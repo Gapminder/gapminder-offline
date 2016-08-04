@@ -1,0 +1,1322 @@
+.ddf-menu {
+  position: absolute;
+  display: block;
+}
+.ddf-menu {
+  top: -11px;
+  right: 0;
+  top: 0;
+  position: absolute;
+  z-index: 9;
+}
+@font-face {
+  font-family: 'Bariol Thin';
+  src: url(./public/fonts/bariol_thin-webfont.eot);
+  src: url(./public/fonts/bariol_thin-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_thin-webfont.woff2) format('woff2'), url(./public/fonts/bariol_thin-webfont.woff) format('woff'), url(./public/fonts/bariol_thin-webfont.ttf) format('truetype'), url(./public/fonts/bariol_thin-webfont.svg#bariolthin) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Thin Italic';
+  src: url(./public/fonts/bariol_thin_italic-webfont.eot);
+  src: url(./public/fonts/bariol_thin_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_thin_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_thin_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_thin_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_thin_italic-webfont.svg#bariolthin_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Light';
+  src: url(./public/fonts/bariol_light-webfont.eot);
+  src: url(./public/fonts/bariol_light-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_light-webfont.woff2) format('woff2'), url(./public/fonts/bariol_light-webfont.woff) format('woff'), url(./public/fonts/bariol_light-webfont.ttf) format('truetype'), url(./public/fonts/bariol_light-webfont.svg#bariol_lightlight) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Light Italic';
+  src: url(./public/fonts/bariol_light_italic-webfont.eot);
+  src: url(./public/fonts/bariol_light_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_light_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_light_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_light_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_light_italic-webfont.svg#bariollight_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Regular';
+  src: url(./public/fonts/bariol_regular-webfont.eot);
+  src: url(./public/fonts/bariol_regular-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_regular-webfont.woff2) format('woff2'), url(./public/fonts/bariol_regular-webfont.woff) format('woff'), url(./public/fonts/bariol_regular-webfont.ttf) format('truetype'), url(./public/fonts/bariol_regular-webfont.svg#bariol_regularregular) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Regular Italic';
+  src: url(./public/fonts/bariol_regular_italic-webfont.eot);
+  src: url(./public/fonts/bariol_regular_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_regular_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_regular_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_regular_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_regular_italic-webfont.svg#bariolregular_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Bold';
+  src: url(./public/fonts/bariol_bold-webfont.eot);
+  src: url(./public/fonts/bariol_bold-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_bold-webfont.woff2) format('woff2'), url(./public/fonts/bariol_bold-webfont.woff) format('woff'), url(./public/fonts/bariol_bold-webfont.ttf) format('truetype'), url(./public/fonts/bariol_bold-webfont.svg#bariol_boldbold) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Bold Italic';
+  src: url(./public/fonts/bariol_bold_italic-webfont.eot);
+  src: url(./public/fonts/bariol_bold_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_bold_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_bold_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_bold_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_bold_italic-webfont.svg#bariol_boldbold_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.heading-2 {
+  margin: 0;
+  margin-bottom: 10px;
+  font-family: "Bariol Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  background-color: #fff;
+  font-family: 'Bariol Regular', Arial, sans-serif;
+  min-width: 250px;
+  padding: 0;
+  margin: 0;
+}
+.wrapper {
+  display: block;
+  position: relative;
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+@media only screen and (max-width: 700px) {
+  .wrapper {
+    position: static;
+    height: auto;
+  }
+}
+.wrapper-error {
+  padding: 50px;
+  text-align: center;
+}
+.wrapper-error .header-title {
+  display: block;
+  float: none;
+  margin: 0 auto;
+}
+.hidden {
+  display: none !important;
+}
+.invisible {
+  visibility: hidden;
+}
+@font-face {
+  font-family: 'Bariol Thin';
+  src: url(./public/fonts/bariol_thin-webfont.eot);
+  src: url(./public/fonts/bariol_thin-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_thin-webfont.woff2) format('woff2'), url(./public/fonts/bariol_thin-webfont.woff) format('woff'), url(./public/fonts/bariol_thin-webfont.ttf) format('truetype'), url(./public/fonts/bariol_thin-webfont.svg#bariolthin) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Thin Italic';
+  src: url(./public/fonts/bariol_thin_italic-webfont.eot);
+  src: url(./public/fonts/bariol_thin_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_thin_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_thin_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_thin_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_thin_italic-webfont.svg#bariolthin_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Light';
+  src: url(./public/fonts/bariol_light-webfont.eot);
+  src: url(./public/fonts/bariol_light-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_light-webfont.woff2) format('woff2'), url(./public/fonts/bariol_light-webfont.woff) format('woff'), url(./public/fonts/bariol_light-webfont.ttf) format('truetype'), url(./public/fonts/bariol_light-webfont.svg#bariol_lightlight) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Light Italic';
+  src: url(./public/fonts/bariol_light_italic-webfont.eot);
+  src: url(./public/fonts/bariol_light_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_light_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_light_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_light_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_light_italic-webfont.svg#bariollight_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Regular';
+  src: url(./public/fonts/bariol_regular-webfont.eot);
+  src: url(./public/fonts/bariol_regular-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_regular-webfont.woff2) format('woff2'), url(./public/fonts/bariol_regular-webfont.woff) format('woff'), url(./public/fonts/bariol_regular-webfont.ttf) format('truetype'), url(./public/fonts/bariol_regular-webfont.svg#bariol_regularregular) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Regular Italic';
+  src: url(./public/fonts/bariol_regular_italic-webfont.eot);
+  src: url(./public/fonts/bariol_regular_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_regular_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_regular_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_regular_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_regular_italic-webfont.svg#bariolregular_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Bold';
+  src: url(./public/fonts/bariol_bold-webfont.eot);
+  src: url(./public/fonts/bariol_bold-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_bold-webfont.woff2) format('woff2'), url(./public/fonts/bariol_bold-webfont.woff) format('woff'), url(./public/fonts/bariol_bold-webfont.ttf) format('truetype'), url(./public/fonts/bariol_bold-webfont.svg#bariol_boldbold) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Bold Italic';
+  src: url(./public/fonts/bariol_bold_italic-webfont.eot);
+  src: url(./public/fonts/bariol_bold_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_bold_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_bold_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_bold_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_bold_italic-webfont.svg#bariol_boldbold_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.header {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-bottom: 2px solid #ffca34;
+  min-width: 250px;
+  padding: 0 15px;
+  position: relative;
+  height: auto;
+  min-height: 50px;
+}
+/*.header:after {
+  content: 'pre-alpha version';
+  color: #ff1313;
+  display: block;
+  position: absolute;
+  top: 11px;
+  z-index: 100;
+  right: 50px;
+  opacity: 0.6;
+  font-size: 20px;
+}*/
+@media only screen and (max-width: 700px) {
+  .header:after {
+    top: 5px;
+    bottom: auto;
+    font-size: 13.5px;
+    right: 43px;
+  }
+}
+.header-title {
+  text-indent: -9999px;
+  overflow: hidden;
+  background-image: url(./public/logo.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 170px;
+  background-size: 100%;
+  color: #fff;
+  float: left;
+  font-size: 17px;
+  line-height: 50px;
+  margin: 0;
+}
+@media only screen and (max-width: 700px) {
+  .header-title {
+    height: 30px;
+  }
+}
+.navbar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 999;
+  bottom: 0;
+  left: 200px;
+  position: static;
+  padding-top: 50px;
+}
+.navbar-nav li {
+  line-height: 30px;
+  font-size: 18px;
+}
+.navbar-nav:hover {
+  display: block !important;
+}
+.menu-mobile {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  position: absolute;
+  width: 25px;
+  height: 3px;
+  display: block;
+}
+.menu-mobile {
+  top: -11px;
+  height: 40px;
+  cursor: pointer;
+  right: 0;
+  top: 0;
+  transition-duration: 0.5s;
+  width: 40px;
+  position: absolute;
+  z-index: 9;
+}
+.menu-mobile:hover {
+  cursor: pointer;
+}
+.menu-mobile .icon {
+  transition-duration: 0.2s;
+  position: absolute;
+  width: 30px;
+  height: 3px;
+  background-color: #ffca34;
+  top: 24px;
+}
+.menu-mobile .icon:before,
+.menu-mobile .icon:after {
+  transition-duration: 0.5s;
+  background-color: #ffca34;
+  position: absolute;
+  content: "";
+  width: 30px;
+  height: 3px;
+}
+.menu-mobile .icon:before {
+  top: -7px;
+}
+.menu-mobile .icon:after {
+  top: 7px;
+}
+.menu-mobile.open .icon {
+  background-color: transparent;
+}
+.menu-mobile.open .icon:before,
+.menu-mobile.open .icon:after {
+  top: 0;
+}
+.menu-mobile.open .icon:before {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+.menu-mobile.open .icon:after {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+@font-face {
+  font-family: 'Bariol Thin';
+  src: url(./public/fonts/bariol_thin-webfont.eot);
+  src: url(./public/fonts/bariol_thin-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_thin-webfont.woff2) format('woff2'), url(./public/fonts/bariol_thin-webfont.woff) format('woff'), url(./public/fonts/bariol_thin-webfont.ttf) format('truetype'), url(./public/fonts/bariol_thin-webfont.svg#bariolthin) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Thin Italic';
+  src: url(./public/fonts/bariol_thin_italic-webfont.eot);
+  src: url(./public/fonts/bariol_thin_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_thin_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_thin_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_thin_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_thin_italic-webfont.svg#bariolthin_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Light';
+  src: url(./public/fonts/bariol_light-webfont.eot);
+  src: url(./public/fonts/bariol_light-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_light-webfont.woff2) format('woff2'), url(./public/fonts/bariol_light-webfont.woff) format('woff'), url(./public/fonts/bariol_light-webfont.ttf) format('truetype'), url(./public/fonts/bariol_light-webfont.svg#bariol_lightlight) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Light Italic';
+  src: url(./public/fonts/bariol_light_italic-webfont.eot);
+  src: url(./public/fonts/bariol_light_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_light_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_light_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_light_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_light_italic-webfont.svg#bariollight_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Regular';
+  src: url(./public/fonts/bariol_regular-webfont.eot);
+  src: url(./public/fonts/bariol_regular-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_regular-webfont.woff2) format('woff2'), url(./public/fonts/bariol_regular-webfont.woff) format('woff'), url(./public/fonts/bariol_regular-webfont.ttf) format('truetype'), url(./public/fonts/bariol_regular-webfont.svg#bariol_regularregular) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Regular Italic';
+  src: url(./public/fonts/bariol_regular_italic-webfont.eot);
+  src: url(./public/fonts/bariol_regular_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_regular_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_regular_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_regular_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_regular_italic-webfont.svg#bariolregular_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Bold';
+  src: url(./public/fonts/bariol_bold-webfont.eot);
+  src: url(./public/fonts/bariol_bold-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_bold-webfont.woff2) format('woff2'), url(./public/fonts/bariol_bold-webfont.woff) format('woff'), url(./public/fonts/bariol_bold-webfont.ttf) format('truetype'), url(./public/fonts/bariol_bold-webfont.svg#bariol_boldbold) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Bold Italic';
+  src: url(./public/fonts/bariol_bold_italic-webfont.eot);
+  src: url(./public/fonts/bariol_bold_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_bold_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_bold_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_bold_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_bold_italic-webfont.svg#bariol_boldbold_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.nav-expandable {
+  position: relative;
+}
+.nav-expandable,
+.nav-expandable * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.nav-expandable .nav-expandable-item {
+  display: inline-block;
+}
+@media only screen and (max-width: 700px) {
+  .nav-expandable .nav-expandable-item {
+    display: block;
+    border-bottom: 1px solid #f2f2f2;
+  }
+}
+.nav-expandable .nav-expandable-item a {
+  color: #777;
+  cursor: pointer;
+  display: block;
+  font-family: "Bariol Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1;
+  padding: 15px;
+  position: relative;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+@media only screen and (max-width: 700px) {
+  .nav-expandable .nav-expandable-item a {
+    padding: 10px;
+  }
+  .nav-expandable .nav-expandable-item a:hover {
+    text-decoration: none;
+  }
+}
+.nav-expandable .nav-expanded:hover + .nav-toggle-expanded {
+  border-left-color: #ffca34;
+  border-right-color: #ffca34;
+}
+.nav-expandable .nav-toggle-expanded {
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+}
+.nav-expandable .nav-toggle-expanded.active,
+.nav-expandable .nav-toggle-expanded:hover {
+  background-color: #fff;
+  color: #ffca34;
+}
+@media only screen and (min-width: 701px) {
+  .nav-expandable .nav-toggle-expanded:hover + .nav-expanded,
+  .nav-expandable .nav-toggle-expanded + .nav-expanded:hover {
+    z-index: 55;
+    display: block !important;
+  }
+}
+.nav-expandable .nav-expanded {
+  background-color: #fff;
+  border-left: 2px solid #ffca34;
+  border-right: 2px solid #ffca34;
+  border-bottom: 2px solid #ffca34;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 30px 10px;
+  padding-bottom: 10px;
+  position: absolute;
+  left: 0;
+  width: 700px;
+}
+@media only screen and (min-width: 701px) {
+  .nav-expandable .nav-expanded {
+    display: none;
+  }
+}
+@media only screen and (max-width: 700px) {
+  .nav-expandable .nav-expanded {
+    width: auto;
+    position: static;
+    padding: 4px;
+    border: 0;
+  }
+}
+.nav-expandable .nav-expanded .nav-expanded-heading {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: #b2b2b2;
+  display: block;
+  font-family: "Bariol Bold", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+@media (min-width: 701px) {
+  .nav-expandable .nav-expanded .nav-expanded-heading {
+    float: left;
+    width: 100%;
+  }
+}
+.nav-expandable .nav-expanded .nav-expanded-more {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  text-align: right;
+  text-transform: uppercase;
+}
+@media (min-width: 701px) {
+  .nav-expandable .nav-expanded .nav-expanded-more {
+    float: left;
+    width: 100%;
+  }
+}
+.nav-expandable .nav-expanded .nav-expanded-columns a {
+  padding: 0;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns ul {
+  padding: 0;
+  list-style: none;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-1 {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 701px) {
+  .nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-1 {
+    float: left;
+    width: 50%;
+  }
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-1 .expanded-column-item {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 701px) {
+  .nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-1 .expanded-column-item {
+    float: left;
+    width: 100%;
+  }
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-2 {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 701px) {
+  .nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-2 {
+    float: left;
+    width: 100%;
+  }
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-2 .expanded-column-item {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 701px) {
+  .nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-2 .expanded-column-item {
+    float: left;
+    width: 50%;
+  }
+}
+@media only screen and (min-width: 701px) and (max-width: 999px) {
+  .nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-2 .expanded-column-item {
+    position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+@media only screen and (min-width: 701px) and (max-width: 999px) and (min-width: 701px) {
+  .nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-2 .expanded-column-item {
+    float: left;
+    width: 100%;
+  }
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-icons {
+  border-bottom: 1px solid #b2b2b2;
+  margin-bottom: 20px;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-icons:last-child {
+  border: none;
+  margin-bottom: 0;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-bulletpoints {
+  margin-bottom: 7px;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-bulletpoints .nav-expanded-columns-inner .expanded-column-item {
+  margin-bottom: 5px;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-bulletpoints .column-item-icon {
+  background-color: #ffca34;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  width: 11px;
+  height: 11px;
+  top: 8px;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-bulletpoints .column-item-icon span {
+  display: none;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-bulletpoints .nav-expanded-columns-inner .expanded-column-item .column-item-info {
+  margin-left: 21px;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-bulletpoints .nav-expanded-columns-inner .expanded-column-item .column-item-info .column-item-heading,
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-bulletpoints .nav-expanded-columns-inner .expanded-column-item .column-item-info .column-item-description {
+  display: inline;
+  margin-left: 0;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-plain .nav-expanded-columns-inner .expanded-column-item .column-item-icon {
+  display: none;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-plain .nav-expanded-columns-inner .expanded-column-item .column-item-info .column-item-heading,
+.nav-expandable .nav-expanded .nav-expanded-columns.nav-expanded-columns-plain .nav-expanded-columns-inner .expanded-column-item .column-item-info .column-item-description {
+  margin-left: 0;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner make-row,
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner .expanded-column-item {
+  margin-bottom: 20px;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner make-row a,
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner .expanded-column-item a {
+  text-transform: none;
+  line-height: 31px;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner make-row .column-item-icon,
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner .expanded-column-item .column-item-icon {
+  color: #ffca34;
+  font-size: 32px;
+  position: absolute;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner make-row .column-item-info .column-item-heading,
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner .expanded-column-item .column-item-info .column-item-heading,
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner make-row .column-item-info .column-item-description,
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner .expanded-column-item .column-item-info .column-item-description {
+  margin-left: 80px;
+  font-family: "Bariol Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.4;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner make-row .column-item-info .column-item-heading,
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner .expanded-column-item .column-item-info .column-item-heading {
+  font-family: "Bariol Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner make-row .column-item-info .column-item-description,
+.nav-expandable .nav-expanded .nav-expanded-columns .nav-expanded-columns-inner .expanded-column-item .column-item-info .column-item-description {
+  color: #b2b2b2;
+  font-size: 15px;
+}
+@media only screen and (min-width: 701px) and (min-width: 701px) and (max-width: 999px) {
+  .nav-expandable .nav-expanded {
+    left: 0;
+    width: 400px;
+  }
+}
+.loader-wrapper {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: #fff;
+  padding: 10px;
+  text-align: center;
+  z-index: 111111;
+}
+.loader {
+  border: 5px solid #ccc;
+  border-right-color: transparent;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  display: none;
+  float: right;
+  margin: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+.loading .loader {
+  display: block;
+}
+@font-face {
+  font-family: 'Bariol Thin';
+  src: url(./public/fonts/bariol_thin-webfont.eot);
+  src: url(./public/fonts/bariol_thin-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_thin-webfont.woff2) format('woff2'), url(./public/fonts/bariol_thin-webfont.woff) format('woff'), url(./public/fonts/bariol_thin-webfont.ttf) format('truetype'), url(./public/fonts/bariol_thin-webfont.svg#bariolthin) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Thin Italic';
+  src: url(./public/fonts/bariol_thin_italic-webfont.eot);
+  src: url(./public/fonts/bariol_thin_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_thin_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_thin_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_thin_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_thin_italic-webfont.svg#bariolthin_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Light';
+  src: url(./public/fonts/bariol_light-webfont.eot);
+  src: url(./public/fonts/bariol_light-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_light-webfont.woff2) format('woff2'), url(./public/fonts/bariol_light-webfont.woff) format('woff'), url(./public/fonts/bariol_light-webfont.ttf) format('truetype'), url(./public/fonts/bariol_light-webfont.svg#bariol_lightlight) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Light Italic';
+  src: url(./public/fonts/bariol_light_italic-webfont.eot);
+  src: url(./public/fonts/bariol_light_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_light_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_light_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_light_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_light_italic-webfont.svg#bariollight_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Regular';
+  src: url(./public/fonts/bariol_regular-webfont.eot);
+  src: url(./public/fonts/bariol_regular-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_regular-webfont.woff2) format('woff2'), url(./public/fonts/bariol_regular-webfont.woff) format('woff'), url(./public/fonts/bariol_regular-webfont.ttf) format('truetype'), url(./public/fonts/bariol_regular-webfont.svg#bariol_regularregular) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Regular Italic';
+  src: url(./public/fonts/bariol_regular_italic-webfont.eot);
+  src: url(./public/fonts/bariol_regular_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_regular_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_regular_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_regular_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_regular_italic-webfont.svg#bariolregular_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Bold';
+  src: url(./public/fonts/bariol_bold-webfont.eot);
+  src: url(./public/fonts/bariol_bold-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_bold-webfont.woff2) format('woff2'), url(./public/fonts/bariol_bold-webfont.woff) format('woff'), url(./public/fonts/bariol_bold-webfont.ttf) format('truetype'), url(./public/fonts/bariol_bold-webfont.svg#bariol_boldbold) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Bold Italic';
+  src: url(./public/fonts/bariol_bold_italic-webfont.eot);
+  src: url(./public/fonts/bariol_bold_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_bold_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_bold_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_bold_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_bold_italic-webfont.svg#bariol_boldbold_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.column {
+  padding: 0;
+}
+.column.main {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  height: 90%;
+  background: #fff;
+}
+@media only screen and (max-width: 700px) {
+  .column.main {
+    height: 450px;
+  }
+}
+@media only screen and (max-width: 700px) and (orientation: landscape) {
+  .column.main {
+    height: 250px;
+  }
+}
+.card {
+  background: #fff;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  box-shadow: rgba(0,0,0,0.02) 0px 2px 1px 2px;
+  padding: 20px;
+  margin: 0px auto 10px auto;
+  max-width: 250px;
+}
+@media only screen and (max-width: 700px) {
+  .card:nth-child(i) {
+    opacity: 0;
+    animation: fadeInDown 0.5s 0/4s forwards;
+  }
+  .card:nth-child(i) {
+    opacity: 0;
+    animation: fadeInDown 0.5s 1/4s forwards;
+  }
+  .card:nth-child(i) {
+    opacity: 0;
+    animation: fadeInDown 0.5s 2/4s forwards;
+  }
+  .card:nth-child(i) {
+    opacity: 0;
+    animation: fadeInDown 0.5s 3/4s forwards;
+  }
+  .card:nth-child(i) {
+    opacity: 0;
+    animation: fadeInDown 0.5s 4/4s forwards;
+  }
+  .card:nth-child(i) {
+    opacity: 0;
+    animation: fadeInDown 0.5s 5/4s forwards;
+  }
+  .card:nth-child(i) {
+    opacity: 0;
+    animation: fadeInDown 0.5s 6/4s forwards;
+  }
+  .card:nth-child(i) {
+    opacity: 0;
+    animation: fadeInDown 0.5s 7/4s forwards;
+  }
+  .card:nth-child(i) {
+    opacity: 0;
+    animation: fadeInDown 0.5s 8/4s forwards;
+  }
+  .card:nth-child(i) {
+    opacity: 0;
+    animation: fadeInDown 0.5s 9/4s forwards;
+  }
+}
+@-moz-keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@-webkit-keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@-o-keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.btn {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background: #999;
+  border: 0px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  box-shadow: rgba(0,0,0,0.02) 0px 2px 1px 2px;
+  padding: 8px 10px;
+  margin: 0px 3px 7px 3px;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-family: 'Lato', Arial, sans-serif;
+}
+.btn:hover {
+  cursor: pointer;
+  background: #8a8a8a;
+}
+.btn.primary {
+  background: #ffca34;
+}
+.btn.primary:hover {
+  background: #ffc215;
+}
+.btn.block {
+  width: 100%;
+  display: block;
+}
+.wrap-report-problem {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+.wrap-report-problem .report-problem {
+  padding: 0 20px;
+  float: right;
+  color: #777;
+}
+.wrap-report-problem .report-problem.indent {
+  margin-right: 30px;
+}
+@media only screen and (max-width: 700px) {
+  .wrap-report-problem .report-problem {
+    float: none;
+    display: inline-block;
+  }
+}
+.wrap-social {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+.social-list {
+  list-style: none;
+  margin: 9px 200px 0 0;
+  padding: 0;
+  float: right;
+}
+@media only screen and (min-width: 701px) and (max-width: 999px) {
+  .social-list {
+    margin-right: 175px;
+  }
+}
+.social-list.mobile {
+  display: none;
+  margin: 5px;
+}
+@media only screen and (max-width: 700px) {
+  .social-list.desktop {
+    display: none;
+  }
+  .social-list.mobile {
+    float: none;
+    display: inline-block;
+  }
+}
+.social-list li {
+  float: left;
+  margin-left: 8px;
+}
+.social-list li a {
+  color: #ffca34;
+  font-size: 25px;
+}
+.social-list .ico-plane {
+  background: #ffca34;
+  border: none;
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 5px 3px;
+  margin: 5px 0;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+.social-list .ico-plane path {
+  fill: #fff;
+}
+@font-face {
+  font-family: 'Bariol Thin';
+  src: url(./public/fonts/bariol_thin-webfont.eot);
+  src: url(./public/fonts/bariol_thin-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_thin-webfont.woff2) format('woff2'), url(./public/fonts/bariol_thin-webfont.woff) format('woff'), url(./public/fonts/bariol_thin-webfont.ttf) format('truetype'), url(./public/fonts/bariol_thin-webfont.svg#bariolthin) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Thin Italic';
+  src: url(./public/fonts/bariol_thin_italic-webfont.eot);
+  src: url(./public/fonts/bariol_thin_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_thin_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_thin_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_thin_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_thin_italic-webfont.svg#bariolthin_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Light';
+  src: url(./public/fonts/bariol_light-webfont.eot);
+  src: url(./public/fonts/bariol_light-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_light-webfont.woff2) format('woff2'), url(./public/fonts/bariol_light-webfont.woff) format('woff'), url(./public/fonts/bariol_light-webfont.ttf) format('truetype'), url(./public/fonts/bariol_light-webfont.svg#bariol_lightlight) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Light Italic';
+  src: url(./public/fonts/bariol_light_italic-webfont.eot);
+  src: url(./public/fonts/bariol_light_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_light_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_light_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_light_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_light_italic-webfont.svg#bariollight_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Regular';
+  src: url(./public/fonts/bariol_regular-webfont.eot);
+  src: url(./public/fonts/bariol_regular-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_regular-webfont.woff2) format('woff2'), url(./public/fonts/bariol_regular-webfont.woff) format('woff'), url(./public/fonts/bariol_regular-webfont.ttf) format('truetype'), url(./public/fonts/bariol_regular-webfont.svg#bariol_regularregular) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Regular Italic';
+  src: url(./public/fonts/bariol_regular_italic-webfont.eot);
+  src: url(./public/fonts/bariol_regular_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_regular_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_regular_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_regular_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_regular_italic-webfont.svg#bariolregular_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Bold';
+  src: url(./public/fonts/bariol_bold-webfont.eot);
+  src: url(./public/fonts/bariol_bold-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_bold-webfont.woff2) format('woff2'), url(./public/fonts/bariol_bold-webfont.woff) format('woff'), url(./public/fonts/bariol_bold-webfont.ttf) format('truetype'), url(./public/fonts/bariol_bold-webfont.svg#bariol_boldbold) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Bold Italic';
+  src: url(./public/fonts/bariol_bold_italic-webfont.eot);
+  src: url(./public/fonts/bariol_bold_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_bold_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_bold_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_bold_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_bold_italic-webfont.svg#bariol_boldbold_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.more {
+  padding: 20px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+}
+@media only screen and (max-width: 700px) {
+  .more {
+    padding: 20px 0;
+  }
+}
+@media only screen and (min-width: 701px) {
+  .more {
+    padding-top: 0px;
+  }
+}
+@media only screen and (max-width: 700px) {
+  .related {
+    padding: 20px;
+  }
+}
+@media only screen and (min-width: 701px) {
+  .related {
+    float: left;
+    width: 63%;
+  }
+}
+.about {
+  float: right;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+@media only screen and (min-width: 701px) {
+  .about {
+    padding-left: 20px;
+    float: right;
+    width: 37%;
+  }
+  .about:after {
+    clear: both;
+  }
+}
+@media only screen and (max-width: 700px) {
+  .about {
+    background: #f2fafc;
+    float: none;
+    padding: 20px;
+    width: 100%;
+  }
+  .about .heading-2 {
+    display: none;
+  }
+}
+.related-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+@media only screen and (min-width: 1000px) {
+  .related-items {
+    -webkit-columns: 2 20px;
+    -moz-columns: 2 20px;
+    columns: 2 20px;
+  }
+}
+.related-item {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+@media only screen and (max-width: 700px) {
+  .related-item {
+    padding: 0px;
+    margin-bottom: 10px;
+  }
+}
+.related-item a {
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  text-decoration: none;
+  color: #222;
+}
+.related-item a:hover .title {
+  color: #607889;
+}
+.related-item-thumbnail {
+  -webkit-flex-shrink: 0;
+  -moz-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  width: 130px;
+  height: auto;
+}
+@media only screen and (max-width: 700px) {
+  .related-item-thumbnail {
+    width: 100px;
+  }
+}
+.related-item-thumbnail img {
+  width: 100%;
+  height: auto;
+}
+.related-item-info {
+  display: inline-block;
+  flex: 1;
+  line-height: 1.2;
+  padding-right: 15px;
+  position: relative;
+  margin-left: 20px;
+}
+.related-item-info .title,
+.related-item-info .subtitle {
+  display: block;
+}
+.related-item-info .title {
+  font-size: 16px;
+}
+.related-item-info .subtitle {
+  font-size: 14px;
+  font-style: italic;
+  color: #808080;
+}
+.menu {
+  display: block;
+  margin: 0 auto;
+  font-size: 1em;
+  text-align: left;
+  text-transform: uppercase;
+  margin-left: 200px;
+}
+@media only screen and (max-width: 999px) {
+  .menu {
+    display: none;
+  }
+}
+.menu-primary {
+  list-style: none;
+  position: relative;
+  z-index: 100;
+  background: #fff;
+  padding: 0;
+  margin: 0;
+}
+.menu-primary > .menu-item {
+  display: block;
+  color: #808285;
+  position: relative;
+}
+@media only screen and (min-width: 1000px) {
+  .menu-primary > .menu-item {
+    float: left;
+    width: 50%;
+  }
+}
+.menu-primary > .menu-item > a {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  display: block;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.15);
+  position: relative;
+  cursor: pointer;
+  margin: 1px 0 0 0;
+  text-decoration: none;
+  max-width: 400px;
+  margin-bottom: 40px;
+  width: 90%;
+}
+@media only screen and (min-width: 1000px) {
+  .menu-primary > .menu-item > a {
+    width: 90%;
+  }
+}
+.menu-primary > .menu-item > a .title {
+  font-family: 'Bariol Bold';
+  color: #808285;
+  font-size: 18px;
+  font-weight: 300;
+  display: block;
+  padding: 15px;
+}
+.menu-primary > .menu-item > a .image {
+  width: 100%;
+  height: auto;
+}
+.menu-primary > .menu-item > a:hover {
+  box-shadow: 0 1px 11px rgba(0,0,0,0.05), 0 1px 6px rgba(0,0,0,0.18);
+}
+.menu-primary > .menu-item > a:hover > .title {
+  color: #607889;
+}
+@media only screen and (max-width: 700px) {
+  .menu-primary {
+    background: none;
+    text-align: center;
+    display: inline-block;
+  }
+  .menu-primary > .menu-item {
+    width: 48%;
+    float: left;
+  }
+  .menu-primary > .menu-item > a {
+    background: #fff;
+    margin: 0;
+    display: inline-block;
+  }
+  .menu-primary > .menu-item > a .title {
+    display: none;
+  }
+}
+.vzb-tool {
+  font-family: 'Bariol Regular', "Lucida Sans Unicode", "Lucida Grande", sans-serif !important;
+}
+.vzb-tool .vzb-tool-buttonlist {
+  background-color: #fff !important;
+}
+.pre-popup {
+  width: 750px;
+  position: absolute;
+  top: 40px;
+  left: 30%;
+  background: #fff;
+  border: 2px solid #f9cc3e;
+  padding: 10px;
+}
+.popup-block {
+  padding: 10px;
+}
+.popup-footer {
+  padding-top: 10px;
+}
+@font-face {
+  font-family: 'Bariol Thin';
+  src: url(./public/fonts/bariol_thin-webfont.eot);
+  src: url(./public/fonts/bariol_thin-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_thin-webfont.woff2) format('woff2'), url(./public/fonts/bariol_thin-webfont.woff) format('woff'), url(./public/fonts/bariol_thin-webfont.ttf) format('truetype'), url(./public/fonts/bariol_thin-webfont.svg#bariolthin) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Thin Italic';
+  src: url(./public/fonts/bariol_thin_italic-webfont.eot);
+  src: url(./public/fonts/bariol_thin_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_thin_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_thin_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_thin_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_thin_italic-webfont.svg#bariolthin_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Light';
+  src: url(./public/fonts/bariol_light-webfont.eot);
+  src: url(./public/fonts/bariol_light-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_light-webfont.woff2) format('woff2'), url(./public/fonts/bariol_light-webfont.woff) format('woff'), url(./public/fonts/bariol_light-webfont.ttf) format('truetype'), url(./public/fonts/bariol_light-webfont.svg#bariol_lightlight) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Light Italic';
+  src: url(./public/fonts/bariol_light_italic-webfont.eot);
+  src: url(./public/fonts/bariol_light_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_light_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_light_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_light_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_light_italic-webfont.svg#bariollight_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Regular';
+  src: url(./public/fonts/bariol_regular-webfont.eot);
+  src: url(./public/fonts/bariol_regular-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_regular-webfont.woff2) format('woff2'), url(./public/fonts/bariol_regular-webfont.woff) format('woff'), url(./public/fonts/bariol_regular-webfont.ttf) format('truetype'), url(./public/fonts/bariol_regular-webfont.svg#bariol_regularregular) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Regular Italic';
+  src: url(./public/fonts/bariol_regular_italic-webfont.eot);
+  src: url(./public/fonts/bariol_regular_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_regular_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_regular_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_regular_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_regular_italic-webfont.svg#bariolregular_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Bold';
+  src: url(./public/fonts/bariol_bold-webfont.eot);
+  src: url(./public/fonts/bariol_bold-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_bold-webfont.woff2) format('woff2'), url(./public/fonts/bariol_bold-webfont.woff) format('woff'), url(./public/fonts/bariol_bold-webfont.ttf) format('truetype'), url(./public/fonts/bariol_bold-webfont.svg#bariol_boldbold) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bariol Bold Italic';
+  src: url(./public/fonts/bariol_bold_italic-webfont.eot);
+  src: url(./public/fonts/bariol_bold_italic-webfont.eot?#iefix) format('embedded-opentype'), url(./public/fonts/bariol_bold_italic-webfont.woff2) format('woff2'), url(./public/fonts/bariol_bold_italic-webfont.woff) format('woff'), url(./public/fonts/bariol_bold_italic-webfont.ttf) format('truetype'), url(./public/fonts/bariol_bold_italic-webfont.svg#bariol_boldbold_italic) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.tabs {
+  list-style: none;
+  float: left;
+  margin: 10px 0 0 20px;
+  padding: 0;
+}
+.tabs li {
+  float: left;
+  border: 2px solid #ffca34;
+  border-bottom: none;
+  margin-right: 10px;
+  line-height: 36px;
+  font-size: 16px;
+}
+.tabs li a {
+  padding: 0 15px;
+}
+.tabs li.selected-tab {
+  background: #ffca34;
+}
+.tabs li .close {
+  float: right;
+  margin-right: 10px;
+  padding: 0;
+}
+.add-tab {
+  float: left;
+  padding: 0 10px;
+  font-size: 18px;
+  line-height: 36px;
+  margin-top: 10px;
+  outline: none;
+  background: none;
+  border: none;
+  font-family: 'Bariol Bold';
+}
+.vzb-tool .vzb-data-warning:hover text,.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-x-title:hover,.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-y-title:hover,.vzb-tool-barchart .vzb-barchart .vzb-bc-year:hover,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-c-title:hover,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-s-title:hover,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-x-title:hover,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-y-title:hover,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-c-title:hover,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-y-title:hover,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-x-title:hover,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-y-title:hover,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-x-title:hover,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-y-title:hover,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-x-title:hover,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-y-title:hover,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-title:hover,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-year:hover{text-decoration:underline}@-webkit-keyframes rotate-forever{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(359deg);transform:rotate(359deg)}}@keyframes rotate-forever{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(359deg);transform:rotate(359deg)}}.vzb-hidden,.vzb-tool .vzb-timeslider.vzb-playing .vzb-ts-btns .vzb-ts-btn-play,.vzb-tool .vzb-timeslider.vzb-ts-hide-play-button .vzb-ts-btns,.vzb-tool .vzb-timeslider.vzb-ts-loading .vzb-ts-btn-pause,.vzb-tool .vzb-timeslider.vzb-ts-loading .vzb-ts-btn-play,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-checkbox input[type=checkbox]{display:none!important}.vzb-invisible{visibility:hidden!important}.vzb-pointerevents-none{pointer-events:none!important}.vzb-blur{-webkit-filter:blur(3px);filter:blur(3px)}.vzb-transparent{opacity:0!important}.vzb-placeholder.vzb-loading-data::after,.vzb-placeholder.vzb-loading-first::after,.vzb-tool .vzb-timeslider .vzb-ts-btn-loading .vzb-loader{-webkit-animation-duration:.6s;animation-duration:.6s;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite;-webkit-animation-name:rotate-forever;animation-name:rotate-forever;-webkit-animation-timing-function:linear;animation-timing-function:linear;height:30px;width:30px;position:absolute;top:50%;right:0;bottom:0;left:50%;border:4px solid rgba(96,120,137,.1);border-radius:100%;border-top:4px solid rgba(96,120,137,.6);content:' ';display:inline-block;margin:-15px;z-index:9999}.vzb-placeholder{background-color:#fff;position:relative}.vzb-placeholder.vzb-loading-data::before,.vzb-placeholder.vzb-loading-first::before{background-color:#fff;bottom:0;content:' ';display:block;left:0;position:absolute;right:0;top:0;z-index:9998}.vzb-placeholder.vzb-loading-first>div{visibility:hidden}.vzb-placeholder.vzb-loading-data::before{filter:alpha(opacity=80);opacity:.8}.vzb-placeholder.vzb-force-fullscreen{position:fixed;top:0;right:0;bottom:0;left:0;display:block;height:auto!important;margin:0;width:auto!important;z-index:9997}.vzb-placeholder .vzb-icon{height:15px;width:15px}.vzb-placeholder .vzb-icon path{fill:#607889}.vzb-placeholder.vzb-error{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;display:table;height:100%}.vzb-placeholder.vzb-error>div{color:#999;display:table-cell;line-height:1.8;text-align:center;vertical-align:middle;visibility:visible}.vzb-placeholder.vzb-error p{font-size:.75em;text-transform:uppercase;white-space:normal}.vzb-placeholder.vzb-error .vzb-icon{height:25px;width:25px}.vzb-placeholder.vzb-error path{fill:#fc6b38}.vzb-placeholder.vzb-error::after,.vzb-placeholder.vzb-error::before{display:none}.vzb-tool,.vzb-tool .vzb-tool-stage{display:-webkit-box;display:-webkit-flex}.vzb-dialog-scrollable{-webkit-overflow-scrolling:auto}.vzb-dialog-scrollable::-webkit-scrollbar{width:6px;-webkit-appearance:none}.vzb-dialog-scrollable::-webkit-scrollbar-thumb{background:#b6c3cc;border-radius:2px;cursor:pointer}.vzb-dialog-scrollable::-webkit-scrollbar-track{width:5px;background:#b6c3cc;border-radius:2px;background-clip:content-box;border:2px solid transparent}.vzb-placeholder{font-size:16px;font-variant:normal;text-align:left}.vzb-placeholder a,.vzb-placeholder div,.vzb-placeholder g,.vzb-placeholder h1,.vzb-placeholder h2,.vzb-placeholder h3,.vzb-placeholder h4,.vzb-placeholder h5,.vzb-placeholder h6,.vzb-placeholder i,.vzb-placeholder p,.vzb-placeholder span,.vzb-placeholder svg,.vzb-placeholder text{background:0 0;border:0;box-sizing:border-box;margin:0;outline:0;padding:0;vertical-align:baseline;white-space:nowrap}.vzb-placeholder button,.vzb-placeholder input,.vzb-placeholder keygen,.vzb-placeholder select,.vzb-placeholder textarea{font-size:16px}.vzb-placeholder *{-webkit-tap-highlight-color:transparent!important}.vzb-tool-barrankchart .vzb-barrankchart,.vzb-tool-bubblechart .vzb-bubblechart,.vzb-tool-bubblemap .vzb-bubblemap,.vzb-tool-linechart .vzb-linechart,.vzb-tool-mountainchart .vzb-mountainchart{position:absolute;top:0;right:0;bottom:0;left:0;overflow:hidden}.vzb-tool-axislabeler .vzb-axislabeler,.vzb-tool-barchart .vzb-barchart,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg,.vzb-tool-popbyage .vzb-popbyage{position:absolute;top:0;right:0;bottom:0;left:0;color:#666;height:100%;margin:0;overflow:hidden;width:100%}.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-x text,.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-y text,.vzb-tool-barchart.vzb-small .vzb-bc-axis-x,.vzb-tool-barchart.vzb-small .vzb-bc-axis-y,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-x text,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-y text,.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-axis-value,.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-bc-axis-x,.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-bc-axis-x-info,.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-bc-axis-y,.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-bc-axis-y-info,.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-bc-labels,.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-bc-tooltip,.vzb-tool-bubblemap.vzb-small .vzb-bubblemap .vzb-bmc-axis-info,.vzb-tool-bubblemap.vzb-small .vzb-bubblemap .vzb-bmc-bubble-labels,.vzb-tool-bubblemap.vzb-small .vzb-bubblemap .vzb-bmc-tooltip,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-value,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-x text,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-y text,.vzb-tool-linechart.vzb-small .vzb-linechart .vzb-lc-axis-value,.vzb-tool-linechart.vzb-small .vzb-linechart .vzb-lc-axis-x,.vzb-tool-linechart.vzb-small .vzb-linechart .vzb-lc-axis-y,.vzb-tool-linechart.vzb-small .vzb-linechart .vzb-lc-label-value,.vzb-tool-linechart.vzb-small .vzb-linechart .vzb-lc-labelname,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-x text,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-y text,.vzb-tool-mountainchart.vzb-small .vzb-mountainchart .vzb-mc-axis-info,.vzb-tool-mountainchart.vzb-small .vzb-mountainchart .vzb-mc-axis-x,.vzb-tool-mountainchart.vzb-small .vzb-mountainchart .vzb-mc-mountains-labels,.vzb-tool-mountainchart.vzb-small .vzb-mountainchart .vzb-mc-probe,.vzb-tool-mountainchart.vzb-small .vzb-mountainchart .vzb-mc-tooltip,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-x text,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-y text,.vzb-tool-popbyage.vzb-small .vzb-bc-axis-x,.vzb-tool-popbyage.vzb-small .vzb-bc-axis-y,.vzb-tool-popbyage.vzb-small .vzb-bc-label>.vzb-bc-age{font-size:.8em}.vzb-tool-barchart.vzb-medium .vzb-bc-axis-x,.vzb-tool-barchart.vzb-medium .vzb-bc-axis-y,.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-axis-value,.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-bc-axis-x,.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-bc-axis-x-info,.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-bc-axis-y,.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-bc-axis-y-info,.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-bc-labels,.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-bc-tooltip,.vzb-tool-bubblemap.vzb-medium .vzb-bubblemap .vzb-bmc-axis-info,.vzb-tool-bubblemap.vzb-medium .vzb-bubblemap .vzb-bmc-bubble-labels,.vzb-tool-bubblemap.vzb-medium .vzb-bubblemap .vzb-bmc-tooltip,.vzb-tool-linechart.vzb-medium .vzb-linechart .vzb-lc-axis-value,.vzb-tool-linechart.vzb-medium .vzb-linechart .vzb-lc-axis-x,.vzb-tool-linechart.vzb-medium .vzb-linechart .vzb-lc-axis-y,.vzb-tool-linechart.vzb-medium .vzb-linechart .vzb-lc-label-value,.vzb-tool-linechart.vzb-medium .vzb-linechart .vzb-lc-labelname,.vzb-tool-mountainchart.vzb-medium .vzb-mountainchart .vzb-mc-axis-info,.vzb-tool-mountainchart.vzb-medium .vzb-mountainchart .vzb-mc-axis-x,.vzb-tool-mountainchart.vzb-medium .vzb-mountainchart .vzb-mc-mountains-labels,.vzb-tool-mountainchart.vzb-medium .vzb-mountainchart .vzb-mc-probe,.vzb-tool-mountainchart.vzb-medium .vzb-mountainchart .vzb-mc-tooltip,.vzb-tool-popbyage.vzb-medium .vzb-bc-axis-x,.vzb-tool-popbyage.vzb-medium .vzb-bc-axis-y,.vzb-tool-popbyage.vzb-medium .vzb-bc-label>.vzb-bc-age{font-size:1em}.vzb-tool-barchart.vzb-large .vzb-bc-axis-x,.vzb-tool-barchart.vzb-large .vzb-bc-axis-y,.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-axis-value,.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-bc-axis-x,.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-bc-axis-x-info,.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-bc-axis-y,.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-bc-axis-y-info,.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-bc-labels,.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-bc-tooltip,.vzb-tool-bubblemap.vzb-large .vzb-bubblemap .vzb-bmc-axis-info,.vzb-tool-bubblemap.vzb-large .vzb-bubblemap .vzb-bmc-bubble-labels,.vzb-tool-bubblemap.vzb-large .vzb-bubblemap .vzb-bmc-tooltip,.vzb-tool-linechart.vzb-large .vzb-linechart .vzb-lc-axis-value,.vzb-tool-linechart.vzb-large .vzb-linechart .vzb-lc-axis-x,.vzb-tool-linechart.vzb-large .vzb-linechart .vzb-lc-axis-y,.vzb-tool-linechart.vzb-large .vzb-linechart .vzb-lc-label-value,.vzb-tool-linechart.vzb-large .vzb-linechart .vzb-lc-labelname,.vzb-tool-mountainchart.vzb-large .vzb-mountainchart .vzb-mc-axis-info,.vzb-tool-mountainchart.vzb-large .vzb-mountainchart .vzb-mc-axis-x,.vzb-tool-mountainchart.vzb-large .vzb-mountainchart .vzb-mc-mountains-labels,.vzb-tool-mountainchart.vzb-large .vzb-mountainchart .vzb-mc-probe,.vzb-tool-mountainchart.vzb-large .vzb-mountainchart .vzb-mc-tooltip,.vzb-tool-popbyage.vzb-large .vzb-bc-axis-x,.vzb-tool-popbyage.vzb-large .vzb-bc-axis-y,.vzb-tool-popbyage.vzb-large .vzb-bc-label>.vzb-bc-age{font-size:1.24em}.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-x text,.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-y text,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-x text,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-y text,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-value,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-x text,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-y text,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-x text,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-y text,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-x text,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-y text{fill:currentColor;stroke:none}.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-x-title,.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-y-title,.vzb-tool-barchart .vzb-barchart .vzb-bc-year,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-c-title,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-s-title,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-x-title,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-y-title,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-c-title,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-y-title,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-x-title,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-y-title,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-x-title,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-y-title,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-x-title,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-y-title,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-title,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-year{color:#425663;cursor:pointer;fill:currentColor}.vzb-tool-barchart.vzb-small .vzb-bc-axis-x-title,.vzb-tool-barchart.vzb-small .vzb-bc-axis-y-title,.vzb-tool-barchart.vzb-small .vzb-bc-year,.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-bc-axis-c-title,.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-bc-axis-s-title,.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-bc-axis-x-title,.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-bc-axis-y-title,.vzb-tool-bubblemap.vzb-small .vzb-bubblemap .vzb-bmc-axis-c-title,.vzb-tool-bubblemap.vzb-small .vzb-bubblemap .vzb-bmc-axis-y-title,.vzb-tool-linechart.vzb-small .vzb-linechart .vzb-lc-axis-x-title,.vzb-tool-linechart.vzb-small .vzb-linechart .vzb-lc-axis-y-title,.vzb-tool-mountainchart.vzb-small .vzb-mountainchart .vzb-mc-axis-x-title,.vzb-tool-mountainchart.vzb-small .vzb-mountainchart .vzb-mc-axis-y-title,.vzb-tool-popbyage.vzb-small .vzb-bc-title,.vzb-tool-popbyage.vzb-small .vzb-bc-year{font-size:1em}.vzb-tool-barchart.vzb-medium .vzb-bc-axis-x-title,.vzb-tool-barchart.vzb-medium .vzb-bc-axis-y-title,.vzb-tool-barchart.vzb-medium .vzb-bc-year,.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-bc-axis-c-title,.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-bc-axis-s-title,.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-bc-axis-x-title,.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-bc-axis-y-title,.vzb-tool-bubblemap.vzb-medium .vzb-bubblemap .vzb-bmc-axis-c-title,.vzb-tool-bubblemap.vzb-medium .vzb-bubblemap .vzb-bmc-axis-y-title,.vzb-tool-linechart.vzb-medium .vzb-linechart .vzb-lc-axis-x-title,.vzb-tool-linechart.vzb-medium .vzb-linechart .vzb-lc-axis-y-title,.vzb-tool-mountainchart.vzb-medium .vzb-mountainchart .vzb-mc-axis-x-title,.vzb-tool-mountainchart.vzb-medium .vzb-mountainchart .vzb-mc-axis-y-title,.vzb-tool-popbyage.vzb-medium .vzb-bc-title,.vzb-tool-popbyage.vzb-medium .vzb-bc-year{font-size:1.24em}.vzb-tool-barchart.vzb-large .vzb-bc-axis-x-title,.vzb-tool-barchart.vzb-large .vzb-bc-axis-y-title,.vzb-tool-barchart.vzb-large .vzb-bc-year,.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-bc-axis-c-title,.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-bc-axis-s-title,.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-bc-axis-x-title,.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-bc-axis-y-title,.vzb-tool-bubblemap.vzb-large .vzb-bubblemap .vzb-bmc-axis-c-title,.vzb-tool-bubblemap.vzb-large .vzb-bubblemap .vzb-bmc-axis-y-title,.vzb-tool-linechart.vzb-large .vzb-linechart .vzb-lc-axis-x-title,.vzb-tool-linechart.vzb-large .vzb-linechart .vzb-lc-axis-y-title,.vzb-tool-mountainchart.vzb-large .vzb-mountainchart .vzb-mc-axis-x-title,.vzb-tool-mountainchart.vzb-large .vzb-mountainchart .vzb-mc-axis-y-title,.vzb-tool-popbyage.vzb-large .vzb-bc-title,.vzb-tool-popbyage.vzb-large .vzb-bc-year{font-size:1.38em}.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-x,.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-y,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-x,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-y,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-x,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-y,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-x,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-y,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-x,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-y{color:#999;fill:none;stroke:#999}.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-x line,.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-x path,.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-y line,.vzb-tool-barchart .vzb-barchart .vzb-bc-axis-y path,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-x line,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-x path,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-y line,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-y path,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-x line,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-x path,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-y line,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-y path,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-x line,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-x path,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-y line,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-y path,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-x line,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-x path,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-y line,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-axis-y path{fill:none;shape-rendering:crispEdges;stroke:#999}.vzb-tool .vzb-tool-dialogs .vzb-ip-holder .vzb-ip-info,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-x-info,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-y-info,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-c-info,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-y-info,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-y-info,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-info{cursor:pointer;opacity:.3;pointer-events:visible}.vzb-tool .vzb-tool-dialogs .vzb-ip-holder .vzb-ip-info path,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-x-info path,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-y-info path,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-c-info path,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-y-info path,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-y-info path,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-info path{fill:#607889;stroke:none}.vzb-tool .vzb-tool-dialogs .vzb-ip-holder .vzb-ip-info circle,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-x-info circle,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-y-info circle,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-c-info circle,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-y-info circle,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-y-info circle,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-info circle{fill:none;stroke:#607889}.vzb-tool .vzb-tool-dialogs .vzb-ip-holder .vzb-ip-info:hover,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-x-info:hover,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-y-info:hover,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-c-info:hover,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-y-info:hover,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-axis-y-info:hover,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-info:hover{opacity:1}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-labels text,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-tooltip text,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels text,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-tooltip text,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-tooltip text{fill:#333;pointer-events:none;text-anchor:end}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-labels rect,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-tooltip rect,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels rect,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-tooltip rect,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-tooltip rect{cursor:pointer;pointer-events:none}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-labels .vzb-tooltip-border,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-tooltip .vzb-tooltip-border,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels .vzb-tooltip-border,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-tooltip .vzb-tooltip-border,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-tooltip .vzb-tooltip-border{fill:#fff;stroke:#333;stroke-width:1.5px}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-label-shadow,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-tooltip-shadow,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-bmc-label-shadow,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-mountains-labels .vzb-mc-label-shadow,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-probe .vzb-shadow{filter:alpha(opacity=70);opacity:.7;fill:#fff;stroke:#fff}.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-bc-label-shadow,.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-bc-tooltip-shadow,.vzb-tool-bubblemap.vzb-small .vzb-bubblemap .vzb-bmc-label-shadow,.vzb-tool-bubblemap.vzb-small .vzb-bubblemap .vzb-shadow,.vzb-tool-mountainchart.vzb-small .vzb-mountainchart .vzb-mc-label-shadow,.vzb-tool-mountainchart.vzb-small .vzb-mountainchart .vzb-shadow{stroke-width:2px}.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-bc-label-shadow,.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-bc-tooltip-shadow,.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-bc-label-shadow,.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-bc-tooltip-shadow,.vzb-tool-bubblemap.vzb-large .vzb-bubblemap .vzb-bmc-label-shadow,.vzb-tool-bubblemap.vzb-large .vzb-bubblemap .vzb-shadow,.vzb-tool-bubblemap.vzb-medium .vzb-bubblemap .vzb-bmc-label-shadow,.vzb-tool-bubblemap.vzb-medium .vzb-bubblemap .vzb-shadow,.vzb-tool-mountainchart.vzb-large .vzb-mountainchart .vzb-mc-label-shadow,.vzb-tool-mountainchart.vzb-large .vzb-mountainchart .vzb-shadow,.vzb-tool-mountainchart.vzb-medium .vzb-mountainchart .vzb-mc-label-shadow,.vzb-tool-mountainchart.vzb-medium .vzb-mountainchart .vzb-shadow{stroke-width:3px}.vzb-tool{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;display:flex;position:relative;width:100%;height:100%;font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif;font-size:16px;overflow:hidden;text-align:left}.vzb-tool .vzb-tool-title{position:absolute;top:0;right:0;left:0;background-color:#f2fafc;color:#666;display:none!important;font-size:.8em;height:8px;padding:10px}.vzb-tool .vzb-tool-stage{-webkit-box-flex:1;-webkit-flex:1 auto;flex:1 auto;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column;-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0)}.vzb-tool .vzb-tool-stage .vzb-tool-viz{-webkit-box-flex:1;-webkit-flex:1 auto;flex:1 auto;position:relative}.vzb-tool .vzb-tool-stage .vzb-tool-timeslider{-webkit-box-flex:0;-webkit-flex:0 0 60px;flex:0 0 60px;height:60px}.vzb-tool .vzb-tool-sidebar{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-flex:0;-webkit-flex:0 0 auto;flex:0 0 auto}.vzb-tool.vzb-buttonlist-off .vzb-tool-buttonlist,.vzb-tool.vzb-small.vzb-buttonlist-off .vzb-tool-buttonlist,.vzb-tool.vzb-small.vzb-timeslider-off .vzb-tool-timeslider,.vzb-tool.vzb-timeslider-off .vzb-tool-timeslider,.vzb-tool.vzb-title-off .vzb-tool-title{display:none}.vzb-tool .vzb-tool-sidebar .vzb-tool-buttonlist{-webkit-box-flex:1;-webkit-flex:1 0 auto;flex:1 0 auto;background-color:#f2fafc;width:60px;overflow:hidden;white-space:normal;position:relative;text-align:center}.vzb-tool .vzb-tool-sidebar .vzb-tool-buttonlist button,.vzb-tool .vzb-tool-sidebar .vzb-tool-buttonlist input,.vzb-tool .vzb-tool-sidebar .vzb-tool-buttonlist keygen,.vzb-tool .vzb-tool-sidebar .vzb-tool-buttonlist select,.vzb-tool .vzb-tool-sidebar .vzb-tool-buttonlist textarea{font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif}.vzb-tool .vzb-tool-sidebar .vzb-tool-buttonlist:-webkit-scrollbar{display:none}.vzb-tool.vzb-small .vzb-tool-stage .vzb-tool-timeslider{-webkit-box-flex:0;-webkit-flex:0 0 40px;flex:0 0 40px;height:40px}.vzb-tool.vzb-small.vzb-portrait,.vzb-tool.vzb-small.vzb-portrait .vzb-tool-sidebar{-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column}.vzb-tool.vzb-small.vzb-portrait .vzb-tool-sidebar .vzb-tool-buttonlist{height:50px;width:auto;white-space:nowrap}.vzb-tool.vzb-small .vzb-tool-title{font-size:.8em;height:0}.vzb-tool.vzb-small .vzb-data-warning text{font-size:.625em}.vzb-tool.vzb-medium .vzb-tool-stage .vzb-tool-timeslider{-webkit-box-flex:0;-webkit-flex:0 0 50px;flex:0 0 50px;height:50px}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-sidebar{-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column;-webkit-box-flex:0;-webkit-flex:0 0 290px;flex:0 0 290px;max-width:290px}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-sidebar .vzb-tool-dialogs{-webkit-box-flex:1;-webkit-flex:1 auto;flex:1 auto;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column;position:static;background-color:#f2fafc;overflow-x:hidden;overflow-y:auto}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-sidebar .vzb-tool-buttonlist{-webkit-box-flex:0;-webkit-flex:0 0 auto;flex:0 0 auto;width:290px;padding:2px 0 5px}.vzb-tool .vzb-tooltip{border-radius:3px;filter:alpha(opacity=90);opacity:.9;background:#666;color:#fff;font-size:1em;font-weight:300;padding:7px 10px;position:absolute;z-index:11}.vzb-tool input[type=range]::-webkit-slider-runnable-track{background:0 0;cursor:pointer}.vzb-tool input[type=range]:focus::-webkit-slider-runnable-track{background:0 0}.vzb-tool input[type=range]::-moz-range-track{background:0 0;cursor:pointer;height:0;border:0}.vzb-tool input[type=range]::-ms-track{background:0 0;border-color:transparent;border-width:10px 0;color:transparent;cursor:pointer;height:0}.vzb-tool input[type=range]::-ms-fill-lower{background:0 0}.vzb-tool input[type=range]:focus::-ms-fill-lower{background:0 0}.vzb-tool input[type=range]::-ms-fill-upper{background:0 0}.vzb-tool input[type=range]:focus::-ms-fill-upper{background:0 0}.vzb-tool input[type=range]::-ms-tooltip{display:none}.vzb-tool input[type=range]::-moz-focus-outer{border:0}.vzb-tool .vzb-data-warning{cursor:pointer;fill:#fc6b38}.vzb-tool .vzb-data-warning path{fill:#fc6b38}.vzb-tool .vzb-timeslider .vzb-ts-btns .vzb-ts-btn .vzb-icon path,.vzb-tool .vzb-timeslider .vzb-ts-btns .vzb-ts-btn:active path,.vzb-tool .vzb-timeslider .vzb-ts-btns .vzb-ts-btn:focus path{fill:#607889}.vzb-tool .vzb-data-warning text{text-transform:uppercase;font-size:.8em}.vzb-tool .vzb-timeslider{min-height:40px;position:relative}.vzb-tool .vzb-timeslider.vzb-ts-disabled{opacity:.4;pointer-events:none}.vzb-tool .vzb-timeslider.vzb-ts-disabled .vzb-ts-slider-slide .background{pointer-events:none}.vzb-tool .vzb-timeslider.vzb-ts-disabled .vzb-ts-slider-handle{visibility:hidden;pointer-events:none}.vzb-tool .vzb-timeslider .vzb-ts-btns{position:absolute;top:0;bottom:0;left:5px;width:40px}.vzb-tool .vzb-timeslider .vzb-ts-btns .vzb-ts-btn{border-radius:40px;font-size:1em;width:40px;height:40px;background:#fff;display:block;border:0;padding:0;margin:5px;cursor:pointer}.vzb-tool .vzb-timeslider .vzb-ts-btns .vzb-ts-btn .vzb-icon{width:40px;height:40px}.vzb-tool .vzb-timeslider .vzb-ts-btns .vzb-ts-btn.vzb-ts-btn-loading{background:#607889}.vzb-tool .vzb-timeslider .vzb-ts-btns .vzb-ts-btn.vzb-ts-btn-pause{display:none}.vzb-tool .vzb-timeslider .vzb-ts-btns .vzb-ts-btn:active,.vzb-tool .vzb-timeslider .vzb-ts-btns .vzb-ts-btn:focus{outline:0}.vzb-tool .vzb-timeslider .vzb-ts-slider-wrapper{position:absolute;top:0;right:9px;bottom:0;left:45px}.vzb-tool .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider{position:absolute;top:0;right:0;bottom:0;left:0;font-size:.8em;overflow:visible;color:#607889;width:100%;height:100%}.vzb-tool .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider .background{cursor:pointer!important}.vzb-tool .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider .vzb-ts-slider-axis{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;filter:alpha(opacity=60);opacity:.6;fill:#607889;font-weight:700;cursor:pointer}.vzb-tool .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider .vzb-ts-slider-axis .domain{filter:alpha(opacity=100);opacity:1;fill:none;stroke:#607889;stroke-opacity:.3;stroke-width:5px;stroke-linecap:round}.vzb-tool .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider .vzb-ts-slider-select{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;filter:alpha(opacity=80);opacity:.8;cursor:default}.vzb-tool .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider .vzb-ts-slider-select .selected-end,.vzb-tool .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider .vzb-ts-slider-select .selected-start{filter:alpha(opacity=100);opacity:1;fill:none;stroke:#607889;stroke-opacity:.8;stroke-width:5px;stroke-linecap:round}.vzb-tool .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider .vzb-ts-slider-handle{fill:#607889;stroke:#fff;stroke-width:4px;cursor:pointer}.vzb-tool .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider .vzb-ts-slider-value{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;display:none;fill:#607889;font-weight:700}.vzb-tool .vzb-timeslider.vzb-playing.vzb-ts-show-value-when-drag-play .vzb-ts-slider-value{display:block!important}.vzb-tool .vzb-timeslider.vzb-playing .vzb-ts-btns .vzb-ts-btn-pause{display:block}.vzb-tool .vzb-timeslider.vzb-playing .vzb-ts-btns:hover .vzb-ts-btn-pause-tooltip{filter:alpha(opacity=100);opacity:1}.vzb-tool .vzb-timeslider.vzb-playing .vzb-ts-btns:hover .vzb-ts-btn-play-tooltip{filter:alpha(opacity=0);opacity:0}.vzb-tool .vzb-timeslider .vzb-ts-btn-loading{position:relative;display:none!important}.vzb-tool .vzb-timeslider.vzb-ts-dragging.vzb-ts-show-value-when-drag-play .vzb-ts-slider-value,.vzb-tool .vzb-timeslider.vzb-ts-loading .vzb-ts-btn-loading,.vzb-tool .vzb-timeslider.vzb-ts-show-value .vzb-ts-slider-value{display:block!important}.vzb-tool .vzb-timeslider .vzb-ts-btn-loading .vzb-loader{height:28px;width:28px;border-color:rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.7);margin:-14px}.vzb-tool .vzb-timeslider.vzb-ts-loading{filter:alpha(opacity=30);opacity:.3}.vzb-tool .vzb-timeslider.vzb-ts-hide-play-button .vzb-ts-slider-wrapper{position:absolute;top:5px;right:9px;bottom:5px;left:5px}.vzb-tool.vzb-small .vzb-timeslider .vzb-ts-btns .vzb-ts-btn{width:35px;height:35px;margin:0}.vzb-tool.vzb-small .vzb-timeslider .vzb-ts-btns .vzb-ts-btn .vzb-icon{width:35px;height:35px}.vzb-tool.vzb-small .vzb-timeslider.vzb-ts-axis-aligned .vzb-ts-btns{position:absolute;top:0;right:0;bottom:5px;left:5px;width:20px;min-height:20px}.vzb-tool.vzb-small .vzb-timeslider.vzb-ts-axis-aligned .vzb-ts-btns .vzb-ts-btn{width:26px;height:26px;margin:0}.vzb-tool.vzb-small .vzb-timeslider.vzb-ts-axis-aligned .vzb-ts-btns .vzb-ts-btn .vzb-icon{width:26px;height:26px}.vzb-tool.vzb-small .vzb-timeslider.vzb-ts-axis-aligned .vzb-ts-btns .vzb-ts-btn.vzb-ts-btn-pause,.vzb-tool.vzb-small .vzb-timeslider.vzb-ts-axis-aligned .vzb-ts-btns .vzb-ts-btn.vzb-ts-btn-play{padding:0}.vzb-tool.vzb-small .vzb-timeslider.vzb-ts-axis-aligned .vzb-ts-slider-wrapper{position:absolute;top:0;right:0;bottom:5px;left:30px}.vzb-tool.vzb-medium .vzb-timeslider{min-height:45px}.vzb-tool.vzb-medium .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider-axis .domain{stroke-width:7px}.vzb-tool.vzb-medium .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider-handle{stroke-width:5px}.vzb-tool.vzb-medium .vzb-timeslider.vzb-ts-axis-aligned .vzb-ts-btns{position:absolute;top:0;right:0;bottom:5px;left:5px}.vzb-tool.vzb-medium .vzb-timeslider.vzb-ts-axis-aligned .vzb-ts-slider-wrapper{position:absolute;top:0;right:0;bottom:5px;left:50px}.vzb-tool.vzb-large .vzb-timeslider{min-height:50px}.vzb-tool.vzb-large .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider{font-size:1em}.vzb-tool.vzb-large .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider-axis .domain,.vzb-tool.vzb-large .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider-select .selected-end,.vzb-tool.vzb-large .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider-select .selected-start{stroke-width:9px}.vzb-tool.vzb-large .vzb-timeslider .vzb-ts-slider-wrapper .vzb-ts-slider-handle{stroke-width:6px}.vzb-tool.vzb-large .vzb-timeslider.vzb-ts-axis-aligned .vzb-ts-btns{position:absolute;top:0;right:0;bottom:5px;left:5px}.vzb-tool.vzb-large .vzb-timeslider.vzb-ts-axis-aligned .vzb-ts-slider-wrapper{position:absolute;top:0;right:0;bottom:5px;left:50px}.vzb-tool .vzb-dialog-shadow{-ms-box-shadow:0 8px 15px rgba(0,0,0,.24);-o-box-shadow:0 8px 15px rgba(0,0,0,.24);box-shadow:0 8px 15px rgba(0,0,0,.24);-webkit-transition:all .3s ease-in-out;transition:all .3s ease-in-out;border-top:1px solid #f7f7f7}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog{width:280px;margin:0;vertical-align:top;background-color:#fff;text-align:left;display:block;position:absolute;overflow:hidden}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-title{color:#607889;font-size:1em;padding:45px 25px 16px;display:inline-block;-webkit-align-self:flex-start;align-self:flex-start}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-title span{vertical-align:middle}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-title .vzb-ip-select{color:#425663;line-height:21px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-content{color:#666;font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif;font-size:.8em;overflow:hidden;overflow-y:auto;padding:0 20px 2px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-content.vzb-dialog-content-fixed{height:250px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-content input[type=radio],.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-content input[type=radio]+span{cursor:pointer}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-content input[type=radio][disabled=true]{cursor:default;opacity:.7}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-content input[type=radio][disabled=true]+span{cursor:default;color:#9fbbc1;opacity:.7}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog input[type=search],.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog input[type=text]{border-radius:4px;-ms-box-sizing:border-box;-o-box-sizing:border-box;box-sizing:border-box;font-size:1em;border:1px solid rgba(153,153,153,.4);padding:9px;display:block;width:100%;outline:0;font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog input[type=search]:focus,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog input[type=text]:focus{border:1px solid rgba(153,153,153,.6)}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog input[type=search]{-webkit-appearance:none;padding-right:1px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog input[type=search]::-webkit-search-decoration{-webkit-appearance:none}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog input[type=search]::-ms-value{margin-right:8px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog input[type=search]:focus::-ms-value{margin-right:0}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-buttons{display:table;width:100%;padding:15px 25px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-control{display:table-cell;width:100%;vertical-align:middle}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-control:first-child{padding-left:0}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-control:last-child{padding-right:0}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-button{display:table-cell;width:auto;cursor:pointer;padding:8px;color:#999;font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif;text-align:center;text-transform:uppercase}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-button:first-child{padding-left:0}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-button:last-child{padding-right:0}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-button.vzb-label-primary{color:#607889;font-weight:700}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-button:hover{color:#4b98aa}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-br{border-top:1px solid #ededed;width:100%;height:28px;margin-top:28px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .thumb-tack-class{border-radius:50%;width:26px;height:26px;border:1px solid #cce6ed;display:inline-block;position:relative;float:right;margin-right:8px;margin-top:8px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .thumb-tack-class path{fill:#4b98aa}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .thumb-tack-class-ico{position:absolute!important;left:7px!important;top:4px!important;cursor:pointer}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .thumb-tack-class-ico-drag{cursor:move}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .thumb-tack-class-ico-drag svg{transform:translate(4px,3.5px);-webkit-transform:translate(4px,3.5px);-moz-transform:translate(4px,3.5px);-ms-transform:translate(4px,3.5px);-o-transform:translate(4px,3.5px);cursor:move}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .thumb-tack-class-ico-pin svg{transform:translate(4px,4px);-webkit-transform:translate(4px,4px);-moz-transform:translate(4px,4px);-ms-transform:translate(4px,4px);-o-transform:translate(4px,4px)}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .thumb-tack-class-ico::before{color:#4b98aa!important}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-checkbox{display:block;height:18px;margin:6px 0;position:relative}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-checkbox label{position:absolute;top:0;border-radius:4px;white-space:nowrap;cursor:pointer;width:18px;height:18px;background:#f2fafc;border:1px solid rgba(96,120,137,.2);text-indent:26px;-webkit-transition:color .3s;transition:color .3s}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-checkbox label.vzb-find-item-brokendata{color:#9fbbc1;text-decoration:line-through}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-checkbox label::after{position:absolute;top:4px;left:4px;filter:alpha(opacity=0);opacity:0;transform:rotate(-45deg);-webkit-transform:rotate(-45deg);-moz-transform:rotate(-45deg);-ms-transform:rotate(-45deg);-o-transform:rotate(-45deg);content:'';width:8px;height:4px;background:0 0;border:3px solid #607889;border-top:0;border-right:0}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-checkbox label:hover::after{filter:alpha(opacity=30);opacity:.3}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-checkbox input[type=checkbox]:checked+label{border:1px solid rgba(96,120,137,.5)}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-checkbox input[type=checkbox]:checked+label::after{filter:alpha(opacity=100);opacity:1}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog.notransition{-webkit-transition:max-height;transition:max-height}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-sublabel{color:#607889;font-weight:700;margin-bottom:16px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-sublabel .vzb-ip-select{color:#425663;font-weight:400}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog .vzb-dialog-paragraph{margin-bottom:20px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog.pinned .thumb-tack-class-ico-pin{background-color:#4b98aa;border:1px solid #4b98aa}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog.pinned .thumb-tack-class-ico-pin path{fill:#fff}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog.pinned .thumb-tack-class-ico::before{color:#fff!important}.vzb-tool .vzb-tool-dialogs .vzb-top-dialog{visibility:hidden}.vzb-tool .vzb-tool-dialogs .vzb-top-dialog.vzb-popup{z-index:-2}.vzb-tool .vzb-tool-dialogs .vzb-top-dialog.vzb-popup.vzb-active{z-index:20;visibility:visible}.vzb-tool .vzb-tool-dialogs .vzb-top-dialog.vzb-popup>.vzb-dialog-modal{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column}.vzb-tool .vzb-tool-dialogs .vzb-top-dialog.vzb-popup>.vzb-dialog-modal>.thumb-tack-class{position:absolute;right:0}.vzb-tool .vzb-tool-dialogs .vzb-top-dialog.vzb-popup>.vzb-dialog-modal>.thumb-tack-class.thumb-tack-class-ico-drag{right:34px}.vzb-tool .vzb-tool-dialogs .vzb-top-dialog.vzb-popup>.vzb-dialog-modal>.vzb-dialog-buttons,.vzb-tool .vzb-tool-dialogs .vzb-top-dialog.vzb-popup>.vzb-dialog-modal>.vzb-dialog-title{-webkit-box-flex:0;-webkit-flex:none;flex:none}.vzb-tool .vzb-tool-dialogs .vzb-top-dialog.vzb-popup>.vzb-dialog-modal>.vzb-dialog-content{-webkit-box-flex:1;-webkit-flex:1 1 auto;flex:1 1 auto}.vzb-tool .vzb-tool-dialogs .vzb-moreoptions{position:static;box-shadow:none}.vzb-tool .vzb-tool-dialogs .vzb-moreoptions .vzb-dialog-modal>.thumb-tack-class.thumb-tack-class-ico-drag,.vzb-tool .vzb-tool-dialogs .vzb-moreoptions .vzb-dialog-modal>.thumb-tack-class.thumb-tack-class-ico-pin{display:none}.vzb-tool .vzb-tool-dialogs .vzb-moreoptions .vzb-dialog-modal>.vzb-dialog-title{display:block;position:relative;margin:0 0 20px;padding:0}.vzb-tool .vzb-tool-dialogs .vzb-moreoptions .vzb-dialog-modal>.vzb-dialog-title .vzb-ip-holder{margin-top:25px;margin-left:38px}.vzb-tool .vzb-tool-dialogs .vzb-moreoptions .vzb-dialog-modal>.vzb-dialog-title .vzb-ip-holder vzb-ip-select{font-weight:400;line-height:20px}.vzb-tool .vzb-tool-dialogs .vzb-moreoptions .vzb-dialog-modal>.vzb-dialog-content{font-size:1em;padding-bottom:10px}.vzb-tool .vzb-tool-dialogs .vzb-moreoptions .vzb-dialog-modal>.vzb-dialog-buttons{padding-top:0;padding-bottom:0}.vzb-tool .vzb-tool-dialogs .vzb-moreoptions .vzb-dialog-modal>.vzb-dialog-buttons [data-click=closeDialog]{display:none}.vzb-tool .vzb-tool-dialogs .vzb-bs-holder{width:240px;margin:0 auto;position:relative}.vzb-tool .vzb-tool-dialogs .vzb-bs-holder .vzb-bs-svg{margin:0 auto;display:block;position:relative}.vzb-tool .vzb-tool-dialogs .vzb-bs-holder .vzb-bs-slider .vzb-bs-slider-thumb-arc{fill:none;pointer-events:none;stroke:#607889;stroke-width:2px;stroke-linejoin:round}.vzb-tool .vzb-tool-dialogs .vzb-bs-holder .vzb-bs-slider .vzb-bs-slider-extent{fill-opacity:.125;cursor:col-resize!important}.vzb-tool .vzb-tool-dialogs .vzb-bs-holder .vzb-bs-slider .vzb-bs-slider-thumb-label{pointer-events:none}.vzb-tool .vzb-tool-dialogs .vzb-bs-holder .vzb-bs-slider .vzb-bs-slider-thumb-badge{fill:#607889;stroke:#fff;stroke-width:2px;stroke-linejoin:round;stroke-opacity:1}.vzb-tool .vzb-tool-dialogs .vzb-bs-holder .vzb-bs-slider .background{fill-opacity:.1;shape-rendering:crispEdges;cursor:pointer!important}.vzb-tool .vzb-tool-dialogs.vzb-large .vzb-bs-holder,.vzb-tool .vzb-tool-dialogs.vzb-presentation .vzb-bs-holder{height:150px}.vzb-tool .vzb-tool-dialogs.vzb-medium .vzb-bs-holder{height:120px}.vzb-tool .vzb-tool-dialogs.vzb-small .vzb-bs-holder{height:90px}.vzb-tool .vzb-tool-dialogs .vzb-szs-holder{width:240px;margin:0 0 15px;position:relative}.vzb-tool .vzb-tool-dialogs .vzb-szs-holder .vzb-szs-svg{margin:0 auto;display:block;position:relative}.vzb-tool .vzb-tool-dialogs .vzb-szs-holder .vzb-szs-slider .vzb-szs-slider-thumb-arc{fill:none;pointer-events:none;stroke:#607889;stroke-width:2px;stroke-linejoin:round}.vzb-tool .vzb-tool-dialogs .vzb-szs-holder .vzb-szs-slider .vzb-szs-slider-extent{fill-opacity:.125;cursor:col-resize!important}.vzb-tool .vzb-tool-dialogs .vzb-szs-holder .vzb-szs-slider .vzb-szs-slider-thumb-label{pointer-events:none}.vzb-tool .vzb-tool-dialogs .vzb-szs-holder .vzb-szs-slider .vzb-szs-slider-thumb-badge{fill:#607889;stroke:#fff;stroke-width:2px;stroke-linejoin:round;stroke-opacity:1}.vzb-tool .vzb-tool-dialogs .vzb-szs-holder .vzb-szs-slider .background{fill-opacity:.1;shape-rendering:crispEdges;cursor:pointer!important}.vzb-tool .vzb-tool-dialogs.vzb-large .vzb-szs-holder,.vzb-tool .vzb-tool-dialogs.vzb-presentation .vzb-szs-holder{height:150px}.vzb-tool .vzb-tool-dialogs.vzb-medium .vzb-szs-holder{height:120px}.vzb-tool .vzb-tool-dialogs.vzb-small .vzb-szs-holder{height:90px}.vzb-tool .vzb-tool-dialogs .vzb-ip-holder{display:inline-block;vertical-align:middle}.vzb-tool .vzb-tool-dialogs .vzb-ip-holder .vzb-ip-select{display:inline-block;position:relative;margin:0 5px 0 11px;padding:5px 21px 5px 5px;border:1px solid #425663;border-radius:4px;cursor:pointer;max-width:170px;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;line-height:20px}.vzb-tool .vzb-tool-dialogs .vzb-ip-holder .vzb-ip-select::after{content:'';position:absolute;width:0;height:0;border:6px solid transparent;border-top:12px solid #425663;top:.7em;right:5px}.vzb-tool .vzb-tool-dialogs .vzb-ip-holder .vzb-ip-select:hover{background-color:#e3eef0}.vzb-tool .vzb-tool-dialogs .vzb-ip-holder .vzb-ip-info{display:inline-block;vertical-align:middle;height:1.1em;width:1.1em}.vzb-tool .vzb-tool-dialogs .vzb-ip-holder .vzb-ip-info .vzb-icon{overflow:visible;width:1.1em;height:1.1em}.vzb-tool .vzb-tool-dialogs .vzb-mmi-holder input[type=text]{margin-right:5px;width:auto;max-width:30%;padding:5px;display:inline-block}.vzb-tool .vzb-tool-dialogs .vzb-ss-holder{height:20px;margin:0 auto;position:relative}.vzb-tool .vzb-tool-dialogs .vzb-ss-holder::before{border-radius:5px;content:'';position:absolute;top:50%;margin-top:-3px;width:100%;height:6px;background-color:rgba(96,120,137,.3)}.vzb-tool .vzb-tool-dialogs .vzb-ss-holder.vzb-disabled::before{background-color:rgba(153,153,153,.2)}.vzb-tool .vzb-tool-dialogs .vzb-ss-holder.vzb-disabled .vzb-ss-slider,.vzb-tool .vzb-tool-dialogs .vzb-ss-holder.vzb-disabled .vzb-ss-slider-small{opacity:.5}.vzb-tool .vzb-tool-dialogs .vzb-ss-holder .vzb-ss-slider,.vzb-tool .vzb-tool-dialogs .vzb-ss-holder .vzb-ss-slider-small{position:absolute;top:50%;margin-top:-10px;width:100%;-webkit-appearance:none;background:0 0;outline:0!important;border:0;padding:0;font-size:15px;max-height:100%}.vzb-tool .vzb-tool-dialogs .vzb-ss-holder .vzb-ss-slider-small::-webkit-slider-thumb,.vzb-tool .vzb-tool-dialogs .vzb-ss-holder .vzb-ss-slider::-webkit-slider-thumb{border-radius:20px;-webkit-transition:left .1s ease-in-out;transition:left .1s ease-in-out;-webkit-appearance:none;cursor:pointer;background-color:#607889;width:20px;height:20px;border:3px solid #fff}.vzb-tool .vzb-tool-dialogs .vzb-ss-holder .vzb-ss-slider-small::-moz-range-thumb,.vzb-tool .vzb-tool-dialogs .vzb-ss-holder .vzb-ss-slider::-moz-range-thumb{border-radius:14px;-webkit-transition:left .1s ease-in-out;transition:left .1s ease-in-out;cursor:pointer;background:#607889;width:14px;height:14px;border:3px solid #fff}.vzb-tool .vzb-tool-dialogs .vzb-ss-holder .vzb-ss-slider-small::-ms-thumb,.vzb-tool .vzb-tool-dialogs .vzb-ss-holder .vzb-ss-slider::-ms-thumb{border-radius:14px;-webkit-transition:left .1s ease-in-out;transition:left .1s ease-in-out;cursor:pointer;background:#607889;height:14px;width:14px;border:3px solid #fff}.vzb-tool .vzb-tool-dialogs .vzb-ss-holder .vzb-ss-slider-small::-webkit-slider-thumb{width:15px;height:15px}.vzb-tool .vzb-tool-dialogs .vzb-ss-holder .vzb-ss-slider-small::-moz-range-thumb{width:9px;height:9px}.vzb-tool .vzb-tool-dialogs .vzb-cl-outer .vzb-cl-holder{height:100%;width:100%;overflow:hidden;position:relative}.vzb-tool .vzb-tool-dialogs .vzb-cl-outer .vzb-cl-colorlist{overflow:hidden}.vzb-tool .vzb-tool-dialogs .vzb-cl-outer .vzb-cl-option{padding-bottom:5px;padding-top:5px;cursor:pointer;padding-left:15px}.vzb-tool .vzb-tool-dialogs .vzb-cl-outer .vzb-cl-option .vzb-cl-color-sample{display:inline-block;width:20px;height:20px;border-radius:10px;margin-right:10px;cursor:pointer}.vzb-tool .vzb-tool-dialogs .vzb-cl-outer .vzb-cl-option .vzb-cl-color-legend{display:inline-block;vertical-align:super;cursor:pointer}.vzb-tool .vzb-tool-dialogs .vzb-cl-outer .vzb-cl-option .vzb-cl-color-legend:hover{text-decoration:underline}.vzb-tool .vzb-tool-dialogs .vzb-cl-outer .vzb-cl-option.vzb-cl-compact{display:inline-block;float:left}.vzb-tool .vzb-tool-dialogs .vzb-cl-outer .vzb-cl-option.vzb-cl-compact .vzb-cl-color-legend{display:none}.vzb-tool .vzb-tool-dialogs .vzb-cl-outer .vzb-cl-rainbow{width:20px;position:absolute;left:15px}.vzb-tool .vzb-tool-dialogs .vzb-cl-outer .vzb-cl-minimap{height:145px;width:100%}.vzb-tool .vzb-tool-dialogs .vzb-cl-outer .vzb-cl-minimap svg{height:100%}.vzb-tool .vzb-tool-dialogs .vzb-sc-holder input{margin:10px 10px 10px 0;width:auto}.vzb-tool .vzb-tool-dialogs .vzb-dl-holder .vzb-draggable{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;margin:auto;padding:5px 0;width:200px}.vzb-tool .vzb-tool-dialogs .vzb-dl-holder .vzb-draggable>div{padding-bottom:3px;opacity:.4}.vzb-tool .vzb-tool-dialogs .vzb-dl-holder .vzb-draggable [draggable=true]{position:relative;opacity:1;padding-bottom:3px}.vzb-tool .vzb-tool-dialogs .vzb-dl-holder .vzb-draggable [draggable=true].dragged{z-index:2}.vzb-tool .vzb-tool-dialogs .vzb-dl-holder .vzb-draggable [draggable=true].dragged li{cursor:move;background:#e3eef0;border-width:1px 3px;border-color:#666}.vzb-tool .vzb-tool-dialogs .vzb-dl-holder .vzb-draggable [draggable=true] li{cursor:move;background:#f2fafc;border:1px solid #9fbbc1}.vzb-tool .vzb-tool-dialogs .vzb-dl-holder .vzb-draggable [draggable=true] li.hover{background:#e3eef0;border-color:#666}.vzb-tool .vzb-tool-dialogs .vzb-dl-holder .vzb-draggable li{cursor:default;height:12px;border-radius:4px;background:#f2fafc;border:1px solid #9fbbc1;list-style:none;padding:2px 8px 5px 6px}.vzb-tool .vzb-tool-dialogs .vzb-dl-holder .over{border:2px dashed #333}.vzb-tool.vzb-large .vzb-tool-dialogs .vzb-dialogs-dialog.vzb-top-dialog,.vzb-tool.vzb-medium .vzb-tool-dialogs .vzb-dialogs-dialog.vzb-top-dialog{top:20px;bottom:auto}.vzb-tool.vzb-large .vzb-tool-dialogs .vzb-dialogs-dialog.vzb-popup,.vzb-tool.vzb-medium .vzb-tool-dialogs .vzb-dialogs-dialog.vzb-popup{position:absolute;top:20px;right:-10px;bottom:auto;left:auto;margin-right:60px}.vzb-tool.vzb-large .vzb-tool-dialogs .vzb-dialogs-dialog.vzb-popup.vzb-active,.vzb-tool.vzb-medium .vzb-tool-dialogs .vzb-dialogs-dialog.vzb-popup.vzb-active{position:absolute;top:20px;right:-10px;bottom:auto;left:auto}.vzb-tool.vzb-small .vzb-tool-dialogs .vzb-dialogs-dialog.vzb-popup.vzb-active{top:auto}.vzb-tool.vzb-small .vzb-presentationmode-switch{pointer-events:none}.vzb-tool.vzb-small .vzb-presentationmode-switch .vzb-dialog-checkbox input[type=checkbox]+label{background-color:#999;border:1px solid rgba(102,102,102,.5)}.vzb-tool.vzb-small .vzb-presentationmode-switch .vzb-dialog-checkbox input[type=checkbox]+label::after{filter:alpha(opacity=0);opacity:0}.vzb-tool.vzb-small.vzb-portrait .vzb-tool-dialogs .vzb-dialogs-dialog.vzb-popup{position:absolute;right:0;bottom:-450px;left:0;margin:auto}.vzb-tool.vzb-small.vzb-portrait .vzb-tool-dialogs .vzb-dialogs-dialog.vzb-popup.vzb-active{position:absolute;right:0;bottom:45px;left:0}.vzb-tool.vzb-small.vzb-landscape .vzb-dialogs-dialog.vzb-popup{position:absolute;top:-1000px;right:-10px;bottom:auto;left:auto;margin-right:60px}.vzb-tool.vzb-small.vzb-landscape .vzb-dialogs-dialog.vzb-popup.vzb-active{position:absolute;top:5px;right:-10px;bottom:auto;left:auto}.vzb-tool.vzb-small.vzb-landscape .vzb-dialogs-dialog.vzb-popup>.vzb-dialog-modal>.vzb-dialog-buttons{padding:3px 25px}.vzb-tool.vzb-small.vzb-landscape .vzb-dialogs-dialog.vzb-popup>.vzb-dialog-modal>.vzb-dialog-title{padding:15px 25px 10px}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-dialogs>.vzb-dialogs-dialog.vzb-top-dialog{margin-right:30px;top:auto;bottom:70px;left:110%}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-dialogs>.vzb-dialogs-dialog.vzb-popup,.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-dialogs>.vzb-dialogs-dialog.vzb-popup.vzb-active{position:absolute;top:auto;right:-10px;bottom:70px;left:auto}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-dialogs>.vzb-dialogs-dialog.vzb-sidebar{visibility:visible;display:block;margin:5px 5px 2px;position:static;box-shadow:none;background-color:#f2fafc;border-bottom:1px solid rgba(200,200,200,.4);z-index:initial}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-dialogs>.vzb-dialogs-dialog.vzb-sidebar .vzb-dialog-buttons{display:none;padding:5px 25px}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-dialogs>.vzb-dialogs-dialog.vzb-sidebar .vzb-dialog-modal{-webkit-box-flex:1;-webkit-flex:auto;flex:auto;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column;overflow:hidden}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-dialogs>.vzb-dialogs-dialog.vzb-sidebar .vzb-dialog-modal .thumb-tack-class.thumb-tack-class-ico-drag,.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-dialogs>.vzb-dialogs-dialog.vzb-sidebar .vzb-dialog-modal .thumb-tack-class.thumb-tack-class-ico-pin{display:none}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-dialogs>.vzb-dialogs-dialog.vzb-sidebar .vzb-dialog-title{padding:5px 25px}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-dialogs>.vzb-dialogs-dialog.vzb-sidebar .vzb-dialog-button{position:relative}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=colors].vzb-popup .vzb-dialog-content{overflow:visible}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=colors]{z-index:auto!important;-webkit-box-flex:0;-webkit-flex:none;flex:none}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=colors] .vzb-dialog-content{max-height:''}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=colors] .vzb-dialog-content .vzb-colorpicker-svg{z-index:10}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=colors] .vzb-dialog-title{display:inline-block;-webkit-box-flex:0;-webkit-flex-grow:0;flex-grow:0}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=colors] .vzb-cl-outer .vzb-cl-holder{max-height:'';overflow-y:hidden;overflow-x:hidden}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=colors] .vzb-cl-outer .vzb-cl-colorlist{overflow:visible}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=colors] .vzb-caxis-selector{-webkit-box-flex:0;-webkit-flex-grow:0;flex-grow:0}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=axes].vzb-popup .vzb-xaxis-minmax,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=axes].vzb-popup .vzb-yaxis-minmax{display:none}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=find] .vzb-find-filter{display:inline-block;position:relative;max-width:170px;padding:0 10px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=find].vzb-moreoptions .vzb-dialog-title .vzb-find-filter{padding-top:20px;margin-bottom:0}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=find].vzb-moreoptions .vzb-dialog-content{padding-bottom:0;margin-bottom:15px}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=find]{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column;-webkit-box-flex:1;-webkit-flex:auto;flex:auto}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=find] .vzb-dialog-buttons{display:block;-webkit-box-flex:0;-webkit-flex:none;flex:none}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=find] .vzb-dialog-button.vzb-label-primary{display:none}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=find] .vzb-dialog-content{-webkit-box-flex:1;-webkit-flex-grow:1;flex-grow:1}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=find] .vzb-dialog-content .vzb-dialog-content-fixed{height:310px;max-height:305px;min-width:140px}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=find] .vzb-dialog-title{display:inline-block;padding:0 0 0 20px;vertical-align:top;margin-top:0;-webkit-box-flex:0;-webkit-flex:none;flex:none}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=find] .vzb-find-filter{display:inline-block;position:relative;max-width:210px;top:0}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=find] .vzb-dialog-content-fixed{min-height:0;max-height:initial;height:auto;margin-top:5px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=show] .vzb-show-filter{display:inline-block;position:relative;max-width:170px;padding:0 10px}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=show]{-webkit-box-flex:1;-webkit-flex:auto;flex:auto}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=show] .vzb-dialog-content.vzb-dialog-content-fixed{height:310px;max-height:305px;min-width:140px}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=show] .vzb-dialog-title{display:inline-block;padding:15px 0 10px 20px;vertical-align:top}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=show] .vzb-show-filter{display:inline-block;position:relative;max-width:210px}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog[data-dlg=size].vzb-sidebar{-webkit-box-flex:0;-webkit-flex:none;flex:none}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog[data-dlg=size].vzb-sidebar .vzb-dialog-title,.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog[data-dlg=size].vzb-sidebar .vzb-saxis-selector{display:inline-block}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=size].vzb-sidebar .vzb-dialog-bubblesize,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=label] .vzb-dialog-content .vzb-bs-slider-thumb-arc{display:none}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog[data-dlg=label].vzb-sidebar{-webkit-box-flex:0;-webkit-flex:none;flex:none}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog[data-dlg=label].vzb-sidebar .vzb-dialog-title,.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog[data-dlg=label].vzb-sidebar .vzb-saxis-selector{display:inline-block}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist{display:-webkit-inline-box;display:-webkit-inline-flex;display:inline-flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-pack:start;-webkit-justify-content:flex-start;justify-content:flex-start;background-color:#fff;overflow:hidden;position:relative;text-align:center;width:100%;white-space:nowrap;padding-left:15px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-title,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom].vzb-sidebar .vzb-adaptminmaxzoom-switch,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom].vzb-sidebar .vzb-zoomonscrolling-switch,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=stack].vzb-sidebar .vzb-howtomerge,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=stack].vzb-sidebar .vzb-manual-sorting{display:none}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist button,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist input,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist keygen,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist select,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist textarea{font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist:-webkit-scrollbar{display:none}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn{width:40px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn[data-btn=hundredpercent]:active>.vzb-buttonlist-btn-icon{background-color:#4b98aa;border:1px solid #4b98aa;color:#fff}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn[data-btn=hundredpercent]:active>.vzb-buttonlist-btn-icon .vzb-icon path,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn[data-btn=hundredpercent]:active>.vzb-buttonlist-btn-icon .vzb-icon text{fill:#fff}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn[data-btn=hundredpercent] .fa{padding-left:0;padding-right:0}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn[data-btn=hundredpercent] .fa .vzb-icon{width:26px;vertical-align:top;font-size:10px;font-weight:900}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-item.item-active>span,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer.vzb-treemenu-horizontal.vzb-treemenu-list-item-leaf .vzb-treemenu-leaf-content .vzb-treemenu-leaf-content-item.vzb-treemenu-leaf-content-item-title{font-weight:700}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn[data-btn=hundredpercent] .fa .vzb-icon text{text-anchor:end;font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn[data-btn=hundredpercent] .fa .vzb-icon .percent{text-anchor:start}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom] .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon{-webkit-transition:background-color .1s ease-in,color .1s ease-in,border .1s ease-in,opacity .1s ease-in;transition:background-color .1s ease-in,color .1s ease-in,border .1s ease-in,opacity .1s ease-in}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom].vzb-moreoptions .vzb-dialog-title{margin-bottom:15px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom].vzb-moreoptions .vzb-dialog-title .vzb-dialog-zoom-buttonlist{padding-top:10px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom].vzb-sidebar>.vzb-dialog-modal>.vzb-dialog-title{padding-top:0}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=zoom].vzb-sidebar>.vzb-dialog-modal>.vzb-dialog-title .vzb-dialog-zoom-buttonlist{background-color:#f2fafc;padding-left:5px;vertical-align:middle}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=stack],.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog[data-dlg=zoom].vzb-sidebar{-webkit-box-flex:0;-webkit-flex:none;flex:none}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-dialogs-dialog.vzb-sidebar[data-dlg=stack] .vzb-dl-holder .vzb-draggable{height:initial}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions] .vzb-dialog-options-buttonlist{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;background-color:#f2fafc;overflow:hidden;position:relative;text-align:center;width:100%;white-space:nowrap}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions] .vzb-dialog-options-buttonlist button,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions] .vzb-dialog-options-buttonlist input,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions] .vzb-dialog-options-buttonlist keygen,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions] .vzb-dialog-options-buttonlist select,.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions] .vzb-dialog-options-buttonlist textarea{font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions] .vzb-dialog-options-buttonlist:-webkit-scrollbar{display:none}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions] .vzb-dialog-options-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon{-webkit-transition:background-color .1s ease-in,color .1s ease-in,border .1s ease-in,opacity .1s ease-in;transition:background-color .1s ease-in,color .1s ease-in,border .1s ease-in,opacity .1s ease-in}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions]>.vzb-dialog-modal>.vzb-dialog-content{padding:0}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions]>.vzb-dialog-modal>.vzb-dialog-content>.vzb-accordion{margin-top:1px}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions]>.vzb-dialog-modal>.vzb-dialog-content>.vzb-accordion .vzb-accordion-section{-webkit-transition:none;transition:none;overflow:hidden;max-height:41px;padding-bottom:10px;width:auto;border:0}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions]>.vzb-dialog-modal>.vzb-dialog-content>.vzb-accordion .vzb-accordion-section .vzb-dialog-title>span:first-child{display:block;padding:9px 15px 10px 10px;height:40px;background-color:#f2fafc;cursor:pointer;text-transform:uppercase}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions]>.vzb-dialog-modal>.vzb-dialog-content>.vzb-accordion .vzb-accordion-section .vzb-dialog-title>span:first-child::after{transform:rotate(45deg);-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);-o-transform:rotate(45deg);content:'';position:absolute;top:18px;right:20px;width:5px;height:5px;border-right:1px solid #607889;border-top:1px solid #607889}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions]>.vzb-dialog-modal>.vzb-dialog-content>.vzb-accordion .vzb-accordion-section.vzb-accordion-active{max-height:500px;-webkit-transition:max-height .3s ease-in-out;transition:max-height .3s ease-in-out}.vzb-tool .vzb-tool-dialogs .vzb-dialogs-dialog[data-dlg=moreoptions]>.vzb-dialog-modal>.vzb-dialog-content>.vzb-accordion .vzb-accordion-section.vzb-accordion-active .vzb-dialog-title>span:first-child::after{transform:rotate(135deg);-webkit-transform:rotate(135deg);-moz-transform:rotate(135deg);-ms-transform:rotate(135deg);-o-transform:rotate(135deg)}.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn{outline:0;background:0 0;border:0;text-align:center;display:inline-block;padding:5px 4px;width:60px}.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon{-webkit-transition:all .1s ease-in;transition:all .1s ease-in;border-radius:36px;cursor:pointer;background-color:#fff;border:1px solid #cce6ed;color:#4b98aa;display:inline-block;font-size:1.24em;height:26px;line-height:12px;padding:5px;text-align:center;width:26px}.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon .vzb-icon,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon .vzb-icon,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon .vzb-icon{height:14px;width:14px;vertical-align:top}.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon .vzb-icon path,.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon .vzb-icon text,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon .vzb-icon path,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon .vzb-icon text,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon .vzb-icon path,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-icon .vzb-icon text{fill:#4b98aa}.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-title,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-title,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-title{color:#9fbbc1;display:block;font-size:.625em;padding-top:1px;text-align:center;text-transform:uppercase}.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn.vzb-buttonlist-btn-more>.btn-icon,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn.vzb-buttonlist-btn-more>.btn-icon,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn.vzb-buttonlist-btn-more>.btn-icon{background-color:#fdfdfd}.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn.vzb-active-locked>.vzb-buttonlist-btn-icon,.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn.vzb-active>.vzb-buttonlist-btn-icon,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn.vzb-active-locked>.vzb-buttonlist-btn-icon,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn.vzb-active>.vzb-buttonlist-btn-icon,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn.vzb-active-locked>.vzb-buttonlist-btn-icon,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn.vzb-active>.vzb-buttonlist-btn-icon{background-color:#4b98aa;border:1px solid #4b98aa;color:#fff}.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn.vzb-active-locked>.vzb-buttonlist-btn-icon .vzb-icon path,.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn.vzb-active-locked>.vzb-buttonlist-btn-icon .vzb-icon text,.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn.vzb-active>.vzb-buttonlist-btn-icon .vzb-icon path,.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn.vzb-active>.vzb-buttonlist-btn-icon .vzb-icon text,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn.vzb-active-locked>.vzb-buttonlist-btn-icon .vzb-icon path,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn.vzb-active-locked>.vzb-buttonlist-btn-icon .vzb-icon text,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn.vzb-active>.vzb-buttonlist-btn-icon .vzb-icon path,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn.vzb-active>.vzb-buttonlist-btn-icon .vzb-icon text,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn.vzb-active-locked>.vzb-buttonlist-btn-icon .vzb-icon path,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn.vzb-active-locked>.vzb-buttonlist-btn-icon .vzb-icon text,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn.vzb-active>.vzb-buttonlist-btn-icon .vzb-icon path,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn.vzb-active>.vzb-buttonlist-btn-icon .vzb-icon text{fill:#fff}.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn.vzb-active-locked>.vzb-buttonlist-btn-title,.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn.vzb-active>.vzb-buttonlist-btn-title,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn.vzb-active-locked>.vzb-buttonlist-btn-title,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn.vzb-active>.vzb-buttonlist-btn-title,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn.vzb-active-locked>.vzb-buttonlist-btn-title,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn.vzb-active>.vzb-buttonlist-btn-title{color:#4b98aa}.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn.vzb-unavailable>.vzb-buttonlist-btn-icon,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn.vzb-unavailable>.vzb-buttonlist-btn-icon,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn.vzb-unavailable>.vzb-buttonlist-btn-icon{border:1px solid #cce6ed;opacity:.4}.vzb-tool .vzb-dialog-options-buttonlist .vzb-buttonlist-btn.vzb-unavailable>.vzb-buttonlist-btn-title,.vzb-tool .vzb-dialog-zoom-buttonlist .vzb-buttonlist-btn.vzb-unavailable>.vzb-buttonlist-btn-title,.vzb-tool .vzb-tool-buttonlist .vzb-buttonlist-btn.vzb-unavailable>.vzb-buttonlist-btn-title{opacity:.4}.vzb-tool.vzb-small .vzb-buttonlist-btn[data-btn=presentation]{pointer-events:none}.vzb-tool.vzb-small .vzb-buttonlist-btn[data-btn=presentation]>.vzb-buttonlist-btn-icon{background-color:rgba(253,253,253,.5)}.vzb-tool.vzb-small .vzb-buttonlist-btn[data-btn=presentation]>.vzb-buttonlist-btn-icon .vzb-icon path{fill:rgba(159,187,193,.4)}.vzb-tool.vzb-small .vzb-buttonlist-btn[data-btn=presentation]>.vzb-buttonlist-btn-title{color:rgba(159,187,193,.4)}.vzb-tool.vzb-small.vzb-portrait .vzb-tool-buttonlist .vzb-buttonlist-btn{margin-bottom:20px;width:60px}.vzb-tool.vzb-landscape .vzb-tool-buttonlist .vzb-buttonlist-btn,.vzb-tool.vzb-large .vzb-tool-buttonlist .vzb-buttonlist-btn,.vzb-tool.vzb-medium .vzb-tool-buttonlist .vzb-buttonlist-btn{margin-right:20px;width:60px}.vzb-tool.vzb-landscape .vzb-tool-buttonlist .vzb-buttonlist-btn>.vzb-btn-icon,.vzb-tool.vzb-large .vzb-tool-buttonlist .vzb-buttonlist-btn>.vzb-btn-icon,.vzb-tool.vzb-medium .vzb-tool-buttonlist .vzb-buttonlist-btn>.vzb-btn-icon{font-size:1.24em;height:36px;padding:9px;width:36px}.vzb-tool.vzb-landscape .vzb-tool-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-title,.vzb-tool.vzb-large .vzb-tool-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-title,.vzb-tool.vzb-medium .vzb-tool-buttonlist .vzb-buttonlist-btn>.vzb-buttonlist-btn-title{font-size:.625em;padding-top:2px}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-buttonlist .vzb-buttonlist-btn{margin-right:0;width:58px}.vzb-tool.vzb-large.vzb-dialog-expand-true .vzb-tool-buttonlist .vzb-buttonlist-btn.vzb-dialog-side-btn{display:none}.vzb-tool .vzb-tool-treemenu{position:absolute;top:0;right:0;z-index:9998;width:100%;height:100%}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-background{background-color:#fdfdfd;opacity:.4;width:100%;height:100%}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer{-ms-box-shadow:0 8px 15px rgba(0,0,0,.24);-o-box-shadow:0 8px 15px rgba(0,0,0,.24);box-shadow:0 8px 15px rgba(0,0,0,.24);position:absolute;background-color:#fff;border-top:1px solid #f7f7f7;padding:0}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer.vzb-treemenu-abs-pos-vert{margin-top:0;margin-bottom:0}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer.vzb-treemenu-abs-pos-horiz{margin-right:0;margin-left:0}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap{-webkit-transition:all .3s ease-in-out;transition:all .3s ease-in-out;padding:0 25px 10px;overflow-y:auto}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap *{box-sizing:border-box}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap.notransition{-webkit-transition:none;transition:none}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-close{position:relative;float:right;top:10px;right:-15px}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-close .vzb-treemenu-close-icon{fill:#607889;fill-opacity:.7;width:25px;height:25px;cursor:pointer}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-close .vzb-treemenu-close-icon:hover{fill-opacity:1}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-title{display:inline-block;color:#607889;font-size:1.24em;padding:25px 25px 10px 5px}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-scaletypes{position:relative;right:-10px;top:30px;font-size:.8em;font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif;float:right}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-scaletypes span{padding:2px 5px;border:1px solid #9fbbc1;color:#425663;margin-left:-1px;cursor:pointer}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-scaletypes span:hover{background-color:#e3eef0;color:#4b98aa}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-scaletypes span:first-child{border-radius:4px 0 0 4px}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-scaletypes span:last-child{border-radius:0 4px 4px 0}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-scaletypes .vzb-treemenu-scaletypes-active{background-color:#e3eef0;color:#4b98aa;pointer-events:none}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-scaletypes .vzb-treemenu-scaletypes-disabled{visibility:hidden;color:#e3eef0;border:0;pointer-events:none}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-search-wrap{padding:5px}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-search{border-radius:4px;-ms-box-sizing:border-box;-o-box-sizing:border-box;box-sizing:border-box;width:100%;display:block;border:1px solid rgba(153,153,153,.4);padding:9px;outline:0;font-size:.8em;font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-horizontal .vzb-treemenu-list>.vzb-treemenu-list-item-children:hover::after,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-horizontal>.vzb-treemenu-list-item-children:hover::after,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-vertical .vzb-treemenu-list>.vzb-treemenu-list-item-children.marquee:hover::before,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-vertical>.vzb-treemenu-list-item-children.marquee:hover::before,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-horizontal .vzb-treemenu-list>.vzb-treemenu-list-item-children:hover::after,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-horizontal>.vzb-treemenu-list-item-children:hover::after,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-vertical .vzb-treemenu-list>.vzb-treemenu-list-item-children.marquee:hover::before,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-vertical>.vzb-treemenu-list-item-children.marquee:hover::before{background-color:#e3eef0;outline:#e3eef0 solid 5px}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-search:focus{border:1px solid rgba(153,153,153,.6)}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-search+.vzb-treemenu-list{position:relative;margin-top:10px;left:0}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top{list-style:none;padding:0;margin:0;left:100%}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-horizontal .vzb-treemenu-list>.vzb-treemenu-list-item,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-horizontal>.vzb-treemenu-list-item,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-horizontal .vzb-treemenu-list>.vzb-treemenu-list-item,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-horizontal>.vzb-treemenu-list-item{height:38px;padding:0}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-horizontal .vzb-treemenu-list>.vzb-treemenu-list-item .vzb-treemenu-list-item-label,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-horizontal>.vzb-treemenu-list-item .vzb-treemenu-list-item-label,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-horizontal .vzb-treemenu-list>.vzb-treemenu-list-item .vzb-treemenu-list-item-label,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-horizontal>.vzb-treemenu-list-item .vzb-treemenu-list-item-label{line-height:17px;padding:10px 0}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-horizontal .vzb-treemenu-list>.vzb-treemenu-list-item-children::after,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-horizontal>.vzb-treemenu-list-item-children::after,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-horizontal .vzb-treemenu-list>.vzb-treemenu-list-item-children::after,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-horizontal>.vzb-treemenu-list-item-children::after{content:'';display:block;position:relative;left:calc(100% - 17px);top:-25px;width:0;height:0;border:6px solid transparent;border-left:6px solid #666;pointer-events:none;z-index:1}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-vertical .vzb-treemenu-list>.vzb-treemenu-list-item .vzb-treemenu-list-item-label,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-vertical>.vzb-treemenu-list-item .vzb-treemenu-list-item-label,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-vertical .vzb-treemenu-list>.vzb-treemenu-list-item .vzb-treemenu-list-item-label,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-vertical>.vzb-treemenu-list-item .vzb-treemenu-list-item-label{line-height:16px;padding:10px 0}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-vertical .vzb-treemenu-list>.vzb-treemenu-list-item-children,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-vertical>.vzb-treemenu-list-item-children,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-vertical .vzb-treemenu-list>.vzb-treemenu-list-item-children,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-vertical>.vzb-treemenu-list-item-children{position:relative}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-vertical .vzb-treemenu-list>.vzb-treemenu-list-item-children::before,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-top.vzb-treemenu-vertical>.vzb-treemenu-list-item-children::before,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-vertical .vzb-treemenu-list>.vzb-treemenu-list-item-children::before,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list.vzb-treemenu-vertical>.vzb-treemenu-list-item-children::before{content:'';display:block;position:absolute;right:5px;width:0;height:0;border:6px solid transparent;border-left:6px solid #666;margin-top:12px;pointer-events:none;z-index:1}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer{position:absolute;background-color:#fff}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer .vzb-treemenu-list{display:none}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer.vzb-treemenu-horizontal{-ms-box-shadow:4px 8px 15px rgba(0,0,0,.2);-o-box-shadow:4px 8px 15px rgba(0,0,0,.2);box-shadow:4px 8px 15px rgba(0,0,0,.2);width:0;top:0;bottom:0;left:100%;z-index:2}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer.vzb-treemenu-horizontal .vzb-treemenu-list{overflow-y:auto;max-height:100%}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer.vzb-treemenu-horizontal .vzb-treemenu-list .vzb-treemenu-list-item:not(.vzb-treemenu-list-item-children) .vzb-treemenu-list-item-label span{margin-right:5px}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer.vzb-treemenu-horizontal.active{top:-1px;bottom:0;clear:both;border-left:1px solid #e3eef0;border-top:1px solid #f7f7f7}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer.vzb-treemenu-horizontal.active>.vzb-treemenu-list{display:block}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer.vzb-treemenu-horizontal.vzb-treemenu-list-item-leaf{background-color:#f2fafc;overflow:hidden;cursor:pointer}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer.vzb-treemenu-horizontal.vzb-treemenu-list-item-leaf .vzb-treemenu-leaf-content{overflow-y:auto;max-height:calc(100% - 60px)}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer.vzb-treemenu-horizontal.vzb-treemenu-list-item-leaf .vzb-treemenu-leaf-content .vzb-treemenu-leaf-content-item{padding:10px 15px 0;display:block;overflow:hidden;white-space:normal;text-overflow:ellipsis;position:relative;color:#666;font-size:.8em;font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer.vzb-treemenu-vertical{position:relative;border:0;background-color:#fff;left:0;padding-left:15px;height:0}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer.vzb-treemenu-vertical.active{height:auto;top:inherit;bottom:inherit}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer.vzb-treemenu-vertical.active>.vzb-treemenu-list{display:block}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-outer.vzb-treemenu-vertical.vzb-treemenu-list-item-leaf{height:0}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-item{padding:5px 0;background-color:#fff;overflow:hidden;white-space:nowrap}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-item>.vzb-treemenu-list-item-label{left:0}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-item:hover{background-color:#e3eef0}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-item.marquee:not(:hover)>.vzb-treemenu-list-item-label span{left:0!important}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-item.marquee:hover>.vzb-treemenu-list-item-label span{text-overflow:inherit;overflow:visible;-webkit-animation:marquee 5s linear infinite;animation:marquee 5s linear infinite}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-item.marquee:hover>.vzb-treemenu-list-item-label span::after{content:attr(data-content);padding-left:30px}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-item+.vzb-treemenu-list-item-special{margin-top:15px}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-item-label{padding:5px 0;margin:0;display:block;cursor:pointer;color:#666;font-size:.8em;font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-item-label span{display:block;position:relative;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin:0 25px 0 5px}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer.vzb-treemenu-open-left-side .vzb-treemenu-horizontal.vzb-treemenu-list-outer.active{left:auto;right:100%}.vzb-tool.vzb-large .vzb-treemenu-wrap-outer.vzb-align-x-right,.vzb-tool.vzb-medium .vzb-treemenu-wrap-outer.vzb-align-x-right,.vzb-tool.vzb-presentation .vzb-treemenu-wrap-outer.vzb-align-x-right{right:60px}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer.vzb-treemenu-open-left-side .vzb-treemenu-horizontal .vzb-treemenu-list-outer .vzb-treemenu-list>.vzb-treemenu-list-item>.vzb-treemenu-list-item-label span,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer.vzb-treemenu-open-left-side .vzb-treemenu-horizontal.vzb-treemenu-list-top>.vzb-treemenu-list-item>.vzb-treemenu-list-item-label span{margin-right:5px}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer.vzb-treemenu-open-left-side .vzb-treemenu-horizontal .vzb-treemenu-list-outer .vzb-treemenu-list>.vzb-treemenu-list-item-children,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer.vzb-treemenu-open-left-side .vzb-treemenu-horizontal.vzb-treemenu-list-top>.vzb-treemenu-list-item-children{padding-left:16px}.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer.vzb-treemenu-open-left-side .vzb-treemenu-horizontal .vzb-treemenu-list-outer .vzb-treemenu-list>.vzb-treemenu-list-item-children::after,.vzb-tool .vzb-tool-treemenu .vzb-treemenu-wrap-outer.vzb-treemenu-open-left-side .vzb-treemenu-horizontal.vzb-treemenu-list-top>.vzb-treemenu-list-item-children::after{left:-14px;border:6px solid transparent;border-right:6px solid #666}@-webkit-keyframes marquee{from{left:0}}@keyframes marquee{from{left:0}}.vzb-tool.vzb-small .vzb-treemenu-wrap-outer{position:absolute;top:10%;left:10%;width:80%;height:80%}.vzb-tool.vzb-small .vzb-treemenu-wrap-outer .vzb-treemenu-wrap{max-height:100%}.vzb-tool.vzb-small .vzb-treemenu-wrap-outer .vzb-treemenu-wrap .vzb-treemenu-list-item{padding:0}.vzb-tool.vzb-small .vzb-treemenu-wrap-outer.vzb-align-x-center{left:50%}.vzb-tool.vzb-small .vzb-treemenu-wrap-outer .active{display:block}.vzb-tool.vzb-medium .vzb-treemenu-wrap-outer.vzb-align-y-top{top:40px}.vzb-tool.vzb-medium .vzb-treemenu-wrap-outer.vzb-align-y-bottom{bottom:65px}.vzb-tool.vzb-medium .vzb-treemenu-wrap-outer.vzb-align-x-left{left:60px}.vzb-tool.vzb-medium .vzb-treemenu-wrap-outer.vzb-align-x-center{left:50%}.vzb-tool.vzb-large .vzb-treemenu-wrap-outer.vzb-align-y-top,.vzb-tool.vzb-presentation .vzb-treemenu-wrap-outer.vzb-align-y-top{top:50px}.vzb-tool.vzb-large .vzb-treemenu-wrap-outer.vzb-align-y-bottom,.vzb-tool.vzb-presentation .vzb-treemenu-wrap-outer.vzb-align-y-bottom{bottom:90px}.vzb-tool.vzb-large .vzb-treemenu-wrap-outer.vzb-align-x-left,.vzb-tool.vzb-presentation .vzb-treemenu-wrap-outer.vzb-align-x-left{left:60px}.vzb-tool.vzb-large .vzb-treemenu-wrap-outer.vzb-align-x-center,.vzb-tool.vzb-presentation .vzb-treemenu-wrap-outer.vzb-align-x-center{left:50%}.vzb-tool .vzb-tool-datawarning{position:absolute;top:0;right:0;height:100%;width:100%}.vzb-tool .vzb-tool-datawarning .vzb-data-warning-background{background-color:#fdfdfd;height:100%;opacity:.4;width:100%}.vzb-tool .vzb-tool-datanotes,.vzb-tool .vzb-tool-datawarning .vzb-data-warning-box{background-color:#fff;border-top:1px solid #f7f7f7;-webkit-box-orient:vertical;-webkit-box-direction:normal}.vzb-tool .vzb-tool-datawarning .vzb-data-warning-box{-ms-box-shadow:0 8px 15px rgba(0,0,0,.24);-o-box-shadow:0 8px 15px rgba(0,0,0,.24);box-shadow:0 8px 15px rgba(0,0,0,.24);-webkit-transition:all .3s ease-in-out;transition:all .3s ease-in-out;padding:0 15px 10px 25px;overflow:hidden;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column}.vzb-tool .vzb-tool-datawarning .vzb-data-warning-box .vzb-data-warning-link{color:#fc6b38;font-size:1.24em;margin:25px 30px 10px 5px}.vzb-tool .vzb-tool-datawarning .vzb-data-warning-box .vzb-data-warning-link svg{height:25px;margin-bottom:-1px;width:25px}.vzb-tool .vzb-tool-datawarning .vzb-data-warning-box .vzb-data-warning-link div{display:inline-block;margin-left:10px;text-transform:uppercase;white-space:normal}.vzb-tool .vzb-tool-datawarning .vzb-data-warning-box .vzb-data-warning-link path{fill:#fc6b38}.vzb-tool .vzb-tool-datawarning .vzb-data-warning-box .vzb-data-warning-title{color:#607889;font-size:1.24em;margin:15px 30px 10px 5px;white-space:normal}.vzb-tool .vzb-tool-datawarning .vzb-data-warning-box .vzb-data-warning-body{font-size:1em;padding:10px 30px 10px 5px;color:#333;white-space:normal;line-height:150%;height:80%;overflow:auto}.vzb-tool .vzb-tool-datawarning .vzb-data-warning-box .vzb-data-warning-body a{color:#fc6b38;text-decoration:none}.vzb-tool .vzb-tool-datawarning .vzb-data-warning-box .vzb-data-warning-body a:hover{text-decoration:underline}.vzb-tool .vzb-tool-datawarning .vzb-data-warning-box .vzb-data-warning-close{cursor:pointer;fill:#607889;fill-opacity:.7;height:25px;position:absolute;right:10px;top:10px;width:25px}.vzb-tool .vzb-tool-datawarning .vzb-data-warning-box .vzb-data-warning-close:hover{fill-opacity:1}.vzb-tool.vzb-small.vzb-portrait .vzb-data-warning-box{position:absolute;top:10%;left:5%;bottom:60px;width:90%;height:80%}.vzb-tool.vzb-small.vzb-portrait .vzb-data-warning-box .vzb-data-warning-link,.vzb-tool.vzb-small.vzb-portrait .vzb-data-warning-box .vzb-data-warning-title{font-size:1em}.vzb-tool.vzb-small.vzb-portrait .vzb-data-warning-box .vzb-data-warning-body{font-size:.8em}.vzb-tool.vzb-small.vzb-landscape .vzb-data-warning-box{position:absolute;top:10%;left:10%;height:80%;margin-right:10px;right:60px;width:80%}.vzb-tool.vzb-small.vzb-landscape .vzb-data-warning-box .vzb-data-warning-link,.vzb-tool.vzb-small.vzb-landscape .vzb-data-warning-box .vzb-data-warning-title{font-size:1em}.vzb-tool.vzb-small.vzb-landscape .vzb-data-warning-box .vzb-data-warning-body{font-size:.8em}.vzb-tool.vzb-medium .vzb-data-warning-box{position:absolute;top:10%;left:20%;height:80%;width:60%}.vzb-tool.vzb-medium .vzb-data-warning-box .vzb-data-warning-link,.vzb-tool.vzb-medium .vzb-data-warning-box .vzb-data-warning-title{font-size:1.24em}.vzb-tool.vzb-medium .vzb-data-warning-box .vzb-data-warning-body{font-size:.8em}.vzb-tool.vzb-large .vzb-data-warning-box{position:absolute;top:10%;left:25%;width:50%;height:80%}.vzb-tool.vzb-large .vzb-data-warning-box .vzb-data-warning-link,.vzb-tool.vzb-large .vzb-data-warning-box .vzb-data-warning-title{font-size:1.24em}.vzb-tool.vzb-large .vzb-data-warning-box .vzb-data-warning-body{font-size:1em}.vzb-tool .vzb-tool-datanotes{position:absolute;top:0;right:0;-ms-box-shadow:0 8px 15px rgba(0,0,0,.24);-o-box-shadow:0 8px 15px rgba(0,0,0,.24);box-shadow:0 8px 15px rgba(0,0,0,.24);z-index:9997;padding:30px 15px 10px 25px;overflow:hidden;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;width:300px;min-height:100px}.vzb-tool .vzb-tool-datanotes.vzb-blur{z-index:0}.vzb-tool .vzb-tool-datanotes .vzb-data-notes-link{-webkit-box-flex:0;-webkit-flex:0 0 25px;flex:0 0 25px;font-size:1.24em;margin:5px 5px 10px}.vzb-tool .vzb-tool-datanotes .vzb-data-notes-link a{color:#4b98aa;text-decoration:none}.vzb-tool .vzb-tool-datanotes .vzb-data-notes-link a:hover{text-decoration:underline}.vzb-tool .vzb-tool-datanotes .vzb-data-notes-body{font-size:1em;-webkit-box-flex:1;-webkit-flex:1 1 auto;flex:1 1 auto;padding:0 30px 0 5px;color:#333;white-space:normal;overflow:auto}.vzb-tool .vzb-tool-datanotes .vzb-data-notes-body a{color:#4b98aa;text-decoration:none}.vzb-tool .vzb-tool-datanotes .vzb-data-notes-body a:hover{text-decoration:underline}.vzb-tool .vzb-tool-datanotes .vzb-data-notes-close{cursor:pointer;fill:#607889;fill-opacity:.7;height:25px;position:absolute;right:5px;top:5px;width:25px}.vzb-tool .vzb-tool-datanotes .vzb-data-notes-close:hover{fill-opacity:1}.vzb-tool .vzb-tool-datanotes:not(.vzb-data-notes-pinned)::after{content:'';display:block;position:absolute;width:100%;height:50px;bottom:0;box-shadow:inset 0 -50px 30px -20px #fff}.vzb-tool.vzb-small .vzb-tool-datanotes{width:300px;max-height:150px}.vzb-tool.vzb-small .vzb-tool-datanotes .vzb-data-notes-body{max-height:70px}.vzb-tool.vzb-small .vzb-tool-datanotes.vzb-data-notes-pinned{max-height:200px}.vzb-tool.vzb-small .vzb-tool-datanotes.vzb-data-notes-pinned .vzb-data-notes-body{max-height:120px}.vzb-tool.vzb-small .vzb-data-notes-link{font-size:1em}.vzb-tool.vzb-small .vzb-data-notes-body{font-size:.8em}.vzb-tool.vzb-medium .vzb-tool-datanotes{width:350px;max-height:175px}.vzb-tool.vzb-medium .vzb-tool-datanotes .vzb-data-notes-body{max-height:95px}.vzb-tool.vzb-medium .vzb-tool-datanotes.vzb-data-notes-pinned{max-height:300px}.vzb-tool.vzb-medium .vzb-tool-datanotes.vzb-data-notes-pinned .vzb-data-notes-body{max-height:220px}.vzb-tool.vzb-medium .vzb-data-notes-link{font-size:1.24em}.vzb-tool.vzb-medium .vzb-data-notes-body{font-size:.8em}.vzb-tool.vzb-large .vzb-tool-datanotes{width:400px;max-height:200px}.vzb-tool.vzb-large .vzb-tool-datanotes .vzb-data-notes-body{max-height:120px}.vzb-tool.vzb-large .vzb-tool-datanotes.vzb-data-notes-pinned{max-height:400px}.vzb-tool.vzb-large .vzb-tool-datanotes.vzb-data-notes-pinned .vzb-data-notes-body{max-height:320px}.vzb-tool.vzb-large .vzb-data-notes-link{font-size:1.24em}.vzb-tool.vzb-large .vzb-data-notes-body{font-size:1em}.vzb-tool-barchart .vzb-barchart .vzb-bc-bar{stroke:none}.vzb-tool-barchart .vzb-barchart .vzb-bc-year{fill:#999;text-anchor:end}.vzb-tool-bubblechart .vzb-bubblechart .vzb-zoomin{cursor:url(./_/_/node_modules/vizabi/build/dist/assets/cursors/zoom-in.cur),auto}.vzb-tool-bubblechart .vzb-bubblechart .vzb-zoomin .vzb-bc-entity{cursor:url(./_/_/node_modules/vizabi/build/dist/assets/cursors/zoom-in.cur),auto!important}.vzb-tool-bubblechart .vzb-bubblechart .vzb-zoomout{cursor:url(./_/_/node_modules/vizabi/build/dist/assets/cursors/zoom-out.cur),auto}.vzb-tool-bubblechart .vzb-bubblechart .vzb-zoomout .vzb-bc-entity{cursor:url(./_/_/node_modules/vizabi/build/dist/assets/cursors/zoom-out.cur),auto!important}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-labels-crop{overflow:visible}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-zoom-rect{fill:none;stroke:#999}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-eventarea{pointer-events:all;fill:none}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-entity .vzb-bc-trailsegment{cursor:pointer}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-entity .vzb-bc-trailsegment line{pointer-events:none;stroke-width:2}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-bubbles .vzb-bc-entity,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-trails .vzb-bc-entity{stroke:#333;stroke-opacity:.7;cursor:pointer;pointer-events:visible}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg.vzb-zoomin{cursor:-webkit-zoom-in;cursor:zoom-in}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg.vzb-zoomin .vzb-bc-entity{cursor:-webkit-zoom-in!important;cursor:zoom-in!important}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg.vzb-zoomout{cursor:-webkit-zoom-out;cursor:zoom-out}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg.vzb-zoomout .vzb-bc-entity{cursor:-webkit-zoom-out!important;cursor:zoom-out!important}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-labels .vzb-label-fill{pointer-events:visible}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-labels .vzb-bc-entity .vzb-bc-label-x{-webkit-transition:opacity .2s linear;transition:opacity .2s linear;fill:#607889;text-anchor:middle;dominant-baseline:middle;pointer-events:visible;font-size:.9em;cursor:pointer;stroke:#fff;stroke-width:2px}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-labels .vzb-bc-entity .vzb-bc-label-x-icon{-webkit-transition:opacity .2s linear;transition:opacity .2s linear;fill:#fff}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-labels .vzb-bc-entity .vzb-label-glow{stroke-width:8px;fill:none;opacity:0}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-labels .vzb-bc-entity.vzb-highlighted .vzb-label-glow{opacity:.8}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-labels .vzb-bc-entity.vzb-label-boxremoved:not(.vzb-highlighted) .vzb-label-fill{opacity:0}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-labels .vzb-bc-entity.vzb-label-boxremoved:not(.vzb-highlighted) .vzb-label-glow{stroke:none}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-bubble-crown .vzb-crown,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-bubble-crown .vzb-crown-glow{pointer-events:none}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-bubble-crown .vzb-crown{stroke:#333}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-bubble-crown .vzb-crown-glow{stroke-width:6px;fill:none;opacity:.8}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-tooltip .vzb-tooltip-glow{stroke-width:8px;fill:none;opacity:0}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-lines .vzb-bc-entity line{stroke:#666;opacity:.8}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-c-title,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-axis-s-title{opacity:.3}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-projection-x,.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-projection-y{stroke-dasharray:2 4;stroke:#999;opacity:0}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-line{fill:none;stroke:#999;stroke-width:1px}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-year{filter:alpha(opacity=30);opacity:.3;font-size:15em;fill:#999;text-anchor:middle;-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.vzb-tool-bubblechart.vzb-presentation .vzb-bubblechart-svg .vzb-bc-axis-x text,.vzb-tool-bubblechart.vzb-presentation .vzb-bubblechart-svg .vzb-bc-axis-y text,.vzb-tool-bubblechart.vzb-presentation .vzb-bubblechart-svg .vzb-bc-labels,.vzb-tool-linechart.vzb-presentation .vzb-linechart .vzb-lc-axis-x text,.vzb-tool-linechart.vzb-presentation .vzb-linechart .vzb-lc-axis-y text,.vzb-tool-linechart.vzb-presentation .vzb-linechart .vzb-lc-labels{font-size:1.6em}.vzb-tool-bubblechart .vzb-bubblechart .vzb-bubblechart-svg .vzb-axis-value text{fill:#607889}.vzb-tool-bubblechart.vzb-large .vzb-bubblechart-svg .vzb-bc-bubbles .vzb-bc-entity{stroke-opacity:1}.vzb-tool-bubblechart.vzb-medium .vzb-bubblechart-svg .vzb-bc-bubbles .vzb-bc-entity{stroke-opacity:.8}.vzb-tool-bubblechart.vzb-small .vzb-bubblechart-svg .vzb-bc-bubbles .vzb-bc-entity{stroke-opacity:.7}.vzb-tool-linechart .vzb-tool-stage{bottom:0}.vzb-tool-linechart .vzb-lc-timeslider{position:absolute;bottom:0;width:100%}.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-projection-x,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-projection-y,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-vertical-now{stroke-dasharray:2 4;stroke:#999;opacity:0}.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-line,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-line-shadow{fill:none;stroke-linecap:round}.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-circle{stroke:#000}.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-entity,.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-entity.vzb-hovered{opacity:.9}.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-entity.vzb-dimmed{opacity:.3}.vzb-tool-linechart .vzb-linechart .vzb-linechart-svg .vzb-lc-entity.vzb-selected{opacity:1}.vzb-tool-linechart.vzb-large .vzb-linechart .vzb-lc-line{stroke-width:8px}.vzb-tool-linechart.vzb-large .vzb-linechart .vzb-lc-line-shadow{stroke-width:11px}.vzb-tool-linechart.vzb-large .vzb-linechart .vzb-lc-circle{stroke-width:3px}.vzb-tool-linechart.vzb-medium .vzb-linechart .vzb-lc-line{stroke-width:6px}.vzb-tool-linechart.vzb-medium .vzb-linechart .vzb-lc-line-shadow{stroke-width:8px}.vzb-tool-linechart.vzb-medium .vzb-linechart .vzb-lc-circle{stroke-width:3px}.vzb-tool-linechart.vzb-small .vzb-linechart .vzb-lc-line{stroke-width:5px}.vzb-tool-linechart.vzb-small .vzb-linechart .vzb-lc-line-shadow{stroke-width:7px}.vzb-tool-linechart.vzb-small .vzb-linechart .vzb-lc-circle{stroke-width:2px}.vzb-tool-mountainchart{visibility:visible!important}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-eventarea{fill:none;pointer-events:all}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-mountain{stroke:#fff;stroke-opacity:.5;stroke-width:1px;cursor:pointer}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-mountain.vzb-selected{stroke:#000}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-probe text{dominant-baseline:hanging;fill:#607889;pointer-events:none}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-probe text.vzb-mc-probe-extremepoverty{font-variant:small-caps;letter-spacing:.15em;opacity:.7}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-probe .vzb-mc-probe-value-dl,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-probe .vzb-mc-probe-value-ul{text-anchor:end}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-probe .vzb-mc-probe-value-dr,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-probe .vzb-mc-probe-value-ur{text-anchor:start}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-probe line{stroke:#999;stroke-dasharray:5 5;pointer-events:none}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-mountains-labels circle,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-mountains-labels text{cursor:pointer;fill:#607889}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-mountains-labels .vzb-highlight .vzb-mc-label-shadow{stroke:#ff0}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-mountains-labels .vzb-mc-label .vzb-mc-label-x-text{-webkit-transition:opacity .2s linear;transition:opacity .2s linear;cursor:pointer;fill:#607889;text-anchor:middle;dominant-baseline:middle;pointer-events:none;font-size:.9em;stroke:none}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-mountains-labels .vzb-mc-label .vzb-mc-label-x-text.vzb-revert-color{fill:#607889}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-mountains-labels .vzb-mc-label .vzb-mc-label-x-icon{-webkit-transition:opacity .2s linear;transition:opacity .2s linear;fill:#fff;pointer-events:none}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-mountains-labels .vzb-mc-label .vzb-mc-label-x{-webkit-transition:opacity .2s linear;transition:opacity .2s linear;cursor:pointer;pointer-events:all;fill:#607889;stroke:#fff;stroke-width:2px}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-mountains-labels .vzb-mc-label .vzb-mc-label-x.vzb-revert-color{fill:#fff;stroke:#607889}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-x,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-y,.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-y-title{pointer-events:none}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-axis-x-title{text-anchor:end;pointer-events:none}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-line{fill:none;stroke:#999;stroke-width:1px}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-year{filter:alpha(opacity=30);opacity:.3;fill:#607889;text-anchor:end;-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;pointer-events:none}.vzb-tool-mountainchart .vzb-mountainchart .vzb-mountainchart-svg .vzb-mc-tooltip text{text-anchor:middle}.vzb-tool-mountainchart.vzb-presentation .vzb-mountainchart .vzb-mc-axis-x text,.vzb-tool-mountainchart.vzb-presentation .vzb-mountainchart .vzb-mc-axis-y text,.vzb-tool-mountainchart.vzb-presentation .vzb-mountainchart .vzb-mc-labels,.vzb-tool-mountainchart.vzb-presentation .vzb-mountainchart .vzb-mc-mountains-labels text,.vzb-tool-mountainchart.vzb-presentation .vzb-mountainchart .vzb-mc-probe text,.vzb-tool-mountainchart.vzb-presentation .vzb-mountainchart .vzb-mc-tooltip text{font-size:1.6em}.vzb-tool-mountainchart.vzb-presentation.vzb-medium .vzb-mc-probe text{font-size:1.24em}.vzb-tool-popbyage .vzb-popbyage .vzb-bc-bar{stroke:none;cursor:pointer}.vzb-tool-popbyage .vzb-popbyage .vzb-bc-label{display:none;pointer-events:none}.vzb-tool-popbyage .vzb-popbyage .vzb-bc-label.vzb-hovered,.vzb-tool-popbyage .vzb-popbyage .vzb-bc-label.vzb-selected{display:block}.vzb-tool-popbyage .vzb-popbyage .vzb-bc-label>.vzb-bc-age{fill:#444}.vzb-tool-popbyage .vzb-popbyage .vzb-dimmed>.vzb-bc-bar{opacity:.8}.vzb-tool-popbyage .vzb-popbyage .vzb-dimmed>.vzb-bc-bar.vzb-hovered{opacity:1}.vzb-tool-popbyage .vzb-popbyage .vzb-dimmed-selected>.vzb-bc-bar{opacity:.5}.vzb-tool-popbyage .vzb-popbyage .vzb-dimmed-selected>.vzb-bc-bar.vzb-hovered{opacity:.8}.vzb-tool-popbyage .vzb-popbyage .vzb-dimmed-selected>.vzb-bc-bar.vzb-selected{opacity:1}.vzb-tool-popbyage .vzb-popbyage .vzb-bc-title{fill:#607889}.vzb-tool-popbyage .vzb-popbyage .vzb-bc-year{fill:#999;text-anchor:end}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bmc-map-background .stroke{fill:none;stroke:#999;stroke-width:.5px;stroke-opacity:.3}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bmc-map-background .fill{fill:none}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bmc-map-background .graticule{fill:none;stroke:#999;stroke-width:.5px;stroke-opacity:.3}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bmc-map-background .land{fill:#999;opacity:.4}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bmc-map-background .boundary{fill:none;stroke:#fff;stroke-width:.5px}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-year{filter:alpha(opacity=50);opacity:.5;font-size:15em;fill:#999;text-anchor:middle;-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels circle,.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels text{cursor:pointer;fill:#607889}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-highlight .vzb-bmc-label-shadow{stroke:#ff0}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-bmc-label .vzb-bmc-label-x-text{-webkit-transition:opacity .2s linear;transition:opacity .2s linear;cursor:pointer;fill:#607889;text-anchor:middle;dominant-baseline:middle;pointer-events:none;font-size:.9em;stroke:none}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-bmc-label .vzb-bmc-label-x-text.vzb-revert-color{fill:#607889}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-bmc-label .vzb-bmc-label-x-icon{-webkit-transition:opacity .2s linear;transition:opacity .2s linear;fill:#fff;pointer-events:none}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-bmc-label .vzb-bmc-label-x{-webkit-transition:opacity .2s linear;transition:opacity .2s linear;cursor:pointer;pointer-events:all;fill:#607889;stroke:#fff;stroke-width:2px}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-bmc-label .vzb-bmc-label-x.vzb-revert-color{fill:#fff;stroke:#607889}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels rect{pointer-events:visible}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels .vzb-bmc-entity .vzb-bmc-label-x{-webkit-transition:opacity .2s linear;transition:opacity .2s linear;fill:#607889;text-anchor:middle;dominant-baseline:middle;pointer-events:visible;font-size:.9em;cursor:pointer;stroke:#fff;stroke-width:2px}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels .vzb-bmc-entity .vzb-bmc-label-x.vzb-highlighted rect{fill:#fffcb9}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels .vzb-bmc-entity .vzb-bmc-label-x-icon{-webkit-transition:opacity .2s linear;transition:opacity .2s linear;fill:#fff}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels .vzb-bmc-entity.vzb-highlighted rect{fill:#fffcb9}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-lines .vzb-bmc-entity line{stroke:#666;opacity:.8}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-tooltip text{text-anchor:end}.vzb-tool-bubblemap .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble{stroke:#333;stroke-opacity:.7}.vzb-tool-bubblemap.vzb-presentation .vzb-bubblemap .vzb-bmc-axis-c-title,.vzb-tool-bubblemap.vzb-presentation .vzb-bubblemap .vzb-bmc-axis-info,.vzb-tool-bubblemap.vzb-presentation .vzb-bubblemap .vzb-bmc-axis-y-title{font-size:2.1em}.vzb-tool-bubblemap.vzb-presentation .vzb-bubblemap .vzb-bmc-bubble-labels text,.vzb-tool-bubblemap.vzb-presentation .vzb-bubblemap .vzb-bmc-labels,.vzb-tool-bubblemap.vzb-presentation .vzb-bubblemap .vzb-bmc-tooltip text{font-size:1.6em}.vzb-tool-bubblemap.vzb-presentation.vzb-small .vzb-bmc-axis-c-title,.vzb-tool-bubblemap.vzb-presentation.vzb-small .vzb-bmc-axis-y-title{font-size:1.24em}.vzb-tool-barrankchart .vzb-barrankchart .vzb-br-header{width:100%;display:block}.vzb-tool-barrankchart .vzb-barrankchart .vzb-br-header .vzb-br-title,.vzb-tool-barrankchart .vzb-barrankchart .vzb-br-header .vzb-br-total{fill:#333}.vzb-tool-barrankchart .vzb-barrankchart .barsviewport{overflow-y:auto;position:relative}.vzb-tool-barrankchart .vzb-barrankchart .vzb-br-bars-svg{width:100%}.vzb-tool-barrankchart .vzb-barrankchart .vzb-br-bars-svg .vzb-br-year{filter:alpha(opacity=30);opacity:.3;font-size:16em;fill:#999;text-anchor:middle;-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.vzb-tool-barrankchart .vzb-barrankchart .vzb-br-bars-svg .vzb-br-label{font-size:.8em}.vzb-tool-barrankchart .vzb-barrankchart .vzb-br-bars-svg .vzb-br-value{font-size:.625em}.vzb-tool-barrankchart .vzb-barrankchart .vzb-br-bars-svg .vzb-dimmed>.vzb-br-bar{opacity:.8}.vzb-tool-barrankchart .vzb-barrankchart .vzb-br-bars-svg .vzb-dimmed>.vzb-br-bar.vzb-hovered{opacity:1}.vzb-tool-barrankchart .vzb-barrankchart .vzb-br-bars-svg .vzb-dimmed-selected>.vzb-br-bar{opacity:.5}.vzb-tool-barrankchart .vzb-barrankchart .vzb-br-bars-svg .vzb-dimmed-selected>.vzb-br-bar.vzb-hovered{opacity:.8}.vzb-tool-barrankchart .vzb-barrankchart .vzb-br-bars-svg .vzb-dimmed-selected>.vzb-br-bar.vzb-selected{opacity:1}.vzb-tool-donutchart .vzb-donutchart{position:absolute;top:0;left:0;right:0;bottom:0;font-family:'Arial Rounded MT Bold',Arial,sans-serif;width:100%;height:100%}.vzb-tool-donutchart .vzb-donutchart svg{width:100%;height:100%}.vzb-tool-donutchart .vzb-donutchart text{text-anchor:middle;fill:#607889}.vzb-tool-donutchart .vzb-donutchart .year{dominant-baseline:hanging;fill:#ddd}.vzb-tool-donutchart .vzb-large .vzb-donutchart .year{font-size:8em}.vzb-tool-donutchart .vzb-large .vzb-donutchart .title{font-size:4em}.vzb-tool-donutchart .vzb-large .vzb-donutchart .label{font-size:2em}.vzb-tool-donutchart .vzb-medium .vzb-donutchart .year{font-size:8em}.vzb-tool-donutchart .vzb-medium .vzb-donutchart .title{font-size:4em}.vzb-tool-donutchart .vzb-medium .vzb-donutchart .label{font-size:2em}.vzb-tool-donutchart .vzb-small .vzb-donutchart .year{font-size:4em}.vzb-tool-donutchart .vzb-small .vzb-donutchart .title{font-size:2em}.vzb-tool-donutchart .vzb-small .vzb-donutchart .label{font-size:1em}.vzb-tool-axislabeler{border-bottom:1px solid #ccc}.vzb-tool-axislabeler .vzb-axislabeler{margin:0;font-family:"Lucida Sans Unicode","Lucida Grande",sans-serif}.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-axis line,.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-axis path,.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-axis-x line,.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-axis-x path,.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-axis-y line,.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-axis-y path{fill:none;stroke:#999;shape-rendering:crispEdges}.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-axis text,.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-axis-x text,.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-axis-y text{fill:#999}.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-line{fill:none;stroke:#3fb500;stroke-width:1px}.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-line-invert{fill:none;stroke:#00f;stroke-width:1px}.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-dots{cursor:pointer;fill:none;stroke:#3fb500;opacity:.5}.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-dots:hover{fill:#3fb500}.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-dots-invert{cursor:pointer;fill:none;stroke:#00f;opacity:.5}.vzb-tool-axislabeler .vzb-axislabeler .vzb-al-dots-invert:hover{fill:#00f}.vzb-tool-axislabeler.vzb-medium .vzb-axis-labeler .vzb-al-year{font-size:12em}.vzb-tool-axislabeler.vzb-small .vzb-axis-labeler .vzb-al-year{font-size:6em}

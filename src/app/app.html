@@ -1,0 +1,84 @@
+<div>
+    <div class="header">
+        <a class="header-title" href="http://www.gapminder.org">
+            GAPMINDER TOOLS
+        </a>
+
+        <div class="ddf-menu">
+            <div class="btn-group" dropdown [(isOpen)]="status.isMenuOpen">
+                <button id="single-button"
+                        type="button"
+                        class="btn btn-primary"
+                        dropdownToggle
+                        [disabled]="disabled">
+                    Choose Option <span class="caret"></span>
+                </button>
+                <ul dropdownMenu role="menu" aria-labelledby="single-button">
+                    <li role="menuitem">
+                        <a class="dropdown-item"
+                           href="#"
+                           (click)="aboutModal.show()">About</a></li>
+                    <li class="divider dropdown-divider"></li>
+                    <li role="menuitem">
+                        <a class="dropdown-item"
+                           href="#"
+                           (click)="ddfModal.show()">Custom DDF folder
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <tabset>
+        <tab *ngFor="let tab of tabs"
+             heading="Chart {{tab.order}}"
+             [active]="tab.active"
+             (select)="tab.active = true"
+             (deselect)="tab.active = false"
+             [removable]="tab.removable">{{tab.content}}</tab>
+    </tabset>
+</div>
+
+<div bsModal
+     #ddfModal="bs-modal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="DDF folder settings"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="ddfModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">DDF folder settings</h4>
+            </div>
+            <div class="modal-body">
+                <ae-ddf-folder-form (done)="ddfFolderFormComplete($event)"></ae-ddf-folder-form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal
+     #aboutModal="bs-modal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="About"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="aboutModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">About</h4>
+            </div>
+            <div class="modal-body">
+                <ae-about-form (done)="aboutFormComplete()"></ae-about-form>
+            </div>
+        </div>
+    </div>
+</div>
