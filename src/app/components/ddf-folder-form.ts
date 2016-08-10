@@ -6,9 +6,10 @@ import {mainQueryTemplate} from './templates/main-query-template';
 import {entitiesQueryTemplate} from './templates/entities-query-template';
 
 const formatJson = require('format-json');
-const Ddf = require('vizabi-ddfcsv-reader').Ddf;
-const ChromeFileReader = require('vizabi-ddfcsv-reader').ChromeFileReader;
-const FrontendFileReader = require('vizabi-ddfcsv-reader').FrontendFileReader;
+const ddfCsvReaderLib = require('vizabi-ddfcsv-reader');
+const Ddf = ddfCsvReaderLib.Ddf;
+const ChromeFileReader = ddfCsvReaderLib.ChromeFileReader;
+const FrontendFileReader = ddfCsvReaderLib.FrontendFileReader;
 
 let template = require('./ddf-folder-form.html');
 
@@ -25,6 +26,7 @@ class Option {
   template: template
 })
 export class DdfFolderFormComponent implements OnInit {
+  public fileReader: any;
   public ddfChartTypes: Option[] = [
     {value: 'BubbleChart', title: 'Bubble Chart'},
     {value: 'MountainChart', title: 'Mountain Chart'},
@@ -72,7 +74,7 @@ export class DdfFolderFormComponent implements OnInit {
     });
   }
 
-  defaults() {
+  public defaults() {
     this.chromeFs = null;
     this.chromeFsRootPath = '';
 
@@ -105,7 +107,17 @@ export class DdfFolderFormComponent implements OnInit {
     }
   }
 
-  loadMeasures(onMeasuresLoaded) {
+  public getDdfCsvReaderObject() {
+    return ddfCsvReaderLib;
+  }
+
+  public loadMeasures(onMeasuresLoaded) {
+    if (!onMeasuresLoaded) {
+      onMeasuresLoaded = () => {
+      };
+    }
+
+
     this.ddfError = '';
     this.dimensions = [];
     this.measures = [];
@@ -119,23 +131,25 @@ export class DdfFolderFormComponent implements OnInit {
     }
 
     if (this.ddfError) {
+      onMeasuresLoaded(this.ddfError);
       return;
     }
 
+    this.fileReader = this.chromeFs ? new ChromeFileReader(this.chromeFs) : new FrontendFileReader();
 
-    const ddf = new Ddf(this.ddfUrl,
-      this.chromeFs ? new ChromeFileReader(this.chromeFs) : new FrontendFileReader());
+    const ddf = new Ddf(this.ddfUrl, this.fileReader);
 
     ddf.getIndex(err => {
       if (err) {
         this.ddfError = 'Wrong DDF index: ' + err;
+        onMeasuresLoaded(this.ddfError);
         return;
       }
 
       ddf.getConceptsAndEntities(query, (err, concepts) => {
         if (err) {
           this.ddfError = 'Wrong DDF concepts: ' + err;
-
+          onMeasuresLoaded(this.ddfError);
           return;
         }
 
@@ -158,19 +172,71 @@ export class DdfFolderFormComponent implements OnInit {
 
             if (error) {
               this.ddfError = error;
+              onMeasuresLoaded(this.ddfError);
               return;
             }
 
             this.metadataContent = metadata;
             this.translationsContent = translations;
 
-            if (onMeasuresLoaded) {
-              onMeasuresLoaded();
-            }
+            onMeasuresLoaded();
           });
         });
       });
     });
+  }
+
+  public getQuery(): any {
+    let queryObj = {
+      data: {
+        ddfPath: '',
+        path: ''
+      },
+      state: {
+        marker: {
+          axis_y: {which: ''},
+          axis_x: {which: ''},
+          size: {which: ''}
+        },
+        time: {
+          start: '',
+          end: '',
+          value: ''
+        }
+      }
+    };
+
+    this.ddfError = '';
+
+    try {
+      queryObj = JSON.parse(this.mainQuery[this.ddfChartType]);
+    } catch (e) {
+      this.ddfError = 'Wrong JSON format for main query';
+    }
+
+    if (this.ddfError) {
+      return;
+    }
+
+    if (this.ddfChartType === 'BubbleChart' || this.ddfChartType === 'MountainChart') {
+      queryObj.data.path = this.ddfUrl;
+      queryObj.state.marker.axis_y.which = this.yAxis;
+      queryObj.state.marker.axis_x.which = this.xAxis;
+      queryObj.state.marker.size.which = this.sizeAxis;
+    }
+
+    if (this.ddfChartType === 'BubbleMap') {
+      queryObj.data.path = this.ddfUrl;
+      queryObj.state.marker.size.which = this.sizeAxis;
+    }
+
+    queryObj.state.time.start = this.startTime;
+    queryObj.state.time.end = this.endTime;
+    queryObj.state.time.value = this.currentTime;
+
+    queryObj.data.ddfPath = this.ddfUrl;
+
+    return queryObj;
   }
 
   loadChromeFs() {
@@ -252,59 +318,6 @@ export class DdfFolderFormComponent implements OnInit {
 
   cantGo() {
     return this.ddfError || this.areMeasuresBadForGo() || this.chromeAppIsBadForGo();
-  }
-
-  getQuery(): any {
-    let queryObj = {
-      data: {
-        ddfPath: '',
-        path: ''
-      },
-      state: {
-        marker: {
-          axis_y: {which: ''},
-          axis_x: {which: ''},
-          size: {which: ''}
-        },
-        time: {
-          start: '',
-          end: '',
-          value: ''
-        }
-      }
-    };
-
-    this.ddfError = '';
-
-    try {
-      queryObj = JSON.parse(this.mainQuery[this.ddfChartType]);
-    } catch (e) {
-      this.ddfError = 'Wrong JSON format for main query';
-    }
-
-    if (this.ddfError) {
-      return;
-    }
-
-    if (this.ddfChartType === 'BubbleChart' || this.ddfChartType === 'MountainChart') {
-      queryObj.data.path = this.ddfUrl;
-      queryObj.state.marker.axis_y.which = this.yAxis;
-      queryObj.state.marker.axis_x.which = this.xAxis;
-      queryObj.state.marker.size.which = this.sizeAxis;
-    }
-
-    if (this.ddfChartType === 'BubbleMap') {
-      queryObj.data.path = this.ddfUrl;
-      queryObj.state.marker.size.which = this.sizeAxis;
-    }
-
-    queryObj.state.time.start = this.startTime;
-    queryObj.state.time.end = this.endTime;
-    queryObj.state.time.value = this.currentTime;
-
-    queryObj.data.ddfPath = this.ddfUrl;
-
-    return queryObj;
   }
 
   openDdf() {
