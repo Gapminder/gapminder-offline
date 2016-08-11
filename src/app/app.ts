@@ -62,6 +62,7 @@ export class AppComponent implements OnInit {
   private readerGetMethod: string;
   private readerParams: Array<any>;
   private readerName: string;
+  private extResources: any;
 
   constructor(private viewContainerRef: ViewContainerRef,
               private ddfFolderForm: DdfFolderFormComponent) {
@@ -72,6 +73,10 @@ export class AppComponent implements OnInit {
     this.readerGetMethod = 'getDDFCsvReaderObject';
     this.readerParams = [this.ddfFolderForm.fileReader];
     this.readerName = 'ddf1-csv-ext';
+    this.extResources = {
+      host: this.ddfFolderForm.ddfUrl,
+      preloadPath: 'preview-data/'
+    };
     this.newChart();
   }
 
