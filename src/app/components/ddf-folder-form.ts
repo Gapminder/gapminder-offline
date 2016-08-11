@@ -321,7 +321,7 @@ export class DdfFolderFormComponent implements OnInit {
   }
 
   openDdf() {
-    this.done.emit({query: this.getQuery()});
+    this.done.emit({ddfFolderForm: this});
   }
 
   close() {

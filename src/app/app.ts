@@ -15,6 +15,16 @@ import {AboutFormComponent} from './components/about-form';
 
 let template = require('./app.html');
 
+function forceResize() {
+  setTimeout(function () {
+    var event: any = document.createEvent('HTMLEvents');
+
+    event.initEvent('resize', true, true);
+    event.eventName = 'resize';
+    window.dispatchEvent(event);
+  }, 10);
+}
+
 class Tab {
   public order: number;
   public active: boolean;
@@ -65,34 +75,37 @@ export class AppComponent implements OnInit {
     this.newChart();
   }
 
-  private ddfFolderFormComplete(eventData) {
+  private ddfFolderFormComplete(event) {
     this.ddfModal.hide();
-
-    if (eventData.query) {
-      this.tabs.forEach(tab => tab.active = false);
-      this.tabs.push(new Tab(eventData.query, this.tabs.length, true));
-    }
+    this.newChart(false, event.ddfFolderForm);
   }
 
   private aboutFormComplete() {
     this.aboutModal.hide();
   }
 
-  private newChart() {
-    this.ddfFolderForm.defaults();
-    this.ddfFolderForm.loadMeasures(ddfSettingsError => {
+  private newChart(isDefaults = true, ddfFolderForm = this.ddfFolderForm) {
+    if (isDefaults) {
+      ddfFolderForm.defaults();
+    }
+
+    ddfFolderForm.loadMeasures(ddfSettingsError => {
       if (ddfSettingsError) {
         return;
       }
 
-      const tab = new Tab(this.ddfFolderForm.ddfChartType, this.tabs.length, true);
+      const tab = new Tab(ddfFolderForm.ddfChartType, this.tabs.length, true);
 
-      tab.model = this.ddfFolderForm.getQuery();
-      tab.metadata = this.ddfFolderForm.metadataContent;
-      tab.translations = this.ddfFolderForm.translationsContent;
+      tab.model = ddfFolderForm.getQuery();
+      tab.metadata = ddfFolderForm.metadataContent;
+      tab.translations = ddfFolderForm.translationsContent;
 
       this.tabs.forEach(tab => tab.active = false);
       this.tabs.push(tab);
+
+      setTimeout(() => {
+        forceResize();
+      }, 3000);
     });
   }
 }

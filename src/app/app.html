@@ -4,11 +4,11 @@
             GAPMINDER TOOLS
         </a>
 
-        <div class="ddf-menu">
+        <div class="ddf-menu" style="margin-top: 5px; margin-right: 10px;">
             <div class="btn-group" dropdown [(isOpen)]="status.isMenuOpen">
                 <button id="single-button"
                         type="button"
-                        class="btn btn-primary"
+                        class="btn btn-default"
                         dropdownToggle
                         [disabled]="disabled">
                     Choose Option <span class="caret"></span>
@@ -23,6 +23,12 @@
                         <a class="dropdown-item"
                            href="#"
                            (click)="ddfModal.show()">Custom DDF folder
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a class="dropdown-item"
+                           href="#"
+                           (click)="newChart()">New chart
                         </a>
                     </li>
                 </ul>
