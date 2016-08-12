@@ -1,57 +1,61 @@
 "use strict";
 
-var packager = require('electron-packager');
+const packager = require('electron-packager');
 const pkg = require('./package.json');
 const argv = require('minimist')(process.argv.slice(2));
 const devDeps = Object.keys(pkg.devDependencies);
 
-const appName = argv.name || pkg.productName;
-const shouldUseAsar = argv.asar || false;
-const shouldBuildAll = argv.all || false;
-const arch = argv.arch || 'all';
+const appName = 'Gapminder Offline';
+const companyName = 'Gapminder';
+const arch = argv.arch || 'x64';
 const platform = argv.platform || 'linux';
+const icon = './src/app/app-icon';
+const year = 2016;
 
 const DEFAULT_OPTS = {
-    dir: './src/app',
-    name: appName,
-    asar: shouldUseAsar,
-    ignore: [
-    ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
+  dir: './src/app',
+  name: appName,
+  asar: false,
+  ignore: devDeps.map(name => `/node_modules/${name}($|/)`)
 };
 
-const icon = './src/app/app-icon';
-
 if (icon) {
-    DEFAULT_OPTS.icon = icon;
+  DEFAULT_OPTS.icon = icon;
 }
 
-pack(platform, arch, function done(err, appPath) {
-    console.log(err);
-});
+pack(platform, arch, err => console.log(err || 'Ok...'));
 
 function pack(plat, arch, cb) {
-    // there is no darwin ia32 electron
-    if (plat === 'darwin' && arch === 'ia32') return;
+  const iconObj = {
+    icon: DEFAULT_OPTS.icon + (() => {
+      let extension = '.png';
 
-    const iconObj = {
-        icon: DEFAULT_OPTS.icon + (() => {
-            let extension = '.png';
-            if (plat === 'darwin') {
-                extension = '.icns';
-            } else if (plat === 'win32') {
-                extension = '.ico';
-            }
-            return extension;
-        })()
-    };
+      if (plat === 'darwin') {
+        extension = '.icns';
+      }
 
-    const opts = Object.assign({}, DEFAULT_OPTS, iconObj, {
-        platform: plat,
-        arch,
-        prune: true,
-        'app-version': pkg.version || DEFAULT_OPTS.version,
-        out: `release/${plat}-${arch}`
-    });
+      if (plat === 'win32') {
+        extension = '.ico';
+      }
 
-    packager(opts, cb);
+      return extension;
+    })()
+  };
+
+  const opts = Object.assign({}, DEFAULT_OPTS, iconObj, {
+    platform: plat,
+    arch,
+    prune: true,
+    'app-version': pkg.version || DEFAULT_OPTS.version,
+    'version-string': {
+      CompanyName: companyName,
+      ProductName: appName,
+      FileVersion: pkg.version || DEFAULT_OPTS.version,
+      ProductVersion: pkg.version || DEFAULT_OPTS.version,
+      LegalCopyright: `© ${companyName} ${year}`
+    },
+    out: `release`
+  });
+
+  packager(opts, cb);
 }
