@@ -15,6 +15,8 @@ import {AboutFormComponent} from './components/about-form';
 
 let template = require('./app.html');
 
+declare var electron: any;
+
 class Tab {
   public order: number;
   public active: boolean;
@@ -56,18 +58,29 @@ export class AppComponent implements OnInit {
 
   constructor(private viewContainerRef: ViewContainerRef,
               private ddfFolderForm: DdfFolderFormComponent) {
+    electron.ipcRenderer.send('get-app-path');
   }
 
   ngOnInit() {
-    this.readerModuleObject = this.ddfFolderForm.getDdfCsvReaderObject();
-    this.readerGetMethod = 'getDDFCsvReaderObject';
-    this.readerParams = [this.ddfFolderForm.fileReader];
-    this.readerName = 'ddf1-csv-ext';
-    this.extResources = {
-      host: this.ddfFolderForm.ddfUrl,
-      preloadPath: 'preview-data/'
-    };
-    this.newChart();
+    let processed = false;
+
+    electron.ipcRenderer.on('got-app-path', (event, path) => {
+      this.ddfFolderForm.electronPath = path;
+
+      if (!processed) {
+        this.readerModuleObject = this.ddfFolderForm.getDdfCsvReaderObject();
+        this.readerGetMethod = 'getDDFCsvReaderObject';
+        this.readerParams = [this.ddfFolderForm.fileReader];
+        this.readerName = 'ddf1-csv-ext';
+        this.extResources = {
+          host: this.ddfFolderForm.ddfUrl,
+          preloadPath: 'preview-data/'
+        };
+        this.newChart();
+
+        processed = true;
+      }
+    });
   }
 
   private ddfFolderFormComplete(event) {

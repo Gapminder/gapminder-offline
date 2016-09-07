@@ -1,6 +1,6 @@
 {
   "name": "gapminder-offline",
-  "version": "0.1.0",
+  "version": "0.15.2-3",
   "description": "Gapminder offline tool",
   "main": "",
   "scripts": {

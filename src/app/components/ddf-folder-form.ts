@@ -10,6 +10,8 @@ const formatJson = require('format-json');
 const ddfCsvReaderLib = require('vizabi-ddfcsv-reader');
 const Ddf = ddfCsvReaderLib.Ddf;
 
+declare var electron: any;
+
 let template = require('./ddf-folder-form.html');
 
 class Option {
@@ -31,6 +33,7 @@ export class DdfFolderFormComponent implements OnInit {
     {value: 'MountainChart', title: 'Mountain Chart'},
     {value: 'BubbleMap', title: 'Bubble Map'}
   ];
+  public electronPath: string;
   public ddfChartType: string = this.ddfChartTypes[0].value;
   public expertMode = false;
   public ddfError: string;
@@ -57,11 +60,16 @@ export class DdfFolderFormComponent implements OnInit {
 
   constructor(private _ngZone: NgZone) {
     this.fileReader = new BackendFileReader();
+
+    electron.ipcRenderer.send('get-app-path');
   }
 
   ngOnInit() {
-    this.defaults();
-    this.loadMeasures(null);
+    electron.ipcRenderer.on('got-app-path', (event, path) => {
+      this.electronPath = path;
+
+      this.defaults();
+    });
   }
 
   onSelect(expectedVariableName, ddfChartType) {
@@ -71,7 +79,7 @@ export class DdfFolderFormComponent implements OnInit {
   }
 
   public defaults() {
-    this.ddfUrl = './resources/app/ddf';
+    this.ddfUrl = this.electronPath + '/ddf';
     this.ddfTranslationsUrl = 'vizabi/en.json';
     this.expectedMeasuresQuery = formatJson.plain(entitiesQueryTemplate);
     this.mainQuery = {};
