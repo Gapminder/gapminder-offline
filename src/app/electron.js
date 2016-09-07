@@ -14,9 +14,9 @@ app.on('ready', () => {
   mainWindow = new BrowserWindow({width: 1200, height: 900});
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
-  if (process.env.NODE_ENV === 'development') {
+  // if (process.env.NODE_ENV === 'development') {
     mainWindow.webContents.openDevTools();
-  }
+  // }
 
   mainWindow.on('closed', () => {
     mainWindow = null;

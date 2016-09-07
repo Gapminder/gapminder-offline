@@ -601,3 +601,5 @@ geo,description,ddf--entities--geo--world_4region.csv
 geo,latitude,ddf--entities--geo--world_4region.csv
 geo,longitude,ddf--entities--geo--world_4region.csv
 geo,color,ddf--entities--geo--world_4region.csv
+tag,name,ddf--entities--tag.csv
+tag,parent,ddf--entities--tag.csv

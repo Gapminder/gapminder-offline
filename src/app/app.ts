@@ -15,16 +15,6 @@ import {AboutFormComponent} from './components/about-form';
 
 let template = require('./app.html');
 
-function forceResize() {
-  setTimeout(function () {
-    var event: any = document.createEvent('HTMLEvents');
-
-    event.initEvent('resize', true, true);
-    event.eventName = 'resize';
-    window.dispatchEvent(event);
-  }, 10);
-}
-
 class Tab {
   public order: number;
   public active: boolean;
@@ -102,16 +92,20 @@ export class AppComponent implements OnInit {
       const tab = new Tab(ddfFolderForm.ddfChartType, this.tabs.length, true);
 
       tab.model = ddfFolderForm.getQuery();
-      tab.metadata = ddfFolderForm.metadataContent;
-      tab.translations = ddfFolderForm.translationsContent;
 
       this.tabs.forEach(tab => tab.active = false);
       this.tabs.push(tab);
-
-      setTimeout(() => {
-        forceResize();
-      }, 3000);
     });
+  }
+
+  private forceResize() {
+    setTimeout(function () {
+      var event: any = document.createEvent('HTMLEvents');
+
+      event.initEvent('resize', true, true);
+      event.eventName = 'resize';
+      window.dispatchEvent(event);
+    }, 10);
   }
 }
 

@@ -39,7 +39,7 @@
         <tab *ngFor="let tab of tabs"
              heading="Chart {{tab.order}}"
              [active]="tab.active"
-             (select)="tab.active = true"
+             (select)="tab.active = true; forceResize();"
              (deselect)="tab.active = false"
              [removable]="tab.removable">
             <vizabi class="vzb-placeholder"
@@ -48,7 +48,6 @@
                     [readerParams]="readerParams"
                     [readerName]="readerName"
                     [model]="tab.model"
-                    [metadata]="tab.metadata"
                     [extResources]="extResources"
                     [translations]="tab.translations"
                     [chartType]="tab.chartType"></vizabi>

@@ -7,17 +7,6 @@
     </div>
 
     <input type="button"
-           (click)="loadChromeFs()"
-           *ngIf="isChromeApp"
-           [disabled]="!isChromeExternalDdfPath"
-           value="Select root folder" />
-
-    <input type="button"
-           (click)="loadMeasures()"
-           [disabled]="isChromeExternalDdfPath && !hasChromeFs()"
-           value="Load measures" />
-
-    <input type="button"
            (click)="defaults()"
            value="Default path prefixes"/>
 
@@ -26,33 +15,10 @@
            value="Expert mode {{expertMode ? '[OFF]' : '[ON]'}}"/>
 </div>
 
-<div *ngIf="isChromeApp" class="popup-block">
-    <label>DDF path type</label>:
-    <label><input #ddfPathType
-                  type="radio"
-                  name="ddfPathType"
-                  value="{{false}}"
-                  (click)='setExternalDdfPath(false)'
-                  [checked]="!isChromeExternalDdfPath"> Native</label>
-    <label><input #ddfPathType
-                  type="radio"
-                  name="ddfPathType"
-                  value="{{true}}"
-                  (click)='setExternalDdfPath(true)'
-                  [checked]="isChromeExternalDdfPath"> External</label>
-</div>
-<div class="popup-block" *ngIf="isChromeExternalDdfPath"><label>Custom DDF folder</label>
-    <b>{{chromeFsRootPath}}</b></div>
-
 <div class="popup-block" *ngIf="!!ddfError" style="color: red;">{{ddfError}}</div>
 
 <div class="popup-block">
     <label>DDF default data folder (folder)&nbsp;<input type="text" [(ngModel)]="ddfUrl" size="40"></label>
-</div>
-
-<div class="popup-block">
-    <label>DDF default metadata prefix (folder&file name)&nbsp;
-        <input type="text" [(ngModel)]="ddfMetadataUrl" size="40"></label>
 </div>
 
 <div class="popup-block">
@@ -63,9 +29,6 @@
 <div class="popup-block" *ngIf="expertMode">
     Main query for Vizabi for different charts (GW - default)<br>
     <textarea [(ngModel)]="mainQuery[ddfChartType]" rows="12" cols="70" style="font-size: x-small;"></textarea>
-    <br>
-    Entities query (GW default)<br>
-    <textarea ng-model="expectedMeasuresQuery" rows="4" cols="70" style="font-size: x-small;"></textarea>
 </div>
 
 <div *ngIf="ddfChartType === 'BubbleChart' || ddfChartType === 'MountainChart'">
