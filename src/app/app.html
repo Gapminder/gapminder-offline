@@ -42,15 +42,17 @@
              (select)="tab.active = true; forceResize();"
              (deselect)="tab.active = false"
              [removable]="tab.removable">
-            <vizabi class="vzb-placeholder"
-                    [readerModuleObject]="readerModuleObject"
-                    [readerGetMethod]="readerGetMethod"
-                    [readerParams]="readerParams"
-                    [readerName]="readerName"
-                    [model]="tab.model"
-                    [extResources]="extResources"
-                    [translations]="tab.translations"
-                    [chartType]="tab.chartType"></vizabi>
+            <div style="height: 600px">
+                <vizabi style="height: 100%"
+                        [readerModuleObject]="readerModuleObject"
+                        [readerGetMethod]="readerGetMethod"
+                        [readerParams]="readerParams"
+                        [readerName]="readerName"
+                        [model]="tab.model"
+                        [extResources]="extResources"
+                        [translations]="tab.translations"
+                        [chartType]="tab.chartType"></vizabi>
+            </div>
         </tab>
     </tabset>
 </div>

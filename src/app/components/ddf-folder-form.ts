@@ -4,11 +4,11 @@ import {FORM_DIRECTIVES} from '@angular/forms';
 import {BUTTON_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 import {mainQueryTemplate} from './templates/main-query-template';
 import {entitiesQueryTemplate} from './templates/entities-query-template';
-import {BackendFileReader} from './backend-file-reader';
 
 const formatJson = require('format-json');
 const ddfCsvReaderLib = require('vizabi-ddfcsv-reader');
 const Ddf = ddfCsvReaderLib.Ddf;
+const BackendFileReader = ddfCsvReaderLib.BackendFileReader;
 
 declare var electron: any;
 
@@ -134,7 +134,7 @@ export class DdfFolderFormComponent implements OnInit {
         var metadataLoader = this.prepareMetadataByFiles();
 
         this.progress = true;
-        metadataLoader((error, metadata, translations) => {
+        metadataLoader((error, translations) => {
           this._ngZone.run(() => {
             this.progress = false;
 
@@ -144,7 +144,6 @@ export class DdfFolderFormComponent implements OnInit {
               return;
             }
 
-            this.metadataContent = metadata;
             this.translationsContent = translations;
 
             onMeasuresLoaded();
@@ -221,7 +220,7 @@ export class DdfFolderFormComponent implements OnInit {
           ddfError += '\nWrong JSON format for translations: ' + e;
         }
 
-        onMetadataLoaded(ddfError, null, translationsContent);
+        onMetadataLoaded(ddfError, translationsContent);
       });
     };
   }
