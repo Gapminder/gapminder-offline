@@ -1,0 +1,42 @@
+<alert *ngFor="let alert of alerts; let i = index"
+       [type]="alert.type"
+       dismissible="true"
+       (close)="closeAlert(i)">
+    {{ alert?.msg }}
+</alert>
+
+<div class="popup-block">
+    <label>New preset name <input type="text" [(ngModel)]="newPresetName" size="40"></label>
+</div>
+
+<div class="popup-block">
+    Preset:
+    <select (change)="onPresetSelect($event.target.value)">
+        <option *ngFor="let preset of presets.items"
+                [selected]="currentPreset.name === preset.name"
+                [value]="preset.name">{{preset.name}}</option>
+    </select>
+    <input *ngIf="newPresetName.length > 0"
+           type="button"
+           value="Clone {{currentPreset.name}} as {{newPresetName}}"
+           (click)="saveNewPreset()">
+</div>
+
+<div class="popup-block" *ngIf="!currentPreset.isReadOnly">
+    Model for {{currentPreset.name}}<br>
+    <textarea [(ngModel)]="modelToEdit"
+              rows="12" cols="70"
+              style="font-size: x-small;"></textarea>
+    <br>
+    <input *ngIf="!isFoo()"
+           type="button"
+           (click)="saveModel()"
+           value="Save model for preset {{currentPreset.name}}" />
+</div>
+
+
+<div class="popup-footer">
+    <input type="button" (click)="close()" value="Close" />
+    <input type="button" (click)="presetsExport()" value="Export" />
+    <input type="button" (click)="presetsImport()" value="Import" />
+</div>
