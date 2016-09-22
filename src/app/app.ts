@@ -105,6 +105,7 @@ export class AppComponent implements OnInit {
       const tab = new Tab(ddfFolderForm.ddfChartType, this.tabs.length, true);
 
       tab.model = ddfFolderForm.getQuery();
+      tab.translations = ddfFolderForm.translations;
 
       this.tabs.forEach(tab => tab.active = false);
       this.tabs.push(tab);

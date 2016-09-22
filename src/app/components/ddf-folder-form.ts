@@ -2,8 +2,8 @@ import {Component, OnInit, NgZone, Injectable, EventEmitter} from '@angular/core
 import {CORE_DIRECTIVES} from '@angular/common';
 import {FORM_DIRECTIVES} from '@angular/forms';
 import {BUTTON_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
-import {mainQueryTemplate} from './templates/main-query-template';
-import {entitiesQueryTemplate} from './templates/entities-query-template';
+// import {mainQueryTemplate} from './templates/main-query-template';
+import {Presets, Preset} from './presets';
 
 const formatJson = require('format-json');
 const ddfCsvReaderLib = require('vizabi-ddfcsv-reader');
@@ -38,10 +38,9 @@ export class DdfFolderFormComponent implements OnInit {
   public expertMode = false;
   public ddfError: string;
   public ddfUrl: string = '';
-  public ddfMetadataUrl: string = '';
   public ddfTranslationsUrl: string = '';
   public mainQuery: any = {};
-  public expectedMeasuresQuery: string = '';
+  // public expectedMeasuresQuery: string = '';
   public measures: any[] = [];
   public dimensions: any[] = [];
   public isDiagnostic: boolean = false;
@@ -52,14 +51,16 @@ export class DdfFolderFormComponent implements OnInit {
   public currentTime: string = '2015';
   public endTime: string = '2015';
   public electronUrl: string = '';
-  public progress: boolean = false;
-  public metadataContent: string = '';
-  public translationsContent: string = '';
+  public translations: string = '';
+  public loadedDataHash: any = {};
+  public presets: Presets = new Presets();
+  public currentPreset: Preset;
 
   private done: EventEmitter<any> = new EventEmitter();
 
   constructor(private _ngZone: NgZone) {
     this.fileReader = new BackendFileReader();
+    this.currentPreset = this.presets.items[0];
 
     electron.ipcRenderer.send('get-app-path');
   }
@@ -78,14 +79,26 @@ export class DdfFolderFormComponent implements OnInit {
     });
   }
 
+  onPresetSelect(presetName) {
+    this._ngZone.run(() => {
+      const currentPreset =
+        this.presets.items
+          .filter(presetItem => presetItem.name === presetName);
+
+      if (currentPreset.length > 0) {
+        this.currentPreset = currentPreset[0];
+      }
+    });
+  }
+
   public defaults() {
     this.ddfUrl = this.electronPath + '/ddf';
     this.ddfTranslationsUrl = 'vizabi/en.json';
-    this.expectedMeasuresQuery = formatJson.plain(entitiesQueryTemplate);
-    this.mainQuery = {};
-    Object.keys(mainQueryTemplate).forEach(key => {
-      this.mainQuery[key] = formatJson.plain(mainQueryTemplate[key]);
-    });
+    // this.expectedMeasuresQuery = formatJson.plain(entitiesQueryTemplate);
+    // this.mainQuery = {};
+    /*Object.keys(mainQueryTemplate).forEach(key => {
+     this.mainQuery[key] = formatJson.plain(mainQueryTemplate[key]);
+     });*/
 
     this.loadMeasures(null);
   }
@@ -102,112 +115,122 @@ export class DdfFolderFormComponent implements OnInit {
 
 
     this.ddfError = '';
-    this.dimensions = [];
-    this.measures = [];
 
-    const ddf = new Ddf(this.ddfUrl, this.fileReader);
+    const dimensions = [];
+    const measures = [];
 
-    ddf.getIndex(err => {
-      if (err) {
-        this.ddfError = 'Wrong DDF index: ' + err;
-        onMeasuresLoaded(this.ddfError);
-        return;
-      }
+    /*const ddf = new Ddf(this.ddfUrl, this.fileReader);
 
-      ddf.getConcepts((err, concepts) => {
-        if (err) {
-          this.ddfError = 'Wrong DDF concepts: ' + err;
+     ddf.getIndex(err => {
+     if (err) {
+     this.ddfError = 'Wrong DDF index: ' + err;
+     onMeasuresLoaded(this.ddfError);
+     return;
+     }
+
+     ddf.getConcepts((err, concepts) => {
+     if (err) {
+     this.ddfError = 'Wrong DDF concepts: ' + err;
+     onMeasuresLoaded(this.ddfError);
+     return;
+     }
+
+     concepts.forEach(concept => {
+     if (concept.concept_type === 'measure') {
+     measures.push(concept);
+     }
+
+     if (concept.concept_type !== 'measure') {
+     dimensions.push(concept);
+     }
+     });*/
+
+    var translationsLoader = this.prepareTranslations();
+
+    translationsLoader((error, translations) => {
+      this._ngZone.run(() => {
+        if (error) {
+          this.ddfError = error;
           onMeasuresLoaded(this.ddfError);
           return;
         }
 
-        concepts.forEach(concept => {
-          if (concept.concept_type === 'measure') {
-            this.measures.push(concept);
-          }
+        // this.dimensions = dimensions;
+        // this.measures = measures;
+        this.translations = translations;
+        // this.loadedDataHash[`${this.ddfUrl}&${this.ddfTranslationsUrl}`] = {translations, dimensions, measures};
 
-          if (concept.concept_type !== 'measure') {
-            this.dimensions.push(concept);
-          }
-        });
-
-        var metadataLoader = this.prepareMetadataByFiles();
-
-        this.progress = true;
-        metadataLoader((error, translations) => {
-          this._ngZone.run(() => {
-            this.progress = false;
-
-            if (error) {
-              this.ddfError = error;
-              onMeasuresLoaded(this.ddfError);
-              return;
-            }
-
-            this.translationsContent = translations;
-
-            onMeasuresLoaded();
-          });
-        });
+        onMeasuresLoaded();
       });
+      /*});
+       });*/
     });
   }
 
+  public isGoodToBeProcessed() {
+    // return !!this.loadedDataHash[`${this.ddfUrl}&${this.ddfTranslationsUrl}`];
+    return true;
+  }
+
   public getQuery(): any {
-    let queryObj = {
-      data: {
-        ddfPath: '',
-        path: ''
-      },
-      state: {
-        marker: {
-          axis_y: {which: ''},
-          axis_x: {which: ''},
-          size: {which: ''}
-        },
-        time: {
-          start: '',
-          end: '',
-          value: ''
-        }
-      }
-    };
+    /*let queryObj = {
+     data: {
+     ddfPath: '',
+     path: ''
+     },
+     state: {
+     marker: {
+     axis_y: {which: ''},
+     axis_x: {which: ''},
+     size: {which: ''}
+     },
+     time: {
+     start: '',
+     end: '',
+     value: ''
+     }
+     }
+     };*/
 
     this.ddfError = '';
 
-    try {
-      queryObj = JSON.parse(this.mainQuery[this.ddfChartType]);
-    } catch (e) {
-      this.ddfError = 'Wrong JSON format for main query';
-    }
+    /*try {
+     queryObj = JSON.parse(this.mainQuery[this.ddfChartType]);
+     } catch (e) {
+     this.ddfError = 'Wrong JSON format for main query';
+     }
 
-    if (this.ddfError) {
-      return;
-    }
+     if (this.ddfError) {
+     return;
+     }
 
-    if (this.ddfChartType === 'BubbleChart' || this.ddfChartType === 'MountainChart') {
-      queryObj.data.path = this.ddfUrl;
-      queryObj.state.marker.axis_y.which = this.yAxis;
-      queryObj.state.marker.axis_x.which = this.xAxis;
-      queryObj.state.marker.size.which = this.sizeAxis;
-    }
+     if (this.ddfChartType === 'BubbleChart' || this.ddfChartType === 'MountainChart') {
+     queryObj.data.path = this.ddfUrl;
+     //queryObj.state.marker.axis_y.which = 'total_fertility_rate';
+     //queryObj.state.marker.axis_x.which = 'median_household_income_ppp_us_constant_prices';
+     //queryObj.state.marker.size.which = 'population_income_group_constant_ppp_gt10kppp';
+     }
 
-    if (this.ddfChartType === 'BubbleMap') {
-      queryObj.data.path = this.ddfUrl;
-      queryObj.state.marker.size.which = this.sizeAxis;
-    }
+     if (this.ddfChartType === 'BubbleMap') {
+     queryObj.data.path = this.ddfUrl;
+     //queryObj.state.marker.size.which = this.sizeAxis;
+     }
 
-    queryObj.state.time.start = this.startTime;
-    queryObj.state.time.end = this.endTime;
-    queryObj.state.time.value = this.currentTime;
+     //queryObj.state.time.start = this.startTime;
+     //queryObj.state.time.end = this.endTime;
+     //queryObj.state.time.value = this.currentTime;
 
+     queryObj.data.ddfPath = this.ddfUrl;*/
+
+    const queryObj = this.currentPreset.model.BubbleChart;
     queryObj.data.ddfPath = this.ddfUrl;
+    queryObj.data.path = this.ddfUrl;
 
     return queryObj;
   }
 
-  prepareMetadataByFiles() {
-    return onMetadataLoaded => {
+  prepareTranslations() {
+    return onTranslationsLoaded => {
       const loader = this.xhrLoad;
 
       loader(this.ddfTranslationsUrl, translations => {
@@ -220,7 +243,7 @@ export class DdfFolderFormComponent implements OnInit {
           ddfError += '\nWrong JSON format for translations: ' + e;
         }
 
-        onMetadataLoaded(ddfError, translationsContent);
+        onTranslationsLoaded(ddfError, translationsContent);
       });
     };
   }
