@@ -1,3 +1,5 @@
+import {Injectable} from '@angular/core';
+
 const defaultModel = {
   BubbleChart: {
     state: {
@@ -269,21 +271,98 @@ export class Preset {
   public name: string;
   public url: string;
   public model: any;
+  public originalModel: any;
+  public originalModelString: string;
+  public isReadOnly;
 
-  constructor(name: string, url: string, model: any) {
+  constructor(name: string, url: string, model: any, isReadOnly = false) {
     this.name = name;
     this.url = url;
     this.model = model;
+    this.isReadOnly = isReadOnly;
+    this.originalModelString = JSON.stringify(model, null, '\t');
+    this.originalModel = JSON.parse(this.originalModelString);
+  }
+
+  changeModel(model) {
+    this.model = model;
+    this.originalModelString = JSON.stringify(model, null, '\t');
+    this.originalModel = JSON.parse(this.originalModelString);
+  }
+
+  clone(name): Preset {
+    const preset = new Preset(name, null, JSON.parse(this.originalModelString));
+
+    return preset;
+  }
+
+  toObject(): any {
+    const name = this.name;
+    const url = this.url;
+    const model = this.model;
+    const isReadOnly = this.isReadOnly;
+
+    return {name, url, model, isReadOnly};
   }
 }
 
-export class Presets {
-  public items: Array<Preset>;
+@Injectable()
+export class PresetService {
+  private items: Array<Preset>;
 
   constructor() {
     this.items = [
-      new Preset('Default', null, defaultModel),
-      new Preset('Alternative', null, alternativeModel)
+      new Preset('Default', null, defaultModel, true),
+      new Preset('Alternative', null, alternativeModel, true)
     ];
+  }
+
+  // todo: change it to lodash
+  isPresetNameUnique(): boolean {
+    const valueHash: any = {};
+
+    for (let preset of this.items) {
+      if (valueHash[preset.name]) {
+        return false;
+      }
+
+      valueHash[preset.name] = false;
+    }
+
+    return true;
+  }
+
+  addPreset(preset: Preset) {
+    if (this.isPresetNameUnique()) {
+      this.items.push(preset);
+
+      return preset;
+    }
+
+    return null;
+  }
+
+  getItems(): Array<Preset> {
+    return this.items;
+  }
+
+  getContent(): string {
+    return JSON.stringify(this.items.map(item => item.toObject()));
+  }
+
+  setContent(content: string): boolean {
+    let result = true;
+
+    try {
+      const contentObj = JSON.parse(content);
+
+      this.items = contentObj
+        .map(record =>
+          new Preset(record.name, record.url, record.model, record.isReadOnly));
+    } catch (e) {
+      result = false;
+    }
+
+    return result;
   }
 }

@@ -2,6 +2,9 @@ const electron = require('electron');
 const app = electron.app;
 const ipc = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
+const fs = require('fs');
+
+const PRESETS_FILE = 'presets.json';
 
 let mainWindow = null;
 
@@ -25,5 +28,17 @@ app.on('ready', () => {
 
   ipc.on('get-app-path', event => {
     event.sender.send('got-app-path', app.getAppPath());
+  });
+
+  ipc.on('presets-export', (event, content) => {
+    fs.writeFile(PRESETS_FILE, content, err => {
+      event.sender.send('presets-export-end', err);
+    });
+  });
+
+  ipc.on('do-presets-import', event => {
+    fs.readFile(PRESETS_FILE, 'utf8', (err, content) => {
+      event.sender.send('presets-import', {err, content});
+    });
   });
 });

@@ -11,6 +11,8 @@ import {
 import {VIZABI_DIRECTIVES} from 'ng2-vizabi';
 import {ModalDirective} from 'ng2-bootstrap/components/modal/modal.component';
 import {DdfFolderFormComponent} from './components/ddf-folder-form';
+import {PresetsFormComponent} from './components/presets-form';
+import {PresetService} from './components/preset-service';
 import {AboutFormComponent} from './components/about-form';
 
 let template = require('./app.html');
@@ -39,7 +41,7 @@ class Tab {
 @Component({
   selector: 'ae-app',
   directives: [CORE_DIRECTIVES, TAB_DIRECTIVES, DROPDOWN_DIRECTIVES, MODAL_DIRECTIVES,
-    DdfFolderFormComponent, AboutFormComponent, VIZABI_DIRECTIVES],
+    DdfFolderFormComponent, PresetsFormComponent, AboutFormComponent, VIZABI_DIRECTIVES],
   viewProviders: [BS_VIEW_PROVIDERS],
   template: template
 })
@@ -48,6 +50,7 @@ export class AppComponent implements OnInit {
   public status: {isMenuOpen: boolean} = {isMenuOpen: false};
 
   @ViewChild('ddfModal') public ddfModal: ModalDirective;
+  @ViewChild('presetsModal') public presetsModal: ModalDirective;
   @ViewChild('aboutModal') public aboutModal: ModalDirective;
 
   private readerModuleObject: any;
@@ -83,9 +86,16 @@ export class AppComponent implements OnInit {
     });
   }
 
+  private presetsFormComplete(event) {
+    this.presetsModal.hide();
+  }
+
   private ddfFolderFormComplete(event) {
     this.ddfModal.hide();
-    this.newChart(false, event.ddfFolderForm);
+
+    if (event.ddfFolderForm) {
+      this.newChart(false, event.ddfFolderForm);
+    }
   }
 
   private aboutFormComplete() {
@@ -125,5 +135,7 @@ export class AppComponent implements OnInit {
 
 bootstrap(AppComponent, [
   DdfFolderFormComponent,
+  PresetsFormComponent,
+  PresetService,
   AboutFormComponent
 ]).catch(err => console.error(err));

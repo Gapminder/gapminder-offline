@@ -3,7 +3,7 @@ import {CORE_DIRECTIVES} from '@angular/common';
 import {FORM_DIRECTIVES} from '@angular/forms';
 import {BUTTON_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 // import {mainQueryTemplate} from './templates/main-query-template';
-import {Presets, Preset} from './presets';
+import {PresetService, Preset} from './preset-service';
 
 const formatJson = require('format-json');
 const ddfCsvReaderLib = require('vizabi-ddfcsv-reader');
@@ -53,14 +53,13 @@ export class DdfFolderFormComponent implements OnInit {
   public electronUrl: string = '';
   public translations: string = '';
   public loadedDataHash: any = {};
-  public presets: Presets = new Presets();
   public currentPreset: Preset;
 
   private done: EventEmitter<any> = new EventEmitter();
 
-  constructor(private _ngZone: NgZone) {
+  constructor(private _ngZone: NgZone, private presets: PresetService) {
     this.fileReader = new BackendFileReader();
-    this.currentPreset = this.presets.items[0];
+    this.currentPreset = this.presets.getItems()[0];
 
     electron.ipcRenderer.send('get-app-path');
   }
@@ -82,11 +81,11 @@ export class DdfFolderFormComponent implements OnInit {
   onPresetSelect(presetName) {
     this._ngZone.run(() => {
       const currentPreset =
-        this.presets.items
-          .filter(presetItem => presetItem.name === presetName);
+        this.presets.getItems()
+          .filter(presetItem => presetItem.name === presetName)[0];
 
-      if (currentPreset.length > 0) {
-        this.currentPreset = currentPreset[0];
+      if (currentPreset) {
+        this.currentPreset = currentPreset;
       }
     });
   }
