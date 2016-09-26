@@ -317,23 +317,14 @@ export class PresetService {
     ];
   }
 
-  // todo: change it to lodash
-  isPresetNameUnique(): boolean {
-    const valueHash: any = {};
-
-    for (let preset of this.items) {
-      if (valueHash[preset.name]) {
-        return false;
-      }
-
-      valueHash[preset.name] = false;
-    }
-
-    return true;
+  isPresetNameUnique(presetToAdd: Preset): boolean {
+    return this.items
+        .filter(preset => preset.name === presetToAdd.name)
+        .length === 0;
   }
 
   addPreset(preset: Preset) {
-    if (this.isPresetNameUnique()) {
+    if (this.isPresetNameUnique(preset)) {
       this.items.push(preset);
 
       return preset;
