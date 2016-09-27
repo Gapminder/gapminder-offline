@@ -1,24 +1,20 @@
-import {Component, OnInit, NgZone, Injectable, EventEmitter} from '@angular/core';
-import {CORE_DIRECTIVES} from '@angular/common';
-import {FORM_DIRECTIVES} from '@angular/forms';
-import {BUTTON_DIRECTIVES, AlertComponent} from 'ng2-bootstrap/ng2-bootstrap';
+import {Component, OnInit, Output, NgZone, Injectable, EventEmitter} from '@angular/core';
 
 import {PresetService, Preset} from './preset-service';
 
 declare var electron: any;
 
-let template = require('./presets-form.html');
+const template = require('./presets-form.html');
 
 @Injectable()
 @Component({
   selector: 'ae-presets-form',
-  directives: [BUTTON_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, AlertComponent],
-  events: ['done'],
   template: template
 })
 export class PresetsFormComponent implements OnInit {
 
-  private done: EventEmitter<any> = new EventEmitter();
+  @Output() done: EventEmitter<any> = new EventEmitter();
+
   private currentPreset: Preset;
   private newPresetName: string = '';
   private modelToEdit: string = '';

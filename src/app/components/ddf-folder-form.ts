@@ -1,7 +1,4 @@
-import {Component, OnInit, NgZone, Injectable, EventEmitter} from '@angular/core';
-import {CORE_DIRECTIVES} from '@angular/common';
-import {FORM_DIRECTIVES} from '@angular/forms';
-import {BUTTON_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import {Component, OnInit, Output, NgZone, Injectable, EventEmitter} from '@angular/core';
 // import {mainQueryTemplate} from './templates/main-query-template';
 import {PresetService, Preset} from './preset-service';
 
@@ -10,9 +7,9 @@ const ddfCsvReaderLib = require('vizabi-ddfcsv-reader');
 const Ddf = ddfCsvReaderLib.Ddf;
 const BackendFileReader = ddfCsvReaderLib.BackendFileReader;
 
-declare var electron: any;
+const template = require('./ddf-folder-form.html');
 
-let template = require('./ddf-folder-form.html');
+declare var electron: any;
 
 class Option {
   value: string;
@@ -22,8 +19,6 @@ class Option {
 @Injectable()
 @Component({
   selector: 'ae-ddf-folder-form',
-  directives: [BUTTON_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES],
-  events: ['done'],
   template: template
 })
 export class DdfFolderFormComponent implements OnInit {
@@ -55,7 +50,7 @@ export class DdfFolderFormComponent implements OnInit {
   public loadedDataHash: any = {};
   public currentPreset: Preset;
 
-  private done: EventEmitter<any> = new EventEmitter();
+  @Output() done: EventEmitter<any> = new EventEmitter();
 
   constructor(private _ngZone: NgZone, private presets: PresetService) {
     this.fileReader = new BackendFileReader();
