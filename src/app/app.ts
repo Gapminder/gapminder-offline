@@ -1,4 +1,4 @@
-import {NgModule, Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {NgModule, Component, OnInit, ViewChild, ViewContainerRef, ElementRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
@@ -9,6 +9,7 @@ import {DdfFolderFormComponent} from './components/ddf-folder-form';
 import {PresetsFormComponent} from './components/presets-form';
 import {PresetService} from './components/preset-service';
 import {AboutFormComponent} from './components/about-form';
+import {VIZABI_DIRECTIVES} from 'ng2-vizabi/ng2-vizabi';
 
 declare var electron: any;
 
@@ -199,7 +200,7 @@ export class AppComponent implements OnInit {
           host: this.ddfFolderForm.ddfUrl,
           preloadPath: 'preview-data/'
         };
-        // this.newChart();
+        this.newChart();
 
         processed = true;
       }
@@ -258,7 +259,8 @@ export class AppComponent implements OnInit {
     AppComponent,
     DdfFolderFormComponent,
     PresetsFormComponent,
-    AboutFormComponent
+    AboutFormComponent,
+    VIZABI_DIRECTIVES
   ],
   imports: [
     BrowserModule,
