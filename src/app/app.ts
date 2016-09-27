@@ -1,4 +1,4 @@
-import {NgModule, Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {NgModule, Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
@@ -85,7 +85,7 @@ class Tab {
              (deselect)="tab.active = false"
              [removable]="tab.removable">
             <div style="height: 600px">
-                <!--<vizabi style="height: 100%"
+                <vizabi style="height: 100%"
                         [readerModuleObject]="readerModuleObject"
                         [readerGetMethod]="readerGetMethod"
                         [readerParams]="readerParams"
@@ -93,7 +93,7 @@ class Tab {
                         [model]="tab.model"
                         [extResources]="extResources"
                         [translations]="tab.translations"
-                        [chartType]="tab.chartType"></vizabi>-->
+                        [chartType]="tab.chartType"></vizabi>
             </div>
         </tab>
     </tabset>
@@ -180,7 +180,7 @@ export class AppComponent implements OnInit {
   private readerName: string;
   private extResources: any;
 
-  constructor(@Inject(DdfFolderFormComponent) private ddfFolderForm: DdfFolderFormComponent) {
+  constructor(private viewContainerRef: ViewContainerRef, private ddfFolderForm: DdfFolderFormComponent) {
     electron.ipcRenderer.send('get-app-path');
   }
 
@@ -266,7 +266,12 @@ export class AppComponent implements OnInit {
     Ng2BootstrapModule,
     ReactiveFormsModule
   ],
-  providers: [{provide: PresetService, useClass: PresetService}],
+  providers: [
+    {provide: PresetService, useClass: PresetService},
+    DdfFolderFormComponent,
+    PresetsFormComponent,
+    AboutFormComponent
+  ],
   bootstrap: [AppComponent]
 })
 
