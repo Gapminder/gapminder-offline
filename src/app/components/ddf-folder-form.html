@@ -1,4 +1,4 @@
-<div class="popup-block">
+<!--<div class="popup-block">
     <div class="btn-group">
         <select (change)="onSelect('ddfChartType', $event.target.value)">
             <option *ngFor="let lDdfChartType of ddfChartTypes"
@@ -13,7 +13,7 @@
     <input type="button"
            (click)="expertMode = !expertMode"
            value="Expert mode {{expertMode ? '[OFF]' : '[ON]'}}"/>
-</div>
+</div>-->
 
 <div class="popup-block" *ngIf="!!ddfError" style="color: red;">{{ddfError}}</div>
 
@@ -26,12 +26,22 @@
         <input type="text" [(ngModel)]="ddfTranslationsUrl" size="40"></label>
 </div>
 
-<div class="popup-block" *ngIf="expertMode">
-    Main query for Vizabi for different charts (GW - default)<br>
-    <textarea [(ngModel)]="mainQuery[ddfChartType]" rows="12" cols="70" style="font-size: x-small;"></textarea>
+<div class="popup-block">
+    Preset:
+    <select (change)="onPresetSelect($event.target.value)">
+        <option *ngFor="let preset of presets.items"
+                [selected]="currentPreset.name === preset.name"
+                [value]="preset.name">{{preset.name}}</option>
+    </select>
 </div>
 
-<div *ngIf="ddfChartType === 'BubbleChart' || ddfChartType === 'MountainChart'">
+
+<!--<div class="popup-block" *ngIf="expertMode">
+    Main query for Vizabi for different charts (GW - default)<br>
+    <textarea [(ngModel)]="mainQuery[ddfChartType]" rows="12" cols="70" style="font-size: x-small;"></textarea>
+</div>-->
+
+<!--<div *ngIf="ddfChartType === 'BubbleChart' || ddfChartType === 'MountainChart'">
     <div class="popup-block">
         X axis:
         <select (change)="onSelect('xAxis', $event.target.value)">
@@ -66,18 +76,21 @@
                     [value]="axis.concept">{{axis.name}}</option>
         </select>
     </div>
-</div>
+</div>-->
 
-<div class="popup-block">
+<!--<div class="popup-block">
     Current time:
     <input type="text" [(ngModel)]="currentTime">
     End time:
     <input type="text" [(ngModel)]="endTime">
-</div>
+</div>-->
 
 <div class="popup-footer">
+    <!--<input type="button"
+           [disabled]="cantGo() || !isGoodToBeProcessed()"
+           (click)="openDdf()"
+           value="Go" />-->
     <input type="button"
-           [disabled]="cantGo() || progress"
            (click)="openDdf()"
            value="Go" />
     <input type="button" (click)="close()" value="Close" />

@@ -1,19 +1,15 @@
-import {enableProdMode, OnInit, ViewChild} from '@angular/core';
-import {bootstrap} from '@angular/platform-browser-dynamic';
-import {Component, ViewContainerRef} from '@angular/core';
-import {CORE_DIRECTIVES} from '@angular/common';
-import {
-  TAB_DIRECTIVES,
-  DROPDOWN_DIRECTIVES,
-  MODAL_DIRECTIVES,
-  BS_VIEW_PROVIDERS
-} from 'ng2-bootstrap/ng2-bootstrap';
-import {VIZABI_DIRECTIVES} from 'ng2-vizabi';
+import {NgModule, Component, OnInit, ViewChild, ViewContainerRef, ElementRef} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {BrowserModule} from '@angular/platform-browser';
+import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
+import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+
 import {ModalDirective} from 'ng2-bootstrap/components/modal/modal.component';
 import {DdfFolderFormComponent} from './components/ddf-folder-form';
+import {PresetsFormComponent} from './components/presets-form';
+import {PresetService} from './components/preset-service';
 import {AboutFormComponent} from './components/about-form';
-
-let template = require('./app.html');
+import {VIZABI_DIRECTIVES} from 'ng2-vizabi/ng2-vizabi';
 
 declare var electron: any;
 
@@ -38,16 +34,142 @@ class Tab {
 
 @Component({
   selector: 'ae-app',
-  directives: [CORE_DIRECTIVES, TAB_DIRECTIVES, DROPDOWN_DIRECTIVES, MODAL_DIRECTIVES,
-    DdfFolderFormComponent, AboutFormComponent, VIZABI_DIRECTIVES],
-  viewProviders: [BS_VIEW_PROVIDERS],
-  template: template
+  template: `
+<div style="height: 100%">
+    <div class="header">
+        <a class="header-title" href="http://www.gapminder.org">
+            GAPMINDER TOOLS
+        </a>
+
+        <div class="ddf-menu" style="margin-top: 5px; margin-right: 10px;">
+            <div class="btn-group" dropdown [(isOpen)]="status.isMenuOpen">
+                <button id="single-button"
+                        type="button"
+                        class="btn btn-default"
+                        dropdownToggle
+                        [disabled]="disabled">
+                    Choose Option <span class="caret"></span>
+                </button>
+                <ul dropdownMenu role="menu" aria-labelledby="single-button">
+                    <li role="menuitem">
+                        <a class="dropdown-item"
+                           href="#"
+                           (click)="aboutModal.show()">About</a></li>
+                    <li class="divider dropdown-divider"></li>
+                    <li role="menuitem">
+                        <a class="dropdown-item"
+                           href="#"
+                           (click)="ddfModal.show()">Custom DDF folder
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a class="dropdown-item"
+                           href="#"
+                           (click)="presetsModal.show()">Presets
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a class="dropdown-item"
+                           href="#"
+                           (click)="newChart()">New chart
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <tabset *ngIf="tabs.length > 0" [height]="'85%'">
+        <tab *ngFor="let tab of tabs"
+             heading="Chart {{tab.order}}"
+             [active]="tab.active"
+             (select)="tab.active = true; forceResize();"
+             (deselect)="tab.active = false"
+             [removable]="tab.removable">
+            <vizabi [readerModuleObject]="readerModuleObject"
+                    [readerGetMethod]="readerGetMethod"
+                    [readerParams]="readerParams"
+                    [readerName]="readerName"
+                    [model]="tab.model"
+                    [extResources]="extResources"
+                    [translations]="tab.translations"
+                    [chartType]="tab.chartType"></vizabi>
+        </tab>
+    </tabset>
+</div>
+
+<div bsModal
+     #ddfModal="bs-modal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="DDF folder settings"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="ddfModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">DDF folder settings</h4>
+            </div>
+            <div class="modal-body">
+                <ae-ddf-folder-form (done)="ddfFolderFormComplete($event)"></ae-ddf-folder-form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal
+     #presetsModal="bs-modal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Presets"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="presetsModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Presets</h4>
+            </div>
+            <div class="modal-body">
+                <ae-presets-form (done)="presetsFormComplete($event)"></ae-presets-form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal
+     #aboutModal="bs-modal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="About"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="aboutModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">About</h4>
+            </div>
+            <div class="modal-body">
+                <ae-about-form (done)="aboutFormComplete()"></ae-about-form>
+            </div>
+        </div>
+    </div>
+</div>
+`
 })
 export class AppComponent implements OnInit {
   public tabs: Tab[] = [];
   public status: {isMenuOpen: boolean} = {isMenuOpen: false};
 
   @ViewChild('ddfModal') public ddfModal: ModalDirective;
+  @ViewChild('presetsModal') public presetsModal: ModalDirective;
   @ViewChild('aboutModal') public aboutModal: ModalDirective;
 
   private readerModuleObject: any;
@@ -56,8 +178,7 @@ export class AppComponent implements OnInit {
   private readerName: string;
   private extResources: any;
 
-  constructor(private viewContainerRef: ViewContainerRef,
-              private ddfFolderForm: DdfFolderFormComponent) {
+  constructor(private viewContainerRef: ViewContainerRef, private ddfFolderForm: DdfFolderFormComponent) {
     electron.ipcRenderer.send('get-app-path');
   }
 
@@ -83,9 +204,16 @@ export class AppComponent implements OnInit {
     });
   }
 
+  private presetsFormComplete(event) {
+    this.presetsModal.hide();
+  }
+
   private ddfFolderFormComplete(event) {
     this.ddfModal.hide();
-    this.newChart(false, event.ddfFolderForm);
+
+    if (event.ddfFolderForm) {
+      this.newChart(false, event.ddfFolderForm);
+    }
   }
 
   private aboutFormComplete() {
@@ -105,6 +233,7 @@ export class AppComponent implements OnInit {
       const tab = new Tab(ddfFolderForm.ddfChartType, this.tabs.length, true);
 
       tab.model = ddfFolderForm.getQuery();
+      tab.translations = ddfFolderForm.translations;
 
       this.tabs.forEach(tab => tab.active = false);
       this.tabs.push(tab);
@@ -122,7 +251,30 @@ export class AppComponent implements OnInit {
   }
 }
 
-bootstrap(AppComponent, [
-  DdfFolderFormComponent,
-  AboutFormComponent
-]).catch(err => console.error(err));
+@NgModule({
+  declarations: [
+    AppComponent,
+    DdfFolderFormComponent,
+    PresetsFormComponent,
+    AboutFormComponent,
+    VIZABI_DIRECTIVES
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    Ng2BootstrapModule,
+    ReactiveFormsModule
+  ],
+  providers: [
+    {provide: PresetService, useClass: PresetService},
+    DdfFolderFormComponent,
+    PresetsFormComponent,
+    AboutFormComponent
+  ],
+  bootstrap: [AppComponent]
+})
+
+export class AppModule {
+}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
