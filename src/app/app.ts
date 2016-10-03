@@ -1,4 +1,4 @@
-import {NgModule, Component, OnInit, ViewChild, ViewContainerRef, ElementRef} from '@angular/core';
+import {NgModule, Component, OnInit, NgZone, ViewChild, ViewContainerRef, ElementRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
@@ -8,19 +8,45 @@ import {ModalDirective} from 'ng2-bootstrap/components/modal/modal.component';
 import {DdfFolderFormComponent} from './components/ddf-folder-form';
 import {PresetsFormComponent} from './components/presets-form';
 import {PresetService} from './components/preset-service';
+import {ConfigService} from './components/config-service';
 import {AboutFormComponent} from './components/about-form';
 import {VIZABI_DIRECTIVES} from 'ng2-vizabi/ng2-vizabi';
 
 declare var electron: any;
 
+class Progress {
+  public value: number;
+
+  constructor() {
+    this.initProgress();
+  }
+
+  public initProgress() {
+    this.value = 0;
+  }
+
+  public setProgress(progress: number) {
+    this.value = progress;
+  }
+
+  public incProgress(value: number) {
+    this.value += value;
+  }
+
+  public isProgress(): boolean {
+    return this.value > 0 && this.value <= 100;
+  }
+}
+
 class Tab {
-  public order: number;
   public active: boolean;
   public removable: boolean = true;
 
   public model: any;
   public metadata: any;
   public translations: any;
+
+  private order: number;
 
   constructor(public chartType: string, order: number, active: boolean = false) {
     this.order = order + 1;
@@ -30,62 +56,72 @@ class Tab {
       this.removable = false;
     }
   }
+
+  public getOrder() {
+    return this.order;
+  }
 }
 
 @Component({
   selector: 'ae-app',
   template: `
-<div style="height: 100%">
-    <div class="header">
-        <a class="header-title" href="http://www.gapminder.org">
-            GAPMINDER TOOLS
-        </a>
+<div style="position: absolute; top: -3px; left: 0;">
+    <a class="header-title">GAPMINDER TOOLS</a>
+</div>
 
-        <div class="ddf-menu" style="margin-top: 5px; margin-right: 10px;">
-            <div class="btn-group" dropdown [(isOpen)]="status.isMenuOpen">
-                <button id="single-button"
-                        type="button"
-                        class="btn btn-default"
-                        dropdownToggle
-                        [disabled]="disabled">
-                    Choose Option <span class="caret"></span>
-                </button>
-                <ul dropdownMenu role="menu" aria-labelledby="single-button">
-                    <li role="menuitem">
-                        <a class="dropdown-item"
-                           href="#"
-                           (click)="aboutModal.show()">About</a></li>
-                    <li class="divider dropdown-divider"></li>
-                    <li role="menuitem">
-                        <a class="dropdown-item"
-                           href="#"
-                           (click)="ddfModal.show()">Custom DDF folder
-                        </a>
-                    </li>
-                    <li role="menuitem">
-                        <a class="dropdown-item"
-                           href="#"
-                           (click)="presetsModal.show()">Presets
-                        </a>
-                    </li>
-                    <li role="menuitem">
-                        <a class="dropdown-item"
-                           href="#"
-                           (click)="newChart()">New chart
-                        </a>
-                    </li>
-                </ul>
-            </div>
+<div style="position: absolute; top: 5px; right: 10px;">
+    <div class="ddf-menu">
+        <div class="btn-group" dropdown [(isOpen)]="status.isMenuOpen">
+            <button id="single-button"
+                    type="button"
+                    class="btn btn-default"
+                    dropdownToggle>
+                Choose Option <span class="caret"></span>
+            </button>
+            <ul dropdownMenu role="menu" aria-labelledby="single-button">
+                <li role="menuitem">
+                    <a class="dropdown-item"
+                       href="#"
+                       (click)="aboutModal.show()">About</a></li>
+                <li class="divider dropdown-divider"></li>
+                <li role="menuitem">
+                    <a class="dropdown-item"
+                       href="#"
+                       (click)="ddfModal.show()">Custom DDF folder
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a class="dropdown-item"
+                       href="#"
+                       (click)="presetsModal.show()">Presets
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a class="dropdown-item"
+                       href="#"
+                       (click)="newChart()">New chart
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
-    <tabset *ngIf="tabs.length > 0" [height]="'85%'">
+</div>
+
+<div style="min-width: 800px; height: 100%">
+    <tabset *ngIf="tabs.length > 0"
+            style="height: 100%">
         <tab *ngFor="let tab of tabs"
              heading="Chart {{tab.order}}"
+             style="height: 100%"
              [active]="tab.active"
              (select)="tab.active = true; forceResize();"
              (deselect)="tab.active = false"
              [removable]="tab.removable">
-            <vizabi [readerModuleObject]="readerModuleObject"
+            <vizabi style="height: 100%;"
+                    (onCreated)="chartCreated($event)"
+                    (onChanged)="chartChanged($event)"
+                    [order]="tab.getOrder()"
+                    [readerModuleObject]="readerModuleObject"
                     [readerGetMethod]="readerGetMethod"
                     [readerParams]="readerParams"
                     [readerName]="readerName"
@@ -95,6 +131,9 @@ class Tab {
                     [chartType]="tab.chartType"></vizabi>
         </tab>
     </tabset>
+    <div *ngIf="progress.value > 0">
+        <progressbar [animate]="false" [value]="progress.value" type="success">{{progress.value}}%</progressbar>
+    </div>
 </div>
 
 <div bsModal
@@ -177,8 +216,12 @@ export class AppComponent implements OnInit {
   private readerParams: Array<any>;
   private readerName: string;
   private extResources: any;
+  private progress: Progress;
 
-  constructor(private viewContainerRef: ViewContainerRef, private ddfFolderForm: DdfFolderFormComponent) {
+  constructor(private _ngZone: NgZone,
+              private viewContainerRef: ViewContainerRef,
+              private ddfFolderForm: DdfFolderFormComponent,
+              private configService: ConfigService) {
     electron.ipcRenderer.send('get-app-path');
   }
 
@@ -197,11 +240,17 @@ export class AppComponent implements OnInit {
           host: this.ddfFolderForm.ddfUrl,
           preloadPath: 'preview-data/'
         };
-        this.newChart();
+
+        this.newChart(() => {
+          this._ngZone.run(() => {
+          });
+        });
 
         processed = true;
       }
     });
+
+    this.progress = new Progress();
   }
 
   private presetsFormComplete(event) {
@@ -212,7 +261,10 @@ export class AppComponent implements OnInit {
     this.ddfModal.hide();
 
     if (event.ddfFolderForm) {
-      this.newChart(false, event.ddfFolderForm);
+      this.newChart(() => {
+        this._ngZone.run(() => {
+        });
+      }, false, event.ddfFolderForm);
     }
   }
 
@@ -220,24 +272,51 @@ export class AppComponent implements OnInit {
     this.aboutModal.hide();
   }
 
-  private newChart(isDefaults = true, ddfFolderForm = this.ddfFolderForm) {
+  private newChart(onChartReady, isDefaults = true, ddfFolderForm = this.ddfFolderForm) {
     if (isDefaults) {
       ddfFolderForm.defaults();
     }
 
-    ddfFolderForm.loadMeasures(ddfSettingsError => {
-      if (ddfSettingsError) {
-        return;
+    this.progress.initProgress();
+
+    const progress = this.progress;
+    const tab = new Tab(ddfFolderForm.ddfChartType, this.tabs.length, true);
+    const configRequestParameters = {
+      ddfPath: ddfFolderForm.ddfUrl,
+      chartType: ddfFolderForm.ddfChartType,
+      onProgress: (value: number) => {
+        progress.incProgress(value);
       }
+    };
 
-      const tab = new Tab(ddfFolderForm.ddfChartType, this.tabs.length, true);
+    this.configService.getConfig(configRequestParameters, (config) => {
+      // tab.model = ddfFolderForm.getQuery();
 
-      tab.model = ddfFolderForm.getQuery();
+      config.data.ddfPath = ddfFolderForm.ddfUrl;
+      config.data.path = ddfFolderForm.ddfUrl;
+
+      tab.model = config;
+
       tab.translations = ddfFolderForm.translations;
 
       this.tabs.forEach(tab => tab.active = false);
       this.tabs.push(tab);
+
+      onChartReady();
     });
+  }
+
+  private chartCreated(data) {
+    const progress = this.progress;
+    const modalInterval: any = setInterval(function () {
+      if (data.component._ready) {
+        progress.setProgress(100);
+        clearInterval(modalInterval);
+        setTimeout(() => {
+          progress.initProgress();
+        }, 3000);
+      }
+    }, 1000);
   }
 
   private forceResize() {
@@ -248,6 +327,10 @@ export class AppComponent implements OnInit {
       event.eventName = 'resize';
       window.dispatchEvent(event);
     }, 10);
+  }
+
+  private chartChanged(data) {
+    console.log(data);
   }
 }
 
@@ -267,6 +350,7 @@ export class AppComponent implements OnInit {
   ],
   providers: [
     {provide: PresetService, useClass: PresetService},
+    {provide: ConfigService, useClass: ConfigService},
     DdfFolderFormComponent,
     PresetsFormComponent,
     AboutFormComponent
