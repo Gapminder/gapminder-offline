@@ -83,6 +83,12 @@ class Tab {
                     <a class="dropdown-item"
                        href="#"
                        (click)="aboutModal.show()">About</a></li>
+                <li role="menuitem">
+                    <a class="dropdown-item"
+                       href="#"
+                       (click)="openDevTools()">Open Dev Tools
+                    </a>
+                </li>
                 <li class="divider dropdown-divider"></li>
                 <li role="menuitem">
                     <a class="dropdown-item"
@@ -253,6 +259,10 @@ export class AppComponent implements OnInit {
     this.progress = new Progress();
   }
 
+  private openDevTools() {
+    electron.ipcRenderer.send('open-dev-tools');
+  }
+
   private presetsFormComplete(event) {
     this.presetsModal.hide();
   }
@@ -330,7 +340,7 @@ export class AppComponent implements OnInit {
   }
 
   private chartChanged(data) {
-    console.log(data);
+    // console.log(data);
   }
 }
 

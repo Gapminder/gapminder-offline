@@ -41,4 +41,8 @@ app.on('ready', () => {
       event.sender.send('presets-import', {err, content});
     });
   });
+
+  ipc.on('open-dev-tools', event => {
+    mainWindow.webContents.openDevTools();
+  });
 });
