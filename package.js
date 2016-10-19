@@ -47,6 +47,9 @@ function pack(plat, arch, cb) {
     arch,
     prune: true,
     'app-version': pkg.version || DEFAULT_OPTS.version,
+    'osx-sign': {
+      identity: 'Stiftelsen Gapminder'
+    },
     'version-string': {
       CompanyName: companyName,
       ProductName: appName,

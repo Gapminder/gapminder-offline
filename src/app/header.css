@@ -1,0 +1,23 @@
+.tab-container ul li:first-child {
+    margin-left: 200px;
+}
+
+.tab-container ul li:last-child {
+    margin-right: 200px;
+}
+
+.nav-tabs {
+    border-bottom: 2px solid #ffca34;
+}
+
+.nav-item {
+    border-bottom: 1px solid #ffca34;
+}
+
+.tab-container div {
+    height: 85%;
+}
+
+.tab-container ul li:last-child {
+    margin-right: 200px;
+}

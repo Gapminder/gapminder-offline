@@ -87,7 +87,7 @@ export class DdfFolderFormComponent implements OnInit {
 
   public defaults() {
     this.ddfUrl = this.electronPath + '/ddf';
-    this.ddfTranslationsUrl = 'vizabi/en.json';
+    this.ddfTranslationsUrl = 'preview-data/translation/en.json';
     // this.expectedMeasuresQuery = formatJson.plain(entitiesQueryTemplate);
     // this.mainQuery = {};
     /*Object.keys(mainQueryTemplate).forEach(key => {

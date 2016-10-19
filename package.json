@@ -1,6 +1,6 @@
 {
   "name": "gapminder-offline",
-  "version": "0.16.1-11",
+  "version": "0.17.1",
   "description": "Gapminder offline tool",
   "main": "",
   "scripts": {
@@ -36,15 +36,17 @@
     "@angular/platform-browser-dynamic": "2.0.0",
     "@angular/platform-server": "2.0.0",
     "@angular/router": "3.0.0",
+    "async": "2.0.1",
     "core-js": "2.4.1",
     "csv-parse": "1.1.7",
-    "electron-prebuilt": "1.4.1",
+    "electron": "1.4.3",
     "format-json": "1.0.3",
+    "lodash": "4.16.2",
     "ng2-bootstrap": "1.1.5",
-    "ng2-vizabi": "0.16.1-11",
+    "ng2-vizabi": "0.17.1",
     "path": "0.12.7",
     "rxjs": "5.0.0-beta.12",
-    "vizabi-ddfcsv-reader": "0.4.17",
+    "vizabi-ddfcsv-reader": "0.4.18",
     "webpack-target-electron-renderer": "0.4.0",
     "zone.js": "0.6.25"
   },
