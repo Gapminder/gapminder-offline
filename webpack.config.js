@@ -41,18 +41,12 @@ var config = {
   },
 
   module: {
-    preLoaders: [{
+    /*preLoaders: [{
       test: /\.ts$/,
       loader: "tslint"
-    }],
+    }],*/
     loaders: [
-      // Support for .ts files.
-      {
-        test: /\.ts$/,
-        loader: 'awesome-typescript-loader',
-        exclude: [/\.(spec|e2e)\.ts$/]
-      },
-
+      {test: /\.ts$/, loaders: ['ts-loader']},
       // Support for *.json files.
       {test: /\.json$/, loader: 'json-loader'},
 

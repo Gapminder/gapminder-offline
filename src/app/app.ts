@@ -10,7 +10,7 @@ import {PresetsFormComponent} from './components/presets-form';
 import {PresetService} from './components/preset-service';
 import {ConfigService} from './components/config-service';
 import {AboutFormComponent} from './components/about-form';
-import {VIZABI_DIRECTIVES} from 'ng2-vizabi/ng2-vizabi';
+import {VizabiModule} from 'ng2-vizabi/ng2-vizabi';
 
 declare var electron: any;
 
@@ -105,7 +105,7 @@ class Tab {
                 <li role="menuitem">
                     <a class="dropdown-item"
                        href="#"
-                       (click)="newChart()">New chart
+                       (click)="defaultChart()">New chart
                     </a>
                 </li>
             </ul>
@@ -113,7 +113,7 @@ class Tab {
     </div>
 </div>
 
-<div style="min-width: 800px; height: 100%">
+<div style="min-width: 800px; height: 85%">
     <tabset *ngIf="tabs.length > 0"
             style="height: 100%">
         <tab *ngFor="let tab of tabs"
@@ -133,7 +133,6 @@ class Tab {
                     [readerName]="readerName"
                     [model]="tab.model"
                     [extResources]="extResources"
-                    [translations]="tab.translations"
                     [chartType]="tab.chartType"></vizabi>
         </tab>
     </tabset>
@@ -247,10 +246,7 @@ export class AppComponent implements OnInit {
           preloadPath: 'preview-data/'
         };
 
-        this.newChart(() => {
-          this._ngZone.run(() => {
-          });
-        });
+        this.defaultChart();
 
         processed = true;
       }
@@ -280,6 +276,13 @@ export class AppComponent implements OnInit {
 
   private aboutFormComplete() {
     this.aboutModal.hide();
+  }
+
+  private defaultChart() {
+    this.newChart(() => {
+      this._ngZone.run(() => {
+      });
+    });
   }
 
   private newChart(onChartReady, isDefaults = true, ddfFolderForm = this.ddfFolderForm) {
@@ -312,7 +315,9 @@ export class AppComponent implements OnInit {
       this.tabs.forEach(tab => tab.active = false);
       this.tabs.push(tab);
 
-      onChartReady();
+      if (onChartReady) {
+        onChartReady();
+      }
     });
   }
 
@@ -340,7 +345,7 @@ export class AppComponent implements OnInit {
   }
 
   private chartChanged(data) {
-    // console.log(data);
+    console.log(data);
   }
 }
 
@@ -350,13 +355,13 @@ export class AppComponent implements OnInit {
     DdfFolderFormComponent,
     PresetsFormComponent,
     AboutFormComponent,
-    VIZABI_DIRECTIVES
   ],
   imports: [
     BrowserModule,
     FormsModule,
     Ng2BootstrapModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    VizabiModule
   ],
   providers: [
     {provide: PresetService, useClass: PresetService},
