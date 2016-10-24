@@ -35,6 +35,9 @@ const getNameProperty = ddfDataDescriptor => {
 const getTimeConcept = concepts => _.head(concepts
   .filter(concept => concept.concept_type === 'time')
   .map(concept => concept.concept));
+const getAppropriateHeader =
+  (headerHolder, order) => headerHolder.length - 1 < order ?
+    _.last(headerHolder).header : headerHolder[order].header;
 const chartTypeAdapters: any = ddfDataDescriptor => ({
   BubbleChart: [
     config => config.replace(/#domain#/g, ddfDataDescriptor.expectedDomain),
@@ -48,11 +51,11 @@ const chartTypeAdapters: any = ddfDataDescriptor => ({
     config => config.replace(/#timeDim#/g, getTimeConcept(ddfDataDescriptor.concepts)),
     config => config.replace(/#nameProperty#/g, getNameProperty(ddfDataDescriptor)),
     config => config.replace(/#yAxis#/g,
-      getMeasureFromHeader(ddfDataDescriptor.dataPointsSchema[0].header, ddfDataDescriptor)),
+      getMeasureFromHeader(getAppropriateHeader(ddfDataDescriptor.dataPointsSchema, 0), ddfDataDescriptor)),
     config => config.replace(/#xAxis#/g,
-      getMeasureFromHeader(ddfDataDescriptor.dataPointsSchema[1].header, ddfDataDescriptor)),
+      getMeasureFromHeader(getAppropriateHeader(ddfDataDescriptor.dataPointsSchema, 1), ddfDataDescriptor)),
     config => config.replace(/#size#/g,
-      getMeasureFromHeader(ddfDataDescriptor.dataPointsSchema[2].header, ddfDataDescriptor))
+      getMeasureFromHeader(getAppropriateHeader(ddfDataDescriptor.dataPointsSchema, 2), ddfDataDescriptor))
   ]
 });
 const getCorrectedSchemaRecord = (record, field = 'header') => {
