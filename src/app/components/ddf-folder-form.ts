@@ -276,4 +276,10 @@ export class DdfFolderFormComponent implements OnInit {
   close() {
     this.done.emit({});
   }
+
+  onFileChanged(event: any) {
+    if (event.srcElement.files && event.srcElement.files.length > 0) {
+      this.ddfUrl = event.srcElement.files[0].path;
+    }
+  }
 }
