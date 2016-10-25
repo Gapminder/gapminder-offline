@@ -69,14 +69,13 @@ class Tab {
     <a class="header-title">GAPMINDER TOOLS</a>
 </div>
 
-<div style="position: absolute; top: 5px; right: 10px;">
+<div style="position: absolute; top: 0; right: 0">
     <div class="ddf-menu">
         <div class="btn-group" dropdown [(isOpen)]="status.isMenuOpen">
             <button id="single-button"
                     type="button"
                     class="btn btn-default"
-                    dropdownToggle>
-                Choose Option <span class="caret"></span>
+                    dropdownToggle><img src="./public/images/hamburger.png" />
             </button>
             <ul dropdownMenu role="menu" aria-labelledby="single-button">
                 <li role="menuitem">
@@ -93,7 +92,7 @@ class Tab {
                 <li role="menuitem">
                     <a class="dropdown-item"
                        href="#"
-                       (click)="ddfModal.show()">Custom DDF folder
+                       (click)="ddfModal.show()">Open DDF folder
                     </a>
                 </li>
                 <li role="menuitem">
@@ -113,7 +112,7 @@ class Tab {
     </div>
 </div>
 
-<div style="min-width: 800px; height: 85%">
+<div style="min-width: 800px; height: calc(100% - 50px);">
     <tabset *ngIf="tabs.length > 0"
             style="height: 100%">
         <tab *ngFor="let tab of tabs"
@@ -123,6 +122,9 @@ class Tab {
              (select)="tab.active = true; forceResize();"
              (deselect)="tab.active = false"
              [removable]="tab.removable">
+            <div class="ddf-progress"
+                 [style.width]="progress.value + '%'"
+                 [style.display]="progress.value > 0 ? 'block' : 'none'"></div>
             <vizabi style="height: 100%;"
                     (onCreated)="chartCreated($event)"
                     (onChanged)="chartChanged($event)"
@@ -136,9 +138,6 @@ class Tab {
                     [chartType]="tab.chartType"></vizabi>
         </tab>
     </tabset>
-    <div *ngIf="progress.value > 0">
-        <progressbar [animate]="false" [value]="progress.value" type="success">{{progress.value}}%</progressbar>
-    </div>
 </div>
 
 <div bsModal
@@ -345,7 +344,6 @@ export class AppComponent implements OnInit {
   }
 
   private chartChanged(data) {
-    console.log(data);
   }
 }
 

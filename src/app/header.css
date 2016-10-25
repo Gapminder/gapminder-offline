@@ -7,11 +7,11 @@
 }
 
 .nav-tabs {
-    border-bottom: 2px solid #ffca34;
+    border-bottom: 2px solid #eeeeee;
 }
 
 .nav-item {
-    border-bottom: 1px solid #ffca34;
+    border-bottom: 1px solid #eeeeee;
 }
 
 .tab-container > div {
@@ -20,4 +20,61 @@
 
 .tab-container > ul li:last-child {
     margin-right: 200px;
+}
+
+.ddf-menu .dropdown-menu {
+    left: auto !important;
+    right: 0 !important;
+}
+
+.ddf-menu .dropdown .btn {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.ddf-menu .dropdown .btn:hover {
+    background: none;
+}
+
+.ddf-menu .dropdown .btn-default {
+    background-color: #ffffff;
+}
+
+.ddf-menu .dropdown .btn-default:active {
+    background-color: #ffffff;
+}
+
+.ddf-menu .dropdown .btn-default:focus {
+    background-color: #ffffff;
+}
+
+.ddf-progress {
+    margin: 0;
+    border-bottom: 2px solid #ffca34;
+}
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputfile + label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    background-color: #ffca34;
+    display: inline-block;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: #ffca34;
+}
+
+.inputfile + label {
+    cursor: pointer;
 }

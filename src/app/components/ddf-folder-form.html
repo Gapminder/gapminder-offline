@@ -15,10 +15,17 @@
            value="Expert mode {{expertMode ? '[OFF]' : '[ON]'}}"/>
 </div>-->
 
-<div class="popup-block" *ngIf="!!ddfError" style="color: red;">{{ddfError}}</div>
+<!--<div class="popup-block" *ngIf="!!ddfError" style="color: red;">{{ddfError}}</div>-->
 
 <div class="popup-block">
-    <label>DDF default data folder (folder)&nbsp;<input type="text" [(ngModel)]="ddfUrl" size="40"></label>
+    <div><input type="file"
+                id="ddf-folder"
+                class="inputfile"
+                (change)="onFileChanged($event)"
+                webkitdirectory
+                directory />
+        <label for="ddf-folder">Choose folder</label></div>
+    <div>{{ddfUrl}}</div>
 </div>
 
 <!--<div class="popup-block">
