@@ -38,6 +38,48 @@ const getTimeConcept = concepts => _.head(concepts
 const getAppropriateHeader =
   (headerHolder, order) => headerHolder.length - 1 < order ?
     _.last(headerHolder).header : headerHolder[order].header;
+/*
+ config => {
+ console.log('#domain#', ddfDataDescriptor.expectedDomain);
+ return config.replace(/#domain#/g, ddfDataDescriptor.expectedDomain);
+ },
+ config => {
+ console.log('#entity#', _.head(_.head(ddfDataDescriptor.entitiesSchema).header));
+ return config.replace(/#entity#/g, _.head(_.head(ddfDataDescriptor.entitiesSchema).header));
+ },
+ config => {
+ console.log('#entityMinimap#', _.head(ddfDataDescriptor.entitiesSchema[ddfDataDescriptor.entitiesSchema > 1 ? 1 : 0].header));
+ return config.replace(
+ /#entityMinimap#/g,
+ _.head(
+ ddfDataDescriptor.entitiesSchema[ddfDataDescriptor.entitiesSchema > 1 ? 1 : 0].header
+ )
+ );
+ },
+ config => {
+ console.log('#timeDim#', getTimeConcept(ddfDataDescriptor.concepts));
+ return config.replace(/#timeDim#/g, getTimeConcept(ddfDataDescriptor.concepts));
+ },
+ config => {
+ console.log('#nameProperty#', getNameProperty(ddfDataDescriptor));
+ return config.replace(/#nameProperty#/g, getNameProperty(ddfDataDescriptor));
+ },
+ config => {
+ console.log('#yAxis#', getMeasureFromHeader(getAppropriateHeader(ddfDataDescriptor.dataPointsSchema, 0), ddfDataDescriptor));
+ return config.replace(/#yAxis#/g,
+ getMeasureFromHeader(getAppropriateHeader(ddfDataDescriptor.dataPointsSchema, 0), ddfDataDescriptor));
+ },
+ config => {
+ console.log('#xAxis#', getMeasureFromHeader(getAppropriateHeader(ddfDataDescriptor.dataPointsSchema, 1), ddfDataDescriptor));
+ return config.replace(/#xAxis#/g,
+ getMeasureFromHeader(getAppropriateHeader(ddfDataDescriptor.dataPointsSchema, 1), ddfDataDescriptor));
+ },
+ config => {
+ console.log('#size#', getMeasureFromHeader(getAppropriateHeader(ddfDataDescriptor.dataPointsSchema, 2), ddfDataDescriptor));
+ return config.replace(/#size#/g,
+ getMeasureFromHeader(getAppropriateHeader(ddfDataDescriptor.dataPointsSchema, 2), ddfDataDescriptor));
+ }
+ */
 const chartTypeAdapters: any = ddfDataDescriptor => ({
   BubbleChart: [
     config => config.replace(/#domain#/g, ddfDataDescriptor.expectedDomain),
@@ -80,7 +122,7 @@ const getExpectedEntityDomain = concepts => _.head(concepts
 const prepareConcepts = (ddf: any, onProgress: Function) =>
   onConceptsReady =>
     ddf
-      .getIndex(err => {
+      .getDataPackage(err => {
         onProgress(10);
         return onConceptsReady(err, {}, ddf.getContentManager().concepts);
       });

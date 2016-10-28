@@ -33,7 +33,7 @@ export class PresetsFormComponent implements OnInit {
         }
 
         if (err) {
-          this.addAlert(`Presets was NOT exported`, 'danger');
+          this.addAlert(`Presets was NOT exported: ${JSON.stringify(err)}`, 'danger');
         }
       });
     });

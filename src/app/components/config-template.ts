@@ -1,21 +1,21 @@
 const configTemplate: any = {
   BubbleChart: {
     state: {
-      time: {
-        dim: '#timeDim#'
-      },
       entities: {
-        dim: '#domain#'
-      },
-      entities_minimap: {
         dim: '#domain#',
         show: {
-          'is--#entityMinimap#': true
+          'is--#entity#': true
         }
+      },
+      entities_colorlegend: {
+        opacityRegular: 0.8,
+        opacityHighlightDim: 0.3,
+        dim: 'world_4region'
       },
       entities_tags: {
         dim: 'tag'
       },
+      time: {},
       marker: {
         space: ['entities', 'time'],
         label: {
@@ -24,24 +24,38 @@ const configTemplate: any = {
         },
         axis_y: {
           use: 'indicator',
-          which: '#yAxis#'
+          which: '#yAxis#',
         },
         axis_x: {
           use: 'indicator',
+          scaleType: 'log',
           which: '#xAxis#'
         },
         size: {
           use: 'indicator',
-          which: '#size#'
+          which: '#size#',
+          scaleType: 'linear',
+          allow: {
+            scales: ['linear']
+          }
+        },
+        color: {
+          use: 'property',
+          which: 'world_4region',
+          syncModels: ['marker_colorlegend']
         }
       },
-      marker_minimap: {
-        space: ['entities_minimap'],
+      marker_colorlegend: {
+        space: ['entities_colorlegend'],
         label: {
           use: 'property',
           which: '#nameProperty#'
         },
-        geoshape: {
+        hook_rank: {
+          use: 'property',
+          which: 'rank'
+        },
+        hook_geoshape: {
           use: 'property',
           which: 'shape_lores_svg'
         }
@@ -50,9 +64,9 @@ const configTemplate: any = {
         space: ['entities_tags'],
         label: {
           use: 'property',
-          which: 'name'
+          which: '#nameProperty#'
         },
-        parent: {
+        hook_parent: {
           use: 'property',
           which: 'parent'
         }
@@ -60,35 +74,23 @@ const configTemplate: any = {
     },
     data: {
       reader: 'ddf1-csv-ext',
-      splash: false
+      splash: true
     },
-    language: {id: 'en', strings: {}},
+    locale: {
+      id: 'en',
+      filePath: './preview-data/translation/'
+    },
     ui: {
+      datawarning: {
+        doubtDomain: [1800, 1950, 2015],
+        doubtRange: [1.0, 0.3, 0.2]
+      },
       buttons: ['colors', 'find', 'size', 'trails', 'lock', 'moreoptions', 'fullscreen', 'presentation'],
-      buttons_expand: [],
       dialogs: {
         popup: ['colors', 'find', 'size', 'zoom', 'moreoptions'],
         sidebar: ['colors', 'find', 'size', 'zoom'],
         moreoptions: ['opacity', 'speed', 'axes', 'size', 'colors', 'label', 'zoom', 'presentation', 'about']
-      },
-      chart: {
-        whenHovering: {
-          showProjectionLineX: true,
-          showProjectionLineY: true,
-          higlightValueX: true,
-          higlightValueY: true
-        },
-        labels: {
-          dragging: true,
-          removeLabelBox: false
-        },
-        trails: true,
-        lockNonSelected: 0
-      },
-      presentation: false,
-      cursorMode: 'arrow',
-      zoomOnScrolling: false,
-      adaptMinMaxZoom: false
+      }
     }
   }
 };

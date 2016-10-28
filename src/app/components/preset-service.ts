@@ -61,7 +61,10 @@ const defaultModel = {
       reader: 'ddf1-csv-ext',
       splash: false
     },
-    language: {id: 'en', strings: {}},
+    locale: {
+      id: 'en',
+      filePath: './preview-data/translation/'
+    },
     ui: {
       buttons: ['colors', 'find', 'size', 'trails', 'lock', 'moreoptions', 'fullscreen', 'presentation'],
       buttons_expand: [],
@@ -192,7 +195,10 @@ const alternativeModel: any = {
       reader: 'ddf1-csv-ext',
       splash: false
     },
-    language: {id: 'en', strings: {}},
+    locale: {
+      id: 'en',
+      filePath: './preview-data/translation/'
+    },
     ui: {
       buttons: ['colors', 'find', 'size', 'trails', 'lock', 'moreoptions', 'fullscreen', 'presentation'],
       buttons_expand: [],

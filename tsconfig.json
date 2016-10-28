@@ -7,15 +7,11 @@
     "sourceMap": true
   },
   "exclude": [
-    "node_modules",
-    "typings/main.d.ts",
-    "typings/main"
+    "node_modules"
   ],
   "filesGlob": [
     "./src/**/*.ts",
-    "!./node_modules/**/*.ts",
-    "src/custom_typings.d.ts",
-    "typings/browser.d.ts"
+    "!./node_modules/**/*.ts"
   ],
   "compileOnSave": false,
   "buildOnSave": false,
