@@ -1,16 +1,18 @@
-import {NgModule, Component, OnInit, NgZone, ViewChild, ViewContainerRef, ElementRef} from '@angular/core';
+import {NgModule, Component, OnInit, NgZone, ViewChild, ViewContainerRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 import {ModalDirective} from 'ng2-bootstrap/components/modal/modal.component';
+import {AutoUpdateComponent} from './components/auto-update';
 import {DdfFolderFormComponent} from './components/ddf-folder-form';
 import {PresetsFormComponent} from './components/presets-form';
 import {PresetService} from './components/preset-service';
 import {ConfigService} from './components/config-service';
 import {AboutFormComponent} from './components/about-form';
 import {VizabiModule} from 'ng2-vizabi/ng2-vizabi';
+import {configSg} from './components/config-sg';
 
 declare var electron: any;
 
@@ -44,7 +46,6 @@ class Tab {
 
   public model: any;
   public metadata: any;
-  public translations: any;
 
   private order: number;
 
@@ -67,6 +68,10 @@ class Tab {
   template: `
 <div style="position: absolute; top: -3px; left: 0;">
     <a class="header-title">GAPMINDER TOOLS</a>
+</div>
+
+<div style="position: absolute; top: 0; right: 50px; width: 300px;">
+  <ae-auto-update></ae-auto-update>
 </div>
 
 <div style="position: absolute; top: 0; right: 0">
@@ -301,6 +306,26 @@ export class AppComponent implements OnInit {
       }
     };
 
+    // predefined config for SG
+    if (!ddfFolderForm.ddfUrl || ddfFolderForm.ddfUrl.indexOf('systema_globalis') > 0) {
+      const config = configSg.BubbleChart;
+
+      config.data.ddfPath = ddfFolderForm.ddfUrl;
+      config.data.path = ddfFolderForm.ddfUrl;
+
+      tab.model = config;
+
+      this.tabs.forEach(tab => tab.active = false);
+      this.tabs.push(tab);
+
+      if (onChartReady) {
+        onChartReady();
+      }
+
+      return;
+    }
+
+    // heuristic config for other datasets
     this.configService.getConfig(configRequestParameters, (config) => {
       // tab.model = ddfFolderForm.getQuery();
 
@@ -308,8 +333,6 @@ export class AppComponent implements OnInit {
       config.data.path = ddfFolderForm.ddfUrl;
 
       tab.model = config;
-
-      tab.translations = ddfFolderForm.translations;
 
       this.tabs.forEach(tab => tab.active = false);
       this.tabs.push(tab);
@@ -350,6 +373,7 @@ export class AppComponent implements OnInit {
 @NgModule({
   declarations: [
     AppComponent,
+    AutoUpdateComponent,
     DdfFolderFormComponent,
     PresetsFormComponent,
     AboutFormComponent,
@@ -364,6 +388,7 @@ export class AppComponent implements OnInit {
   providers: [
     {provide: PresetService, useClass: PresetService},
     {provide: ConfigService, useClass: ConfigService},
+    AutoUpdateComponent,
     DdfFolderFormComponent,
     PresetsFormComponent,
     AboutFormComponent

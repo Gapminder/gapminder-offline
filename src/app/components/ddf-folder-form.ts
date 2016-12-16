@@ -86,7 +86,7 @@ export class DdfFolderFormComponent implements OnInit {
   }
 
   public defaults() {
-    this.ddfUrl = this.electronPath + '/ddf';
+    this.ddfUrl = this.electronPath + '/ddf--gapminder--systema_globalis';
     this.ddfTranslationsUrl = 'preview-data/translation/en.json';
     // this.expectedMeasuresQuery = formatJson.plain(entitiesQueryTemplate);
     // this.mainQuery = {};

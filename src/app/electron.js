@@ -2,19 +2,61 @@ const electron = require('electron');
 const app = electron.app;
 const ipc = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
+const path = require('path');
 const fs = require('fs');
+const electronEasyUpdater = require('electron-easy-updater');
+const childProcess = require('child_process');
 
-const PRESETS_FILE = 'presets.json';
+const spawn = childProcess.spawn;
+const dirs = {
+  linux: './',
+  darwin: __dirname + '/../../../../',
+  win32: '.\\'
+};
+
+process.noAsar = true;
+
+const RELEASE_ARCHIVE = 'release.zip';
+const FEED_VERSION_URL = 'http://s3-eu-west-1.amazonaws.com/gapminder-offline/auto-update.json';
+const FEED_URL = `http://s3-eu-west-1.amazonaws.com/gapminder-offline/#version#/Gapminder Offline-${process.platform}-x64.zip`;
+const PRESETS_FILE = __dirname + '/presets.json';
+const UPDATE_FLAG_FILE = `${dirs[process.platform]}update-required`;
+const CACHE_DIR = `${dirs[process.platform]}cache`;
 
 let mainWindow = null;
+let newVersion = null;
 
-app.on('window-all-closed', () => {
-  if (process.platform != 'darwin') {
-    app.quit();
+function finishUpdate() {
+  if (process.platform !== 'win32') {
+    const updateCommand = dirs[process.platform] + 'update-' + process.platform;
+
+    spawn(
+      updateCommand,
+      [],
+      {
+        cwd: dirs[process.platform],
+        stdio: 'ignore',
+        detached: true
+      }
+    ).unref();
   }
-});
 
-app.on('ready', () => {
+  if (process.platform === 'win32') {
+    spawn(
+      'cmd.exe',
+      ['/s', '/c', '"update-win32.bat"'],
+      {
+        windowsVerbatimArguments: true,
+        stdio: 'ignore',
+        detached: true
+      }
+    ).unref();
+  }
+
+  app.quit();
+}
+
+function startMainApplication() {
   mainWindow = new BrowserWindow({width: 1200, height: 800});
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
@@ -42,7 +84,80 @@ app.on('ready', () => {
     });
   });
 
-  ipc.on('open-dev-tools', event => {
+  ipc.on('open-dev-tools', () => {
     mainWindow.webContents.openDevTools();
+  });
+
+  ipc.on('check-version', event => {
+    setTimeout(() => {
+      electronEasyUpdater.versionCheck({
+        url: FEED_VERSION_URL,
+        version: app.getVersion()
+      }, (err, actualVersion) => {
+        if (!err && actualVersion) {
+          newVersion = actualVersion;
+          event.sender.send('request-to-update', actualVersion);
+        }
+      });
+    }, 10000);
+  });
+
+  ipc.on('prepare-update', event => {
+    const releaseUrl = FEED_URL.replace('#version#', newVersion);
+
+    electronEasyUpdater.download({
+        url: releaseUrl,
+        version: app.getVersion(),
+        path: CACHE_DIR,
+        file: RELEASE_ARCHIVE
+      }, progress => {
+        event.sender.send('download-progress', progress);
+      },
+      err => {
+        if (err) {
+          event.sender.send('unpack-complete', err);
+          return;
+        }
+
+        electronEasyUpdater.unpack({
+            directory: CACHE_DIR,
+            file: RELEASE_ARCHIVE
+          },
+          progress => {
+            event.sender.send('unpack-progress', progress);
+          },
+          err => {
+            fs.writeFile(UPDATE_FLAG_FILE, '0', () => {
+              event.sender.send('unpack-complete', err);
+            });
+          });
+      }
+    );
+  });
+
+  ipc.on('new-version-ready-flag', () => {
+    fs.writeFile(UPDATE_FLAG_FILE, '0', err => null);
+  });
+
+  ipc.on('exit-and-update', () => {
+    finishUpdate(() => {
+      process.exit(0);
+    });
+  });
+}
+
+app.on('window-all-closed', () => {
+  app.quit();
+  process.exit(0);
+});
+
+app.on('ready', () => {
+  fs.readFile(UPDATE_FLAG_FILE, 'utf8', err => {
+    if (err) {
+      startMainApplication();
+      return;
+    }
+
+    finishUpdate();
   });
 });
