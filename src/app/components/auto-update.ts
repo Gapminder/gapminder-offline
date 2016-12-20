@@ -26,10 +26,10 @@ const ipc = electron.ipcRenderer;
 `],
   template: `
 <div *ngIf="requestToUpdate" style="display: inline;">
-    <div class="label">New release is available. Do you want to update?</div>
+    <div class="label">New version is available!</div>
     <span>
-      <input type="button" (click)="processUpdateRequest()" value="Yes" class="btn" />
-      <input type="button" (click)="resetUpdateRequest()" value="No" class="btn" />
+      <input type="button" (click)="processUpdateRequest()" value="Update now" class="btn" />
+      <input type="button" (click)="resetUpdateRequest()" value="Later" class="btn" />
     </span>
 </div>
 <div *ngIf="requestToProgress" class="progress">
@@ -39,10 +39,9 @@ const ipc = electron.ipcRenderer;
                  [value]="progress"></progressbar>
 </div>
 <div *ngIf="requestToExitAndFinishUpdate">
-    <div class="label">Do you want to exit and update now?</div>
+    <div class="label">Reopen the app to finish update?</div>
     <span>
-      <input type="button" (click)="processExitAndFinishUpdateRequest()" value="Yes" class="btn" />
-      <input type="button" (click)="resetExitAndFinishUpdateRequest()" value="No" class="btn" />
+      <input type="button" (click)="processExitAndFinishUpdateRequest()" value="Ok" class="btn" />
     </span>
 </div>
 `
