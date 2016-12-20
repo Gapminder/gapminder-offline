@@ -10,7 +10,8 @@ import {DdfFolderFormComponent} from './components/ddf-folder-form';
 import {PresetsFormComponent} from './components/presets-form';
 import {PresetService} from './components/preset-service';
 import {ConfigService} from './components/config-service';
-import {AboutFormComponent} from './components/about-form';
+import {AdditionalDataComponent, IAdditionalDataItem} from './components/additional-data';
+import {AdditionalDataFormComponent} from './components/additional-data-form';
 import {VizabiModule} from 'ng2-vizabi/ng2-vizabi';
 import {configSg} from './components/config-sg';
 
@@ -43,9 +44,8 @@ class Progress {
 class Tab {
   public active: boolean;
   public removable: boolean = true;
-
   public model: any;
-  public metadata: any;
+  public additionalData: Array<IAdditionalDataItem> = [];
 
   private order: number;
 
@@ -86,10 +86,6 @@ class Tab {
                 <li role="menuitem">
                     <a class="dropdown-item"
                        href="#"
-                       (click)="aboutModal.show()">About</a></li>
-                <li role="menuitem">
-                    <a class="dropdown-item"
-                       href="#"
                        (click)="openDevTools()">Open Dev Tools
                     </a>
                 </li>
@@ -98,6 +94,12 @@ class Tab {
                     <a class="dropdown-item"
                        href="#"
                        (click)="ddfModal.show()">Open DDF folder
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a class="dropdown-item"
+                       href="#"
+                       (click)="additionalDataModal.show()">Add extra data
                     </a>
                 </li>
                 <li role="menuitem">
@@ -140,6 +142,7 @@ class Tab {
                     [readerName]="readerName"
                     [model]="tab.model"
                     [extResources]="extResources"
+                    [additionalItems]="tab.additionalData"
                     [chartType]="tab.chartType"></vizabi>
         </tab>
     </tabset>
@@ -150,7 +153,7 @@ class Tab {
      class="modal fade"
      tabindex="-1"
      role="dialog"
-     aria-labelledby="DDF folder settings"
+     aria-labelledby="Open DDF folder"
      aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -162,6 +165,28 @@ class Tab {
             </div>
             <div class="modal-body">
                 <ae-ddf-folder-form (done)="ddfFolderFormComplete($event)"></ae-ddf-folder-form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal
+     #additionalDataModal="bs-modal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Add extra data"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="additionalDataModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Addition data</h4>
+            </div>
+            <div class="modal-body">
+                <ae-additional-data-form (done)="additionalDataFormComplete($event)"></ae-additional-data-form>
             </div>
         </div>
     </div>
@@ -188,28 +213,6 @@ class Tab {
         </div>
     </div>
 </div>
-
-<div bsModal
-     #aboutModal="bs-modal"
-     class="modal fade"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="About"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="aboutModal.hide()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">About</h4>
-            </div>
-            <div class="modal-body">
-                <ae-about-form (done)="aboutFormComplete()"></ae-about-form>
-            </div>
-        </div>
-    </div>
-</div>
 `
 })
 export class AppComponent implements OnInit {
@@ -217,8 +220,8 @@ export class AppComponent implements OnInit {
   public status: {isMenuOpen: boolean} = {isMenuOpen: false};
 
   @ViewChild('ddfModal') public ddfModal: ModalDirective;
+  @ViewChild('additionalDataModal') public additionalDataModal: ModalDirective;
   @ViewChild('presetsModal') public presetsModal: ModalDirective;
-  @ViewChild('aboutModal') public aboutModal: ModalDirective;
 
   private readerModuleObject: any;
   private readerGetMethod: string;
@@ -278,10 +281,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private aboutFormComplete() {
-    this.aboutModal.hide();
-  }
-
   private defaultChart() {
     this.newChart(() => {
       this._ngZone.run(() => {
@@ -305,6 +304,8 @@ export class AppComponent implements OnInit {
         progress.incProgress(value);
       }
     };
+
+    tab.additionalData = ddfFolderForm.additionalData;
 
     // predefined config for SG
     if (!ddfFolderForm.ddfUrl || ddfFolderForm.ddfUrl.indexOf('systema_globalis') > 0) {
@@ -343,6 +344,16 @@ export class AppComponent implements OnInit {
     });
   }
 
+  private additionalDataFormComplete(additionalData: Array<IAdditionalDataItem>) {
+    if (additionalData) {
+      const currentTab = this.tabs.find(tab => tab.active);
+
+      currentTab.additionalData = additionalData;
+    }
+
+    this.additionalDataModal.hide();
+  }
+
   private chartCreated(data) {
     const progress = this.progress;
     const modalInterval: any = setInterval(function () {
@@ -376,7 +387,8 @@ export class AppComponent implements OnInit {
     AutoUpdateComponent,
     DdfFolderFormComponent,
     PresetsFormComponent,
-    AboutFormComponent,
+    AdditionalDataFormComponent,
+    AdditionalDataComponent
   ],
   imports: [
     BrowserModule,
@@ -391,7 +403,8 @@ export class AppComponent implements OnInit {
     AutoUpdateComponent,
     DdfFolderFormComponent,
     PresetsFormComponent,
-    AboutFormComponent
+    AdditionalDataFormComponent,
+    AdditionalDataComponent
   ],
   bootstrap: [AppComponent]
 })

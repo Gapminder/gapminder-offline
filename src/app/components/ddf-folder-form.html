@@ -28,6 +28,11 @@
     <div>{{ddfUrl}}</div>
 </div>
 
+<div class="popup-block">
+    <ae-additional-data (additionalData)="additionalDataChanged($event)"></ae-additional-data>
+</div>
+
+
 <!--<div class="popup-block">
     <label>DDF default translations prefix (folder&file name)&nbsp;
         <input type="text" [(ngModel)]="ddfTranslationsUrl" size="40"></label>
