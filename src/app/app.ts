@@ -1,4 +1,4 @@
-import {NgModule, Component, OnInit, NgZone, ViewChild, ViewContainerRef} from '@angular/core';
+import {NgModule, Component, OnInit, NgZone, ViewChild, ElementRef, ViewContainerRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
@@ -67,7 +67,7 @@ class Tab {
 @Component({
   selector: 'ae-app',
   template: `
-<div style="position: absolute; top: -3px; left: 0;">
+<div style="position: absolute; top: -3px; left: 10px;">
     <a class="header-title">GAPMINDER TOOLS</a>
 </div>
 
@@ -75,71 +75,59 @@ class Tab {
   <ae-auto-update></ae-auto-update>
 </div>
 
-<div style="position: absolute; top: 0; right: 0">
+<div style="position: absolute; top: 0; right: 0;">
     <div class="ddf-menu">
         <div class="btn-group" dropdown [(isOpen)]="status.isMenuOpen">
             <button id="single-button"
                     type="button"
-                    class="btn btn-default"
-                    dropdownToggle><img src="./public/images/hamburger.png" />
+                    dropdownToggle
+                    class="btn btn-default"><img src="./public/images/hamburger.png" />
             </button>
-            <ul dropdownMenu role="menu" aria-labelledby="single-button">
-                <li role="menuitem">
-                    <a class="dropdown-item"
-                       href="#"
-                       (click)="openDevTools()">Open Dev Tools
-                    </a>
-                </li>
-                
-                <li role="menuitem">
-                    <ul dropdownMenu role="menu" aria-labelledby="single-button">
-                                      <li role="menuitem">
-                    <a class="dropdown-item"
-                       href="#"
-                       (click)="ddfModal.show()">Open DDF folder
-                    </a>
-                </li>
-                <li role="menuitem">
-                    <a class="dropdown-item"
-                       href="#"
-                       (click)="additionalDataModal.show()">Add extra data
-                    </a>
-                </li>
-
+            
+            <ul dropdownMenu role="menu" aria-labelledby="single-button" class="menu show-menu">
+                <li class="menu-item submenu">
+                    <button type="button" class="menu-btn"><span class="menu-text">New chart</span></button>
+                    <ul class="menu">
+                        <li class="menu-item">
+                            <button type="button" class="menu-btn"><span class="menu-text" (click)="doGapminderChart()">Gapminder data</span> </button>
+                        </li>
+                        <li class="menu-item submenu">
+                            <button type="button" class="menu-btn"><span class="menu-text">Your data</span> </button>
+                            <ul class="menu">
+                                <li class="menu-item">
+                                    <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
+                                </li>
+                                <li class="menu-item">
+                                    <button type="button" class="menu-btn" (click)="doNewDdfFolder()"><span class="menu-text">DDFcsv dataset</span> </button>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
-
-                
-                <li class="divider dropdown-divider"></li>
-                <li role="menuitem">
-                    <a class="dropdown-item"
-                       href="#"
-                       (click)="ddfModal.show()">Open DDF folder
-                    </a>
+                <li class="menu-item submenu">
+                    <button type="button" class="menu-btn"><span class="menu-text">Add your data</span></button>
+                    <ul class="menu">
+                        <li class="menu-item">
+                            <button type="button" class="menu-btn" (click)="doAddCsvFile()"><span class="menu-text">CSV file...</span> </button>
+                        </li>
+                        <li class="menu-item">
+                            <button type="button" class="menu-btn" (click)="doAddDdfFolder()"><span class="menu-text">DDFcsv dataset</span> </button>
+                        </li>
+                    </ul>
                 </li>
-                <li role="menuitem">
-                    <a class="dropdown-item"
-                       href="#"
-                       (click)="additionalDataModal.show()">Add extra data
-                    </a>
+                <li class="menu-separator"></li>
+                <li class="menu-item">
+                    <button type="button" class="menu-btn"><span class="menu-text">Open...</span></button>
                 </li>
-                <li role="menuitem">
-                    <a class="dropdown-item"
-                       href="#"
-                       (click)="presetsModal.show()">Presets
-                    </a>
+                <li class="menu-item">
+                    <button type="button" class="menu-btn"><span class="menu-text">Save...</span></button>
                 </li>
-                <li role="menuitem">
-                    <a class="dropdown-item"
-                       href="#"
-                       (click)="versionsModal.show()">Update
-                    </a>
+                <li class="menu-separator"></li>
+                <li class="menu-item">
+                    <button type="button" class="menu-btn" (click)="versionsModal.show()"><span class="menu-text">Update</span></button>
                 </li>
-                <li role="menuitem">
-                    <a class="dropdown-item"
-                       href="#"
-                       (click)="defaultChart()">New chart
-                    </a>
+                <li class="menu-item">
+                    <button type="button" class="menu-btn" (click)="openDevTools()"><span class="menu-text">Open dev tools</span> </button>
                 </li>
             </ul>
         </div>
@@ -262,6 +250,10 @@ class Tab {
         </div>
     </div>
 </div>
+
+<input type="file" style="display: none;" #newDdfFolder (change)="onDdfFolderChanged($event)" webkitdirectory directory />
+<input type="file" style="display: none;" #addDdfFolder (change)="onDdfExtFolderChanged($event)" webkitdirectory directory />
+<input type="file" style="display: none;" #addCsvFile (change)="onCsvFileChanged($event)" />
 `
 })
 export class AppComponent implements OnInit {
@@ -272,6 +264,10 @@ export class AppComponent implements OnInit {
   @ViewChild('additionalDataModal') public additionalDataModal: ModalDirective;
   @ViewChild('presetsModal') public presetsModal: ModalDirective;
   @ViewChild('versionsModal') public versionsModal: ModalDirective;
+
+  @ViewChild('newDdfFolder') newDdfFolderInput: ElementRef;
+  @ViewChild('addDdfFolder') addDdfFolderInput: ElementRef;
+  @ViewChild('addCsvFile') addCsvFileInput: ElementRef;
 
   private readerModuleObject: any;
   private readerGetMethod: string;
@@ -426,7 +422,7 @@ export class AppComponent implements OnInit {
 
   private forceResize() {
     setTimeout(function () {
-      var event: any = document.createEvent('HTMLEvents');
+      const event: any = document.createEvent('HTMLEvents');
 
       event.initEvent('resize', true, true);
       event.eventName = 'resize';
@@ -435,6 +431,55 @@ export class AppComponent implements OnInit {
   }
 
   private chartChanged(data) {
+  }
+
+  private doNewDdfFolder() {
+    this.newDdfFolderInput.nativeElement.click();
+  }
+
+  private onDdfFolderChanged(event: any) {
+    if (event.srcElement.files && event.srcElement.files.length > 0) {
+      this.ddfFolderForm.ddfUrl = event.srcElement.files[0].path;
+      this.newChart(() => {
+        this._ngZone.run(() => {
+        });
+      }, false);
+    }
+  }
+
+  private doGapminderChart() {
+    this.newChart(() => {
+      this._ngZone.run(() => {
+      });
+    });
+  }
+
+  private doAddDdfFolder() {
+    this.addDdfFolderInput.nativeElement.click();
+  }
+
+  private doAddCsvFile() {
+    this.addCsvFileInput.nativeElement.click();
+  }
+
+  private addData(data) {
+    const currentTab = this.tabs.find(tab => tab.active);
+    const newAdditionalData = currentTab.additionalData.slice();
+
+    newAdditionalData.push(data);
+    currentTab.additionalData = newAdditionalData;
+  }
+
+  private onDdfExtFolderChanged(event) {
+    if (event.srcElement.files && event.srcElement.files.length > 0) {
+      this.addData({reader: 'ddfcsv', path: event.srcElement.files[0].path});
+    }
+  }
+
+  private onCsvFileChanged(event) {
+    if (event.srcElement.files && event.srcElement.files.length > 0) {
+      this.addData({reader: 'csv', path: event.srcElement.files[0].path});
+    }
   }
 }
 
