@@ -15,7 +15,9 @@ const configTemplate: any = {
       entities_tags: {
         dim: 'tag'
       },
-      time: {},
+      time: {
+        dim: 'time'
+      },
       marker: {
         space: ['entities', 'time'],
         label: {

@@ -24,9 +24,7 @@ export const configSg: any = {
         dim: 'tag'
       },
       time: {
-        startOrigin: '1800',
-        endOrigin: '2015',
-        value: '2015'
+        dim: 'time'
       },
       marker: {
         space: ['entities', 'time'],
