@@ -11,10 +11,6 @@ declare var electron: any;
   <div class="popup-block">
     <div *ngFor="let version of versions"><a (click)="update(version)">{{version}}</a></div>
   </div>
-
-  <div class="popup-footer">
-      <input type="button" (click)="close()" value="Close" />
-  </div>
 </div>
 `
 })

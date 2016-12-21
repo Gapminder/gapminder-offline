@@ -4,9 +4,11 @@ const ipc = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const fs = require('fs');
+const fsExtra = require('fs-extra');
 const request = require('request');
 const autoUpdateConfig = require('./auto-update-config.json');
 const electronEasyUpdater = require('electron-easy-updater');
+const fileManagement = require('./file-management');
 const childProcess = require('child_process');
 
 const spawn = childProcess.spawn;
@@ -162,6 +164,9 @@ function startMainApplication() {
     fs.writeFile(UPDATE_FLAG_FILE, '0', err => null);
   });
 
+  ipc.on('do-open', fileManagement.openFile);
+  ipc.on('do-save', fileManagement.saveFile);
+
   ipc.on('exit-and-update', () => {
     finishUpdate(() => {
       process.exit(0);
@@ -177,6 +182,7 @@ app.on('window-all-closed', () => {
 app.on('ready', () => {
   fs.readFile(UPDATE_FLAG_FILE, 'utf8', err => {
     if (err) {
+      fsExtra.removeSync(CACHE_DIR);
       startMainApplication();
       return;
     }
