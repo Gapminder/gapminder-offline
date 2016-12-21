@@ -12,6 +12,7 @@ import {PresetService} from './components/preset-service';
 import {ConfigService} from './components/config-service';
 import {AdditionalDataComponent, IAdditionalDataItem} from './components/additional-data';
 import {AdditionalDataFormComponent} from './components/additional-data-form';
+import {VersionsFormComponent} from './components/versions-form';
 import {VizabiModule} from 'ng2-vizabi/ng2-vizabi';
 import {configSg} from './components/config-sg';
 
@@ -131,6 +132,12 @@ class Tab {
                 <li role="menuitem">
                     <a class="dropdown-item"
                        href="#"
+                       (click)="versionsModal.show()">Update
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a class="dropdown-item"
+                       href="#"
                        (click)="defaultChart()">New chart
                     </a>
                 </li>
@@ -233,6 +240,28 @@ class Tab {
         </div>
     </div>
 </div>
+
+<div bsModal
+     #versionsModal="bs-modal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Versions"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="versionsModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Update</h4>
+            </div>
+            <div class="modal-body">
+                <ae-versions-form (done)="versionsFormComplete($event)"></ae-versions-form>
+            </div>
+        </div>
+    </div>
+</div>
 `
 })
 export class AppComponent implements OnInit {
@@ -242,6 +271,7 @@ export class AppComponent implements OnInit {
   @ViewChild('ddfModal') public ddfModal: ModalDirective;
   @ViewChild('additionalDataModal') public additionalDataModal: ModalDirective;
   @ViewChild('presetsModal') public presetsModal: ModalDirective;
+  @ViewChild('versionsModal') public versionsModal: ModalDirective;
 
   private readerModuleObject: any;
   private readerGetMethod: string;
@@ -374,6 +404,13 @@ export class AppComponent implements OnInit {
     this.additionalDataModal.hide();
   }
 
+  private versionsFormComplete(version?: string) {
+    if (version) {
+      electron.ipcRenderer.send('request-custom-update', version);
+      this.versionsModal.hide();
+    }
+  }
+
   private chartCreated(data) {
     const progress = this.progress;
     const modalInterval: any = setInterval(function () {
@@ -408,7 +445,8 @@ export class AppComponent implements OnInit {
     DdfFolderFormComponent,
     PresetsFormComponent,
     AdditionalDataFormComponent,
-    AdditionalDataComponent
+    AdditionalDataComponent,
+    VersionsFormComponent
   ],
   imports: [
     BrowserModule,
@@ -424,7 +462,8 @@ export class AppComponent implements OnInit {
     DdfFolderFormComponent,
     PresetsFormComponent,
     AdditionalDataFormComponent,
-    AdditionalDataComponent
+    AdditionalDataComponent,
+    VersionsFormComponent
   ],
   bootstrap: [AppComponent]
 })

@@ -4,6 +4,7 @@ const ipc = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const fs = require('fs');
+const request = require('request');
 const autoUpdateConfig = require('./auto-update-config.json');
 const electronEasyUpdater = require('electron-easy-updater');
 const childProcess = require('child_process');
@@ -57,6 +58,39 @@ function finishUpdate() {
   app.quit();
 }
 
+function startUpdate(event, version) {
+  const releaseUrl = FEED_URL.replace('#version#', version);
+
+  electronEasyUpdater.download({
+      url: releaseUrl,
+      version: app.getVersion(),
+      path: CACHE_DIR,
+      file: RELEASE_ARCHIVE
+    }, progress => {
+      event.sender.send('download-progress', progress);
+    },
+    err => {
+      if (err) {
+        event.sender.send('unpack-complete', err);
+        return;
+      }
+
+      electronEasyUpdater.unpack({
+          directory: CACHE_DIR,
+          file: RELEASE_ARCHIVE
+        },
+        progress => {
+          event.sender.send('unpack-progress', progress);
+        },
+        err => {
+          fs.writeFile(UPDATE_FLAG_FILE, '0', () => {
+            event.sender.send('unpack-complete', err);
+          });
+        });
+    }
+  );
+}
+
 function startMainApplication() {
   mainWindow = new BrowserWindow({width: 1200, height: 800});
   mainWindow.loadURL('file://' + __dirname + '/index.html');
@@ -71,6 +105,23 @@ function startMainApplication() {
 
   ipc.on('get-app-path', event => {
     event.sender.send('got-app-path', app.getAppPath());
+  });
+
+  ipc.on('get-supported-versions', event => {
+    request.get(FEED_VERSION_URL, (error, response, body) => {
+      if (!error && response.statusCode == 200) {
+        try {
+          const config = JSON.parse(body);
+
+          event.sender.send('got-supported-versions', config.supported);
+        } catch (e) {
+        }
+      }
+    });
+  });
+
+  ipc.on('request-custom-update', (event, version) => {
+    event.sender.send('request-and-update', version);
   });
 
   ipc.on('presets-export', (event, content) => {
@@ -103,37 +154,8 @@ function startMainApplication() {
     }, 10000);
   });
 
-  ipc.on('prepare-update', event => {
-    const releaseUrl = FEED_URL.replace('#version#', newVersion);
-
-    electronEasyUpdater.download({
-        url: releaseUrl,
-        version: app.getVersion(),
-        path: CACHE_DIR,
-        file: RELEASE_ARCHIVE
-      }, progress => {
-        event.sender.send('download-progress', progress);
-      },
-      err => {
-        if (err) {
-          event.sender.send('unpack-complete', err);
-          return;
-        }
-
-        electronEasyUpdater.unpack({
-            directory: CACHE_DIR,
-            file: RELEASE_ARCHIVE
-          },
-          progress => {
-            event.sender.send('unpack-progress', progress);
-          },
-          err => {
-            fs.writeFile(UPDATE_FLAG_FILE, '0', () => {
-              event.sender.send('unpack-complete', err);
-            });
-          });
-      }
-    );
+  ipc.on('prepare-update', (event, version) => {
+    startUpdate(event, version || newVersion);
   });
 
   ipc.on('new-version-ready-flag', () => {

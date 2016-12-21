@@ -59,6 +59,15 @@ export class AutoUpdateComponent implements OnInit {
   ngOnInit() {
     electron.ipcRenderer.send('check-version');
 
+    ipc.on('request-and-update', (event, version) => {
+      this._ngZone.run(() => {
+        if (version) {
+          this.requestToUpdate = true;
+          this.processUpdateRequest(version);
+        }
+      });
+    });
+
     ipc.on('request-to-update', (event, version) => {
       this._ngZone.run(() => {
         if (version) {
@@ -100,8 +109,8 @@ export class AutoUpdateComponent implements OnInit {
     });
   }
 
-  processUpdateRequest() {
-    electron.ipcRenderer.send('prepare-update');
+  processUpdateRequest(version?: string) {
+    electron.ipcRenderer.send('prepare-update', version);
     this.resetUpdateRequest();
 
     this._ngZone.run(() => {
