@@ -89,6 +89,26 @@ class Tab {
                        (click)="openDevTools()">Open Dev Tools
                     </a>
                 </li>
+                
+                <li role="menuitem">
+                    <ul dropdownMenu role="menu" aria-labelledby="single-button">
+                                      <li role="menuitem">
+                    <a class="dropdown-item"
+                       href="#"
+                       (click)="ddfModal.show()">Open DDF folder
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a class="dropdown-item"
+                       href="#"
+                       (click)="additionalDataModal.show()">Add extra data
+                    </a>
+                </li>
+
+                    </ul>
+                </li>
+
+                
                 <li class="divider dropdown-divider"></li>
                 <li role="menuitem">
                     <a class="dropdown-item"

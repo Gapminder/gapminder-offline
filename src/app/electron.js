@@ -4,6 +4,7 @@ const ipc = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const fs = require('fs');
+const autoUpdateConfig = require('./auto-update-config.json');
 const electronEasyUpdater = require('electron-easy-updater');
 const childProcess = require('child_process');
 
@@ -17,8 +18,8 @@ const dirs = {
 process.noAsar = true;
 
 const RELEASE_ARCHIVE = 'release.zip';
-const FEED_VERSION_URL = 'http://s3-eu-west-1.amazonaws.com/gapminder-offline/auto-update.json';
-const FEED_URL = `http://s3-eu-west-1.amazonaws.com/gapminder-offline/#version#/Gapminder Offline-${process.platform}-x64.zip`;
+const FEED_VERSION_URL = autoUpdateConfig.FEED_VERSION_URL;
+const FEED_URL = autoUpdateConfig.FEED_URL.replace(/#os#/g, process.platform);
 const PRESETS_FILE = __dirname + '/presets.json';
 const UPDATE_FLAG_FILE = `${dirs[process.platform]}update-required`;
 const CACHE_DIR = `${dirs[process.platform]}cache`;

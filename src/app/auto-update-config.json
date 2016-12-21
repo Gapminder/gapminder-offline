@@ -1,0 +1,4 @@
+{
+  "FEED_VERSION_URL": "http://s3-eu-west-1.amazonaws.com/gapminder-offline/auto-update.json",
+  "FEED_URL": "http://s3-eu-west-1.amazonaws.com/gapminder-offline/#version#/Gapminder Offline-#os#-x64.zip"
+}
