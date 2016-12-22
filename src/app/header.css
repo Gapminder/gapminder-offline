@@ -1,6 +1,29 @@
-.glyphicon-remove-circle:before{content:"\e014"}
+.glyphicon-remove-circle:before{
+    content:"\e014";
+    top: 1px;
+    position: relative;
+    right: -2px;
+}
 
-.active {
+.main-menu-btn {
+    border: none ! important;
+    background-color: #fff ! important;
+    outline: none ! important;
+    margin-top: 2px;
+    margin-right: 2px;
+}
+
+.main-menu-btn:hover {
+    border: none ! important;
+    outline: none ! important;
+}
+
+.main-menu-btn:active {
+    border: none ! important;
+    outline: none ! important;
+}
+
+.nav-item > .active {
     background-color: #ffca34 ! important;
     border: none ! important;
 }
@@ -74,8 +97,8 @@
 }
 
 .menu {
-    top: 44px;
-    right: 20px;
+    top: 39px;
+    right: 0px;
     position: absolute;
     width: 200px;
     padding: 2px;

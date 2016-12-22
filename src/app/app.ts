@@ -19,28 +19,28 @@ import {configSg} from './components/config-sg';
 declare var electron: any;
 
 /* class Progress {
-  public value: number;
+ public value: number;
 
-  constructor() {
-    this.initProgress();
-  }
+ constructor() {
+ this.initProgress();
+ }
 
-  public initProgress() {
-    this.value = 0;
-  }
+ public initProgress() {
+ this.value = 0;
+ }
 
-  public setProgress(progress: number) {
-    this.value = progress;
-  }
+ public setProgress(progress: number) {
+ this.value = progress;
+ }
 
-  public incProgress(value: number) {
-    this.value += value;
-  }
+ public incProgress(value: number) {
+ this.value += value;
+ }
 
-  public isProgress(): boolean {
-    return this.value > 0 && this.value <= 100;
-  }
-}*/
+ public isProgress(): boolean {
+ return this.value > 0 && this.value <= 100;
+ }
+ }*/
 
 class Tab {
   public active: boolean;
@@ -71,7 +71,7 @@ class Tab {
 @Component({
   selector: 'ae-app',
   template: `
-<div style="position: absolute; top: -3px; left: 10px;">
+<div style="position: absolute; top: -4px; left: 10px;">
     <a class="header-title">GAPMINDER TOOLS</a>
 </div>
 
@@ -81,15 +81,13 @@ class Tab {
 
 <div style="position: absolute; top: 0; right: 0;">
     <div class="ddf-menu">
-        <div class="btn-group" dropdown [(isOpen)]="status.isMenuOpen">
-            <button id="single-button"
-                    type="button"
-                    dropdownToggle
-                    style="margin-top: -3px;"
-                    class="btn btn-default"><img src="./public/images/hamburger.png" />
+        <div class="btn-group">
+            <button type="button"
+                    (click)="switchMenu()"
+                    class="main-menu-btn"><img src="./public/images/hamburger.png" />
             </button>
             
-            <ul dropdownMenu role="menu" aria-labelledby="single-button" class="menu show-menu">
+            <ul role="menu" aria-labelledby="single-button" class="menu show-menu" *ngIf="isMenuOpen">
                 <li class="menu-item submenu">
                     <button type="button" class="menu-btn"><span class="menu-text">New chart</span></button>
                     <ul class="menu">
@@ -99,7 +97,7 @@ class Tab {
                         <li class="menu-item submenu">
                             <button type="button" class="menu-btn"><span class="menu-text">Your data</span> </button>
                             <ul class="menu">
-                                <li class="menu-item">
+                                <li class="menu-item" (click)="doNewCsvFile()">
                                     <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
                                 </li>
                                 <li class="menu-item" (click)="doNewDdfFolder()">
@@ -128,8 +126,8 @@ class Tab {
                     <button type="button" class="menu-btn"><span class="menu-text">Save...</span></button>
                 </li>
                 <li class="menu-separator"></li>
-                <li class="menu-item" (click)="versionsModal.show()">
-                    <button type="button" class="menu-btn"><span class="menu-text">Update</span></button>
+                <li class="menu-item" (click)="checkForUpdates()">
+                    <button type="button" class="menu-btn"><span class="menu-text">Check for updates...</span></button>
                 </li>
                 <li class="menu-item" (click)="openDevTools()">
                     <button type="button" class="menu-btn"><span class="menu-text">Open dev tools</span> </button>
@@ -257,13 +255,14 @@ class Tab {
 </div>
 
 <input type="file" style="display: none;" #newDdfFolder (change)="onDdfFolderChanged($event)" webkitdirectory directory />
+<input type="file" style="display: none;" #newCsvFile (change)="onNewCsvFileChanged($event)" />
 <input type="file" style="display: none;" #addDdfFolder (change)="onDdfExtFolderChanged($event)" webkitdirectory directory />
 <input type="file" style="display: none;" #addCsvFile (change)="onCsvFileChanged($event)" />
 `
 })
 export class AppComponent implements OnInit {
   public tabs: Tab[] = [];
-  public status: {isMenuOpen: boolean} = {isMenuOpen: false};
+  public isMenuOpen: boolean = false;
 
   @ViewChild('ddfModal') public ddfModal: ModalDirective;
   @ViewChild('additionalDataModal') public additionalDataModal: ModalDirective;
@@ -271,6 +270,7 @@ export class AppComponent implements OnInit {
   @ViewChild('versionsModal') public versionsModal: ModalDirective;
 
   @ViewChild('newDdfFolder') newDdfFolderInput: ElementRef;
+  @ViewChild('newCsvFile') newCsvFileInput: ElementRef;
   @ViewChild('addDdfFolder') addDdfFolderInput: ElementRef;
   @ViewChild('addCsvFile') addCsvFileInput: ElementRef;
 
@@ -313,7 +313,12 @@ export class AppComponent implements OnInit {
     // this.progress = new Progress();
   }
 
+  private switchMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
   private openDevTools() {
+    this.isMenuOpen = false;
     electron.ipcRenderer.send('open-dev-tools');
   }
 
@@ -395,6 +400,19 @@ export class AppComponent implements OnInit {
     });
   }
 
+  private newSimpleChart(onChartReady) {
+    /*    const tab = new Tab(this.ddfFolderForm.ddfChartType, this.tabs.length, true);
+
+     tab.model = config;
+
+     this.tabs.forEach(tab => tab.active = false);
+     this.tabs.push(tab);
+
+     if (onChartReady) {
+     onChartReady();
+     }*/
+  }
+
   private additionalDataFormComplete(additionalData: Array<IAdditionalDataItem>) {
     if (additionalData) {
       const currentTab = this.tabs.find(tab => tab.active);
@@ -414,15 +432,15 @@ export class AppComponent implements OnInit {
 
   private chartCreated(data) {
     /* const progress = this.progress;
-    const modalInterval: any = setInterval(function () {
-      if (data.component._ready) {
-        progress.setProgress(100);
-        clearInterval(modalInterval);
-        setTimeout(() => {
-          progress.initProgress();
-        }, 3000);
-      }
-    }, 1000);*/
+     const modalInterval: any = setInterval(function () {
+     if (data.component._ready) {
+     progress.setProgress(100);
+     clearInterval(modalInterval);
+     setTimeout(() => {
+     progress.initProgress();
+     }, 3000);
+     }
+     }, 1000);*/
   }
 
   private forceResize() {
@@ -440,6 +458,7 @@ export class AppComponent implements OnInit {
 
   private doNewDdfFolder() {
     this.newDdfFolderInput.nativeElement.click();
+    this.isMenuOpen = false;
   }
 
   private onDdfFolderChanged(event: any) {
@@ -452,7 +471,21 @@ export class AppComponent implements OnInit {
     }
   }
 
+  private doNewCsvFile() {
+    this.newCsvFileInput.nativeElement.click();
+    this.isMenuOpen = false;
+  }
+
+  private onNewCsvFileChanged(event) {
+    if (event.srcElement.files && event.srcElement.files.length > 0) {
+      console.log(event.srcElement.files[0].path);
+
+
+    }
+  }
+
   private doGapminderChart() {
+    this.isMenuOpen = false;
     this.newChart(() => {
       this._ngZone.run(() => {
       });
@@ -460,10 +493,12 @@ export class AppComponent implements OnInit {
   }
 
   private doAddDdfFolder() {
+    this.isMenuOpen = false;
     this.addDdfFolderInput.nativeElement.click();
   }
 
   private doAddCsvFile() {
+    this.isMenuOpen = false;
     this.addCsvFileInput.nativeElement.click();
   }
 
@@ -477,7 +512,7 @@ export class AppComponent implements OnInit {
 
   private onDdfExtFolderChanged(event) {
     if (event.srcElement.files && event.srcElement.files.length > 0) {
-      this.addData({reader: 'ddfcsv', path: event.srcElement.files[0].path});
+      this.addData({reader: 'ddf1-csv-ext', path: event.srcElement.files[0].path});
     }
   }
 
@@ -485,6 +520,11 @@ export class AppComponent implements OnInit {
     if (event.srcElement.files && event.srcElement.files.length > 0) {
       this.addData({reader: 'csv', path: event.srcElement.files[0].path});
     }
+  }
+
+  private checkForUpdates() {
+    this.versionsModal.show();
+    this.isMenuOpen = false;
   }
 }
 
