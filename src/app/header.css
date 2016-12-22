@@ -1,3 +1,10 @@
+.glyphicon-remove-circle:before{content:"\e014"}
+
+.active {
+    background-color: #ffca34 ! important;
+    border: none ! important;
+}
+
 .tab-container > ul li:first-child {
     margin-left: 200px;
 }
@@ -6,12 +13,30 @@
     margin-right: 200px;
 }
 
-.nav-tabs {
-    border-bottom: 2px solid #eeeeee;
+.tab-container > ul > li > a {
+    margin: 0;
+    border: none;
 }
 
-.nav-item {
-    border-bottom: 1px solid #eeeeee;
+.nav-tabs {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 2px solid #ffca34;
+}
+
+.nav-tabs > li > a {
+    margin: 0;
+    border: none;
+}
+
+.nav-tabs > li > a:hover {
+    margin: 0;
+    border: none;
+}
+
+.nav-link {
+    border: none;
 }
 
 .tab-container > div {
@@ -144,7 +169,7 @@
 }
 
 .menu .menu {
-    top: 4px;
+    top: 0px;
     right: 99%;
 }
 

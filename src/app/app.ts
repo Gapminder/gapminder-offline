@@ -18,7 +18,7 @@ import {configSg} from './components/config-sg';
 
 declare var electron: any;
 
-class Progress {
+/* class Progress {
   public value: number;
 
   constructor() {
@@ -40,7 +40,7 @@ class Progress {
   public isProgress(): boolean {
     return this.value > 0 && this.value <= 100;
   }
-}
+}*/
 
 class Tab {
   public active: boolean;
@@ -62,6 +62,10 @@ class Tab {
   public getOrder() {
     return this.order;
   }
+
+  public getCustomClass(): string {
+    return this.active ? 'customClass' : '';
+  }
 }
 
 @Component({
@@ -81,6 +85,7 @@ class Tab {
             <button id="single-button"
                     type="button"
                     dropdownToggle
+                    style="margin-top: -3px;"
                     class="btn btn-default"><img src="./public/images/hamburger.png" />
             </button>
             
@@ -88,8 +93,8 @@ class Tab {
                 <li class="menu-item submenu">
                     <button type="button" class="menu-btn"><span class="menu-text">New chart</span></button>
                     <ul class="menu">
-                        <li class="menu-item">
-                            <button type="button" class="menu-btn"><span class="menu-text" (click)="doGapminderChart()">Gapminder data</span> </button>
+                        <li class="menu-item" (click)="doGapminderChart()">
+                            <button type="button" class="menu-btn"><span class="menu-text">Gapminder data</span> </button>
                         </li>
                         <li class="menu-item submenu">
                             <button type="button" class="menu-btn"><span class="menu-text">Your data</span> </button>
@@ -97,8 +102,8 @@ class Tab {
                                 <li class="menu-item">
                                     <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
                                 </li>
-                                <li class="menu-item">
-                                    <button type="button" class="menu-btn" (click)="doNewDdfFolder()"><span class="menu-text">DDFcsv dataset</span> </button>
+                                <li class="menu-item" (click)="doNewDdfFolder()">
+                                    <button type="button" class="menu-btn"><span class="menu-text">DDFcsv dataset</span> </button>
                                 </li>
                             </ul>
                         </li>
@@ -107,11 +112,11 @@ class Tab {
                 <li class="menu-item submenu">
                     <button type="button" class="menu-btn"><span class="menu-text">Add your data</span></button>
                     <ul class="menu">
-                        <li class="menu-item">
-                            <button type="button" class="menu-btn" (click)="doAddCsvFile()"><span class="menu-text">CSV file...</span> </button>
+                        <li class="menu-item" (click)="doAddCsvFile()">
+                            <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
                         </li>
-                        <li class="menu-item">
-                            <button type="button" class="menu-btn" (click)="doAddDdfFolder()"><span class="menu-text">DDFcsv dataset</span> </button>
+                        <li class="menu-item" (click)="doAddDdfFolder()">
+                            <button type="button" class="menu-btn"><span class="menu-text">DDFcsv dataset</span> </button>
                         </li>
                     </ul>
                 </li>
@@ -123,18 +128,18 @@ class Tab {
                     <button type="button" class="menu-btn"><span class="menu-text">Save...</span></button>
                 </li>
                 <li class="menu-separator"></li>
-                <li class="menu-item">
-                    <button type="button" class="menu-btn" (click)="versionsModal.show()"><span class="menu-text">Update</span></button>
+                <li class="menu-item" (click)="versionsModal.show()">
+                    <button type="button" class="menu-btn"><span class="menu-text">Update</span></button>
                 </li>
-                <li class="menu-item">
-                    <button type="button" class="menu-btn" (click)="openDevTools()"><span class="menu-text">Open dev tools</span> </button>
+                <li class="menu-item" (click)="openDevTools()">
+                    <button type="button" class="menu-btn"><span class="menu-text">Open dev tools</span> </button>
                 </li>
             </ul>
         </div>
     </div>
 </div>
 
-<div style="min-width: 800px; height: calc(100% - 50px);">
+<div style="min-width: 800px; height: calc(100% - 52px);">
     <tabset *ngIf="tabs.length > 0"
             style="height: 100%">
         <tab *ngFor="let tab of tabs"
@@ -144,9 +149,9 @@ class Tab {
              (select)="tab.active = true; forceResize();"
              (deselect)="tab.active = false"
              [removable]="tab.removable">
-            <div class="ddf-progress"
+            <!--<div class="ddf-progress"
                  [style.width]="progress.value + '%'"
-                 [style.display]="progress.value > 0 ? 'block' : 'none'"></div>
+                 [style.display]="progress.value > 0 ? 'block' : 'none'"></div>-->
             <vizabi style="height: 100%;"
                     (onCreated)="chartCreated($event)"
                     (onChanged)="chartChanged($event)"
@@ -274,7 +279,7 @@ export class AppComponent implements OnInit {
   private readerParams: Array<any>;
   private readerName: string;
   private extResources: any;
-  private progress: Progress;
+  // private progress: Progress;
 
   constructor(private _ngZone: NgZone,
               private viewContainerRef: ViewContainerRef,
@@ -305,7 +310,7 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.progress = new Progress();
+    // this.progress = new Progress();
   }
 
   private openDevTools() {
@@ -339,15 +344,15 @@ export class AppComponent implements OnInit {
       ddfFolderForm.defaults();
     }
 
-    this.progress.initProgress();
+    // this.progress.initProgress();
 
-    const progress = this.progress;
+    // const progress = this.progress;
     const tab = new Tab(ddfFolderForm.ddfChartType, this.tabs.length, true);
     const configRequestParameters = {
       ddfPath: ddfFolderForm.ddfUrl,
       chartType: ddfFolderForm.ddfChartType,
       onProgress: (value: number) => {
-        progress.incProgress(value);
+        // progress.incProgress(value);
       }
     };
 
@@ -408,7 +413,7 @@ export class AppComponent implements OnInit {
   }
 
   private chartCreated(data) {
-    const progress = this.progress;
+    /* const progress = this.progress;
     const modalInterval: any = setInterval(function () {
       if (data.component._ready) {
         progress.setProgress(100);
@@ -417,7 +422,7 @@ export class AppComponent implements OnInit {
           progress.initProgress();
         }, 3000);
       }
-    }, 1000);
+    }, 1000);*/
   }
 
   private forceResize() {
