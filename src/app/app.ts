@@ -385,6 +385,8 @@ export class AppComponent implements OnInit {
 
       tab.model = config;
 
+      console.log(JSON.stringify(tab.model));
+
       this.tabs.forEach(tab => tab.active = false);
       this.tabs.push(tab);
 
@@ -404,6 +406,8 @@ export class AppComponent implements OnInit {
 
       tab.model = config;
 
+      console.log(JSON.stringify(tab.model));
+
       this.tabs.forEach(tab => tab.active = false);
       this.tabs.push(tab);
 
@@ -422,6 +426,8 @@ export class AppComponent implements OnInit {
         path: csvFile
       }
     };
+
+    console.log(JSON.stringify(tab.model));
 
     this.tabs.forEach(tab => tab.active = false);
     this.tabs.push(tab);
