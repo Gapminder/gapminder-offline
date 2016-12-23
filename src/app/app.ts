@@ -48,6 +48,12 @@ class Tab {
   public model: any;
   public additionalData: Array<IAdditionalDataItem> = [];
 
+  public readerModuleObject: any;
+  public readerGetMethod: string;
+  public readerParams: Array<any>;
+  public readerName: string;
+  public extResources: any;
+
   private order: number;
 
   constructor(public chartType: string, order: number, active: boolean = false) {
@@ -154,12 +160,12 @@ class Tab {
                     (onCreated)="chartCreated($event)"
                     (onChanged)="chartChanged($event)"
                     [order]="tab.getOrder()"
-                    [readerModuleObject]="readerModuleObject"
-                    [readerGetMethod]="readerGetMethod"
-                    [readerParams]="readerParams"
-                    [readerName]="readerName"
+                    [readerModuleObject]="tab.readerModuleObject"
+                    [readerGetMethod]="tab.readerGetMethod"
+                    [readerParams]="tab.readerParams"
+                    [readerName]="tab.readerName"
                     [model]="tab.model"
-                    [extResources]="extResources"
+                    [extResources]="tab.extResources"
                     [additionalItems]="tab.additionalData"
                     [chartType]="tab.chartType"></vizabi>
         </tab>
@@ -353,6 +359,13 @@ export class AppComponent implements OnInit {
 
     // const progress = this.progress;
     const tab = new Tab(ddfFolderForm.ddfChartType, this.tabs.length, true);
+
+    tab.readerModuleObject = this.readerModuleObject;
+    tab.readerGetMethod = this.readerGetMethod;
+    tab.readerParams = this.readerParams;
+    tab.readerName = this.readerName;
+    tab.extResources = this.extResources;
+
     const configRequestParameters = {
       ddfPath: ddfFolderForm.ddfUrl,
       chartType: ddfFolderForm.ddfChartType,
@@ -400,17 +413,22 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private newSimpleChart(onChartReady) {
-    /*    const tab = new Tab(this.ddfFolderForm.ddfChartType, this.tabs.length, true);
+  private newSimpleChart(csvFile, onChartReady) {
+    const tab = new Tab(this.ddfFolderForm.ddfChartType, this.tabs.length, true);
 
-     tab.model = config;
+    tab.model = {
+      data: {
+        reader: 'csv',
+        path: csvFile
+      }
+    };
 
-     this.tabs.forEach(tab => tab.active = false);
-     this.tabs.push(tab);
+    this.tabs.forEach(tab => tab.active = false);
+    this.tabs.push(tab);
 
-     if (onChartReady) {
-     onChartReady();
-     }*/
+    if (onChartReady) {
+      onChartReady();
+    }
   }
 
   private additionalDataFormComplete(additionalData: Array<IAdditionalDataItem>) {
@@ -478,9 +496,10 @@ export class AppComponent implements OnInit {
 
   private onNewCsvFileChanged(event) {
     if (event.srcElement.files && event.srcElement.files.length > 0) {
-      console.log(event.srcElement.files[0].path);
-
-
+      this.newSimpleChart(event.srcElement.files[0].path, () => {
+        this._ngZone.run(() => {
+        });
+      });
     }
   }
 
