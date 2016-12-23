@@ -4,6 +4,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
+import {ClickOutside} from './components/click-outside-directive';
 import {ModalDirective} from 'ng2-bootstrap/components/modal/modal.component';
 import {AutoUpdateComponent} from './components/auto-update';
 import {DdfFolderFormComponent} from './components/ddf-folder-form';
@@ -93,7 +94,7 @@ class Tab {
                     class="main-menu-btn"><img src="./public/images/hamburger.png" />
             </button>
             
-            <ul role="menu" aria-labelledby="single-button" class="menu show-menu" *ngIf="isMenuOpen">
+            <ul role="menu" aria-labelledby="single-button" class="menu show-menu" *ngIf="isMenuOpen" click-outside (clickOutside)="onClickOutside($event)">
                 <li class="menu-item submenu">
                     <button type="button" class="menu-btn"><span class="menu-text">New chart</span></button>
                     <ul class="menu">
@@ -545,6 +546,10 @@ export class AppComponent implements OnInit {
     this.versionsModal.show();
     this.isMenuOpen = false;
   }
+
+  private onClickOutside(event) {
+    console.log(event);
+  }
 }
 
 @NgModule({
@@ -555,7 +560,8 @@ export class AppComponent implements OnInit {
     PresetsFormComponent,
     AdditionalDataFormComponent,
     AdditionalDataComponent,
-    VersionsFormComponent
+    VersionsFormComponent,
+    ClickOutside
   ],
   imports: [
     BrowserModule,
