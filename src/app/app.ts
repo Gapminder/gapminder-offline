@@ -13,34 +13,11 @@ import {ConfigService} from './components/config-service';
 import {AdditionalDataComponent, IAdditionalDataItem} from './components/additional-data';
 import {AdditionalDataFormComponent} from './components/additional-data-form';
 import {VersionsFormComponent} from './components/versions-form';
+import {CsvConfigFormComponent} from './components/csv-config-form';
 import {VizabiModule} from 'ng2-vizabi/ng2-vizabi';
 import {configSg} from './components/config-sg';
 
 declare var electron: any;
-
-/* class Progress {
- public value: number;
-
- constructor() {
- this.initProgress();
- }
-
- public initProgress() {
- this.value = 0;
- }
-
- public setProgress(progress: number) {
- this.value = progress;
- }
-
- public incProgress(value: number) {
- this.value += value;
- }
-
- public isProgress(): boolean {
- return this.value > 0 && this.value <= 100;
- }
- }*/
 
 class Tab {
   public active: boolean;
@@ -67,10 +44,6 @@ class Tab {
 
   public getOrder() {
     return this.order;
-  }
-
-  public getCustomClass(): string {
-    return this.active ? 'customClass' : '';
   }
 }
 
@@ -262,10 +235,53 @@ class Tab {
     </div>
 </div>
 
+<div bsModal
+     #csvConfigModal="bs-modal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="New bubble chart from your data"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="csvConfigModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">New bubble chart from your data</h4>
+            </div>
+            <div class="modal-body">
+                <ae-csv-config-form (done)="csvConfigFormComplete($event)"></ae-csv-config-form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal
+     #additionalCsvConfigModal="bs-modal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Add your data to bubble chart"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="additionalCsvConfigModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Add your data to bubble chart</h4>
+            </div>
+            <div class="modal-body">
+                <ae-csv-config-form (done)="additionalCsvConfigFormComplete($event)"></ae-csv-config-form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <input type="file" style="display: none;" #newDdfFolder (change)="onDdfFolderChanged($event)" webkitdirectory directory />
-<input type="file" style="display: none;" #newCsvFile (change)="onNewCsvFileChanged($event)" />
 <input type="file" style="display: none;" #addDdfFolder (change)="onDdfExtFolderChanged($event)" webkitdirectory directory />
-<input type="file" style="display: none;" #addCsvFile (change)="onCsvFileChanged($event)" />
 </div>
 `
 })
@@ -277,11 +293,11 @@ export class AppComponent implements OnInit {
   @ViewChild('additionalDataModal') public additionalDataModal: ModalDirective;
   @ViewChild('presetsModal') public presetsModal: ModalDirective;
   @ViewChild('versionsModal') public versionsModal: ModalDirective;
+  @ViewChild('csvConfigModal') public csvConfigModal: ModalDirective;
+  @ViewChild('additionalCsvConfigModal') public additionalCsvConfigModal: ModalDirective;
 
   @ViewChild('newDdfFolder') newDdfFolderInput: ElementRef;
-  @ViewChild('newCsvFile') newCsvFileInput: ElementRef;
   @ViewChild('addDdfFolder') addDdfFolderInput: ElementRef;
-  @ViewChild('addCsvFile') addCsvFileInput: ElementRef;
 
   private readerModuleObject: any;
   private readerGetMethod: string;
@@ -323,10 +339,10 @@ export class AppComponent implements OnInit {
   }
 
   private appMainClickHandler($event) {
-    if(this.isMenuOpen) {
+    if (this.isMenuOpen) {
       const elementTarget = $event.target;
       const elementMenu = document.getElementsByClassName('btn-group')[0];
-      if(!elementMenu.contains(elementTarget)) {
+      if (!elementMenu.contains(elementTarget)) {
         this.isMenuOpen = false;
       }
     }
@@ -430,13 +446,13 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private newSimpleChart(csvFile, onChartReady) {
+  private newSimpleChart(properties, onChartReady) {
     const tab = new Tab(this.ddfFolderForm.ddfChartType, this.tabs.length, true);
 
     tab.model = {
       data: {
-        reader: 'csv',
-        path: csvFile
+        reader: properties.reader,
+        path: properties.path
       }
     };
 
@@ -468,16 +484,6 @@ export class AppComponent implements OnInit {
   }
 
   private chartCreated(data) {
-    /* const progress = this.progress;
-     const modalInterval: any = setInterval(function () {
-     if (data.component._ready) {
-     progress.setProgress(100);
-     clearInterval(modalInterval);
-     setTimeout(() => {
-     progress.initProgress();
-     }, 3000);
-     }
-     }, 1000);*/
   }
 
   private forceResize() {
@@ -509,17 +515,8 @@ export class AppComponent implements OnInit {
   }
 
   private doNewCsvFile() {
-    this.newCsvFileInput.nativeElement.click();
+    this.csvConfigModal.show();
     this.isMenuOpen = false;
-  }
-
-  private onNewCsvFileChanged(event) {
-    if (event.srcElement.files && event.srcElement.files.length > 0) {
-      this.newSimpleChart(event.srcElement.files[0].path, () => {
-        this._ngZone.run(() => {
-        });
-      });
-    }
   }
 
   private doGapminderChart() {
@@ -536,13 +533,15 @@ export class AppComponent implements OnInit {
   }
 
   private doAddCsvFile() {
+    this.additionalCsvConfigModal.show();
     this.isMenuOpen = false;
-    this.addCsvFileInput.nativeElement.click();
   }
 
   private addData(data) {
     const currentTab = this.tabs.find(tab => tab.active);
     const newAdditionalData = currentTab.additionalData.slice();
+
+    console.log('add data', data);
 
     newAdditionalData.push(data);
     currentTab.additionalData = newAdditionalData;
@@ -551,12 +550,6 @@ export class AppComponent implements OnInit {
   private onDdfExtFolderChanged(event) {
     if (event.srcElement.files && event.srcElement.files.length > 0) {
       this.addData({reader: 'ddf1-csv-ext', path: event.srcElement.files[0].path});
-    }
-  }
-
-  private onCsvFileChanged(event) {
-    if (event.srcElement.files && event.srcElement.files.length > 0) {
-      this.addData({reader: 'csv', path: event.srcElement.files[0].path});
     }
   }
 
@@ -576,6 +569,25 @@ export class AppComponent implements OnInit {
     this.isMenuOpen = false;
     electron.ipcRenderer.send('do-save', {foo: 'baz'});
   }
+
+  private csvConfigFormComplete(event) {
+    this.csvConfigModal.hide();
+
+    if (event) {
+      this.newSimpleChart(event, () => {
+        this._ngZone.run(() => {
+        });
+      });
+    }
+  }
+
+  private additionalCsvConfigFormComplete(event) {
+    this.additionalCsvConfigModal.hide();
+
+    if (event) {
+      this.addData(event);
+    }
+  }
 }
 
 @NgModule({
@@ -586,7 +598,8 @@ export class AppComponent implements OnInit {
     PresetsFormComponent,
     AdditionalDataFormComponent,
     AdditionalDataComponent,
-    VersionsFormComponent
+    VersionsFormComponent,
+    CsvConfigFormComponent
   ],
   imports: [
     BrowserModule,
@@ -603,7 +616,8 @@ export class AppComponent implements OnInit {
     PresetsFormComponent,
     AdditionalDataFormComponent,
     AdditionalDataComponent,
-    VersionsFormComponent
+    VersionsFormComponent,
+    CsvConfigFormComponent
   ],
   bootstrap: [AppComponent]
 })
