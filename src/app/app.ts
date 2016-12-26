@@ -77,6 +77,7 @@ class Tab {
 @Component({
   selector: 'ae-app',
   template: `
+<div style="height: 100%" (click)="appMainClickHandler($event)">
 <div style="position: absolute; top: -4px; left: 10px;">
     <a class="header-title">GAPMINDER TOOLS</a>
 </div>
@@ -159,6 +160,7 @@ class Tab {
             <vizabi style="height: 100%;"
                     (onCreated)="chartCreated($event)"
                     (onChanged)="chartChanged($event)"
+                    (onClick)="appMainClickHandler($event)"
                     [order]="tab.getOrder()"
                     [readerModuleObject]="tab.readerModuleObject"
                     [readerGetMethod]="tab.readerGetMethod"
@@ -264,6 +266,7 @@ class Tab {
 <input type="file" style="display: none;" #newCsvFile (change)="onNewCsvFileChanged($event)" />
 <input type="file" style="display: none;" #addDdfFolder (change)="onDdfExtFolderChanged($event)" webkitdirectory directory />
 <input type="file" style="display: none;" #addCsvFile (change)="onCsvFileChanged($event)" />
+</div>
 `
 })
 export class AppComponent implements OnInit {
@@ -317,6 +320,16 @@ export class AppComponent implements OnInit {
     });
 
     // this.progress = new Progress();
+  }
+
+  private appMainClickHandler($event) {
+    if(this.isMenuOpen) {
+      const elementTarget = $event.target;
+      const elementMenu = document.getElementsByClassName('btn-group')[0];
+      if(!elementMenu.contains(elementTarget)) {
+        this.isMenuOpen = false;
+      }
+    }
   }
 
   private switchMenu() {
