@@ -163,6 +163,14 @@ function startMainApplication() {
     fs.writeFile(UPDATE_FLAG_FILE, '0', err => null);
   });
 
+  ipc.on('do-open', (event, params) => {
+    console.log(event, params);
+  });
+
+  ipc.on('do-save', (event, params) => {
+    console.log(event, params);
+  });
+
   ipc.on('exit-and-update', () => {
     finishUpdate(() => {
       process.exit(0);

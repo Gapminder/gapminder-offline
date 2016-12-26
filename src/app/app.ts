@@ -125,10 +125,10 @@ class Tab {
                     </ul>
                 </li>
                 <li class="menu-separator"></li>
-                <li class="menu-item">
+                <li class="menu-item" (click)="doOpen()">
                     <button type="button" class="menu-btn"><span class="menu-text">Open...</span></button>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" (click)="doSave()">
                     <button type="button" class="menu-btn"><span class="menu-text">Save...</span></button>
                 </li>
                 <li class="menu-separator"></li>
@@ -550,6 +550,18 @@ export class AppComponent implements OnInit {
   private checkForUpdates() {
     this.versionsModal.show();
     this.isMenuOpen = false;
+  }
+
+  private doOpen() {
+    this.isMenuOpen = false;
+    electron.ipcRenderer.send('do-open', {foo: 'bar'});
+  }
+
+  private doSave() {
+    const currentTab = this.tabs.find(tab => tab.active);
+
+    this.isMenuOpen = false;
+    electron.ipcRenderer.send('do-save', {foo: 'baz'});
   }
 }
 
