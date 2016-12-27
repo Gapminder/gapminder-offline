@@ -1,6 +1,6 @@
 {
   "name": "gapminder-offline",
-  "version": "0.70.1",
+  "version": "0.70.2",
   "description": "Gapminder offline tool",
   "main": "",
   "scripts": {
@@ -17,9 +17,9 @@
     "vizabi-translation-win": "copy .\\node_modules\\vizabi\\build\\dist\\assets\\translation\\* .\\src\\app\\preview-data\\translation && copy .\\node_modules\\vizabi\\build\\dist\\assets\\translation\\* .\\src\\app\\assets\\translation",
     "build-win:dev": "npm run vizabi-styles-win && npm run vizabi-cursors-win && npm run vizabi-translation-win && webpack --progress --profile --colors --display-error-details --display-cached",
     "package": "node package.js",
-    "package-win": "npm run package -- --platform=win32 && copy update-win32.bat \"release\\Gapminder Offline-win32-x64\" && cd \"release\\Gapminder Offline-win32-x64\\resources\\app\" && npm i electron-easy-updater && npm i fs-extra",
-    "package-lin": "npm run package -- --platform=linux && cp ./update-linux \"./release/Gapminder Offline-linux-x64\" && cd \"./release/Gapminder Offline-linux-x64/resources/app\" && npm i electron-easy-updater && npm i fs-extra",
-    "package-mac": "npm run package -- --platform=darwin && cp ./init-macos-sierra \"./release/Gapminder Offline-darwin-x64\" && cp ./update-darwin \"./release/Gapminder Offline-darwin-x64\" && cd \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app\" && npm i electron-easy-updater && npm i fs-extra",
+    "package-win": "npm run package -- --platform=win32 && copy update-win32.bat \"release\\Gapminder Offline-win32-x64\" && cd \"release\\Gapminder Offline-win32-x64\\resources\\app\" && npm i electron-easy-updater fs-extra",
+    "package-lin": "npm run package -- --platform=linux && cp ./update-linux \"./release/Gapminder Offline-linux-x64\" && cd \"./release/Gapminder Offline-linux-x64/resources/app\" && npm i electron-easy-updater fs-extra",
+    "package-mac": "npm run package -- --platform=darwin && cp ./init-macos-sierra \"./release/Gapminder Offline-darwin-x64\" && cp ./update-darwin \"./release/Gapminder Offline-darwin-x64\" && cd \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app\" && npm i electron-easy-updater fs-extra",
     "package-all": "npm run package-win && npm run package-lin && npm run package-mac",
     "typings-install": "typings install",
     "electron": "NODE_ENV=development electron src/app",
