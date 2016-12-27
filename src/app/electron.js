@@ -2,6 +2,7 @@ const electron = require('electron');
 const app = electron.app;
 const ipc = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
+const dialog = electron.dialog;
 const path = require('path');
 const fs = require('fs');
 const fsExtra = require('fs-extra');
@@ -164,11 +165,84 @@ function startMainApplication() {
   });
 
   ipc.on('do-open', (event, params) => {
-    console.log(event, params);
+
+    dialog.showOpenDialog({
+      title: 'Open chart state ...',
+      filters: [{name: 'JSON', extensions: ['json']}],
+      properties: ['openFile']
+    }, function(fileNames){
+
+      if(!fileNames) {
+        return;
+      }
+
+      fs.readFile(fileNames[0], 'utf-8', function (err, data) {
+
+        if(err) {
+          dialog.showErrorBox("File reading error", err.message);
+        } else {
+          const chartTab = JSON.parse(data);
+          const dataPath = chartTab.model.data.path;
+
+          if(fs.existsSync(dataPath)) {
+            // complete successfully
+            event.sender.send('do-open-completed', {tab: chartTab});
+          } else {
+            // fix path
+            const brokenPath = path.basename(dataPath);
+            dialog.showErrorBox("Broken path detected.", 'Choose correct location for "'+brokenPath+'"');
+
+            dialog.showOpenDialog({
+              title: 'Select location for "'+brokenPath+'"...',
+              properties: ['openDirectory']
+            }, function(dirPaths){
+
+              if(!dirPaths) {
+                return;
+              }
+
+              const dirPath = dirPaths[0];
+
+              // update model fith correct path
+              chartTab.model.data.path = dirPath;
+              chartTab.model.data.ddfPath = dirPath;
+              chartTab.modelFull.data.path = dirPath;
+              chartTab.modelFull.data.ddfPath = dirPath;
+
+              event.sender.send('do-open-completed', {tab: chartTab});
+            });
+          }
+        }
+
+      });
+
+    });
+
   });
 
   ipc.on('do-save', (event, params) => {
-    console.log(event, params);
+
+    dialog.showSaveDialog({
+      title: 'Save current chart as ...',
+      filters: [{name: 'JSON', extensions: ['json']}]
+    }, function(fileName){
+
+      if (!fileName) {
+        return;
+      }
+
+      fs.writeFile(fileName, JSON.stringify(params.tab), function (err) {
+
+        if(err) {
+          dialog.showErrorBox("File save error", err.message);
+        } else {
+          dialog.showMessageBox({
+            message: "Chart state successfully saved",
+            buttons: ["OK"]
+          });
+        }
+      });
+    });
   });
 
   ipc.on('exit-and-update', () => {

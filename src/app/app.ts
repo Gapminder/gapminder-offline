@@ -53,12 +53,14 @@ class Tab {
   public readerParams: Array<any>;
   public readerName: string;
   public extResources: any;
+  public ddfChartType: string;
 
   private order: number;
 
   constructor(public chartType: string, order: number, active: boolean = false) {
     this.order = order + 1;
     this.active = active;
+    this.ddfChartType = chartType;
 
     if (order === 0) {
       this.removable = false;
@@ -319,6 +321,10 @@ export class AppComponent implements OnInit {
       }
     });
 
+    electron.ipcRenderer.on('do-open-completed', (event, parameters) => {
+      this.doOpenCompleted(event, parameters);
+    });
+
     // this.progress = new Progress();
   }
 
@@ -398,7 +404,7 @@ export class AppComponent implements OnInit {
 
       tab.model = config;
 
-      console.log(JSON.stringify(tab.model));
+      // console.log(JSON.stringify(tab.model));
 
       this.tabs.forEach(tab => tab.active = false);
       this.tabs.push(tab);
@@ -419,7 +425,7 @@ export class AppComponent implements OnInit {
 
       tab.model = config;
 
-      console.log(JSON.stringify(tab.model));
+      // console.log(JSON.stringify(tab.model));
 
       this.tabs.forEach(tab => tab.active = false);
       this.tabs.push(tab);
@@ -440,7 +446,7 @@ export class AppComponent implements OnInit {
       }
     };
 
-    console.log(JSON.stringify(tab.model));
+    // console.log(JSON.stringify(tab.model));
 
     this.tabs.forEach(tab => tab.active = false);
     this.tabs.push(tab);
@@ -491,6 +497,8 @@ export class AppComponent implements OnInit {
   }
 
   private chartChanged(data) {
+    const currentTab = this.tabs.find(tab => tab.active);
+    currentTab['modelFull'] = data.modelFull;
   }
 
   private doNewDdfFolder() {
@@ -567,14 +575,43 @@ export class AppComponent implements OnInit {
 
   private doOpen() {
     this.isMenuOpen = false;
-    electron.ipcRenderer.send('do-open', {foo: 'bar'});
+    electron.ipcRenderer.send('do-open');
   }
+
+  private doOpenCompleted(event, parameters) {
+
+    const tabLoaded = parameters.tab;
+
+    // create new tab
+    const tab = new Tab(tabLoaded.ddfChartType, this.tabs.length, true);
+
+    // link to reader
+    tab.readerModuleObject = this.readerModuleObject;
+    tab.readerParams = this.readerParams;
+
+    // restore tab variables
+    tab.readerGetMethod = tabLoaded.readerGetMethod;
+    tab.readerName = tabLoaded.readerName;
+    tab.extResources = tabLoaded.extResources;
+    tab.additionalData = tabLoaded.additionalData;
+
+    // setup vizabi model
+    delete tabLoaded.modelFull.bind;
+    tab.model = tabLoaded.modelFull;
+
+    // switch tab to active
+    this.tabs.forEach(tab => tab.active = false);
+    this.tabs.push(tab);
+
+    this._ngZone.run(() => {});
+    return;
+  };
 
   private doSave() {
     const currentTab = this.tabs.find(tab => tab.active);
-
     this.isMenuOpen = false;
-    electron.ipcRenderer.send('do-save', {foo: 'baz'});
+
+    electron.ipcRenderer.send('do-save', {tab: currentTab});
   }
 }
 
