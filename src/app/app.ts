@@ -452,6 +452,7 @@ export class AppComponent implements OnInit {
     tab.model = {
       data: {
         reader: properties.reader,
+        delimiter: properties.delimiter,
         path: properties.path
       }
     };
