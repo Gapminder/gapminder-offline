@@ -502,7 +502,9 @@ export class AppComponent implements OnInit {
 
 
   private doSave() {
-    const currentTab = this.getCurrentTab();
+    const currentTab = Object.assign({}, this.getCurrentTab());
+
+    delete currentTab.component;
 
     this.isMenuOpen = false;
     electron.ipcRenderer.send('do-save', {tab: currentTab});
