@@ -32,7 +32,6 @@ export interface IAdditionalDataItem {
         <input type="file" class="pathToAdd" (change)="onFileChanged($event)" id="fileToAdd" />
       </div>
     </div>
-
   </div>
 </div>
 `
