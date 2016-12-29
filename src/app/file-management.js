@@ -6,9 +6,9 @@ const fs = require('fs');
 const request = require('request');
 
 const DATA_PATH = {
-  win32: 'resources\\app\\ddf--gapminder--systema_globalis',
-  linux: 'resources/app/ddf--gapminder--systema_globalis',
-  darwin: 'Contents/Resources/app/ddf--gapminder--systema_globalis'
+  win32: '.\\resources\\app\\ddf--gapminder--systema_globalis',
+  linux: './resources/app/ddf--gapminder--systema_globalis',
+  darwin: app.getAppPath() + '/ddf--gapminder--systema_globalis'
 };
 
 const pathToRelative = (from, to) => path.relative(path.parse(from).dir, to);
@@ -59,7 +59,7 @@ exports.openFile = event => {
       Object.keys(config).forEach(key => {
         if ((key === 'data' || key.indexOf('data_') === 0) && typeof config[key] === 'object') {
           if (config[key].path.indexOf('@internal') >= 0) {
-            config[key].path = path.resolve('.', DATA_PATH[process.platform]);
+            config[key].path = DATA_PATH[process.platform];
           } else {
             config[key].path = path.resolve(currentDir, config[key].path);
 
