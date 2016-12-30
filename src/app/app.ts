@@ -83,7 +83,7 @@ class Tab {
                                     <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
                                 </li>
                                 <li class="menu-item" (click)="doNewDdfFolder()">
-                                    <button type="button" class="menu-btn"><span class="menu-text">DDFcsv dataset</span> </button>
+                                    <button type="button" class="menu-btn"><span class="menu-text">DDF folder</span> </button>
                                 </li>
                             </ul>
                         </li>
@@ -96,7 +96,7 @@ class Tab {
                             <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
                         </li>
                         <li class="menu-item" (click)="doAddDdfFolder()">
-                            <button type="button" class="menu-btn"><span class="menu-text">DDFcsv dataset</span> </button>
+                            <button type="button" class="menu-btn"><span class="menu-text">DDF folder</span> </button>
                         </li>
                     </ul>
                 </li>
