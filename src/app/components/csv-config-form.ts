@@ -73,7 +73,7 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
                 <div><a href="https://docs.google.com/document/d/1EUY88cgjs4RHlLpFy_9JdyKaPio4gRVVI2L8wpgZe6Y" target="_blank">How to export a file from MS Excel</a></div>
                 <div><a href="https://docs.google.com/document/d/1GEgBscyLSbAkiXbrDrixGDrlTG4DekuFETD5AQaRBvs" target="_blank">How to export a file from Google Docs</a></div>
                 <div><a href="https://csvlint.io/" target="_blank">Online csv validator (a handy tool)</a></div>
-                <div>How do we use your data?<br>— We don't. Everything stays local on your computer. <a href="https://github.com/VS-work/gapminder-offline" target="_blank">Read more</a></div>
+                <div><a href="#" (click)="switchUseYourDataVisible()">How do we use your data?</a><br><span *ngIf="useYourDataVisible">— We don't. Everything stays local on your computer. <a href="https://github.com/VS-work/gapminder-offline" target="_blank">Read more</a></span></div>
            </div>
            <div class="col-sm-4" style="vertical-align: bottom; text-align: right; position: absolute; bottom: 0; right: 0;">
                 <input type="button" (click)="close()" value="Cancel" />
@@ -92,6 +92,7 @@ export class CsvConfigFormComponent implements OnInit {
   private choice: string = '';
   private isExampleRows: boolean = false;
   private isExampleColumns: boolean = false;
+  private useYourDataVisible: boolean = false;
   private delimiter: string = ',';
   private file: string = '';
 
@@ -138,6 +139,10 @@ export class CsvConfigFormComponent implements OnInit {
 
   private switchExampleColumns() {
     this.isExampleColumns = !this.isExampleColumns;
+  }
+
+  private switchUseYourDataVisible() {
+    this.useYourDataVisible = !this.useYourDataVisible;
   }
 
   private onCsvFileChanged(event) {
