@@ -24,23 +24,27 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
   .desc {
     font-size: small
   }
+  .highl {
+    background-color: yellow;
+    color: #b81f00;
+  }
 </style>
 <div class="popup-block" class="main-popup">
     <div class="step-block">
         <h4>Step 1: Choose how your data is arranged:</h4>
-        <div *ngIf="addDataMode" class="desc">Limitation: entities (in column {{getDim()}}) should match the ones already used in the chart:
-         {{getCountries()}} and so on… You can find more instructions <a href="#">on this web page</a>
+        <div *ngIf="addDataMode" class="desc">Limitation: entities (in column <span class="highl">{{getDim()}}</span>) should match the ones already used in the chart:
+         <span class="highl">{{getCountries()}}</span> and so on… You can find more instructions <a href="https://docs.google.com/document/d/1pfMcCSKhC2wEVJRYa4Ex2TZkGS22du0Kz9NxSAIHjqU" target="_blank">on this web page</a>
         </div>
         <div>
             <label class="step-label"><input type="radio" name="choice" #choiceRows (change)="setChoice('rows')" [checked]="choice === 'rows'"> Time is in rows</label>
             <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: time points, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
-            <div *ngIf="addDataMode" class="desc">Column 1: {{getDim()}}, Column 2: {{getTime()}}, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
+            <div *ngIf="addDataMode" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: <span class="highl">{{getTime()}}</span>, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
         </div>
         <div *ngIf="isExampleRows" style="width: 100%;"><img src="./public/images/templates/time-as-rows-example.png" class="example-image"></div>
         <div>
             <label class="step-label"><input type="radio" name="choice" #choiceColumns (change)="setChoice('columns')" [checked]="choice === 'columns'"> Time is in columns</label>
             <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: indicators, Column 3 and on: time points (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
-            <div *ngIf="addDataMode" class="desc">Column 1: {{getDim()}}, Column 2: indicators, Column 3 and on: time points (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
+            <div *ngIf="addDataMode" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: indicators, Column 3 and on: time points (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
         </div>
         <div *ngIf="isExampleColumns" style="width: 100%;"><img src="./public/images/templates/time-as-columns-example.png" class="example-image"></div>
     </div>
@@ -64,14 +68,14 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
 
 <div class="popup-footer">
     <div class="btn-group" style="width: 100%">
-        <div class="row" style="vertical-align: bottom; position: relative; ">
-            <div class="col-sm-4">
-                <div><a href="#">How to export a file from MS Excel</a></div>
-                <div><a href="#">How to export a file from Google Docs</a></div>
-                <div><a href="#">Online csv validator (a handy tool)</a></div>
-                <div><a href="#">How do we use your data?</a></div>
+        <div class="row" style="vertical-align: bottom; position: relative;">
+            <div class="col-sm-8">
+                <div><a href="https://docs.google.com/document/d/1EUY88cgjs4RHlLpFy_9JdyKaPio4gRVVI2L8wpgZe6Y" target="_blank">How to export a file from MS Excel</a></div>
+                <div><a href="https://docs.google.com/document/d/1GEgBscyLSbAkiXbrDrixGDrlTG4DekuFETD5AQaRBvs" target="_blank">How to export a file from Google Docs</a></div>
+                <div><a href="https://csvlint.io/" target="_blank">Online csv validator (a handy tool)</a></div>
+                <div>How do we use your data?<br>— We don't. Everything stays local on your computer. <a href="https://github.com/VS-work/gapminder-offline" target="_blank">Read more</a></div>
            </div>
-           <div class="col-sm-8" style="vertical-align: bottom; text-align: right; position: absolute; bottom: 0; right: 0;">
+           <div class="col-sm-4" style="vertical-align: bottom; text-align: right; position: absolute; bottom: 0; right: 0;">
                 <input type="button" (click)="close()" value="Cancel" />
                 <input type="button" (click)="ok()" [disabled]="!choice || !file || !delimiter" value="Ok" />        
            </div>
