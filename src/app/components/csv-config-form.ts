@@ -8,7 +8,8 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
   .main-popup {
     width: 100%;
     height: 300px;
-    overflow: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
   }
   .step-block {
     margin-bottom: 20px;
@@ -58,8 +59,10 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
         <h4 *ngIf="file && choice">Step 3: Additional options:</h4>
         <div *ngIf="file && choice" class="btn-group">Delimiter:</div>
         <div *ngIf="file && choice" class="btn-group">
+            <label class="btn btn-default" [(ngModel)]="delimiter" btnRadio="auto"> Auto </label>
             <label class="btn btn-default" [(ngModel)]="delimiter" btnRadio=","> , </label>
             <label class="btn btn-default" [(ngModel)]="delimiter" btnRadio=";"> ; </label>
+            <label class="btn btn-default" [(ngModel)]="delimiter" btnRadio="\t"> Tab </label>
         </div>
     </div>
 </div>
@@ -93,7 +96,7 @@ export class CsvConfigFormComponent implements OnInit {
   private isExampleRows: boolean = false;
   private isExampleColumns: boolean = false;
   private useYourDataVisible: boolean = false;
-  private delimiter: string = ',';
+  private delimiter: string = 'auto';
   private file: string = '';
 
   ngOnInit() {
@@ -103,7 +106,7 @@ export class CsvConfigFormComponent implements OnInit {
     this.done.emit({
       reader: this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
       path: this.file,
-      delimiter: this.delimiter
+      delimiter: this.delimiter==='auto' ? null : this.delimiter
     });
     this.reset();
   }
