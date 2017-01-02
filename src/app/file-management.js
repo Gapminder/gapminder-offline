@@ -87,30 +87,27 @@ exports.saveFile = (event, params) => {
       return;
     }
 
-    Object.keys(params.tab.modelFull).forEach(key => {
-      if ((key === 'data' || key.indexOf('data_') === 0) && typeof params.tab.modelFull[key] === 'object') {
-        if (isPathInternal(params.tab.modelFull[key].path)) {
-          const parsed = path.parse(params.tab.modelFull[key].path);
+    Object.keys(params.model).forEach(key => {
+      if ((key === 'data' || key.indexOf('data_') === 0) && typeof params.model[key] === 'object') {
+        if (isPathInternal(params.model[key].path)) {
+          const parsed = path.parse(params.model[key].path);
 
-          params.tab.modelFull[key].path = `@internal`
+          params.model[key].path = `@internal`
         } else {
-          params.tab.modelFull[key].path = pathToRelative(fileName, params.tab.modelFull[key].path);
+          params.model[key].path = pathToRelative(fileName, params.model[key].path);
         }
       }
     });
 
-    params.tab.modelFull.chartType = params.tab.chartType;
+    params.model.chartType = params.chartType;
 
-    fs.writeFile(fileName, JSON.stringify(params.tab.modelFull, null, ' '), err => {
+    fs.writeFile(fileName, JSON.stringify(params.model, null, ' '), err => {
       if (err) {
         dialog.showErrorBox('File save error', err.message);
         return;
       }
 
-      dialog.showMessageBox({
-        message: 'Chart state successfully saved',
-        buttons: ['OK']
-      });
+      console.info('Chart state successfully saved');
     });
   });
 };

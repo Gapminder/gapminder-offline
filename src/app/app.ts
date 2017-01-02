@@ -504,10 +504,8 @@ export class AppComponent implements OnInit {
   private doSave() {
     const currentTab = Object.assign({}, this.getCurrentTab());
 
-    delete currentTab.component;
-
     this.isMenuOpen = false;
-    electron.ipcRenderer.send('do-save', {tab: currentTab});
+    electron.ipcRenderer.send('do-save', {model: currentTab.component.getModel(), chartType: currentTab.chartType}); 
   }
 
   private csvConfigFormComplete(event) {
