@@ -29,25 +29,30 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
     background-color: yellow;
     color: #b81f00;
   }
+  label.step-label {
+    margin-left: 1px;
+  }
 </style>
 <div class="popup-block" class="main-popup">
     <div class="step-block">
         <h4>Step 1: Choose how your data is arranged:</h4>
-        <div *ngIf="addDataMode" class="desc">Limitation: entities (in column <span class="highl">{{getDim()}}</span>) should match the ones already used in the chart:
-         <span class="highl">{{getCountries()}}</span> and so on… You can find more instructions <a href="https://docs.google.com/document/d/1pfMcCSKhC2wEVJRYa4Ex2TZkGS22du0Kz9NxSAIHjqU" target="_blank">on this web page</a>
+        <div *ngIf="addDataMode" class="desc">Limitation: entities in the first column should match the ones already used in the chart:
+         <span class="highl">{{getCountries()}}</span> and so on... Time points should be expressed like <span class="highl">{{getTimePoints()}}</span>... 
+         Observe the restrictions on column headers, as <span class="highl">highlighted</span> below.
+         You can find more instructions <a href="https://docs.google.com/document/d/1pfMcCSKhC2wEVJRYa4Ex2TZkGS22du0Kz9NxSAIHjqU" target="_blank">on&nbsp;this&nbsp;web&nbsp;page</a>
         </div>
         <div>
             <label class="step-label"><input type="radio" name="choice" #choiceRows (change)="setChoice('rows')" [checked]="choice === 'rows'"> Time is in rows</label>
             <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: time points, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
             <div *ngIf="addDataMode" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: <span class="highl">{{getTime()}}</span>, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
         </div>
-        <div *ngIf="isExampleRows" style="width: 100%;"><img src="./public/images/templates/time-as-rows-example.png" class="example-image"></div>
+        <div *ngIf="isExampleRows" style="width: 100%; max-width: 600px"><img src="./public/images/templates/time-as-rows-example.png" class="example-image"></div>
         <div>
             <label class="step-label"><input type="radio" name="choice" #choiceColumns (change)="setChoice('columns')" [checked]="choice === 'columns'"> Time is in columns</label>
             <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: indicators, Column 3 and on: time points (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
             <div *ngIf="addDataMode" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: indicators, Column 3 and on: time points (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
         </div>
-        <div *ngIf="isExampleColumns" style="width: 100%;"><img src="./public/images/templates/time-as-columns-example.png" class="example-image"></div>
+        <div *ngIf="isExampleColumns" style="width: 100%; max-width: 600px"><img src="./public/images/templates/time-as-columns-example.png" class="example-image"></div>
     </div>
     
     <div class="step-block">
@@ -67,7 +72,7 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
     </div>
 </div>
 
-<div style="border-bottom: 1px solid #e5e5e5; margin: 30px -15px 30px -15px;"></div>
+<div style="border-bottom: 1px solid #e5e5e5; margin: 5px -15px 10px -15px;"></div>
 
 <div class="popup-footer">
     <div class="btn-group" style="width: 100%">
@@ -79,8 +84,8 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
                 <div><a href="#" (click)="switchUseYourDataVisible()">How do we use your data?</a><br><span *ngIf="useYourDataVisible">— We don't. Everything stays local on your computer. <a href="https://github.com/VS-work/gapminder-offline" target="_blank">Read more</a></span></div>
            </div>
            <div class="col-sm-4" style="vertical-align: bottom; text-align: right; position: absolute; bottom: 0; right: 0;">
-                <input type="button" (click)="close()" value="Cancel" />
-                <input type="button" (click)="ok()" [disabled]="!choice || !file || !delimiter" value="Ok" />        
+                <input type="button" style="width: 30%; height: 40px;" (click)="close()" value="Cancel" />
+                <input type="button" style="width: 40%; height: 40px;" (click)="ok()" [disabled]="!choice || !file || !delimiter" value="OK" />        
            </div>
        </div>
     </div>
@@ -134,6 +139,13 @@ export class CsvConfigFormComponent implements OnInit {
     const dim = this.getDim();
 
     return this.parent ? this.parent.getCurrentTab().component.model.state.marker.getKeys().slice(0, 5).map(d => d[dim]).join(", ") : null;
+  }
+  
+  private getTimePoints() {
+    if(!this.parent) return null;
+  
+    let timeMdl = this.parent.getCurrentTab().component.model.state.time;
+    return timeMdl.getAllSteps().slice(0, 3).map(m=>timeMdl.formatDate(m)).join(", ");
   }
 
   private switchExampleRows() {
