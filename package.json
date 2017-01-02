@@ -21,6 +21,7 @@
     "package-lin": "npm run package -- --platform=linux && cp ./update-linux \"./release/Gapminder Offline-linux-x64\" && cd \"./release/Gapminder Offline-linux-x64/resources/app\" && npm i electron-easy-updater fs-extra",
     "package-mac": "npm run package -- --platform=darwin && cp ./init-macos-sierra \"./release/Gapminder Offline-darwin-x64\" && cp ./update-darwin \"./release/Gapminder Offline-darwin-x64\" && cd \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app\" && npm i electron-easy-updater fs-extra",
     "package-all": "npm run package-win && npm run package-lin && npm run package-mac",
+    "mac": "rm -rf release && npm run build && npm run package-mac",
     "typings-install": "typings install",
     "electron": "NODE_ENV=development electron src/app",
     "webpack-test": "webpack --config webpack.test.js --progress --profile --colors --display-error-details --display-cached",
