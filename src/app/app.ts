@@ -14,6 +14,8 @@ import {VersionsFormComponent} from './components/versions-form';
 import {CsvConfigFormComponent} from './components/csv-config-form';
 import {VizabiModule} from 'ng2-vizabi/ng2-vizabi';
 import {configSg} from './components/config-sg';
+import {InitMenuComponent} from './template-menu';
+import {Menu} from 'electron';
 
 declare var electron: any;
 
@@ -112,7 +114,7 @@ class Tab {
                     <button type="button" class="menu-btn"><span class="menu-text">Check for updates...</span></button>
                 </li>
                 <li class="menu-item" (click)="openDevTools()">
-                    <button type="button" class="menu-btn"><span class="menu-text">Open dev tools</span> </button>
+                    <button type="button" class="menu-btn"><span class="menu-text">Open Developer Tools</span> </button>
                 </li>
             </ul>
         </div>
@@ -214,8 +216,8 @@ class Tab {
 </div>
 
 
-<input type="file" style="display: none;" #newDdfFolder (change)="onDdfFolderChanged($event)" webkitdirectory directory />
-<input type="file" style="display: none;" #addDdfFolder (change)="onDdfExtFolderChanged($event)" webkitdirectory directory />
+<input id="newDdfFolder" type="file" style="display: none;" #newDdfFolder (click)="onDdfFolderClick($event, onDdfFolderChanged)"/>
+<input id="addDdfFolder" type="file" style="display: none;" #addDdfFolder (click)="onDdfFolderClick($event, onDdfExtFolderChanged)"/>
 </div>
 `
 })
@@ -238,11 +240,14 @@ export class AppComponent implements OnInit {
   private readerParams: Array<any>;
   private readerName: string;
   private extResources: any;
+  public menuComponent: Menu;
 
   constructor(private _ngZone: NgZone,
               private viewContainerRef: ViewContainerRef,
               private ddfFolderForm: DdfFolderFormComponent,
               private configService: ConfigService) {
+
+    new InitMenuComponent(this);
     electron.ipcRenderer.send('get-app-path');
   }
 
@@ -420,14 +425,14 @@ export class AppComponent implements OnInit {
     console.log('model changed', JSON.stringify(currentTab.modelFull, null, ' '));
   }
 
-  private doNewDdfFolder() {
-    this.newDdfFolderInput.nativeElement.click();
+  public doNewDdfFolder() {
     this.isMenuOpen = false;
+    this.newDdfFolderInput.nativeElement.click();
   }
 
-  private onDdfFolderChanged(event: any) {
-    if (event.srcElement.files && event.srcElement.files.length > 0) {
-      this.ddfFolderForm.ddfUrl = event.srcElement.files[0].path;
+  private onDdfFolderChanged(filePaths) {
+    if (filePaths && filePaths.length > 0) {
+      this.ddfFolderForm.ddfUrl = filePaths[0];
       this.newChart(() => {
         this._ngZone.run(() => {
         });
@@ -435,12 +440,12 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private doNewCsvFile() {
+  public doNewCsvFile() {
     this.csvConfigModal.show();
     this.isMenuOpen = false;
   }
 
-  private doGapminderChart() {
+  public doGapminderChart() {
     this.isMenuOpen = false;
     this.newChart(() => {
       this._ngZone.run(() => {
@@ -448,12 +453,21 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private doAddDdfFolder() {
+  public doAddDdfFolder() {
     this.isMenuOpen = false;
     this.addDdfFolderInput.nativeElement.click();
   }
 
-  private doAddCsvFile() {
+  public onDdfFolderClick(event, callback) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.isMenuOpen = false;
+    const dialog = electron.remote.dialog;
+    const currentWindow = electron.remote.getCurrentWindow();
+    dialog.showOpenDialog(currentWindow, {properties: ['openDirectory']}, callback.bind(this));
+  }
+
+  public doAddCsvFile() {
     this.additionalCsvConfigModal.show();
     this.isMenuOpen = false;
   }
@@ -468,9 +482,9 @@ export class AppComponent implements OnInit {
     currentTab.additionalData = newAdditionalData;
   }
 
-  private onDdfExtFolderChanged(event) {
-    if (event.srcElement.files && event.srcElement.files.length > 0) {
-      this.addData({reader: 'ddf1-csv-ext', path: event.srcElement.files[0].path});
+  private onDdfExtFolderChanged(filePaths) {
+    if (filePaths && filePaths.length > 0) {
+      this.addData({reader: 'ddf1-csv-ext', path: filePaths[0]});
     }
   }
 
@@ -479,7 +493,7 @@ export class AppComponent implements OnInit {
     this.isMenuOpen = false;
   }
 
-  private doOpen() {
+  public doOpen() {
     this.isMenuOpen = false;
     electron.ipcRenderer.send('do-open');
   }
@@ -501,7 +515,7 @@ export class AppComponent implements OnInit {
   };
 
 
-  private doSave() {
+  public doSave() {
     const currentTab = Object.assign({}, this.getCurrentTab());
 
     this.isMenuOpen = false;
