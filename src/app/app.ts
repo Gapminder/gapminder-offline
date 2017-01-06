@@ -20,6 +20,7 @@ declare var electron: any;
 class Tab {
   public active: boolean;
   public removable: boolean = true;
+  public selectedChartType: string = '';
   public model: any;
   public modelFull: any;
   public additionalData: Array<IAdditionalDataItem> = [];
@@ -38,6 +39,7 @@ class Tab {
     this.order = order + 1;
     this.active = active;
     this.ddfChartType = chartType;
+    this.selectedChartType = '';
 
     if (order === 0) {
       this.removable = false;
@@ -129,6 +131,15 @@ class Tab {
              (select)="tab.active = true; forceResize();"
              (deselect)="tab.active = false"
              [removable]="tab.removable">
+            <div *ngIf="!tab.selectedChartType">
+              <div class="tab-chart-choice">Choose Chart Type</div>
+              <ul class="tab-chart-list">
+                <li (click)="selectChart('BubbleChart')"><div><img src="./public/images/tools/bubblechart.png"><span>Bubble Chart</span></div></li>
+                <li (click)="selectChart('BubbleMap')"><div><img src="./public/images/tools/bubblemap.png"><span>Bubble Map</span></div></li>
+                <li (click)="selectChart('MountainChart')"><div><img src="./public/images/tools/mountainchart.png"><span>Mountain Chart</span></div></li>
+              </ul>
+            </div>
+            <div *ngIf="tab.selectedChartType" style="height: 100%;">
             <vizabi style="height: 100%;"
                     (onCreated)="chartCreated($event)"
                     (onChanged)="chartChanged($event)"
@@ -142,6 +153,7 @@ class Tab {
                     [extResources]="tab.extResources"
                     [additionalItems]="tab.additionalData"
                     [chartType]="tab.chartType"></vizabi>
+            </div>
         </tab>
     </tabset>
 </div>
@@ -248,6 +260,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     let processed = false;
+    const that = this;
 
     electron.ipcRenderer.on('got-app-path', (event, path) => {
       this.ddfFolderForm.electronPath = path;
@@ -262,7 +275,9 @@ export class AppComponent implements OnInit {
           preloadPath: 'preview-data/'
         };
 
-        this.defaultChart();
+        //this.defaultChart();
+        that.initTab();
+        that._ngZone.run(() => {});
 
         processed = true;
       }
@@ -300,6 +315,18 @@ export class AppComponent implements OnInit {
     electron.ipcRenderer.send('open-dev-tools');
   }
 
+  public selectChart(chartType) {
+    const tab = this.getCurrentTab();
+    tab.selectedChartType = chartType;
+    this.defaultChart();
+  }
+
+  public initTab() {
+    const tab = new Tab(this.ddfFolderForm.ddfChartType, this.tabs.length, true);
+    this.tabs.forEach(tab => tab.active = false);
+    this.tabs.push(tab);
+  }
+
   private defaultChart() {
     this.newChart(() => {
       this._ngZone.run(() => {
@@ -312,7 +339,8 @@ export class AppComponent implements OnInit {
       ddfFolderForm.defaults();
     }
 
-    const tab = new Tab(ddfFolderForm.ddfChartType, this.tabs.length, true);
+    const tab = this.getCurrentTab();
+    //const tab = new Tab(ddfFolderForm.ddfChartType, this.tabs.length, true);
 
     tab.readerModuleObject = this.readerModuleObject;
     tab.readerGetMethod = this.readerGetMethod;
@@ -331,7 +359,8 @@ export class AppComponent implements OnInit {
 
     // predefined config for SG
     if (!ddfFolderForm.ddfUrl || ddfFolderForm.ddfUrl.indexOf('systema_globalis') > 0) {
-      const config = configSg.BubbleChart;
+      const chartType = tab.selectedChartType;
+      const config = configSg[chartType];
 
       config.data.ddfPath = ddfFolderForm.ddfUrl;
       config.data.path = ddfFolderForm.ddfUrl;
@@ -340,8 +369,8 @@ export class AppComponent implements OnInit {
 
       console.log(JSON.stringify(tab.model));
 
-      this.tabs.forEach(tab => tab.active = false);
-      this.tabs.push(tab);
+      //this.tabs.forEach(tab => tab.active = false);
+      //this.tabs.push(tab);
 
       if (onChartReady) {
         onChartReady();
@@ -361,8 +390,8 @@ export class AppComponent implements OnInit {
 
       console.log(JSON.stringify(tab.model));
 
-      this.tabs.forEach(tab => tab.active = false);
-      this.tabs.push(tab);
+      //this.tabs.forEach(tab => tab.active = false);
+      //this.tabs.push(tab);
 
       if (onChartReady) {
         onChartReady();
@@ -442,10 +471,13 @@ export class AppComponent implements OnInit {
 
   private doGapminderChart() {
     this.isMenuOpen = false;
+    this.initTab();
+    /*
     this.newChart(() => {
       this._ngZone.run(() => {
       });
     });
+    */
   }
 
   private doAddDdfFolder() {
@@ -491,6 +523,7 @@ export class AppComponent implements OnInit {
     delete config.bind;
     delete config.chartType;
 
+    tab.selectedChartType = 'fromFile';
     tab.model = config;
 
     this.tabs.forEach(tab => tab.active = false);
