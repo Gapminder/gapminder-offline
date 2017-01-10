@@ -42,12 +42,8 @@ class Tab {
     this.order = order + 1;
     this.active = active;
     this.ddfChartType = chartType;
-    // <<<<<<< enhancement-tab-name
     this.title = title ? title : `Chart ${this.order}`;
-    // =======
-    // todo: chack it
-    // this.selectedChartType = '';
-    // >>>>>>> master
+    this.selectedChartType = '';
 
     if (order === 0) {
       this.removable = false;
