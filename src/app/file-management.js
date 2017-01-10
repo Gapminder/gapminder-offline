@@ -45,7 +45,9 @@ exports.openFile = event => {
     }
 
     const fileName = fileNames[0];
-    const currentDir = path.parse(fileName).dir;
+    const parseFileData = path.parse(fileName);
+    const currentDir = parseFileData.dir;
+    const fileNameOnly = parseFileData.name;
 
     fs.readFile(fileName, 'utf-8', (err, data) => {
       if (err) {
@@ -71,7 +73,7 @@ exports.openFile = event => {
       });
 
       Promise.all(brokenFileActions).then(() => {
-        event.sender.send('do-open-completed', {tab: config});
+        event.sender.send('do-open-completed', {tab: config, file: fileNameOnly});
       });
     });
   });

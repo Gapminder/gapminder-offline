@@ -21,6 +21,7 @@ declare var electron: any;
 
 class Tab {
   public active: boolean;
+  public title: string;
   public removable: boolean = true;
   public selectedChartType: string = '';
   public model: any;
@@ -37,11 +38,16 @@ class Tab {
 
   private order: number;
 
-  constructor(public chartType: string, order: number, active: boolean = false) {
+  constructor(public chartType: string, order: number, active: boolean = false, title: string = '') {
     this.order = order + 1;
     this.active = active;
     this.ddfChartType = chartType;
-    this.selectedChartType = '';
+    // <<<<<<< enhancement-tab-name
+    this.title = title ? title : `Chart ${this.order}`;
+    // =======
+    // todo: chack it
+    // this.selectedChartType = '';
+    // >>>>>>> master
 
     if (order === 0) {
       this.removable = false;
@@ -127,7 +133,7 @@ class Tab {
     <tabset *ngIf="tabs.length > 0"
             style="height: 100%">
         <tab *ngFor="let tab of tabs"
-             heading="Chart {{tab.order}}"
+             [heading]="tab.title"
              style="height: 100%"
              [active]="tab.active"
              (select)="tab.active = true; forceResize();"
@@ -448,10 +454,8 @@ export class AppComponent implements OnInit {
 
   private chartChanged(data) {
     const currentTab = this.getCurrentTab();
-
     currentTab.modelFull = data.modelFull;
-
-    console.log('model changed', JSON.stringify(currentTab.modelFull, null, ' '));
+    //console.log('model changed', JSON.stringify(currentTab.modelFull, null, ' '));
   }
 
   public doNewDdfFolder() {
@@ -532,7 +536,7 @@ export class AppComponent implements OnInit {
 
   private doOpenCompleted(event, parameters) {
     const config = parameters.tab;
-    const tab = new Tab(config.chartType, this.tabs.length, true);
+    const tab = new Tab(config.chartType, this.tabs.length, true, parameters.file);
 
     delete config.bind;
     delete config.chartType;
@@ -552,7 +556,8 @@ export class AppComponent implements OnInit {
     const currentTab = Object.assign({}, this.getCurrentTab());
 
     this.isMenuOpen = false;
-    electron.ipcRenderer.send('do-save', {model: currentTab.component.getModel(), chartType: currentTab.chartType}); 
+    electron.ipcRenderer.send('do-save', {model: currentTab.component.getModel(), chartType: currentTab.chartType});
+    //electron.ipcRenderer.send('do-save', {model: currentTab.modelFull, chartType: currentTab.chartType});
   }
 
   private csvConfigFormComplete(event) {
