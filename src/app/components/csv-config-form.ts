@@ -33,7 +33,7 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
     margin-left: 1px;
   }
 </style>
-<div class="popup-block" class="main-popup">
+<div class="popup-block main-popup" style="overflow: auto">
     <div class="step-block">
         <h4>Step 1: Choose how your data is arranged:</h4>
         <div *ngIf="addDataMode" class="desc">Limitation: entities in the first column should match the ones already used in the chart:
@@ -108,11 +108,17 @@ export class CsvConfigFormComponent implements OnInit {
   }
 
   ok() {
-    this.done.emit({
+    const config = {
       reader: this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
       path: this.file,
-      delimiter: this.delimiter==='auto' ? null : this.delimiter
-    });
+      delimiter: this.delimiter
+    };
+
+    if (this.delimiter === 'auto') {
+      delete config.delimiter;
+    }
+
+    this.done.emit(config);
     this.reset();
   }
 
@@ -140,12 +146,12 @@ export class CsvConfigFormComponent implements OnInit {
 
     return this.parent && this.parent.getCurrentTab().component ? this.parent.getCurrentTab().component.model.state.marker.getKeys().slice(0, 5).map(d => d[dim]).join(", ") : null;
   }
-  
+
   private getTimePoints() {
-    if(!this.parent || !this.parent.getCurrentTab().component) return null;
-  
+    if (!this.parent || !this.parent.getCurrentTab().component) return null;
+
     let timeMdl = this.parent.getCurrentTab().component.model.state.time;
-    return timeMdl.getAllSteps().slice(0, 3).map(m=>timeMdl.formatDate(m)).join(", ");
+    return timeMdl.getAllSteps().slice(0, 3).map(m => timeMdl.formatDate(m)).join(", ");
   }
 
   private switchExampleRows() {

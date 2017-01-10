@@ -1,6 +1,6 @@
 {
   "name": "gapminder-offline",
-  "version": "0.70.6",
+  "version": "0.70.10",
   "description": "Gapminder offline tool",
   "main": "",
   "scripts": {
@@ -17,9 +17,9 @@
     "vizabi-translation-win": "copy .\\node_modules\\vizabi\\build\\dist\\assets\\translation\\* .\\src\\app\\preview-data\\translation && copy .\\node_modules\\vizabi\\build\\dist\\assets\\translation\\* .\\src\\app\\assets\\translation",
     "build-win:dev": "npm run vizabi-styles-win && npm run vizabi-cursors-win && npm run vizabi-translation-win && webpack --progress --profile --colors --display-error-details --display-cached",
     "package": "node package.js",
-    "package-win": "npm run package -- --platform=win32 && copy update-win32.bat \"release\\Gapminder Offline-win32-x64\" && cd \"release\\Gapminder Offline-win32-x64\\resources\\app\" && npm i electron-easy-updater fs-extra",
-    "package-lin": "npm run package -- --platform=linux && cp ./update-linux \"./release/Gapminder Offline-linux-x64\" && cd \"./release/Gapminder Offline-linux-x64/resources/app\" && npm i electron-easy-updater fs-extra",
-    "package-mac": "npm run package -- --platform=darwin && cp ./init-macos-sierra \"./release/Gapminder Offline-darwin-x64\" && cp ./update-darwin \"./release/Gapminder Offline-darwin-x64\" && cd \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app\" && npm i electron-easy-updater fs-extra",
+    "package-win": "npm run package -- --platform=win32",
+    "package-lin": "npm run package -- --platform=linux",
+    "package-mac": "npm run package -- --platform=darwin && codesign --deep --force --verbose --sign 'Stiftelsen Gapminder' ./release/Gapminder\\ Offline-darwin-x64/Gapminder\\ Offline.app",
     "package-all": "npm run package-win && npm run package-lin && npm run package-mac",
     "mac": "rm -rf release && npm run build && npm run package-mac",
     "typings-install": "typings install",
@@ -55,9 +55,9 @@
     "format-json": "1.0.3",
     "lodash": "4.16.6",
     "ng2-bootstrap": "1.1.5",
-    "ng2-vizabi": "0.18.2-39",
+    "ng2-vizabi": "0.18.2-85",
     "rxjs": "5.0.0-beta.12",
-    "vizabi-ddfcsv-reader": "0.6.1",
+    "vizabi-ddfcsv-reader": "0.6.6",
     "webpack-target-electron-renderer": "0.4.0",
     "zone.js": "0.6.25"
   },

@@ -25,7 +25,6 @@ class Tab {
   public removable: boolean = true;
   public selectedChartType: string = '';
   public model: any;
-  public modelFull: any;
   public additionalData: Array<IAdditionalDataItem> = [];
 
   public readerModuleObject: any;
@@ -106,7 +105,7 @@ class Tab {
                         </li>
                     </ul>
                 </li>
-                <li class="menu-sepcomponentarator"></li>
+                <li class="menu-separator"></li>
                 <li class="menu-item" (click)="doOpen()">
                     <button type="button" class="menu-btn"><span class="menu-text">Open...</span></button>
                 </li>
@@ -144,7 +143,8 @@ class Tab {
               </ul>
             </div>
             <div *ngIf="tab.selectedChartType" style="height: 100%;">
-            <vizabi style="height: 100%;"
+            <vizabi *ngIf="tab.selectedChartType"
+                    style="height: 100%;"
                     (onCreated)="chartCreated($event)"
                     (onChanged)="chartChanged($event)"
                     (onClick)="appMainClickHandler($event)"
@@ -220,7 +220,7 @@ class Tab {
                 <button type="button" class="close" (click)="additionalCsvConfigModal.hide()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Add your data to bubble chart</h4>
+                <h4 class="modal-title">Add your data to the chart</h4>
             </div>
             <div class="modal-body">
                 <ae-csv-config-form [addDataMode]="true" [parent]="getParent()" (done)="additionalCsvConfigFormComplete($event)"></ae-csv-config-form>
@@ -275,7 +275,7 @@ export class AppComponent implements OnInit {
       if (!processed) {
         this.readerModuleObject = this.ddfFolderForm.getDdfCsvReaderObject();
         this.readerGetMethod = 'getDDFCsvReaderObject';
-        this.readerParams = [this.ddfFolderForm.fileReader];
+        this.readerParams = [this.ddfFolderForm.fileReader, console];
         this.readerName = 'ddf1-csv-ext';
         this.extResources = {
           host: this.ddfFolderForm.ddfUrl,
@@ -284,7 +284,8 @@ export class AppComponent implements OnInit {
 
         //this.defaultChart();
         that.initTab();
-        that._ngZone.run(() => {});
+        that._ngZone.run(() => {
+        });
 
         processed = true;
       }
@@ -325,6 +326,8 @@ export class AppComponent implements OnInit {
   public selectChart(chartType) {
     const tab = this.getCurrentTab();
     tab.selectedChartType = chartType;
+    tab.chartType = chartType;
+    tab.ddfChartType = chartType;
     this.defaultChart();
   }
 
@@ -409,6 +412,7 @@ export class AppComponent implements OnInit {
   private newSimpleChart(properties, onChartReady) {
     const tab = new Tab(this.ddfFolderForm.ddfChartType, this.tabs.length, true);
 
+    tab.selectedChartType = this.ddfFolderForm.ddfChartType;
     tab.model = {
       data: {
         reader: properties.reader,
@@ -450,8 +454,8 @@ export class AppComponent implements OnInit {
 
   private chartChanged(data) {
     const currentTab = this.getCurrentTab();
-    currentTab.modelFull = data.modelFull;
-    //console.log('model changed', JSON.stringify(currentTab.modelFull, null, ' '));
+
+    currentTab.component = data.component;
   }
 
   public doNewDdfFolder() {
@@ -477,12 +481,9 @@ export class AppComponent implements OnInit {
   public doGapminderChart() {
     this.isMenuOpen = false;
     this.initTab();
-    /*
-    this.newChart(() => {
-      this._ngZone.run(() => {
-      });
+
+    this._ngZone.run(() => {
     });
-    */
   }
 
   public doAddDdfFolder() {
@@ -549,11 +550,12 @@ export class AppComponent implements OnInit {
 
 
   public doSave() {
-    const currentTab = Object.assign({}, this.getCurrentTab());
+    const currentTab = this.getCurrentTab();
+    const model = Object.assign({}, currentTab.component.getModel());
 
     this.isMenuOpen = false;
-    electron.ipcRenderer.send('do-save', {model: currentTab.component.getModel(), chartType: currentTab.chartType});
-    //electron.ipcRenderer.send('do-save', {model: currentTab.modelFull, chartType: currentTab.chartType});
+
+    electron.ipcRenderer.send('do-save', {model, chartType: currentTab.chartType});
   }
 
   private csvConfigFormComplete(event) {

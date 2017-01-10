@@ -115,7 +115,7 @@ function startMainApplication() {
         try {
           const config = JSON.parse(body);
 
-          event.sender.send('got-supported-versions', config.supported);
+          event.sender.send('got-supported-versions', config.supported, config.version);
         } catch (e) {
         }
       }

@@ -198,11 +198,11 @@ export class ConfigService {
 
       const chartTypeAdapter = chartTypeAdapters(ddfDataDescriptor)[parameters.chartType];
 
-      let configStr = JSON.stringify(configTemplate.BubbleChart);
+      let configStr = JSON.stringify(configTemplate[parameters.chartType]);
 
-      for (const configTransformer of chartTypeAdapter) {
+      /*for (const configTransformer of chartTypeAdapter) {
         configStr = configTransformer(configStr);
-      }
+      }*/
 
       const configObj = JSON.parse(configStr);
       // console.log(ddfDataDescriptor);
