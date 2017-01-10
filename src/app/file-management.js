@@ -7,7 +7,7 @@ const request = require('request');
 
 const DATA_PATH = {
   win32: '.\\resources\\app\\ddf--gapminder--systema_globalis',
-  linux: './resources/app/ddf--gapminder--systema_globalis',
+  linux: app.getAppPath() + '/ddf--gapminder--systema_globalis',
   darwin: app.getAppPath() + '/ddf--gapminder--systema_globalis'
 };
 

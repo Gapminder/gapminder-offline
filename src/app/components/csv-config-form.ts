@@ -128,21 +128,21 @@ export class CsvConfigFormComponent implements OnInit {
   }
 
   private getDim(): string {
-    return this.parent ? this.parent.getCurrentTab().component.model.state.marker._getFirstDimension() : null;
+    return this.parent && this.parent.getCurrentTab().component ? this.parent.getCurrentTab().component.model.state.marker._getFirstDimension() : null;
   }
 
   private getTime(): string {
-    return this.parent ? this.parent.getCurrentTab().component.model.state.time.dim : null;
+    return this.parent && this.parent.getCurrentTab().component ? this.parent.getCurrentTab().component.model.state.time.dim : null;
   }
 
   private getCountries() {
     const dim = this.getDim();
 
-    return this.parent ? this.parent.getCurrentTab().component.model.state.marker.getKeys().slice(0, 5).map(d => d[dim]).join(", ") : null;
+    return this.parent && this.parent.getCurrentTab().component ? this.parent.getCurrentTab().component.model.state.marker.getKeys().slice(0, 5).map(d => d[dim]).join(", ") : null;
   }
   
   private getTimePoints() {
-    if(!this.parent) return null;
+    if(!this.parent || !this.parent.getCurrentTab().component) return null;
   
     let timeMdl = this.parent.getCurrentTab().component.model.state.time;
     return timeMdl.getAllSteps().slice(0, 3).map(m=>timeMdl.formatDate(m)).join(", ");

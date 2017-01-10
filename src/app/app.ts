@@ -14,6 +14,8 @@ import {VersionsFormComponent} from './components/versions-form';
 import {CsvConfigFormComponent} from './components/csv-config-form';
 import {VizabiModule} from 'ng2-vizabi/ng2-vizabi';
 import {configSg} from './components/config-sg';
+import {InitMenuComponent} from './template-menu';
+import {Menu} from 'electron';
 
 declare var electron: any;
 
@@ -21,6 +23,7 @@ class Tab {
   public active: boolean;
   public title: string;
   public removable: boolean = true;
+  public selectedChartType: string = '';
   public model: any;
   public modelFull: any;
   public additionalData: Array<IAdditionalDataItem> = [];
@@ -39,7 +42,12 @@ class Tab {
     this.order = order + 1;
     this.active = active;
     this.ddfChartType = chartType;
+    // <<<<<<< enhancement-tab-name
     this.title = title ? title : `Chart ${this.order}`;
+    // =======
+    // todo: chack it
+    // this.selectedChartType = '';
+    // >>>>>>> master
 
     if (order === 0) {
       this.removable = false;
@@ -114,7 +122,7 @@ class Tab {
                     <button type="button" class="menu-btn"><span class="menu-text">Check for updates...</span></button>
                 </li>
                 <li class="menu-item" (click)="openDevTools()">
-                    <button type="button" class="menu-btn"><span class="menu-text">Open dev tools</span> </button>
+                    <button type="button" class="menu-btn"><span class="menu-text">Open Developer Tools</span> </button>
                 </li>
             </ul>
         </div>
@@ -131,6 +139,15 @@ class Tab {
              (select)="tab.active = true; forceResize();"
              (deselect)="tab.active = false"
              [removable]="tab.removable">
+            <div *ngIf="!tab.selectedChartType">
+              <div class="tab-chart-choice">Choose Chart Type</div>
+              <ul class="tab-chart-list">
+                <li (click)="selectChart('BubbleChart')"><div><img src="./public/images/tools/bubblechart.png"><span>Bubble Chart</span></div></li>
+                <li (click)="selectChart('BubbleMap')"><div><img src="./public/images/tools/bubblemap.png"><span>Bubble Map</span></div></li>
+                <li (click)="selectChart('MountainChart')"><div><img src="./public/images/tools/mountainchart.png"><span>Mountain Chart</span></div></li>
+              </ul>
+            </div>
+            <div *ngIf="tab.selectedChartType" style="height: 100%;">
             <vizabi style="height: 100%;"
                     (onCreated)="chartCreated($event)"
                     (onChanged)="chartChanged($event)"
@@ -144,6 +161,7 @@ class Tab {
                     [extResources]="tab.extResources"
                     [additionalItems]="tab.additionalData"
                     [chartType]="tab.chartType"></vizabi>
+            </div>
         </tab>
     </tabset>
 </div>
@@ -216,8 +234,8 @@ class Tab {
 </div>
 
 
-<input type="file" style="display: none;" #newDdfFolder (change)="onDdfFolderChanged($event)" webkitdirectory directory />
-<input type="file" style="display: none;" #addDdfFolder (change)="onDdfExtFolderChanged($event)" webkitdirectory directory />
+<input id="newDdfFolder" type="file" style="display: none;" #newDdfFolder (click)="onDdfFolderClick($event, onDdfFolderChanged)"/>
+<input id="addDdfFolder" type="file" style="display: none;" #addDdfFolder (click)="onDdfFolderClick($event, onDdfExtFolderChanged)"/>
 </div>
 `
 })
@@ -240,16 +258,20 @@ export class AppComponent implements OnInit {
   private readerParams: Array<any>;
   private readerName: string;
   private extResources: any;
+  public menuComponent: Menu;
 
   constructor(private _ngZone: NgZone,
               private viewContainerRef: ViewContainerRef,
               private ddfFolderForm: DdfFolderFormComponent,
               private configService: ConfigService) {
+
+    new InitMenuComponent(this);
     electron.ipcRenderer.send('get-app-path');
   }
 
   ngOnInit() {
     let processed = false;
+    const that = this;
 
     electron.ipcRenderer.on('got-app-path', (event, path) => {
       this.ddfFolderForm.electronPath = path;
@@ -264,7 +286,9 @@ export class AppComponent implements OnInit {
           preloadPath: 'preview-data/'
         };
 
-        this.defaultChart();
+        //this.defaultChart();
+        that.initTab();
+        that._ngZone.run(() => {});
 
         processed = true;
       }
@@ -302,6 +326,18 @@ export class AppComponent implements OnInit {
     electron.ipcRenderer.send('open-dev-tools');
   }
 
+  public selectChart(chartType) {
+    const tab = this.getCurrentTab();
+    tab.selectedChartType = chartType;
+    this.defaultChart();
+  }
+
+  public initTab() {
+    const tab = new Tab(this.ddfFolderForm.ddfChartType, this.tabs.length, true);
+    this.tabs.forEach(tab => tab.active = false);
+    this.tabs.push(tab);
+  }
+
   private defaultChart() {
     this.newChart(() => {
       this._ngZone.run(() => {
@@ -314,7 +350,8 @@ export class AppComponent implements OnInit {
       ddfFolderForm.defaults();
     }
 
-    const tab = new Tab(ddfFolderForm.ddfChartType, this.tabs.length, true);
+    const tab = this.getCurrentTab();
+    //const tab = new Tab(ddfFolderForm.ddfChartType, this.tabs.length, true);
 
     tab.readerModuleObject = this.readerModuleObject;
     tab.readerGetMethod = this.readerGetMethod;
@@ -333,7 +370,8 @@ export class AppComponent implements OnInit {
 
     // predefined config for SG
     if (!ddfFolderForm.ddfUrl || ddfFolderForm.ddfUrl.indexOf('systema_globalis') > 0) {
-      const config = configSg.BubbleChart;
+      const chartType = tab.selectedChartType;
+      const config = configSg[chartType];
 
       config.data.ddfPath = ddfFolderForm.ddfUrl;
       config.data.path = ddfFolderForm.ddfUrl;
@@ -342,8 +380,8 @@ export class AppComponent implements OnInit {
 
       console.log(JSON.stringify(tab.model));
 
-      this.tabs.forEach(tab => tab.active = false);
-      this.tabs.push(tab);
+      //this.tabs.forEach(tab => tab.active = false);
+      //this.tabs.push(tab);
 
       if (onChartReady) {
         onChartReady();
@@ -363,8 +401,8 @@ export class AppComponent implements OnInit {
 
       console.log(JSON.stringify(tab.model));
 
-      this.tabs.forEach(tab => tab.active = false);
-      this.tabs.push(tab);
+      //this.tabs.forEach(tab => tab.active = false);
+      //this.tabs.push(tab);
 
       if (onChartReady) {
         onChartReady();
@@ -420,14 +458,14 @@ export class AppComponent implements OnInit {
     //console.log('model changed', JSON.stringify(currentTab.modelFull, null, ' '));
   }
 
-  private doNewDdfFolder() {
-    this.newDdfFolderInput.nativeElement.click();
+  public doNewDdfFolder() {
     this.isMenuOpen = false;
+    this.newDdfFolderInput.nativeElement.click();
   }
 
-  private onDdfFolderChanged(event: any) {
-    if (event.srcElement.files && event.srcElement.files.length > 0) {
-      this.ddfFolderForm.ddfUrl = event.srcElement.files[0].path;
+  private onDdfFolderChanged(filePaths) {
+    if (filePaths && filePaths.length > 0) {
+      this.ddfFolderForm.ddfUrl = filePaths[0];
       this.newChart(() => {
         this._ngZone.run(() => {
         });
@@ -435,25 +473,37 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private doNewCsvFile() {
+  public doNewCsvFile() {
     this.csvConfigModal.show();
     this.isMenuOpen = false;
   }
 
-  private doGapminderChart() {
+  public doGapminderChart() {
     this.isMenuOpen = false;
+    this.initTab();
+    /*
     this.newChart(() => {
       this._ngZone.run(() => {
       });
     });
+    */
   }
 
-  private doAddDdfFolder() {
+  public doAddDdfFolder() {
     this.isMenuOpen = false;
     this.addDdfFolderInput.nativeElement.click();
   }
 
-  private doAddCsvFile() {
+  public onDdfFolderClick(event, callback) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.isMenuOpen = false;
+    const dialog = electron.remote.dialog;
+    const currentWindow = electron.remote.getCurrentWindow();
+    dialog.showOpenDialog(currentWindow, {properties: ['openDirectory']}, callback.bind(this));
+  }
+
+  public doAddCsvFile() {
     this.additionalCsvConfigModal.show();
     this.isMenuOpen = false;
   }
@@ -468,9 +518,9 @@ export class AppComponent implements OnInit {
     currentTab.additionalData = newAdditionalData;
   }
 
-  private onDdfExtFolderChanged(event) {
-    if (event.srcElement.files && event.srcElement.files.length > 0) {
-      this.addData({reader: 'ddf1-csv-ext', path: event.srcElement.files[0].path});
+  private onDdfExtFolderChanged(filePaths) {
+    if (filePaths && filePaths.length > 0) {
+      this.addData({reader: 'ddf1-csv-ext', path: filePaths[0]});
     }
   }
 
@@ -479,7 +529,7 @@ export class AppComponent implements OnInit {
     this.isMenuOpen = false;
   }
 
-  private doOpen() {
+  public doOpen() {
     this.isMenuOpen = false;
     electron.ipcRenderer.send('do-open');
   }
@@ -491,6 +541,7 @@ export class AppComponent implements OnInit {
     delete config.bind;
     delete config.chartType;
 
+    tab.selectedChartType = 'fromFile';
     tab.model = config;
 
     this.tabs.forEach(tab => tab.active = false);
@@ -501,7 +552,7 @@ export class AppComponent implements OnInit {
   };
 
 
-  private doSave() {
+  public doSave() {
     const currentTab = Object.assign({}, this.getCurrentTab());
 
     this.isMenuOpen = false;
