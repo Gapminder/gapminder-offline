@@ -560,3 +560,33 @@ body {
     border: none;
     font-family: 'Bariol Bold';
 }
+
+.tab-chart-choice {
+    text-align: center;
+    font-size: 20px;
+    margin: 40px 0 20px 0;
+}
+.tab-chart-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.tab-chart-list li {
+    width: 33%;
+    float: left;
+    cursor: pointer;
+}
+.tab-chart-list li div {
+    margin: 20px;
+    padding: 20px;
+    display: block;
+    border: 1px solid #ffca34;
+}
+.tab-chart-list span {
+    display: block;
+    text-align: center;
+    font-size: 16px;
+}
+.tab-chart-list li div img {
+    width: 100%;
+}
