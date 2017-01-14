@@ -78,14 +78,14 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
     <div class="btn-group" style="width: 100%">
         <div class="row" style="vertical-align: bottom; position: relative;">
             <div class="col-sm-8">
-                <div><a href="https://docs.google.com/document/d/1EUY88cgjs4RHlLpFy_9JdyKaPio4gRVVI2L8wpgZe6Y" target="_blank">How to export a file from MS Excel</a></div>
+                <div><a href="https://docs.google.com/document/d/1EUY88cgjs4RHlLpFy_9JdyKaPio4gRVVI2L8wpgZe6Y" target="_blank">How to prepare export a file from MS Excel</a></div>
                 <div><a href="https://docs.google.com/document/d/1GEgBscyLSbAkiXbrDrixGDrlTG4DekuFETD5AQaRBvs" target="_blank">How to export a file from Google Docs</a></div>
                 <div><a href="https://csvlint.io/" target="_blank">Online csv validator (a handy tool)</a></div>
-                <div><a href="#" (click)="switchUseYourDataVisible()">How do we use your data?</a><br><span *ngIf="useYourDataVisible">— We don't. Everything stays local on your computer. <a href="https://github.com/VS-work/gapminder-offline" target="_blank">Read more</a></span></div>
+                <div><a href="#" (click)="switchUseYourDataVisible()">How do we use your data?</a><br><span *ngIf="useYourDataVisible">— We don't. Everything stays local on your computer. <a href="https://github.com/VS-work/gapminder-offline/blob/master/LICENSE" target="_blank">Read more</a></span></div>
            </div>
-           <div class="col-sm-4" style="vertical-align: bottom; text-align: right; position: absolute; bottom: 0; right: 0;">
-                <input type="button" style="width: 30%; height: 40px;" (click)="close()" value="Cancel" />
-                <input type="button" style="width: 40%; height: 40px;" (click)="ok()" [disabled]="!choice || !file || !delimiter" value="OK" />        
+           <div class="col-sm-4" style="vertical-align: bottom; text-align: right; position: absolute; bottom: 0; right: 0; min-width: 200px;">
+                <input type="button" style="width: 40%; height: 40px;" (click)="close()" value="Cancel" />
+                <input type="button" style="width: 50%; height: 40px;" (click)="ok()" [disabled]="!choice || !file || !delimiter" value="OK" />        
            </div>
        </div>
     </div>
