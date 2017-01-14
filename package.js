@@ -23,7 +23,18 @@ if (icon) {
   DEFAULT_OPTS.icon = icon;
 }
 
-pack(platform, arch, err => console.log(err || 'Ok...'));
+pack(platform, arch, err => {
+  const exec = require('child_process').exec;
+  const cmd = {
+    linux: 'cp ./update-linux \"./release/Gapminder Offline-linux-x64\" && cd \"./release/Gapminder Offline-linux-x64/resources/app\" && npm i electron-easy-updater fs-extra',
+    darwin: 'cp ./init-macos-sierra \"./release/Gapminder Offline-darwin-x64\" && cp ./update-darwin \"./release/Gapminder Offline-darwin-x64\" && cd \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app\" && npm i electron-easy-updater fs-extra',
+    win32: 'copy update-win32.bat \"release\\Gapminder Offline-win32-x64\" && cd \"release\\Gapminder Offline-win32-x64\\resources\\app\" && npm i electron-easy-updater fs-extra'
+  };
+
+  exec(cmd[platform], error => {
+    console.log(err || error || 'Ok...');
+  });
+});
 
 function pack(plat, arch, cb) {
   const iconObj = {
@@ -48,8 +59,8 @@ function pack(plat, arch, cb) {
     prune: true,
     'app-version': pkg.version || DEFAULT_OPTS.version,
     /*'osx-sign': {
-      identity: 'Stiftelsen Gapminder'
-    },*/
+     identity: 'Stiftelsen Gapminder'
+     },*/
     'version-string': {
       CompanyName: companyName,
       ProductName: appName,

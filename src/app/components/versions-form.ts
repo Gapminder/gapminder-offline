@@ -9,7 +9,7 @@ declare var electron: any;
 <div *ngIf="versions && versions.length >= 0">
   <h4>What version do you need?</h4>
   <div class="popup-block">
-    <div *ngFor="let version of versions"><a (click)="update(version)">{{version}}</a></div>
+    <div *ngFor="let version of versions"><a href="#" (click)="update(version)">{{version}}</a> <span *ngIf="version === latestVersion">(latest)</span></div>
   </div>
 </div>
 `
@@ -18,13 +18,15 @@ export class VersionsFormComponent implements OnInit {
   @Output() done: EventEmitter<any> = new EventEmitter();
 
   private versions: Array<string> = [];
+  private latestVersion: string;
 
   constructor() {
     electron.ipcRenderer.send('get-supported-versions');
   }
 
   ngOnInit() {
-    electron.ipcRenderer.on('got-supported-versions', (event, versions) => {
+    electron.ipcRenderer.on('got-supported-versions', (event, versions, version) => {
+      this.latestVersion = version;
       this.versions = versions;
     });
   }

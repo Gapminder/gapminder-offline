@@ -17,7 +17,7 @@ export class InitMenuComponent {
                                 label: "Your data",
                                 submenu: [
                                     {
-                                        label: "CSV file..",
+                                        label: "CSV file...",
                                         click: () => appComponent.doNewCsvFile()
                                     },
                                     {
@@ -32,7 +32,7 @@ export class InitMenuComponent {
                         label: "Add your data",
                         submenu: [
                             {
-                                label: "CSV file..",
+                                label: "CSV file...",
                                 click: () => appComponent.doAddCsvFile()
                             },
                             {
@@ -45,11 +45,11 @@ export class InitMenuComponent {
                         type: 'separator'
                     },
                     {
-                        label: 'Open..',
+                        label: 'Open...',
                         click: () => appComponent.doOpen()
                     },
                     {
-                        label: 'Save..',
+                        label: 'Save...',
                         click: () => appComponent.doSave()
                     },
                     {
@@ -111,9 +111,6 @@ export class InitMenuComponent {
             {
                 role: 'help',
                 submenu: [
-                    {
-                        role: 'about'
-                    },
                     {
                         label: 'Check for updates...',
                         click: () => appComponent.checkForUpdates()

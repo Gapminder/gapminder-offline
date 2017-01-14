@@ -564,7 +564,7 @@ body {
 .tab-chart-choice {
     text-align: center;
     font-size: 20px;
-    margin: 40px 0 20px 0;
+    padding: 40px 0 20px 0;
 }
 .tab-chart-list {
     list-style: none;

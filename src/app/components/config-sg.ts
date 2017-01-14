@@ -65,7 +65,7 @@ export const configSg: any = {
           syncModels: ['marker_colorlegend']
         }
       },
-      marker_colorlegend:{
+      marker_colorlegend: {
         space: ['entities_colorlegend'],
         label: {
           use: 'property',
@@ -97,11 +97,11 @@ export const configSg: any = {
         doubtDomain: [1800, 1950, 2015],
         doubtRange: [1.0, 0.3, 0.2]
       },
-      buttons: ['colors','find','size','trails','lock','moreoptions','fullscreen','presentation'],
+      buttons: ['colors', 'find', 'size', 'trails', 'lock', 'moreoptions', 'fullscreen', 'presentation'],
       dialogs: {
-        popup: ['colors','find','size','zoom','moreoptions'],
-        sidebar: ['colors','find','size','zoom'],
-        moreoptions: ['opacity','speed','axes','size','colors','label','zoom','presentation','about']
+        popup: ['colors', 'find', 'size', 'zoom', 'moreoptions'],
+        sidebar: ['colors', 'find', 'size', 'zoom'],
+        moreoptions: ['opacity', 'speed', 'axes', 'size', 'colors', 'label', 'zoom', 'presentation', 'about']
       }
     }
   },
@@ -114,136 +114,122 @@ export const configSg: any = {
       id: 'en',
       filePath: './preview-data/translation/'
     },
-    state: {
-      time: {
-        startOrigin: "1800",
-        endOrigin: "2015",
-        value: "2015"
+    "state": {
+      "time": {
+        "startOrigin": "1800",
+        "endOrigin": "2015",
+        "value": "2015",
+        "dim": "time"
       },
-      entities: {
-        dim: "geo",
-        show: {
+      "entities": {
+        "dim": "geo",
+        "show": {
           "is--country": true
         }
       },
-      entities_allpossible: {
-        dim: "geo",
-        show: {
+      "entities_allpossible": {
+        "dim": "geo",
+        "show": {
           "is--country": true
         }
       },
-      entities_colorlegend: {
-        dim: "geo",
-        show: {
-          "is--world_4region": true
+      "entities_colorlegend": {
+        "dim": "world_4region"
+      },
+      "entities_tags": {
+        "dim": "tag"
+      },
+      "marker_allpossible": {
+        "space": ["entities_allpossible"],
+        "label": {
+          "use": "property",
+          "which": "name"
         }
       },
-      entities_tags: {
-        dim: "tag"
-      },
-      marker_allpossible: {
-        space: [
-          "entities_allpossible"
-        ],
-        label: {
-          use: "property",
-          which: "name"
+      "marker": {
+        "space": ["entities", "time"],
+        "opacityRegular": 0.8,
+        "label": {
+          "use": "property",
+          "which": "name"
+        },
+        "axis_y": {
+          "use": "indicator",
+          "which": "population_total",
+          "scaleType": "linear"
+        },
+        "axis_x": {
+          "use": "indicator",
+          "which": "income_per_person_gdppercapita_ppp_inflation_adjusted",
+          "scaleType": "log",
+          "domainMin": 0.11,
+          "domainMax": 500,
+          "tailFatX": 1.85,
+          "tailCutX": 0.2,
+          "tailFade": 0.7,
+          "xScaleFactor": 1.039781626,
+          "xScaleShift": -1.127066411
+        },
+        "axis_s": {
+          "use": "indicator",
+          "which": "gapminder_gini",
+          "scaleType": "linear"
+        },
+        "color": {
+          "use": "property",
+          "which": "world_4region",
+          "scaleType": "ordinal",
+          "syncModels": ["marker_colorlegend", "stack", "group"]
+        },
+        "stack": {
+          "use": "constant",
+          "which": "all"
+        },
+        "group": {
+          "use": "property",
+          "which": "world_4region",
+          "merge": false
         }
       },
-      marker: {
-        space: [
-          "entities",
-          "time"
-        ],
-        label: {
-          use: "property",
-          which: "name"
+      "marker_colorlegend": {
+        "space": ["entities_colorlegend"],
+        "opacityRegular": 0.8,
+        "opacityHighlightDim": 0.3,
+        "label": {
+          "use": "property",
+          "which": "name"
         },
-        axis_y: {
-          use: "indicator",
-          which: "life_expectancy_years",
-          scaleType: "linear"
+        "hook_rank": {
+          "use": "property",
+          "which": "rank"
         },
-        axis_x: {
-          use: "indicator",
-          which: "income_per_person_gdppercapita_ppp_inflation_adjusted",
-          scaleType: "log",
-          domainMin: 0.11,
-          domainMax: 500,
-          tailFatX: 1.85,
-          tailCutX: 0.2,
-          tailFade: 0.7,
-          xScaleFactor: 1.039781626,
-          xScaleShift: -1.127066411
-        },
-        axis_s: {
-          use: "indicator",
-          which: "population_total",
-          scaleType: "linear"
-        },
-        color: {
-          use: "property",
-          which: "world_4region",
-          scaleType: "ordinal",
-          syncModels: [
-            "marker_colorlegend",
-            "stack",
-            "group"
-          ]
-        },
-        stack: {
-          use: "constant",
-          which: "all"
-        },
-        group: {
-          use: "property",
-          which: "world_4region",
-          merge: false
+        "hook_geoshape": {
+          "use": "property",
+          "which": "shape_lores_svg"
         }
       },
-      marker_colorlegend: {
-        space: [
-          "entities_colorlegend"
-        ],
-        type: "geometry",
-        shape: "svg",
-        label: {
-          use: "property",
-          which: "name"
+      "marker_tags": {
+        "space": ["entities_tags"],
+        "label": {
+          "use": "property",
+          "which": "name"
         },
-        hook_rank: {
-          use: "property",
-          which: "rank"
-        },
-        hook_geoshape: {
-          use: "property",
-          which: "shape_lores_svg"
-        }
-      },
-      marker_tags: {
-        space: [
-          "entities_tags"
-        ],
-        label: {
-          use: "property",
-          which: "name"
-        },
-        hook_parent: {
-          use: "property",
-          which: "parent"
+        "hook_parent": {
+          "use": "property",
+          "which": "parent"
         }
       }
     },
-    ui: {
-      datawarning: {
-        doubtDomain: [1800, 1950, 2015],
-        doubtRange: [1.0, 0.8, 0.6]
+    "ui": {
+      "datawarning": {
+        "doubtDomain": [1800, 1950, 2015],
+        "doubtRange": [1.0, 0.8, 0.6]
       },
-      buttons: ['colors','find','size','trails','lock','moreoptions','fullscreen','presentation'],
-      dialogs: {
-        popup: ['colors','find','size','zoom','moreoptions'],
-        sidebar: ['colors','find','size','zoom'],
-        moreoptions: ['opacity','speed','axes','size','colors','label','zoom','presentation','about']
+      "buttons": ["colors", "find", "stack", "show", "moreoptions", "fullscreen", "presentation"],
+      "dialogs": {
+        "popup": ["colors", "find", "stack", "show", "moreoptions"],
+        "sidebar": ["colors", "find", "stack"],
+        "moreoptions": ["opacity", "speed", "stack", "axesmc", "colors", "presentation", "about"]
       }
     }
   },
@@ -256,110 +242,97 @@ export const configSg: any = {
       id: 'en',
       filePath: './preview-data/translation/'
     },
-    state: {
-      time: {
-        startOrigin: "1800",
-        endOrigin: "2015",
-        value: "2015"
+    "state": {
+      "time": {
+        "startOrigin": "1800",
+        "endOrigin": "2015",
+        "value": "2015",
+        "dim": "time"
       },
-      entities: {
-        dim: "geo",
-        show: {
+      "entities": {
+        "dim": "geo",
+        "show": {
           "is--country": true
         }
       },
-      entities_colorlegend: {
-        dim: "geo",
-        show: {
-          "is--world_4region": true
-        }
+      "entities_colorlegend": {
+        "dim": "world_4region"
       },
-      entities_tags: {
-        dim: "tag"
+      "entities_tags": {
+        "dim": "tag"
       },
-      marker: {
-        space: [
-          "entities",
-          "time"
-        ],
-        label: {
-          use: "property",
-          which: "name"
+      "marker": {
+        "space": ["entities", "time"],
+        "label": {
+          "use": "property",
+          "which": "name"
         },
-        size: {
-          use: "indicator",
-          which: "population_total",
-          scaleType: "linear",
-          domainMin: 15,
-          domainMax: 1400000000,
-          allow: {
-            scales: [
-              "linear"
-            ]
+        "size": {
+          "use": "indicator",
+          "which": "population_total",
+          "scaleType": "linear",
+          "domainMin": 15,
+          "domainMax": 1400000000,
+          "allow": {
+            "scales": ["linear"]
           }
         },
-        hook_lat: {
-          use: "property",
-          which: "latitude",
+        "hook_lat": {
+          "use": "property",
+          "which": "latitude",
           "_important": true
         },
-        hook_lng: {
-          use: "property",
-          which: "longitude",
+        "hook_lng": {
+          "use": "property",
+          "which": "longitude",
           "_important": true
         },
-        color: {
-          use: "property",
-          which: "world_4region",
-          scaleType: "ordinal",
-          syncModels: [
-            "marker_colorlegend"
-          ]
+        "color": {
+          "use": "property",
+          "which": "world_4region",
+          "scaleType": "ordinal",
+          "syncModels": ["marker_colorlegend"]
         }
       },
-      marker_colorlegend: {
-        space: [
-          "entities_colorlegend"
-        ],
-        type: "geometry",
-        shape: "svg",
-        label: {
-          use: "property",
-          which: "name"
+      "marker_colorlegend": {
+        "space": ["entities_colorlegend"],
+        "opacityRegular": 0.8,
+        "opacityHighlightDim": 0.3,
+        "label": {
+          "use": "property",
+          "which": "name"
         },
-        hook_rank: {
-          use: "property",
-          which: "rank"
+        "hook_rank": {
+          "use": "property",
+          "which": "rank"
         },
-        hook_geoshape: {
-          use: "property",
-          which: "shape_lores_svg"
+        "hook_geoshape": {
+          "use": "property",
+          "which": "shape_lores_svg"
         }
       },
-      marker_tags: {
-        space: [
-          "entities_tags"
-        ],
-        label: {
-          use: "property",
-          which: "name"
+      "marker_tags": {
+        "space": ["entities_tags"],
+        "label": {
+          "use": "property",
+          "which": "name"
         },
-        hook_parent: {
-          use: "property",
-          which: "parent"
+        "hook_parent": {
+          "use": "property",
+          "which": "parent"
         }
       }
     },
-    ui: {
-      datawarning: {
-        doubtDomain: [1800, 1950, 2015],
-        doubtRange: [1.0, 0.3, 0.2]
+    "ui": {
+      "datawarning": {
+        "doubtDomain": [1800, 1950, 2015],
+        "doubtRange": [1.0, 0.3, 0.2]
       },
-      buttons: ['colors','find','size','trails','lock','moreoptions','fullscreen','presentation'],
-      dialogs: {
-        popup: ['colors','find','size','zoom','moreoptions'],
-        sidebar: ['colors','find','size','zoom'],
-        moreoptions: ['opacity','speed','axes','size','colors','label','zoom','presentation','about']
+      "buttons": ["colors", "find", "size", "moreoptions", "fullscreen", "presentation"],
+      "dialogs": {
+        "popup": ["colors", "find", "size", "moreoptions"],
+        "sidebar": ["colors", "find", "size"],
+        "moreoptions": ["opacity", "speed", "size", "colors", "presentation", "about"]
       }
     }
   }
