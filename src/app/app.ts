@@ -34,6 +34,7 @@ class Tab {
   public extResources: any;
   public ddfChartType: string;
   public component: any;
+  public instance: any;
 
   private order: number;
 
@@ -440,6 +441,7 @@ export class AppComponent implements OnInit {
 
   private chartCreated(data) {
     this.getCurrentTab().component = data.component;
+    this.getCurrentTab().instance = data.component;
   }
 
   private forceResize() {
