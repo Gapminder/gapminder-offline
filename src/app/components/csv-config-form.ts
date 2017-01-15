@@ -60,7 +60,7 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
         <div *ngIf="choice"><input type="file" (change)="onCsvFileChanged($event)" /></div>
     </div>
     
-    <div class="step-block">
+    <!--<div class="step-block">
         <h4 *ngIf="file && choice">Step 3: Additional options:</h4>
         <div *ngIf="file && choice" class="btn-group">Delimiter:</div>
         <div *ngIf="file && choice" class="btn-group">
@@ -69,7 +69,7 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
             <label class="btn btn-default" [(ngModel)]="delimiter" btnRadio=";"> ; </label>
             <label class="btn btn-default" [(ngModel)]="delimiter" btnRadio="\t"> Tab </label>
         </div>
-    </div>
+    </div>-->
 </div>
 
 <div style="border-bottom: 1px solid #e5e5e5; margin: 5px -15px 10px -15px;"></div>

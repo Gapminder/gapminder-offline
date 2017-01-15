@@ -1,10 +1,10 @@
 import {NgModule, Component, OnInit, NgZone, ViewChild, ElementRef, ViewContainerRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
-import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
+import {Ng2BootstrapModule, TabsModule} from 'ng2-bootstrap';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
-import {ModalDirective} from 'ng2-bootstrap/components/modal/modal.component';
+import {ModalDirective, ModalModule} from 'ng2-bootstrap';
 import {AutoUpdateComponent} from './components/auto-update';
 import {DdfFolderFormComponent} from './components/ddf-folder-form';
 import {PresetService} from './components/preset-service';
@@ -121,6 +121,12 @@ class Tab {
                 </li>
                 <li class="menu-item" *ngIf="!getCurrentTab().selectedChartType">
                     <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Save...</span></button>
+                </li>
+                <li class="menu-item" *ngIf="getCurrentTab().selectedChartType === 'BubbleChart'" (click)="doExportForWeb()">
+                    <button type="button" class="menu-btn"><span class="menu-text">Export for Web...</span></button>
+                </li>
+                <li class="menu-item" *ngIf="getCurrentTab().selectedChartType !== 'BubbleChart'">
+                    <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Export for Web...</span></button>
                 </li>
                 <li class="menu-separator"></li>
                 <li class="menu-item" (click)="checkForUpdates()">
@@ -312,6 +318,13 @@ export class AppComponent implements OnInit {
     this.menuComponent.items[0].submenu.items[1].submenu.items[0].enabled = value;
     this.menuComponent.items[0].submenu.items[1].submenu.items[1].enabled = value;
     this.menuComponent.items[0].submenu.items[4].enabled = value;
+    this.menuComponent.items[0].submenu.items[5].enabled = false;
+
+    const currentTab = this.getCurrentTab();
+
+    if (currentTab && currentTab.selectedChartType === 'BubbleChart') {
+      this.menuComponent.items[0].submenu.items[5].enabled = value;
+    }
   }
 
   public getParent(): AppComponent {
@@ -584,6 +597,15 @@ export class AppComponent implements OnInit {
     electron.ipcRenderer.send('do-save', {model, chartType: currentTab.chartType});
   }
 
+  public doExportForWeb() {
+    const currentTab = this.getCurrentTab();
+    const model = Object.assign({}, currentTab.component && currentTab.component.getModel ? currentTab.component.getModel() : currentTab.instance.getModel());
+
+    this.isMenuOpen = false;
+
+    electron.ipcRenderer.send('do-export-for-web', {model, chartType: currentTab.chartType});
+  }
+
   private csvConfigFormComplete(event) {
     this.csvConfigModal.hide();
 
@@ -616,6 +638,8 @@ export class AppComponent implements OnInit {
   imports: [
     BrowserModule,
     FormsModule,
+    ModalModule.forRoot(),
+    TabsModule.forRoot(),
     Ng2BootstrapModule,
     ReactiveFormsModule,
     VizabiModule

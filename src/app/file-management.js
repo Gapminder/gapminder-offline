@@ -3,12 +3,26 @@ const app = electron.app;
 const dialog = electron.dialog;
 const path = require('path');
 const fs = require('fs');
+const fsExtra = require('fs-extra');
+const zipdir = require('zip-dir');
 const request = require('request');
 
 const DATA_PATH = {
   win32: '.\\resources\\app\\ddf--gapminder--systema_globalis',
   linux: app.getAppPath() + '/ddf--gapminder--systema_globalis',
   darwin: app.getAppPath() + '/ddf--gapminder--systema_globalis'
+};
+
+const WEB_RESOURCE_PATH = {
+  win32: '.\\resources\\app\\export-template',
+  linux: app.getAppPath() + '/export-template',
+  darwin: app.getAppPath() + '/export-template'
+};
+
+const WEB_PATH = {
+  win32: '.\\web',
+  linux: app.getAppPath() + '/../../web',
+  darwin: app.getAppPath() + '/../../../../web'
 };
 
 const pathToRelative = (from, to) => path.relative(path.parse(from).dir, to);
@@ -92,8 +106,6 @@ exports.saveFile = (event, params) => {
     Object.keys(params.model).forEach(key => {
       if ((key === 'data' || key.indexOf('data_') === 0) && typeof params.model[key] === 'object') {
         if (isPathInternal(params.model[key].path)) {
-          const parsed = path.parse(params.model[key].path);
-
           params.model[key].path = `@internal`
         } else {
           params.model[key].path = pathToRelative(fileName, params.model[key].path);
@@ -110,6 +122,58 @@ exports.saveFile = (event, params) => {
       }
 
       console.info('Chart state successfully saved');
+    });
+  });
+};
+
+exports.exportForWeb = (event, params) => {
+  fsExtra.removeSync(`${WEB_PATH[process.platform]}`);
+
+  Object.keys(params.model).forEach(key => {
+    if ((key === 'data' || key.indexOf('data_') === 0) && typeof params.model[key] === 'object') {
+      const pathKeys = params.model[key].path.split(path.sep);
+      const pathKey = pathKeys[pathKeys.length - 1];
+
+      fsExtra.copySync(params.model[key].path, `${WEB_PATH[process.platform]}/data/${pathKey}`);
+
+      params.model[key].path = `./data/${pathKey}`;
+      params.model[key].ddfPath = `./data/${pathKey}`;
+
+      if (params.model[key].reader === 'ddf1-csv-ext') {
+        params.model[key].reader = 'ddf';
+      }
+    }
+  });
+
+  params.model.chartType = params.chartType;
+  params.model.locale.filePath = 'assets/translation/';
+
+  const config = `var CONFIG = ${JSON.stringify(params.model, null, ' ')};`;
+
+  fsExtra.copySync(`${WEB_RESOURCE_PATH[process.platform]}`, `${WEB_PATH[process.platform]}`);
+  fsExtra.outputFileSync(`${WEB_PATH[process.platform]}/config.js`, config);
+
+  let indexContent = fs.readFileSync(`${WEB_RESOURCE_PATH[process.platform]}/index.html`).toString();
+
+  indexContent = indexContent.replace(/#chartType#/, params.chartType);
+
+  fs.writeFileSync(`${WEB_PATH[process.platform]}/index.html`, indexContent, 'utf8');
+
+  dialog.showSaveDialog({
+    title: 'Export current chart as ...',
+    filters: [{name: 'ZIP', extensions: ['zip']}]
+  }, fileName => {
+    if (!fileName) {
+      return;
+    }
+
+    zipdir(`${WEB_PATH[process.platform]}`, {saveTo: fileName}, err => {
+      if (err) {
+        dialog.showMessageBox({message: 'This chart has NOT been exported.', buttons: ['OK']});
+        return;
+      }
+
+      dialog.showMessageBox({message: 'This chart has been exported.', buttons: ['OK']});
     });
   });
 };
