@@ -29,7 +29,6 @@ const ipc = electron.ipcRenderer;
     <div class="label">New version is available!</div>
     <span>
       <input type="button" (click)="processUpdateRequest()" value="Update now" class="btn" />
-      <input type="button" (click)="resetUpdateRequest()" value="Later" class="btn" />
     </span>
 </div>
 <div *ngIf="requestToProgress" class="progress">

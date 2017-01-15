@@ -83,7 +83,7 @@ class Tab {
                             <button type="button" class="menu-btn"><span class="menu-text">Gapminder data</span> </button>
                         </li>
                         <li class="menu-item submenu">
-                            <button type="button" class="menu-btn"><span class="menu-text">Your data</span> </button>
+                            <button type="button" class="menu-btn"><span class="menu-text">Your data (bubble chart only)</span> </button>
                             <ul class="menu">
                                 <li class="menu-item" (click)="doNewCsvFile()">
                                     <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>

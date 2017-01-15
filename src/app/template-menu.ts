@@ -14,7 +14,7 @@ export class InitMenuComponent {
                                 click: () => appComponent.doGapminderChart()
                             },
                             {
-                                label: "Your data",
+                                label: "Your data (bubble chart only)",
                                 submenu: [
                                     {
                                         label: "CSV file...",
