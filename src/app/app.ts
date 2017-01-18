@@ -1,10 +1,10 @@
 import {NgModule, Component, OnInit, NgZone, ViewChild, ElementRef, ViewContainerRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
-import {Ng2BootstrapModule} from 'ng2-bootstrap/ng2-bootstrap';
+import {Ng2BootstrapModule, TabsModule} from 'ng2-bootstrap';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
-import {ModalDirective} from 'ng2-bootstrap/components/modal/modal.component';
+import {ModalDirective, ModalModule} from 'ng2-bootstrap';
 import {AutoUpdateComponent} from './components/auto-update';
 import {DdfFolderFormComponent} from './components/ddf-folder-form';
 import {PresetService} from './components/preset-service';
@@ -34,6 +34,7 @@ class Tab {
   public extResources: any;
   public ddfChartType: string;
   public component: any;
+  public instance: any;
 
   private order: number;
 
@@ -97,11 +98,17 @@ class Tab {
                 <li class="menu-item submenu">
                     <button type="button" class="menu-btn"><span class="menu-text">Add your data</span></button>
                     <ul class="menu">
-                        <li class="menu-item" (click)="doAddCsvFile()">
+                        <li class="menu-item" *ngIf="getCurrentTab().selectedChartType" (click)="doAddCsvFile()">
                             <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
                         </li>
-                        <li class="menu-item" (click)="doAddDdfFolder()">
+                        <li class="menu-item" *ngIf="getCurrentTab().selectedChartType" (click)="doAddDdfFolder()">
                             <button type="button" class="menu-btn"><span class="menu-text">DDF folder</span> </button>
+                        </li>
+                        <li class="menu-item" *ngIf="!getCurrentTab().selectedChartType">
+                            <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">CSV file...</span> </button>
+                        </li>
+                        <li class="menu-item" *ngIf="!getCurrentTab().selectedChartType">
+                            <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">DDF folder</span> </button>
                         </li>
                     </ul>
                 </li>
@@ -109,8 +116,17 @@ class Tab {
                 <li class="menu-item" (click)="doOpen()">
                     <button type="button" class="menu-btn"><span class="menu-text">Open...</span></button>
                 </li>
-                <li class="menu-item" (click)="doSave()">
+                <li class="menu-item" *ngIf="getCurrentTab().selectedChartType" (click)="doSave()">
                     <button type="button" class="menu-btn"><span class="menu-text">Save...</span></button>
+                </li>
+                <li class="menu-item" *ngIf="!getCurrentTab().selectedChartType">
+                    <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Save...</span></button>
+                </li>
+                <li class="menu-item" *ngIf="getCurrentTab().selectedChartType === 'BubbleChart'" (click)="doExportForWeb()">
+                    <button type="button" class="menu-btn"><span class="menu-text">Export for Web...</span></button>
+                </li>
+                <li class="menu-item" *ngIf="getCurrentTab().selectedChartType !== 'BubbleChart'">
+                    <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Export for Web...</span></button>
                 </li>
                 <li class="menu-separator"></li>
                 <li class="menu-item" (click)="checkForUpdates()">
@@ -294,6 +310,21 @@ export class AppComponent implements OnInit {
     electron.ipcRenderer.on('do-open-completed', (event, parameters) => {
       this.doOpenCompleted(event, parameters);
     });
+
+    this.setAddDataItemsAvailability(false);
+  }
+
+  private setAddDataItemsAvailability(value: boolean) {
+    this.menuComponent.items[0].submenu.items[1].submenu.items[0].enabled = value;
+    this.menuComponent.items[0].submenu.items[1].submenu.items[1].enabled = value;
+    this.menuComponent.items[0].submenu.items[4].enabled = value;
+    this.menuComponent.items[0].submenu.items[5].enabled = false;
+
+    const currentTab = this.getCurrentTab();
+
+    if (currentTab && currentTab.selectedChartType === 'BubbleChart') {
+      this.menuComponent.items[0].submenu.items[5].enabled = value;
+    }
   }
 
   public getParent(): AppComponent {
@@ -439,7 +470,12 @@ export class AppComponent implements OnInit {
   }
 
   private chartCreated(data) {
-    this.getCurrentTab().component = data.component;
+
+    console.log('chartCreated', data);
+
+    this.getCurrentTab().component = data.model;
+    this.getCurrentTab().instance = data.component;
+    this.setAddDataItemsAvailability(true);
   }
 
   private forceResize() {
@@ -453,6 +489,9 @@ export class AppComponent implements OnInit {
   }
 
   private chartChanged(data) {
+
+    console.log('chartChanged', data);
+
     const currentTab = this.getCurrentTab();
 
     currentTab.component = data.component;
@@ -551,11 +590,20 @@ export class AppComponent implements OnInit {
 
   public doSave() {
     const currentTab = this.getCurrentTab();
-    const model = Object.assign({}, currentTab.component.getModel());
+    const model = Object.assign({}, currentTab.component && currentTab.component.getModel ? currentTab.component.getModel() : currentTab.instance.getModel());
 
     this.isMenuOpen = false;
 
     electron.ipcRenderer.send('do-save', {model, chartType: currentTab.chartType});
+  }
+
+  public doExportForWeb() {
+    const currentTab = this.getCurrentTab();
+    const model = Object.assign({}, currentTab.component && currentTab.component.getModel ? currentTab.component.getModel() : currentTab.instance.getModel());
+
+    this.isMenuOpen = false;
+
+    electron.ipcRenderer.send('do-export-for-web', {model, chartType: currentTab.chartType});
   }
 
   private csvConfigFormComplete(event) {
@@ -590,6 +638,8 @@ export class AppComponent implements OnInit {
   imports: [
     BrowserModule,
     FormsModule,
+    ModalModule.forRoot(),
+    TabsModule.forRoot(),
     Ng2BootstrapModule,
     ReactiveFormsModule,
     VizabiModule

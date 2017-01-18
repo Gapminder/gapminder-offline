@@ -36,7 +36,7 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
 <div class="popup-block main-popup" style="overflow: auto">
     <div class="step-block">
         <h4>Step 1: Choose how your data is arranged:</h4>
-        <div *ngIf="addDataMode" class="desc">Limitation: entities in the first column should match the ones already used in the chart:
+        <div *ngIf="addDataMode && parent.getCurrentTab().instance" class="desc">Limitation: entities in the first column should match the ones already used in the chart:
          <span class="highl">{{getCountries()}}</span> and so on... Time points should be expressed like <span class="highl">{{getTimePoints()}}</span>... 
          Observe the restrictions on column headers, as <span class="highl">highlighted</span> below.
          You can find more instructions <a href="https://docs.google.com/document/d/1pfMcCSKhC2wEVJRYa4Ex2TZkGS22du0Kz9NxSAIHjqU" target="_blank">on&nbsp;this&nbsp;web&nbsp;page</a>
@@ -44,13 +44,13 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
         <div>
             <label class="step-label"><input type="radio" name="choice" #choiceRows (change)="setChoice('rows')" [checked]="choice === 'rows'"> Time is in rows</label>
             <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: time points, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
-            <div *ngIf="addDataMode" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: <span class="highl">{{getTime()}}</span>, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
+            <div *ngIf="addDataMode && parent.getCurrentTab().instance" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: <span class="highl">{{getTime()}}</span>, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
         </div>
         <div *ngIf="isExampleRows" style="width: 100%; max-width: 600px"><img src="./public/images/templates/time-as-rows-example.png" class="example-image"></div>
         <div>
             <label class="step-label"><input type="radio" name="choice" #choiceColumns (change)="setChoice('columns')" [checked]="choice === 'columns'"> Time is in columns</label>
             <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: indicators, Column 3 and on: time points (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
-            <div *ngIf="addDataMode" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: indicators, Column 3 and on: time points (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
+            <div *ngIf="addDataMode && parent.getCurrentTab().instance" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: indicators, Column 3 and on: time points (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
         </div>
         <div *ngIf="isExampleColumns" style="width: 100%; max-width: 600px"><img src="./public/images/templates/time-as-columns-example.png" class="example-image"></div>
     </div>
@@ -60,7 +60,7 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
         <div *ngIf="choice"><input type="file" (change)="onCsvFileChanged($event)" /></div>
     </div>
     
-    <div class="step-block">
+    <!--<div class="step-block">
         <h4 *ngIf="file && choice">Step 3: Additional options:</h4>
         <div *ngIf="file && choice" class="btn-group">Delimiter:</div>
         <div *ngIf="file && choice" class="btn-group">
@@ -69,7 +69,7 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
             <label class="btn btn-default" [(ngModel)]="delimiter" btnRadio=";"> ; </label>
             <label class="btn btn-default" [(ngModel)]="delimiter" btnRadio="\t"> Tab </label>
         </div>
-    </div>
+    </div>-->
 </div>
 
 <div style="border-bottom: 1px solid #e5e5e5; margin: 5px -15px 10px -15px;"></div>
@@ -134,23 +134,23 @@ export class CsvConfigFormComponent implements OnInit {
   }
 
   private getDim(): string {
-    return this.parent && this.parent.getCurrentTab().component ? this.parent.getCurrentTab().component.model.state.marker._getFirstDimension() : null;
+    return this.parent && this.parent.getCurrentTab().instance ? this.parent.getCurrentTab().instance.model.state.marker._getFirstDimension() : null;
   }
 
   private getTime(): string {
-    return this.parent && this.parent.getCurrentTab().component ? this.parent.getCurrentTab().component.model.state.time.dim : null;
+    return this.parent && this.parent.getCurrentTab().instance ? this.parent.getCurrentTab().instance.model.state.time.dim : null;
   }
 
   private getCountries() {
     const dim = this.getDim();
 
-    return this.parent && this.parent.getCurrentTab().component ? this.parent.getCurrentTab().component.model.state.marker.getKeys().slice(0, 5).map(d => d[dim]).join(", ") : null;
+    return this.parent && this.parent.getCurrentTab().instance ? this.parent.getCurrentTab().instance.model.state.marker.getKeys().slice(0, 5).map(d => d[dim]).join(", ") : null;
   }
 
   private getTimePoints() {
-    if (!this.parent || !this.parent.getCurrentTab().component) return null;
+    if (!this.parent || !this.parent.getCurrentTab().instance) return null;
 
-    let timeMdl = this.parent.getCurrentTab().component.model.state.time;
+    let timeMdl = this.parent.getCurrentTab().instance.model.state.time;
     return timeMdl.getAllSteps().slice(0, 3).map(m => timeMdl.formatDate(m)).join(", ");
   }
 
