@@ -32,7 +32,7 @@ pack(platform, arch, err => {
       win32: 'copy update-win32.bat \"release\\Gapminder Offline-win32-x64\" && cd \"release\\Gapminder Offline-win32-x64\\resources\\app\" && npm i electron-easy-updater fs-extra zip-dir'
     },
     'ia32': {
-      win32: 'cp ./update-win32.bat \"./release/Gapminder Offline-win32-ia32\" && cd \"./release/Gapminder Offline-win32-ia32/resources/app\" && npm i electron-easy-updater fs-extra zip-dir'
+      win32: 'copy update-win32.bat \"release\\Gapminder Offline-win32-ia32\" && cd \"release\\Gapminder Offline-win32-ia32\\resources\\app\" && npm i electron-easy-updater fs-extra zip-dir'
     }
   };
 
