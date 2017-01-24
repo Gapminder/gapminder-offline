@@ -1,4 +1,6 @@
 {
   "FEED_VERSION_URL": "http://s3-eu-west-1.amazonaws.com/gapminder-offline/auto-update.json",
-  "FEED_URL": "http://s3-eu-west-1.amazonaws.com/gapminder-offline/#version#/Gapminder Offline-#os#-x64.zip"
+  "FEED_URL": "http://s3-eu-west-1.amazonaws.com/gapminder-offline/#version#/Gapminder Offline-#os#-x64.zip",
+  "DS_FEED_VERSION_URL": "https://raw.githubusercontent.com/buchslava/ddf--gapminder--systema_globalis/master/datapackage.json",
+  "DS_FEED_URL": "https://github.com/buchslava/ddf--gapminder--systema_globalis/archive/#version#.zip"
 }

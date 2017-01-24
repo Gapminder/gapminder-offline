@@ -103,13 +103,12 @@ export class AutoUpdateComponent implements OnInit {
       this._ngZone.run(() => {
         this.requestToProgress = false;
         this.requestToExitAndFinishUpdate = true;
-        electron.ipcRenderer.send('new-version-ready-flag');
       });
     });
   }
 
   processUpdateRequest(version?: string) {
-    electron.ipcRenderer.send('prepare-update', version);
+    electron.ipcRenderer.send('prepare-update', version, 'full');
     this.resetUpdateRequest();
 
     this._ngZone.run(() => {
@@ -120,10 +119,6 @@ export class AutoUpdateComponent implements OnInit {
 
   resetUpdateRequest() {
     this.requestToUpdate = false;
-  }
-
-  resetExitAndFinishUpdateRequest() {
-    this.requestToExitAndFinishUpdate = false;
   }
 
   processExitAndFinishUpdateRequest() {
