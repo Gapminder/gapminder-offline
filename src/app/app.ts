@@ -1,7 +1,9 @@
+declare var electron: any;
+
 import {NgModule, Component, OnInit, NgZone, ViewChild, ElementRef, ViewContainerRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
-import {Ng2BootstrapModule, TabsModule} from 'ng2-bootstrap';
+import {Ng2BootstrapModule, TabsModule, ProgressbarModule} from 'ng2-bootstrap';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 import {ModalDirective, ModalModule} from 'ng2-bootstrap';
@@ -12,12 +14,10 @@ import {ConfigService} from './components/config-service';
 import {AdditionalDataComponent, IAdditionalDataItem} from './components/additional-data';
 import {VersionsFormComponent} from './components/versions-form';
 import {CsvConfigFormComponent} from './components/csv-config-form';
-import {VizabiModule} from 'ng2-vizabi/ng2-vizabi';
+import {VizabiModule} from 'ng2-vizabi';
 import {configSg} from './components/config-sg';
 import {InitMenuComponent} from './template-menu';
 import {Menu} from 'electron';
-
-declare var electron: any;
 
 class Tab {
   public active: boolean;
@@ -354,12 +354,15 @@ export class AppComponent implements OnInit {
     electron.ipcRenderer.send('open-dev-tools');
   }
 
-  public selectChart(chartType) {
+  public selectChart(chartType, isDefault = true) {
     const tab = this.getCurrentTab();
     tab.selectedChartType = chartType;
     tab.chartType = chartType;
     tab.ddfChartType = chartType;
-    this.defaultChart();
+
+    if (isDefault) {
+      this.defaultChart();
+    }
   }
 
   public initTab() {
@@ -414,7 +417,7 @@ export class AppComponent implements OnInit {
       //this.tabs.push(tab);
 
       if (onChartReady) {
-        onChartReady();
+        onChartReady(tab);
       }
 
       return;
@@ -435,7 +438,7 @@ export class AppComponent implements OnInit {
       //this.tabs.push(tab);
 
       if (onChartReady) {
-        onChartReady();
+        onChartReady(tab);
       }
     });
   }
@@ -470,7 +473,6 @@ export class AppComponent implements OnInit {
   }
 
   private chartCreated(data) {
-
     console.log('chartCreated', data);
 
     this.getCurrentTab().component = data.model;
@@ -505,6 +507,8 @@ export class AppComponent implements OnInit {
   private onDdfFolderChanged(filePaths) {
     if (filePaths && filePaths.length > 0) {
       this.ddfFolderForm.ddfUrl = filePaths[0];
+      this.initTab();
+      this.selectChart('BubbleChart', false);
       this.newChart(() => {
         this._ngZone.run(() => {
         });
@@ -640,6 +644,7 @@ export class AppComponent implements OnInit {
     FormsModule,
     ModalModule.forRoot(),
     TabsModule.forRoot(),
+    ProgressbarModule.forRoot(),
     Ng2BootstrapModule,
     ReactiveFormsModule,
     VizabiModule

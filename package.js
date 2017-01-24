@@ -10,7 +10,7 @@ const companyName = 'Gapminder';
 const arch = argv.arch || 'x64';
 const platform = argv.platform || 'linux';
 const icon = './src/app/app-icon';
-const year = 2016;
+const year = 2017;
 
 const DEFAULT_OPTS = {
   dir: './src/app',
@@ -27,12 +27,12 @@ pack(platform, arch, err => {
   const exec = require('child_process').exec;
   const cmd = {
     'x64': {
-      linux: 'cp ./update-linux \"./release/Gapminder Offline-linux-x64\" && cd \"./release/Gapminder Offline-linux-x64/resources/app\" && npm i electron-easy-updater fs-extra zip-dir',
-      darwin: 'cp ./init-macos-sierra \"./release/Gapminder Offline-darwin-x64\" && cp ./update-darwin \"./release/Gapminder Offline-darwin-x64\" && cd \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app\" && npm i electron-easy-updater fs-extra zip-dir',
-      win32: 'copy update-win32.bat \"release\\Gapminder Offline-win32-x64\" && cd \"release\\Gapminder Offline-win32-x64\\resources\\app\" && npm i electron-easy-updater fs-extra zip-dir'
+      linux: 'cp ./update-app-linux \"./release/Gapminder Offline-linux-x64/update-app\" && cp ./update-dataset-linux \"./release/Gapminder Offline-linux-x64/update-dataset\" && cd \"./release/Gapminder Offline-linux-x64/resources/app\" && npm i electron-easy-updater fs-extra zip-dir semver',
+      darwin: 'cp ./init-macos-sierra \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app\" && cp ./update-app-darwin \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app/update-app\" && cp ./update-dataset-darwin \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app/update-dataset\" && cd \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app\" && npm i electron-easy-updater fs-extra zip-dir semver',
+      win32: 'copy update-app-win-x64.bat \"release\\Gapminder Offline-win32-x64\\update-app-win64.bat\" && copy update-dataset-win.bat \"release\\Gapminder Offline-win32-x64\\update-dataset-win64.bat\" && cd \"release\\Gapminder Offline-win32-x64\\resources\\app\" && npm i electron-easy-updater fs-extra zip-dir semver'
     },
     'ia32': {
-      win32: 'copy update-win32.bat \"release\\Gapminder Offline-win32-ia32\" && cd \"release\\Gapminder Offline-win32-ia32\\resources\\app\" && npm i electron-easy-updater fs-extra zip-dir'
+      win32: 'copy update-app-win-ia32.bat \"release\\Gapminder Offline-win32-ia32\\update-app-win32.bat\" && copy update-dataset-win.bat \"release\\Gapminder Offline-win32-ia32\\update-dataset-win32.bat\" && cd \"release\\Gapminder Offline-win32-ia32\\resources\\app\" && npm i electron-easy-updater fs-extra zip-dir semver'
     }
   };
 
@@ -63,9 +63,6 @@ function pack(plat, arch, cb) {
     arch,
     prune: true,
     'app-version': pkg.version || DEFAULT_OPTS.version,
-    /*'osx-sign': {
-     identity: 'Stiftelsen Gapminder'
-     },*/
     'version-string': {
       CompanyName: companyName,
       ProductName: appName,

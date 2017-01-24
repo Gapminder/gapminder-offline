@@ -1,1 +1,1 @@
-xattr -dr com.apple.quarantine /Applications/Gapminder\ Offline-darwin-x64/Gapminder\ Offline.app
+xattr -dr com.apple.quarantine /Applications/Gapminder\ Offline-mac/Gapminder\ Offline.app

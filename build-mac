@@ -1,0 +1,17 @@
+rm -r ./release/partial
+rm -r ./release/Gapminder\ Offline-mac.zip
+rm -r ./release/Gapminder\ Offline-mac
+npm run build
+npm run package-mac
+cd ./release
+mv ./Gapminder\ Offline-darwin-x64 ./Gapminder\ Offline-mac
+cd ./Gapminder\ Offline-mac
+codesign --deep --force --verbose --sign 'Stiftelsen Gapminder' ./Gapminder\ Offline.app
+zip --symlinks -r ./Gapminder\ Offline-mac.zip ./Gapminder\ Offline.app
+cd ..
+mkdir -p partial/Gapminder\ Offline-mac/Gapminder\ Offline.app/Contents/Resources/app
+cp -R ./Gapminder\ Offline-mac/Gapminder\ Offline.app/Contents/Resources/app ./partial/Gapminder\ Offline-mac/Gapminder\ Offline.app/Contents/Resources
+rm -r ./partial/Gapminder\ Offline-mac/Gapminder\ Offline.app/Contents/Resources/app/ddf--gapminder--systema_globalis
+cd partial/Gapminder\ Offline-mac
+zip --symlinks -r ./Gapminder\ Offline-mac.zip ./Gapminder\ Offline.app
+cd ../../..
