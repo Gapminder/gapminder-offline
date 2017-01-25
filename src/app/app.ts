@@ -1,7 +1,7 @@
 import {NgModule, Component, OnInit, NgZone, ViewChild, ElementRef, ViewContainerRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
-import {Ng2BootstrapModule, TabsModule} from 'ng2-bootstrap';
+import {Ng2BootstrapModule, TabsModule, ProgressbarModule} from 'ng2-bootstrap';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 import {ModalDirective, ModalModule} from 'ng2-bootstrap';
@@ -640,6 +640,7 @@ export class AppComponent implements OnInit {
     FormsModule,
     ModalModule.forRoot(),
     TabsModule.forRoot(),
+    ProgressbarModule.forRoot(),
     Ng2BootstrapModule,
     ReactiveFormsModule,
     VizabiModule
