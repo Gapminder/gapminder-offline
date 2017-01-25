@@ -27,7 +27,12 @@ process.noAsar = true;
 
 const RELEASE_ARCHIVE = 'release.zip';
 const FEED_VERSION_URL = autoUpdateConfig.FEED_VERSION_URL;
-const FEED_URL = autoUpdateConfig.FEED_URL.replace(/#os#/g, process.platform);
+const FEED_URL = autoUpdateConfig.FEED_URL
+  .replace(/#os#/g, process.platform)
+  .replace(/#arch#/g, process.arch);
+const PARTIAL_FEED_URL = autoUpdateConfig.PARTIAL_FEED_URL
+  .replace(/#os#/g, process.platform)
+  .replace(/#arch#/g, process.arch);
 const DS_FEED_VERSION_URL = autoUpdateConfig.DS_FEED_VERSION_URL;
 const DS_FEED_URL = autoUpdateConfig.DS_FEED_URL;
 const PRESETS_FILE = __dirname + '/presets.json';
@@ -161,9 +166,11 @@ function startMainApplication() {
     electronEasyUpdater.versionCheck({
       url: FEED_VERSION_URL,
       version: app.getVersion()
-    }, (errGenericUpdate, actualVersionGenericUpdate) => {
+    }, (errGenericUpdate, actualVersionGenericUpdate, versionDiffType) => {
       if (!errGenericUpdate && actualVersionGenericUpdate) {
-        updateProcessDescriptor = new UpdateProcessDescriptor('full', actualVersionGenericUpdate);
+        const url = versionDiffType === 'major' ? FEED_URL : PARTIAL_FEED_URL;
+
+        updateProcessDescriptor = new UpdateProcessDescriptor('full', actualVersionGenericUpdate, url);
 
         event.sender.send('request-to-update', actualVersionGenericUpdate);
         return;

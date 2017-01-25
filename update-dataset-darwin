@@ -1,0 +1,4 @@
+cp -R ./cache/ddf--gapminder--systema_globalis-*/* ./resources/app/ddf--gapminder--systema_globalis
+rm -rf ./cache
+rm ./update-required
+open -a 'Gapminder Offline'

@@ -1,6 +1,7 @@
 {
-  "FEED_VERSION_URL": "http://s3-eu-west-1.amazonaws.com/gapminder-offline/auto-update.json",
-  "FEED_URL": "http://s3-eu-west-1.amazonaws.com/gapminder-offline/#version#/Gapminder Offline-#os#-x64.zip",
+  "FEED_VERSION_URL": "http://s3-eu-west-1.amazonaws.com/gapminder-offline/auto-update-test.json",
+  "FEED_URL": "http://s3-eu-west-1.amazonaws.com/gapminder-offline/#version#/Gapminder Offline-#os#-#arch#.zip",
+  "PARTIAL_FEED_URL": "http://s3-eu-west-1.amazonaws.com/gapminder-offline/#version#/partial/Gapminder Offline-#os#-#arch#.zip",
   "DS_FEED_VERSION_URL": "https://raw.githubusercontent.com/buchslava/ddf--gapminder--systema_globalis/master/datapackage.json",
   "DS_FEED_URL": "https://github.com/buchslava/ddf--gapminder--systema_globalis/archive/#version#.zip"
 }
