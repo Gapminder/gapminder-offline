@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const fsExtra = require('fs-extra');
 const request = require('request');
+const semver = require('semver');
 const autoUpdateConfig = require('./auto-update-config.json');
 const electronEasyUpdater = require('electron-easy-updater');
 const fileManagement = require('./file-management');
@@ -193,7 +194,9 @@ function startMainApplication() {
 
   ipc.on('prepare-update', (event, version, type) => {
     if (version) {
-      updateProcessDescriptor = new UpdateProcessDescriptor(type, version);
+      const url = semver.diff(app.getVersion(), version) === 'major' ? FEED_URL : PARTIAL_FEED_URL;
+
+      updateProcessDescriptor = new UpdateProcessDescriptor(type, version, url);
     }
 
     startUpdate(event);
