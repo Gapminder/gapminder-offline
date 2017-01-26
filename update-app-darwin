@@ -5,5 +5,5 @@ cp ./cache/Gapminder\ Offline-darwin-x64/update-dataset-darwin .
 xattr -dr com.apple.quarantine /Applications/Gapminder\ Offline-darwin-x64/Gapminder\ Offline.app
 rm -rf ./cache
 rm ./update-required
-sleep 3
-open -a 'Gapminder Offline'
+sleep 1
+Gapminder\ Offline.app/Contents/MacOS/Gapminder\ Offline &

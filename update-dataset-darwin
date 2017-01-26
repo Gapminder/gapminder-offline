@@ -4,5 +4,5 @@ cp -R ./ddf--gapminder--systema_globalis ../Gapminder\ Offline.app/Contents/Reso
 cd ..
 rm -rf ./cache
 rm ./update-required
-sleep 3
-open -a 'Gapminder Offline'
+sleep 1
+Gapminder\ Offline.app/Contents/MacOS/Gapminder\ Offline &
