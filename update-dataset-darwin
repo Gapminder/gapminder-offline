@@ -1,6 +1,6 @@
 cd cache
 mv ddf--gapminder--systema_globalis* ddf--gapminder--systema_globalis
-cp -R ./ddf--gapminder--systema_globalis ../Gapminder\ Offline.app/Contents/Resources/app/ddf--gapminder--systema_globalis
+cp -R ./ddf--gapminder--systema_globalis ../Gapminder\ Offline.app/Contents/Resources/app
 cd ..
 rm -rf ./cache
 rm ./update-required
