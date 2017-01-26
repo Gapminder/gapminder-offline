@@ -166,7 +166,7 @@ function startMainApplication() {
       if (!errGenericUpdate && actualVersionGenericUpdate) {
         const url = versionDiffType === 'major' ? FEED_URL : PARTIAL_FEED_URL;
 
-        updateProcessDescriptor = new UpdateProcessDescriptor('full', actualVersionGenericUpdate, url);
+        updateProcessDescriptor = new UpdateProcessDescriptor('app', actualVersionGenericUpdate, url);
 
         event.sender.send('request-to-update', actualVersionGenericUpdate);
         return;
