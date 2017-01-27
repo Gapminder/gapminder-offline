@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, NgZone} from '@angular/core';
+import {Component, Inject, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
 
 @Component({
@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
     </div>
     `
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   name: string;
 
   constructor(private _router: Router, private _ngZone: NgZone, @Inject('AppStore') private appStore) {
@@ -23,9 +23,5 @@ export class HomeComponent implements OnInit {
     this._ngZone.run(() => {
       this._router.navigate(['/']);
     });
-  }
-
-  ngOnInit() {
-    // Our API
   }
 }

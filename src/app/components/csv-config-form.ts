@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angular/core';
+import {Component, Input, Output, Injectable, EventEmitter} from '@angular/core';
 
 @Injectable()
 @Component({
@@ -92,7 +92,7 @@ import {Component, OnInit, Input, Output, Injectable, EventEmitter} from '@angul
 </div>
 `
 })
-export class CsvConfigFormComponent implements OnInit {
+export class CsvConfigFormComponent {
   @Input() parent?: any;
   @Input() addDataMode?: boolean = false;
   @Output() done: EventEmitter<any> = new EventEmitter();
@@ -103,9 +103,6 @@ export class CsvConfigFormComponent implements OnInit {
   private useYourDataVisible: boolean = false;
   private delimiter: string = 'auto';
   private file: string = '';
-
-  ngOnInit() {
-  }
 
   ok() {
     const config = {
