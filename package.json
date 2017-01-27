@@ -53,7 +53,7 @@
     "csv-parse": "1.1.9",
     "electron": "1.4.14",
     "lodash": "4.17.4",
-    "minimist": "^1.2.0",
+    "minimist": "1.2.0",
     "ng2-bootstrap": "1.2.2",
     "ng2-vizabi": "0.18.3-22",
     "rxjs": "5.0.3",

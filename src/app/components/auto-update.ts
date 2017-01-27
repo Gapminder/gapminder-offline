@@ -108,7 +108,7 @@ export class AutoUpdateComponent implements OnInit {
   }
 
   processUpdateRequest(version?: string) {
-    electron.ipcRenderer.send('prepare-update', version, 'full');
+    electron.ipcRenderer.send('prepare-update', version, 'app');
     this.resetUpdateRequest();
 
     this._ngZone.run(() => {

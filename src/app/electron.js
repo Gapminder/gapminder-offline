@@ -18,11 +18,6 @@ const dirs = {
   darwin: __dirname + '/../../../../',
   win32: '.\\'
 };
-const DATA_PACKAGE_PATH = {
-  win32: '.\\resources\\app\\ddf--gapminder--systema_globalis\\datapackage.json',
-  linux: app.getAppPath() + '/ddf--gapminder--systema_globalis/datapackage.json',
-  darwin: app.getAppPath() + '/ddf--gapminder--systema_globalis/datapackage.json'
-};
 
 process.noAsar = true;
 
@@ -171,13 +166,13 @@ function startMainApplication() {
       if (!errGenericUpdate && actualVersionGenericUpdate) {
         const url = versionDiffType === 'major' ? FEED_URL : PARTIAL_FEED_URL;
 
-        updateProcessDescriptor = new UpdateProcessDescriptor('full', actualVersionGenericUpdate, url);
+        updateProcessDescriptor = new UpdateProcessDescriptor('app', actualVersionGenericUpdate, url);
 
         event.sender.send('request-to-update', actualVersionGenericUpdate);
         return;
       }
 
-      const dataPackage = require(DATA_PACKAGE_PATH[process.platform]);
+      const dataPackage = require(app.getAppPath() + '/ddf--gapminder--systema_globalis/datapackage.json');
 
       electronEasyUpdater.versionCheck({
         url: DS_FEED_VERSION_URL,

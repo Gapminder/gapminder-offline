@@ -1,6 +1,0 @@
-cp -R ./cache/Gapminder\ Offline-darwin-x64/Gapminder\ Offline.app .
-cp ./cache/Gapminder\ Offline-darwin-x64/init-macos-sierra .
-cp ./cache/Gapminder\ Offline-darwin-x64/update-darwin .
-rm -rf ./cache
-rm ./update-required
-open -a 'Gapminder Offline'

@@ -1,0 +1,9 @@
+cp -R ./cache/Gapminder\ Offline-darwin-x64/Gapminder\ Offline.app .
+cp ./cache/Gapminder\ Offline-darwin-x64/init-macos-sierra .
+cp ./cache/Gapminder\ Offline-darwin-x64/update-app-darwin .
+cp ./cache/Gapminder\ Offline-darwin-x64/update-dataset-darwin .
+xattr -dr com.apple.quarantine /Applications/Gapminder\ Offline-darwin-x64/Gapminder\ Offline.app
+rm -rf ./cache
+rm ./update-required
+sleep 1
+Gapminder\ Offline.app/Contents/MacOS/Gapminder\ Offline &
