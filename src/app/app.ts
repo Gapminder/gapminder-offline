@@ -7,53 +7,19 @@ import {Ng2BootstrapModule, TabsModule, ProgressbarModule} from 'ng2-bootstrap';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 import {ModalDirective, ModalModule} from 'ng2-bootstrap';
+import {HamburgerMenuComponent} from './components/hamburger-menu';
 import {AutoUpdateComponent} from './components/auto-update';
 import {DdfFolderFormComponent} from './components/ddf-folder-form';
 import {PresetService} from './components/preset-service';
 import {ConfigService} from './components/config-service';
-import {AdditionalDataComponent, IAdditionalDataItem} from './components/additional-data';
+import {AdditionalDataComponent} from './components/additional-data';
 import {VersionsFormComponent} from './components/versions-form';
 import {CsvConfigFormComponent} from './components/csv-config-form';
+import {TabModel} from './components/tab-model';
 import {VizabiModule} from 'ng2-vizabi';
 import {configSg} from './components/config-sg';
 import {InitMenuComponent} from './template-menu';
 import {Menu} from 'electron';
-
-class Tab {
-  public active: boolean;
-  public title: string;
-  public removable: boolean = true;
-  public selectedChartType: string = '';
-  public model: any;
-  public additionalData: Array<IAdditionalDataItem> = [];
-
-  public readerModuleObject: any;
-  public readerGetMethod: string;
-  public readerParams: Array<any>;
-  public readerName: string;
-  public extResources: any;
-  public ddfChartType: string;
-  public component: any;
-  public instance: any;
-
-  private order: number;
-
-  constructor(public chartType: string, order: number, active: boolean = false, title: string = '') {
-    this.order = order + 1;
-    this.active = active;
-    this.ddfChartType = chartType;
-    this.title = title ? title : `Chart ${this.order}`;
-    this.selectedChartType = '';
-
-    if (order === 0) {
-      this.removable = false;
-    }
-  }
-
-  public getOrder() {
-    return this.order;
-  }
-}
 
 @Component({
   selector: 'ae-app',
@@ -75,67 +41,7 @@ class Tab {
                     class="main-menu-btn"><img src="./public/images/hamburger.png" />
             </button>
             
-            <ul role="menu" aria-labelledby="single-button" class="menu show-menu" *ngIf="isMenuOpen">
-                <li class="menu-item submenu">
-                    <button type="button" class="menu-btn"><span class="menu-text">New chart</span></button>
-                    <ul class="menu">
-                        <li class="menu-item" (click)="doGapminderChart()">
-                            <button type="button" class="menu-btn"><span class="menu-text">Gapminder data</span> </button>
-                        </li>
-                        <li class="menu-item submenu">
-                            <button type="button" class="menu-btn"><span class="menu-text">Your data (bubble chart only)</span> </button>
-                            <ul class="menu">
-                                <li class="menu-item" (click)="doNewCsvFile()">
-                                    <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
-                                </li>
-                                <li class="menu-item" (click)="doNewDdfFolder()">
-                                    <button type="button" class="menu-btn"><span class="menu-text">DDF folder</span> </button>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li class="menu-item submenu">
-                    <button type="button" class="menu-btn"><span class="menu-text">Add your data</span></button>
-                    <ul class="menu">
-                        <li class="menu-item" *ngIf="getCurrentTab().selectedChartType" (click)="doAddCsvFile()">
-                            <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
-                        </li>
-                        <li class="menu-item" *ngIf="getCurrentTab().selectedChartType" (click)="doAddDdfFolder()">
-                            <button type="button" class="menu-btn"><span class="menu-text">DDF folder</span> </button>
-                        </li>
-                        <li class="menu-item" *ngIf="!getCurrentTab().selectedChartType">
-                            <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">CSV file...</span> </button>
-                        </li>
-                        <li class="menu-item" *ngIf="!getCurrentTab().selectedChartType">
-                            <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">DDF folder</span> </button>
-                        </li>
-                    </ul>
-                </li>
-                <li class="menu-separator"></li>
-                <li class="menu-item" (click)="doOpen()">
-                    <button type="button" class="menu-btn"><span class="menu-text">Open...</span></button>
-                </li>
-                <li class="menu-item" *ngIf="getCurrentTab().selectedChartType" (click)="doSave()">
-                    <button type="button" class="menu-btn"><span class="menu-text">Save...</span></button>
-                </li>
-                <li class="menu-item" *ngIf="!getCurrentTab().selectedChartType">
-                    <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Save...</span></button>
-                </li>
-                <li class="menu-item" *ngIf="getCurrentTab().selectedChartType === 'BubbleChart'" (click)="doExportForWeb()">
-                    <button type="button" class="menu-btn"><span class="menu-text">Export for Web...</span></button>
-                </li>
-                <li class="menu-item" *ngIf="getCurrentTab().selectedChartType !== 'BubbleChart'">
-                    <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Export for Web...</span></button>
-                </li>
-                <li class="menu-separator"></li>
-                <li class="menu-item" (click)="checkForUpdates()">
-                    <button type="button" class="menu-btn"><span class="menu-text">Check for updates...</span></button>
-                </li>
-                <li class="menu-item" (click)="openDevTools()">
-                    <button type="button" class="menu-btn"><span class="menu-text">Open Developer Tools</span> </button>
-                </li>
-            </ul>
+            <ae-hamburger-menu [isMenuOpen]="isMenuOpen" [currentTab]="getCurrentTab()" (onMenuItemSelected)="onMenuItemSelected($event)"></ae-hamburger-menu>
         </div>
     </div>
 </div>
@@ -252,7 +158,7 @@ class Tab {
 `
 })
 export class AppComponent implements OnInit {
-  public tabs: Tab[] = [];
+  public tabs: TabModel[] = [];
   public isMenuOpen: boolean = false;
 
   @ViewChild('ddfModal') public ddfModal: ModalDirective;
@@ -314,6 +220,10 @@ export class AppComponent implements OnInit {
     this.setAddDataItemsAvailability(false);
   }
 
+  private onMenuItemSelected(methodName: string) {
+    this[methodName]();
+  }
+
   private setAddDataItemsAvailability(value: boolean) {
     this.menuComponent.items[0].submenu.items[1].submenu.items[0].enabled = value;
     this.menuComponent.items[0].submenu.items[1].submenu.items[1].enabled = value;
@@ -331,7 +241,7 @@ export class AppComponent implements OnInit {
     return this;
   }
 
-  public getCurrentTab(): Tab {
+  public getCurrentTab(): TabModel {
     return this.tabs.find(tab => tab.active);
   }
 
@@ -366,7 +276,7 @@ export class AppComponent implements OnInit {
   }
 
   public initTab() {
-    const tab = new Tab(this.ddfFolderForm.ddfChartType, this.tabs.length, true);
+    const tab = new TabModel(this.ddfFolderForm.ddfChartType, this.tabs.length, true);
     this.tabs.forEach(tab => tab.active = false);
     this.tabs.push(tab);
   }
@@ -444,7 +354,7 @@ export class AppComponent implements OnInit {
   }
 
   private newSimpleChart(properties, onChartReady) {
-    const tab = new Tab(this.ddfFolderForm.ddfChartType, this.tabs.length, true);
+    const tab = new TabModel(this.ddfFolderForm.ddfChartType, this.tabs.length, true);
 
     tab.selectedChartType = this.ddfFolderForm.ddfChartType;
     tab.model = {
@@ -576,7 +486,7 @@ export class AppComponent implements OnInit {
 
   private doOpenCompleted(event, parameters) {
     const config = parameters.tab;
-    const tab = new Tab(config.chartType, this.tabs.length, true, parameters.file);
+    const tab = new TabModel(config.chartType, this.tabs.length, true, parameters.file);
 
     delete config.bind;
     delete config.chartType;
@@ -634,6 +544,7 @@ export class AppComponent implements OnInit {
   declarations: [
     AppComponent,
     AutoUpdateComponent,
+    HamburgerMenuComponent,
     DdfFolderFormComponent,
     AdditionalDataComponent,
     VersionsFormComponent,
@@ -653,6 +564,7 @@ export class AppComponent implements OnInit {
     {provide: PresetService, useClass: PresetService},
     {provide: ConfigService, useClass: ConfigService},
     AutoUpdateComponent,
+    HamburgerMenuComponent,
     DdfFolderFormComponent,
     AdditionalDataComponent,
     VersionsFormComponent,
