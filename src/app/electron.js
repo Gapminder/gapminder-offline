@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const fsExtra = require('fs-extra');
 const request = require('request');
+const semver = require('semver');
 const autoUpdateConfig = require('./auto-update-config.json');
 const electronEasyUpdater = require('electron-easy-updater');
 const fileManagement = require('./file-management');
@@ -14,25 +15,50 @@ const childProcess = require('child_process');
 const spawn = childProcess.spawn;
 const dirs = {
   linux: './',
-  darwin: __dirname + '/../../../../',
+  darwin: __dirname + '/',
   win32: '.\\'
 };
 
 process.noAsar = true;
+const getTypeByOsAndArch = (os, arch) => {
+  if (os === 'win32' && arch === 'x64') {
+    return 'win64';
+  }
 
+  if (os === 'win32' && arch === 'ia32') {
+    return 'win32';
+  }
+
+  if (os === 'darwin') {
+    return 'mac';
+  }
+
+  return os;
+};
 const RELEASE_ARCHIVE = 'release.zip';
 const FEED_VERSION_URL = autoUpdateConfig.FEED_VERSION_URL;
-const FEED_URL = autoUpdateConfig.FEED_URL.replace(/#os#/g, process.platform);
+const FEED_URL = autoUpdateConfig.FEED_URL.replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch));
+const PARTIAL_FEED_URL = autoUpdateConfig.PARTIAL_FEED_URL.replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch));
+const DS_FEED_VERSION_URL = autoUpdateConfig.DS_FEED_VERSION_URL;
+const DS_FEED_URL = autoUpdateConfig.DS_FEED_URL;
 const PRESETS_FILE = __dirname + '/presets.json';
 const UPDATE_FLAG_FILE = `${dirs[process.platform]}update-required`;
 const CACHE_DIR = `${dirs[process.platform]}cache`;
 
 let mainWindow = null;
-let newVersion = null;
+let updateProcessDescriptor;
 
-function finishUpdate() {
+class UpdateProcessDescriptor {
+  constructor(type, version, url) {
+    this.type = type;
+    this.version = version;
+    this.url = url || FEED_URL;
+  }
+}
+
+function finishUpdate(type) {
   if (process.platform !== 'win32') {
-    const updateCommand = dirs[process.platform] + 'update-' + process.platform;
+    const updateCommand = dirs[process.platform] + 'update-' + type;
 
     spawn(
       updateCommand,
@@ -48,7 +74,7 @@ function finishUpdate() {
   if (process.platform === 'win32') {
     spawn(
       'cmd.exe',
-      ['/s', '/c', '"update-win32.bat"'],
+      ['/s', '/c', '"update-' + type + '-' + getTypeByOsAndArch(process.platform, process.arch) + '.bat"'],
       {
         windowsVerbatimArguments: true,
         stdio: 'ignore',
@@ -60,8 +86,8 @@ function finishUpdate() {
   app.quit();
 }
 
-function startUpdate(event, version) {
-  const releaseUrl = FEED_URL.replace('#version#', version);
+function startUpdate(event) {
+  const releaseUrl = updateProcessDescriptor.url.replace('#version#', updateProcessDescriptor.version);
 
   electronEasyUpdater.download({
       url: releaseUrl,
@@ -85,7 +111,7 @@ function startUpdate(event, version) {
           event.sender.send('unpack-progress', progress);
         },
         err => {
-          fs.writeFile(UPDATE_FLAG_FILE, '0', () => {
+          fs.writeFile(UPDATE_FLAG_FILE, updateProcessDescriptor.type, () => {
             event.sender.send('unpack-complete', err);
           });
         });
@@ -102,7 +128,7 @@ function startMainApplication() {
   }
 
   mainWindow.on('closed', () => {
-    mainWindow = null;
+    mainWindow.destroy();
   });
 
   ipc.on('get-app-path', event => {
@@ -146,20 +172,39 @@ function startMainApplication() {
     electronEasyUpdater.versionCheck({
       url: FEED_VERSION_URL,
       version: app.getVersion()
-    }, (err, actualVersion) => {
-      if (!err && actualVersion) {
-        newVersion = actualVersion;
-        event.sender.send('request-to-update', actualVersion);
+    }, (errGenericUpdate, actualVersionGenericUpdate, versionDiffType) => {
+      if (!errGenericUpdate && actualVersionGenericUpdate) {
+        const url = versionDiffType === 'major' ? FEED_URL : PARTIAL_FEED_URL;
+
+        updateProcessDescriptor = new UpdateProcessDescriptor('app', actualVersionGenericUpdate, url);
+
+        event.sender.send('request-to-update', actualVersionGenericUpdate);
+        return;
       }
+
+      const dataPackage = require(app.getAppPath() + '/ddf--gapminder--systema_globalis/datapackage.json');
+
+      electronEasyUpdater.versionCheck({
+        url: DS_FEED_VERSION_URL,
+        version: dataPackage.version
+      }, (errDsUpdate, actualVersionDsUpdate) => {
+        if (!errDsUpdate && actualVersionDsUpdate) {
+          updateProcessDescriptor = new UpdateProcessDescriptor('dataset', actualVersionDsUpdate, DS_FEED_URL);
+
+          event.sender.send('request-to-update', actualVersionDsUpdate);
+        }
+      });
     });
   });
 
-  ipc.on('prepare-update', (event, version) => {
-    startUpdate(event, version || newVersion);
-  });
+  ipc.on('prepare-update', (event, version, type) => {
+    if (version) {
+      const url = semver.diff(app.getVersion(), version) === 'major' ? FEED_URL : PARTIAL_FEED_URL;
 
-  ipc.on('new-version-ready-flag', () => {
-    fs.writeFile(UPDATE_FLAG_FILE, '0', err => null);
+      updateProcessDescriptor = new UpdateProcessDescriptor(type, version, url);
+    }
+
+    startUpdate(event);
   });
 
   ipc.on('do-open', fileManagement.openFile);
@@ -167,25 +212,24 @@ function startMainApplication() {
   ipc.on('do-export-for-web', fileManagement.exportForWeb);
 
   ipc.on('exit-and-update', () => {
-    finishUpdate(() => {
-      process.exit(0);
+    finishUpdate(updateProcessDescriptor.type, () => {
+      app.quit();
     });
   });
 }
 
 app.on('window-all-closed', () => {
   app.quit();
-  process.exit(0);
 });
 
 app.on('ready', () => {
-  fs.readFile(UPDATE_FLAG_FILE, 'utf8', err => {
+  fs.readFile(UPDATE_FLAG_FILE, 'utf8', (err, content) => {
     if (err) {
       fsExtra.removeSync(CACHE_DIR);
       startMainApplication();
       return;
     }
 
-    finishUpdate();
+    finishUpdate(content);
   });
 });

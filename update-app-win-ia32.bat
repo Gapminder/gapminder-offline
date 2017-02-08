@@ -1,4 +1,6 @@
-xcopy /y /s /e "cache\Gapminder Offline-win32-x64" .
+cd cache
+robocopy . .. /E
+cd ..
 rmdir /s /q cache
 del .\update-required
 start "" ".\Gapminder Offline.exe"

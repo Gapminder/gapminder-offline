@@ -1,5 +1,6 @@
 export const configSg: any = {
   BubbleChart: {
+    "chart-type": "bubbles",
     data: {
       reader: 'ddf1-csv-ext',
       splash: true
@@ -100,12 +101,7 @@ export const configSg: any = {
         "doubtDomain": [1800, 1950, 2015],
         "doubtRange": [1.0, 0.3, 0.2]
       },
-      "buttons": ["colors", "find", "size", "trails", "lock", "moreoptions", "fullscreen", "presentation"],
-      "dialogs": {
-        "popup": ["colors", "find", "size", "zoom", "moreoptions"],
-        "sidebar": ["colors", "find", "size", "zoom"],
-        "moreoptions": ["opacity", "speed", "axes", "size", "colors", "label", "zoom", "presentation", "about"]
-      }
+      "splash": true
     }
   },
   MountainChart: {
