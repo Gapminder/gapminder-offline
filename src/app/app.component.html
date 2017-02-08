@@ -1,0 +1,101 @@
+<div style="height: 100%" (click)="appMainClickHandler($event)">
+    <div style="position: absolute; top: 0; right: 50px; width: 300px;">
+        <ae-auto-update (onAutoUpdateRequested)="doDetectChanges()"
+                        (onAutoUpdateProgress)="doDetectChanges()"
+                        (onAutoUpdateCompleted)="doDetectChanges()"></ae-auto-update>
+    </div>
+
+    <div style="position: absolute; top: 0; right: 0;">
+        <div class="ddf-menu">
+            <div class="btn-group">
+                <button type="button"
+                        (click)="switchMenu()"
+                        class="main-menu-btn"><img src="./public/images/hamburger.png" />
+                </button>
+
+                <ae-hamburger-menu [isMenuOpened]="isMenuOpened" [currentTab]="getCurrentTab()" (onMenuItemSelected)="onMenuItemSelected($event)"></ae-hamburger-menu>
+            </div>
+        </div>
+    </div>
+
+    <div style="min-width: 800px; height: calc(100% - 52px);">
+        <ae-tabs [tabsModel]="tabsModel"
+                 (onTabsInit)="doDetectChanges()"
+                 (onTabRemoved)="doDetectChanges()"
+                 (onTabSetActive)="doDetectChanges()"
+                 (onChartCreated)="onChartCreated()"
+                 (onChartClicked)="appMainClickHandler($event)"
+                 style="height: 100%;"></ae-tabs>
+    </div>
+
+    <div bsModal
+         #versionsModal="bs-modal"
+         class="modal fade"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="Check for updates"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" (click)="versionsModal.hide()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Check for updates</h4>
+                </div>
+                <div class="modal-body">
+                    <ae-versions-form (done)="versionsFormComplete($event)"></ae-versions-form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div bsModal
+         #csvConfigModal="bs-modal"
+         class="modal fade"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="New bubble chart from your data"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" (click)="csvConfigModal.hide()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">New bubble chart from your data</h4>
+                </div>
+                <div class="modal-body">
+                    <ae-csv-config-form (done)="completeCsvConfigForm($event)"></ae-csv-config-form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div bsModal
+         (onShown)="onAdditionalCsvConfigModalShown()"
+         #additionalCsvConfigModal="bs-modal"
+         class="modal fade"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="Add your data to bubble chart"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" (click)="additionalCsvConfigModal.hide()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Add your data to the chart</h4>
+                </div>
+                <div class="modal-body">
+                    <ae-csv-config-form [addDataMode]="true" (done)="additionalCsvConfigFormComplete($event)"></ae-csv-config-form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <input id="newDdfFolder" type="file" style="display: none;" #newDdfFolder (click)="menuActions.ddfFolderClick($event, onDdfFolderChanged)"/>
+    <input id="addDdfFolder" type="file" style="display: none;" #addDdfFolder (click)="menuActions.ddfFolderClick($event, onDdfExtFolderChanged)"/>
+</div>

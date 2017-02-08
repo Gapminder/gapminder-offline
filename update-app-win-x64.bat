@@ -1,3 +1,4 @@
+timeout /t 3 /nobreak > NUL
 cd cache
 robocopy . .. /E
 cd ..

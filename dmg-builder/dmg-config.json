@@ -1,0 +1,13 @@
+{
+  "title": "Gapminder Offline tool",
+  "icon": "gapminder.icns",
+  "background": "gapminder.png",
+  "window": {
+     "with": 898,
+     "height": 511
+   },
+  "contents": [
+    { "x": 635, "y": 400, "type": "link", "path": "/Applications" },
+    { "x": 253, "y": 400, "type": "file", "path": "../release/Gapminder Offline-mac/Gapminder Offline.app" }
+  ]
+}

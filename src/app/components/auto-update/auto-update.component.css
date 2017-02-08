@@ -1,0 +1,16 @@
+.btn {
+    font-size: 9px;
+    color: #ffffff;
+    background: #f9cc3e;
+    padding: 2px 2px 2px 2px;
+    text-decoration: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0px;
+}
+.progress {
+    margin-top: 8px;
+}
+.label {
+    font-size: smaller;
+}

@@ -11,6 +11,9 @@ const autoUpdateConfig = require('./auto-update-config.json');
 const electronEasyUpdater = require('electron-easy-updater');
 const fileManagement = require('./file-management');
 const childProcess = require('child_process');
+const dataPackage = require(app.getAppPath() + '/ddf--gapminder--systema_globalis/datapackage.json');
+const devMode = process.argv.length > 1 && process.argv.indexOf('dev') > 0;
+const autoUpdateTestMode = process.argv.length > 1 && process.argv.indexOf('au-test') > 0;
 
 const spawn = childProcess.spawn;
 const dirs = {
@@ -36,7 +39,7 @@ const getTypeByOsAndArch = (os, arch) => {
   return os;
 };
 const RELEASE_ARCHIVE = 'release.zip';
-const FEED_VERSION_URL = autoUpdateConfig.FEED_VERSION_URL;
+const FEED_VERSION_URL = autoUpdateTestMode ? autoUpdateConfig.FEED_VERSION_URL_TEST : autoUpdateConfig.FEED_VERSION_URL;
 const FEED_URL = autoUpdateConfig.FEED_URL.replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch));
 const PARTIAL_FEED_URL = autoUpdateConfig.PARTIAL_FEED_URL.replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch));
 const DS_FEED_VERSION_URL = autoUpdateConfig.DS_FEED_VERSION_URL;
@@ -123,12 +126,20 @@ function startMainApplication() {
   mainWindow = new BrowserWindow({width: 1200, height: 800});
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
-  if (process.env.NODE_ENV === 'development') {
+  if (devMode) {
     mainWindow.webContents.openDevTools();
   }
 
   mainWindow.on('closed', () => {
     mainWindow.destroy();
+  });
+
+  ipc.on('get-dev-mode', event => {
+    event.sender.send('got-dev-mode', devMode);
+  });
+
+  ipc.on('get-versions-info', event => {
+    event.sender.send('got-versions-info', {dataset: dataPackage.version, app: app.getVersion()});
   });
 
   ipc.on('get-app-path', event => {
@@ -141,7 +152,7 @@ function startMainApplication() {
         try {
           const config = JSON.parse(body);
 
-          event.sender.send('got-supported-versions', config.supported, config.version);
+          event.sender.send('got-supported-versions', config.supported, config.version, app.getVersion());
         } catch (e) {
         }
       }
@@ -181,8 +192,6 @@ function startMainApplication() {
         event.sender.send('request-to-update', actualVersionGenericUpdate);
         return;
       }
-
-      const dataPackage = require(app.getAppPath() + '/ddf--gapminder--systema_globalis/datapackage.json');
 
       electronEasyUpdater.versionCheck({
         url: DS_FEED_VERSION_URL,
