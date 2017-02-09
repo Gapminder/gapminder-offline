@@ -1,10 +1,10 @@
 "use strict";
 var testing_1 = require("@angular/core/testing");
-var home_1 = require('./../src/app/components/home');
+var home_1 = require("../src/app/components/home");
 var router_1 = require("@angular/router");
 var platform_browser_1 = require("@angular/platform-browser");
 describe('Component: HomeComponent', function () {
-    var fixture, component, de, element;
+    var fixture, component, context, de, element;
     // setup
     var RouterStub = (function () {
         function RouterStub() {
@@ -25,27 +25,20 @@ describe('Component: HomeComponent', function () {
             declarations: [home_1.HomeComponent]
         });
         fixture = testing_1.TestBed.createComponent(home_1.HomeComponent);
-        component = fixture.componentInstance; // to access properties and methods
         de = fixture.debugElement; // test helper
         element = fixture.nativeElement; // to access DOM element
+        context = fixture.debugElement.componentInstance;
     });
-    it("should be really initialized", function () {
-        expect(fixture).toBeDefined();
-        expect(component).toBeDefined();
+    it('should check that the component work', function () {
+        expect(context).toBeTruthy();
     });
-    it('should call goBack method', function (done) {
-        spyOn(component, 'goBack');
+    it('should call goBack method', function () {
+        spyOn(context, 'goBack');
         // let button = de.nativeElement.querySelector('button');
         // button.click();
-        component.goBack();
+        context.goBack();
         fixture.detectChanges();
-        fixture.whenStable().then(function () {
-            expect(component.goBack).toHaveBeenCalled();
-            done();
-        }, function (error, param2) {
-            console.log('args', error, param2);
-            done();
-        });
+        expect(context.goBack).toHaveBeenCalled();
     });
     it('should render `Home component` with h1 empty', function () {
         fixture.whenStable().then(function () {
@@ -53,7 +46,7 @@ describe('Component: HomeComponent', function () {
         });
     });
     it('should render `James` name (async)', testing_1.async(function () {
-        component.name = 'James';
+        context.name = 'James';
         //trigger change detection
         fixture.detectChanges();
         fixture.whenStable().then(function () {
@@ -65,14 +58,5 @@ describe('Component: HomeComponent', function () {
         router.navigate('/');
         expect(router.navigate).toHaveBeenCalledWith('/');
     });
-    fit('should tell ROUTER to navigate when hero clicked', testing_1.inject([router_1.Router], function (router) {
-        var spy = spyOn(router, 'navigateByUrl');
-        component.goBack();
-        fixture.detectChanges();
-        // args passed to router.navigateByUrl()
-        var navArgs = spy.calls.first().args[0];
-        // expecting to navigate to id of the component's first hero
-        expect(navArgs).toBe('/');
-    }));
 });
 //# sourceMappingURL=home.spec.js.map

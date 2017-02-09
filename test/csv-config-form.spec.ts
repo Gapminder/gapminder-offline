@@ -1,4 +1,4 @@
-import {async, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {CsvConfigFormComponent} from "../src/app/components/csv-config-form";
 
 describe('Component: CsvConfigFormComponent', () => {
