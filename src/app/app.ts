@@ -16,7 +16,7 @@ import {CsvConfigFormComponent} from './components/csv-config-form';
 import {TabModel} from './components/tab-model';
 import {VizabiModule} from 'ng2-vizabi';
 import {TabsComponent} from './components/tabs-component';
-import {InitMenuComponent} from './template-menu';
+import {initMenuComponent} from './template-menu';
 import {Menu} from 'electron';
 
 @Component({
@@ -124,6 +124,8 @@ import {Menu} from 'electron';
 export class AppComponent implements OnInit {
   public tabsModel: TabModel[] = [];
   public isMenuOpen: boolean = false;
+  public menuComponent: Menu;
+  public menuActions: any = {};
 
   @ViewChild('ddfModal') public ddfModal: ModalDirective;
   @ViewChild('additionalDataModal') public additionalDataModal: ModalDirective;
@@ -131,17 +133,76 @@ export class AppComponent implements OnInit {
   @ViewChild('versionsModal') public versionsModal: ModalDirective;
   @ViewChild('csvConfigModal') public csvConfigModal: ModalDirective;
   @ViewChild('additionalCsvConfigModal') public additionalCsvConfigModal: ModalDirective;
-
   @ViewChild('newDdfFolder') newDdfFolderInput: ElementRef;
   @ViewChild('addDdfFolder') addDdfFolderInput: ElementRef;
-
-  public menuComponent: Menu;
 
   constructor(private _ngZone: NgZone,
               private viewContainerRef: ViewContainerRef,
               private chartService: ChartService) {
+    this.menuActions = {
+      gapminderChart: () => {
+        this.isMenuOpen = false;
+        this.chartService.initTab(this.tabsModel);
 
-    new InitMenuComponent(this);
+        this._ngZone.run(() => {
+        });
+      },
+      openDdfFolder: () => {
+        this.isMenuOpen = false;
+        this.newDdfFolderInput.nativeElement.click();
+      },
+      openCsvFile: () => {
+        this.csvConfigModal.show();
+        this.isMenuOpen = false;
+      },
+      ddfFolderClick: (event, onFolderClickProcessed) => {
+        const dialog = electron.remote.dialog;
+        const currentWindow = electron.remote.getCurrentWindow();
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        this.isMenuOpen = false;
+        dialog.showOpenDialog(currentWindow, {properties: ['openDirectory']}, onFolderClickProcessed.bind(this));
+      },
+      addCsvFile: () => {
+        this.additionalCsvConfigModal.show();
+        this.isMenuOpen = false;
+      },
+      addDdfFolder: () => {
+        this.isMenuOpen = false;
+        this.addDdfFolderInput.nativeElement.click();
+      },
+      open: () => {
+        this.isMenuOpen = false;
+        electron.ipcRenderer.send('do-open');
+      },
+      save: () => {
+        const currentTab = this.getCurrentTab();
+        const model = Object.assign({}, currentTab.component && currentTab.component.getModel ? currentTab.component.getModel() : currentTab.instance.getModel());
+
+        this.isMenuOpen = false;
+
+        electron.ipcRenderer.send('do-save', {model, chartType: currentTab.chartType});
+      },
+      exportForWeb: () => {
+        const currentTab = this.getCurrentTab();
+        const model = Object.assign({}, currentTab.component && currentTab.component.getModel ? currentTab.component.getModel() : currentTab.instance.getModel());
+
+        this.isMenuOpen = false;
+
+        electron.ipcRenderer.send('do-export-for-web', {model, chartType: currentTab.chartType});
+      },
+      checkForUpdates: () => {
+        this.versionsModal.show();
+        this.isMenuOpen = false;
+      },
+      openDevTools: () => {
+        this.isMenuOpen = false;
+        electron.ipcRenderer.send('open-dev-tools');
+      }
+    };
+
+    initMenuComponent(this);
     electron.ipcRenderer.send('get-app-path');
   }
 
@@ -153,11 +214,11 @@ export class AppComponent implements OnInit {
     this.setAddDataItemsAvailability(false);
   }
 
-  private onMenuItemSelected(methodName: string) {
-    this[methodName]();
+  public onMenuItemSelected(methodName: string) {
+    this.menuActions[methodName]();
   }
 
-  private setAddDataItemsAvailability(value: boolean) {
+  public setAddDataItemsAvailability(value: boolean) {
     this.menuComponent.items[0].submenu.items[1].submenu.items[0].enabled = value;
     this.menuComponent.items[0].submenu.items[1].submenu.items[1].enabled = value;
     this.menuComponent.items[0].submenu.items[4].enabled = value;
@@ -170,15 +231,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public getParent(): AppComponent {
-    return this;
-  }
-
   public getCurrentTab(): TabModel {
     return this.tabsModel.find(tab => tab.active);
   }
 
-  private appMainClickHandler($event) {
+  public appMainClickHandler($event) {
     if (this.isMenuOpen) {
       const elementTarget = $event.target;
       const elementMenu = document.getElementsByClassName('btn-group')[0];
@@ -189,16 +246,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private switchMenu() {
+  public switchMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  private openDevTools() {
-    this.isMenuOpen = false;
-    electron.ipcRenderer.send('open-dev-tools');
-  }
-
-  private versionsFormComplete(version?: string) {
+  public versionsFormComplete(version?: string) {
     if (version) {
       electron.ipcRenderer.send('request-custom-update', version);
       this.versionsModal.hide();
@@ -209,12 +261,7 @@ export class AppComponent implements OnInit {
     this.setAddDataItemsAvailability(true);
   }
 
-  public doNewDdfFolder() {
-    this.isMenuOpen = false;
-    this.newDdfFolderInput.nativeElement.click();
-  }
-
-  private onDdfFolderChanged(filePaths) {
+  public onDdfFolderChanged(filePaths) {
     if (filePaths && filePaths.length > 0) {
       this.chartService.ddfFolderDescriptor.ddfUrl = filePaths[0];
       this.chartService.initTab(this.tabsModel, 'BubbleChart');
@@ -225,39 +272,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public doNewCsvFile() {
-    this.csvConfigModal.show();
-    this.isMenuOpen = false;
-  }
-
-  public doGapminderChart() {
-    this.isMenuOpen = false;
-    this.chartService.initTab(this.tabsModel);
-
-    this._ngZone.run(() => {
-    });
-  }
-
-  public doAddDdfFolder() {
-    this.isMenuOpen = false;
-    this.addDdfFolderInput.nativeElement.click();
-  }
-
-  public onDdfFolderClick(event, callback) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    this.isMenuOpen = false;
-    const dialog = electron.remote.dialog;
-    const currentWindow = electron.remote.getCurrentWindow();
-    dialog.showOpenDialog(currentWindow, {properties: ['openDirectory']}, callback.bind(this));
-  }
-
-  public doAddCsvFile() {
-    this.additionalCsvConfigModal.show();
-    this.isMenuOpen = false;
-  }
-
-  private addData(data) {
+  public addData(data) {
     const currentTab = this.getCurrentTab();
     const newAdditionalData = currentTab.additionalData.slice();
 
@@ -267,30 +282,19 @@ export class AppComponent implements OnInit {
     currentTab.additionalData = newAdditionalData;
   }
 
-  private onDdfExtFolderChanged(filePaths) {
+  public onDdfExtFolderChanged(filePaths) {
     if (filePaths && filePaths.length > 0) {
       this.addData({reader: 'ddf1-csv-ext', path: filePaths[0]});
     }
   }
 
-  private checkForUpdates() {
-    this.versionsModal.show();
-    this.isMenuOpen = false;
-  }
-
-  public doOpen() {
-    this.isMenuOpen = false;
-    electron.ipcRenderer.send('do-open');
-  }
-
-  private doOpenCompleted(event, parameters) {
+  public doOpenCompleted(event, parameters) {
     const config = parameters.tab;
     const tab = new TabModel(config.chartType, this.tabsModel.length, true, parameters.file);
 
     delete config.bind;
     delete config.chartType;
 
-    // tab.selectedChartType = 'fromFile';
     tab.model = config;
 
     this.tabsModel.forEach(tab => tab.active = false);
@@ -299,25 +303,6 @@ export class AppComponent implements OnInit {
     this._ngZone.run(() => {
     });
   };
-
-
-  public doSave() {
-    const currentTab = this.getCurrentTab();
-    const model = Object.assign({}, currentTab.component && currentTab.component.getModel ? currentTab.component.getModel() : currentTab.instance.getModel());
-
-    this.isMenuOpen = false;
-
-    electron.ipcRenderer.send('do-save', {model, chartType: currentTab.chartType});
-  }
-
-  public doExportForWeb() {
-    const currentTab = this.getCurrentTab();
-    const model = Object.assign({}, currentTab.component && currentTab.component.getModel ? currentTab.component.getModel() : currentTab.instance.getModel());
-
-    this.isMenuOpen = false;
-
-    electron.ipcRenderer.send('do-export-for-web', {model, chartType: currentTab.chartType});
-  }
 
   private csvConfigFormComplete(event) {
     this.csvConfigModal.hide();

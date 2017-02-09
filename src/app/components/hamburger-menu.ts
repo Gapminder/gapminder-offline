@@ -8,16 +8,16 @@ import {TabModel} from './tab-model';
     <li class="menu-item submenu">
         <button type="button" class="menu-btn"><span class="menu-text">New chart</span></button>
         <ul class="menu">
-            <li class="menu-item" (click)="execute('doGapminderChart')">
+            <li class="menu-item" (click)="execute('gapminderChart')">
                 <button type="button" class="menu-btn"><span class="menu-text">Gapminder data</span> </button>
             </li>
             <li class="menu-item submenu">
                 <button type="button" class="menu-btn"><span class="menu-text">Your data (bubble chart only)</span> </button>
                 <ul class="menu">
-                    <li class="menu-item" (click)="execute('doNewCsvFile')">
+                    <li class="menu-item" (click)="execute('openCsvFile')">
                         <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
                     </li>
-                    <li class="menu-item" (click)="execute('doNewDdfFolder')">
+                    <li class="menu-item" (click)="execute('openDdfFolder')">
                         <button type="button" class="menu-btn"><span class="menu-text">DDF folder</span> </button>
                     </li>
                 </ul>
@@ -27,34 +27,34 @@ import {TabModel} from './tab-model';
     <li class="menu-item submenu">
         <button type="button" class="menu-btn"><span class="menu-text">Add your data</span></button>
         <ul class="menu">
-            <li class="menu-item" *ngIf="currentTab.selectedChartType" (click)="execute('doAddCsvFile')">
+            <li class="menu-item" *ngIf="currentTab.chartType" (click)="execute('addCsvFile')">
                 <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
             </li>
-            <li class="menu-item" *ngIf="currentTab.selectedChartType" (click)="execute('doAddDdfFolder')">
+            <li class="menu-item" *ngIf="currentTab.chartType" (click)="execute('addDdfFolder')">
                 <button type="button" class="menu-btn"><span class="menu-text">DDF folder</span> </button>
             </li>
-            <li class="menu-item" *ngIf="!currentTab.selectedChartType">
+            <li class="menu-item" *ngIf="!currentTab.chartType">
                 <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">CSV file...</span> </button>
             </li>
-            <li class="menu-item" *ngIf="!currentTab.selectedChartType">
+            <li class="menu-item" *ngIf="!currentTab.chartType">
                 <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">DDF folder</span> </button>
             </li>
         </ul>
     </li>
     <li class="menu-separator"></li>
-    <li class="menu-item" (click)="execute('doOpen')">
+    <li class="menu-item" (click)="execute('open')">
         <button type="button" class="menu-btn"><span class="menu-text">Open...</span></button>
     </li>
-    <li class="menu-item" *ngIf="currentTab.selectedChartType" (click)="execute('doSave')">
+    <li class="menu-item" *ngIf="currentTab.chartType" (click)="execute('save')">
         <button type="button" class="menu-btn"><span class="menu-text">Save...</span></button>
     </li>
-    <li class="menu-item" *ngIf="!currentTab.selectedChartType">
+    <li class="menu-item" *ngIf="!currentTab.chartType">
         <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Save...</span></button>
     </li>
-    <li class="menu-item" *ngIf="currentTab.selectedChartType === 'BubbleChart'" (click)="execute('doExportForWeb')">
+    <li class="menu-item" *ngIf="currentTab.chartType === 'BubbleChart'" (click)="execute('exportForWeb')">
         <button type="button" class="menu-btn"><span class="menu-text">Export for Web...</span></button>
     </li>
-    <li class="menu-item" *ngIf="currentTab.selectedChartType !== 'BubbleChart'">
+    <li class="menu-item" *ngIf="currentTab.chartType !== 'BubbleChart'">
         <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Export for Web...</span></button>
     </li>
     <li class="menu-separator"></li>
