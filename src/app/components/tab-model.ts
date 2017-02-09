@@ -4,7 +4,6 @@ export class TabModel {
   public active: boolean;
   public title: string;
   public removable: boolean = true;
-  public selectedChartType: string = '';
   public model: any;
   public additionalData: Array<IAdditionalDataItem> = [];
 
@@ -19,12 +18,11 @@ export class TabModel {
 
   private order: number;
 
-  constructor(public chartType: string, order: number, active: boolean = false, title: string = '') {
+  constructor(public chartType: string = '', order: number, active: boolean = false, title: string = '') {
     this.order = order + 1;
     this.active = active;
     this.ddfChartType = chartType;
     this.title = title ? title : `Chart ${this.order}`;
-    this.selectedChartType = '';
 
     if (order === 0) {
       this.removable = false;
