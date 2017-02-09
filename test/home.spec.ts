@@ -1,7 +1,7 @@
 import {TestBed, async, ComponentFixture, inject} from '@angular/core/testing';
 import {Router} from '@angular/router';
 import {By} from '@angular/platform-browser';
-import {HomeComponent} from "../app/components/home";
+import {HomeComponent} from "../src/app/components/home";
 
 describe('Component: HomeComponent', () => {
     let fixture: ComponentFixture<HomeComponent>, component, context, de, element;
