@@ -28,7 +28,7 @@
     "typings-install": "typings install",
     "electron": "NODE_ENV=development electron src/app",
     "webpack-test": "webpack --config webpack.test.js --progress --profile --colors --display-error-details --display-cached",
-    "test": "karma start"
+    "test": "karma start || true"
   },
   "repository": {
     "type": "git",
