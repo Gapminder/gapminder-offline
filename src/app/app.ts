@@ -165,7 +165,7 @@ export class AppComponent implements OnInit {
 
     const currentTab = this.getCurrentTab();
 
-    if (currentTab && currentTab.ddfChartType === 'BubbleChart') {
+    if (currentTab && currentTab.chartType === 'BubbleChart') {
       this.menuComponent.items[0].submenu.items[5].enabled = value;
     }
   }

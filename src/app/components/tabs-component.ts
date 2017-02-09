@@ -19,7 +19,7 @@ const BackendFileReader = ddfCsvReaderLib.BackendFileReader;
          (select)="tab.active = true; forceResize();"
          (deselect)="tab.active = false"
          [removable]="tab.removable">
-        <div *ngIf="!tab.ddfChartType">
+        <div *ngIf="!tab.chartType">
           <div class="tab-chart-choice">Choose Chart Type</div>
           <ul class="tab-chart-list">
             <li (click)="selectChart('BubbleChart')"><div><img src="./public/images/tools/bubblechart.png"><span>Bubble Chart</span></div></li>
@@ -27,7 +27,7 @@ const BackendFileReader = ddfCsvReaderLib.BackendFileReader;
             <li (click)="selectChart('MountainChart')"><div><img src="./public/images/tools/mountainchart.png"><span>Mountain Chart</span></div></li>
           </ul>
         </div>
-        <div *ngIf="tab.ddfChartType" style="height: 100%;">
+        <div *ngIf="tab.chartType" style="height: 100%;">
           <vizabi style="height: 100%;"
                   (onCreated)="chartCreated($event)"
                   (onChanged)="chartChanged($event)"
@@ -93,7 +93,6 @@ export class TabsComponent implements OnInit {
   public selectChart(chartType, isDefault = true) {
     const tab = this.getCurrentTab();
     tab.chartType = chartType;
-    tab.ddfChartType = chartType;
 
     if (isDefault) {
       this.defaultChart();

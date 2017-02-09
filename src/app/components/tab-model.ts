@@ -12,7 +12,6 @@ export class TabModel {
   public readerParams: Array<any>;
   public readerName: string;
   public extResources: any;
-  public ddfChartType: string;
   public component: any;
   public instance: any;
 
@@ -21,7 +20,6 @@ export class TabModel {
   constructor(public chartType: string = '', order: number, active: boolean = false, title: string = '') {
     this.order = order + 1;
     this.active = active;
-    this.ddfChartType = chartType;
     this.title = title ? title : `Chart ${this.order}`;
 
     if (order === 0) {

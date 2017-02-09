@@ -12,8 +12,8 @@ export class ChartService {
     this.ddfFolderDescriptor = new DdfFolderDescriptor();
   }
 
-  public initTab(tabsModel: TabModel[], ddfChartType = '') {
-    const tab = new TabModel(ddfChartType, tabsModel.length, true);
+  public initTab(tabsModel: TabModel[], chartType = '') {
+    const tab = new TabModel(chartType, tabsModel.length, true);
 
     tabsModel.forEach(tab => tab.active = false);
     tabsModel.push(tab);
@@ -33,7 +33,7 @@ export class ChartService {
     tab.additionalData = this.ddfFolderDescriptor.additionalData;
 
     if (!this.ddfFolderDescriptor.ddfUrl || this.ddfFolderDescriptor.ddfUrl.indexOf('systema_globalis') > 0) {
-      const chartType = tab.ddfChartType;
+      const chartType = tab.chartType;
       const config = configSg[chartType];
 
       config.data.ddfPath = this.ddfFolderDescriptor.ddfUrl;
@@ -50,9 +50,9 @@ export class ChartService {
   }
 
   public newSimpleChart(tabsModel: TabModel[], properties, onChartReady) {
-    const tab = new TabModel(this.ddfFolderDescriptor.ddfChartType, tabsModel.length, true);
+    const tab = new TabModel(this.ddfFolderDescriptor.chartType, tabsModel.length, true);
 
-    tab.ddfChartType = this.ddfFolderDescriptor.ddfChartType;
+    tab.chartType = this.ddfFolderDescriptor.chartType;
     tab.model = {
       data: {
         reader: properties.reader,
