@@ -2,8 +2,7 @@ export const configSg: any = {
   BubbleChart: {
     "chart-type": "bubbles",
     data: {
-      reader: 'ddf1-csv-ext',
-      splash: true
+      reader: 'ddf1-csv-ext'
     },
     locale: {
       id: 'en',
@@ -106,8 +105,7 @@ export const configSg: any = {
   },
   MountainChart: {
     data: {
-      reader: 'ddf1-csv-ext',
-      splash: true
+      reader: 'ddf1-csv-ext'
     },
     locale: {
       id: 'en',
@@ -229,13 +227,13 @@ export const configSg: any = {
         "popup": ["colors", "find", "stack", "show", "moreoptions"],
         "sidebar": ["colors", "find", "stack"],
         "moreoptions": ["opacity", "speed", "stack", "axesmc", "colors", "presentation", "about"]
-      }
+      },
+      "splash": true
     }
   },
   BubbleMap: {
     data: {
-      reader: 'ddf1-csv-ext',
-      splash: true
+      reader: 'ddf1-csv-ext'
     },
     locale: {
       id: 'en',
@@ -327,6 +325,11 @@ export const configSg: any = {
         "doubtDomain": [1800, 1950, 2015],
         "doubtRange": [1.0, 0.3, 0.2]
       },
+      "map": {
+        "offset": {
+          "bottom": -0.12
+        }
+      },
       "buttons": ["colors", "find", "size", "moreoptions", "fullscreen", "presentation"],
       "dialogs": {
         "popup": ["colors", "find", "size", "moreoptions"],
@@ -340,7 +343,8 @@ export const configSg: any = {
           "top": 0.05,
           "bottom": -0.12
         }
-      }
+      },
+      "splash": true
     }
   }
 };
