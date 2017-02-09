@@ -326,17 +326,6 @@ export const configSg: any = {
         "doubtRange": [1.0, 0.3, 0.2]
       },
       "map": {
-        "offset": {
-          "bottom": -0.12
-        }
-      },
-      "buttons": ["colors", "find", "size", "moreoptions", "fullscreen", "presentation"],
-      "dialogs": {
-        "popup": ["colors", "find", "size", "moreoptions"],
-        "sidebar": ["colors", "find", "size"],
-        "moreoptions": ["opacity", "speed", "size", "colors", "presentation", "about"]
-      },
-      "map": {
         "scale": 1,
         "preserveAspectRatio": false,
         "offset": {
