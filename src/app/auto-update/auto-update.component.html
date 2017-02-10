@@ -1,0 +1,18 @@
+<div *ngIf="requestToUpdate" style="display: inline;">
+    <div class="label">New version is available!</div>
+    <span>
+      <input type="button" (click)="processUpdateRequest()" value="Update now" class="btn" />
+    </span>
+</div>
+<div *ngIf="requestToProgress" class="progress">
+    <progressbar [max]="max"
+                 type="warning"
+                 class="progress-striped"
+                 [value]="progress"></progressbar>
+</div>
+<div *ngIf="requestToExitAndFinishUpdate">
+    <div class="label">Reopen the app to finish update?</div>
+    <span>
+      <input type="button" (click)="processExitAndFinishUpdateRequest()" value="Ok" class="btn" />
+    </span>
+</div>

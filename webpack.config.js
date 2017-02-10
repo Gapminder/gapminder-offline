@@ -22,9 +22,7 @@ var config = {
 
   // our angular app
   entry: {
-    'polyfills': './src/polyfills.ts',
-    'vendor': './src/vendor.ts',
-    'app': './src/app/app'
+    'app': './src/app/main'
   },
 
   // Config for our build files

@@ -1,40 +1,10 @@
 import {Component, OnInit, Output, EventEmitter, Injectable} from '@angular/core';
-
-export interface IAdditionalDataItem {
-  reader: string;
-  path: string;
-}
+import {IAdditionalDataItem} from '../descriptors/additional-data-item.descriptor';
 
 @Injectable()
 @Component({
   selector: 'ae-additional-data',
-  template: `
-<div class="panel panel-default">
-  <h3 class="panel-title">Additional data</h3>
-  
-  <div class="panel-body">
-  
-    <div *ngFor="let item of data" class="panel panel-default">
-       {{item.path}} via <b>{{item.reader}}</b> reader <button (click)="deleteAdditionalItem(item)">Delete</button>
-    </div>
-    
-    <div class="panel panel-default">
-      <div class="form-group">
-        <label for="readerToAdd">Reader:</label>
-        <select (change)="onReaderSelect($event.target.value)" id="readerToAdd">
-          <option value="csv">csv</option>
-          <option value="ddfcsv">ddfcsv</option>
-        </select>
-      </div>
-   
-      <div class="form-group">
-        <label for="fileToAdd">File to add:</label>
-        <input type="file" class="pathToAdd" (change)="onFileChanged($event)" id="fileToAdd" />
-      </div>
-    </div>
-  </div>
-</div>
-`
+  templateUrl: './additional-data/additional-data.component.html'
 })
 export class AdditionalDataComponent implements OnInit {
   @Output() additionalData: EventEmitter<any> = new EventEmitter();

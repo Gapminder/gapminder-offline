@@ -6,44 +6,8 @@ const ipc = electron.ipcRenderer;
 
 @Component({
   selector: 'ae-auto-update',
-  styles: [`
-  .btn {
-      font-size: 9px;
-      color: #ffffff;
-      background: #f9cc3e;
-      padding: 2px 2px 2px 2px;
-      text-decoration: none;
-      -webkit-border-radius: 0;
-      -moz-border-radius: 0;
-      border-radius: 0px;
-  }
-  .progress {
-      margin-top: 8px;
-  }
-  .label {
-      font-size: smaller;
-  }
-`],
-  template: `
-<div *ngIf="requestToUpdate" style="display: inline;">
-    <div class="label">New version is available!</div>
-    <span>
-      <input type="button" (click)="processUpdateRequest()" value="Update now" class="btn" />
-    </span>
-</div>
-<div *ngIf="requestToProgress" class="progress">
-    <progressbar [max]="max"
-                 type="warning"
-                 class="progress-striped"
-                 [value]="progress"></progressbar>
-</div>
-<div *ngIf="requestToExitAndFinishUpdate">
-    <div class="label">Reopen the app to finish update?</div>
-    <span>
-      <input type="button" (click)="processExitAndFinishUpdateRequest()" value="Ok" class="btn" />
-    </span>
-</div>
-`
+  styleUrls: ['./auto-update/auto-update.component.css'],
+  templateUrl: './auto-update/auto-update.component.html'
 })
 export class AutoUpdateComponent implements OnInit {
   public requestToUpdate: boolean = false;

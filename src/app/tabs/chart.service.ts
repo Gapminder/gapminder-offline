@@ -1,8 +1,15 @@
 import {Injectable} from '@angular/core';
-import {configSg} from './config-sg';
-import {TabModel} from './tab-model';
-import {DdfFolderDescriptor} from './descriptors/ddf-folder-descriptor';
-import {TabDataDescriptor} from './descriptors/tab-data-descriptor';
+import {TabModel} from './tab.model';
+import {DdfFolderDescriptor} from '../descriptors/ddf-folder.descriptor';
+import {TabDataDescriptor} from '../descriptors/tab-data.descriptor';
+
+const AgePyramid = require('../vizabi-config/AgePyramid.json');
+const BarRankChart = require('../vizabi-config/BarRankChart.json');
+const BubbleChart = require('../vizabi-config/BubbleChart.json');
+const BubbleMap = require('../vizabi-config/BubbleMap.json');
+const LineChart = require('../vizabi-config/LineChart.json');
+const MountainChart = require('../vizabi-config/MountainChart.json');
+const configSg = {AgePyramid, BarRankChart, BubbleChart, BubbleMap, LineChart, MountainChart};
 
 @Injectable()
 export class ChartService {
@@ -36,8 +43,15 @@ export class ChartService {
       const chartType = tab.chartType;
       const config = configSg[chartType];
 
-      config.data.ddfPath = this.ddfFolderDescriptor.ddfUrl;
-      config.data.path = this.ddfFolderDescriptor.ddfUrl;
+      config.data = {
+        reader: 'ddf1-csv-ext',
+        ddfPath: this.ddfFolderDescriptor.ddfUrl,
+        path: this.ddfFolderDescriptor.ddfUrl
+      };
+      config.locale = {
+        id: 'en',
+        filePath: './preview-data/translation/'
+      };
 
       tab.model = config;
 

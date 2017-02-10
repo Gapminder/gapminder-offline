@@ -1,5 +1,5 @@
 import {TestBed, ComponentFixture} from "@angular/core/testing";
-import {AdditionalDataComponent} from "../src/app/components/additional-data";
+import {AdditionalDataComponent} from "../src/app/additional-data/additional-data.component";
 
 describe('Component: AdditionalDataComponent', () => {
    let fixture: ComponentFixture<AdditionalDataComponent>, component, element, de, context;

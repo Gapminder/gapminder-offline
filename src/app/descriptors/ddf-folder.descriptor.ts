@@ -1,4 +1,4 @@
-import {IAdditionalDataItem} from '../additional-data';
+import {IAdditionalDataItem} from './additional-data-item.descriptor';
 
 export class ChartTypeOption {
   value: string;

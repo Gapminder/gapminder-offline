@@ -5,14 +5,7 @@ declare var electron: any;
 @Injectable()
 @Component({
   selector: 'ae-versions-form',
-  template: `
-<div *ngIf="versions && versions.length >= 0">
-  <h4>What version do you need?</h4>
-  <div class="popup-block">
-    <div *ngFor="let version of versions"><a href="#" (click)="update(version)">{{version}}</a> <span *ngIf="version === latestVersion">(latest)</span></div>
-  </div>
-</div>
-`
+  templateUrl: './versions-form/versions-form.component.html'
 })
 export class VersionsFormComponent implements OnInit {
   @Output() done: EventEmitter<any> = new EventEmitter();

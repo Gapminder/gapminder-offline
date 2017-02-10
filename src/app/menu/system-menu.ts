@@ -1,4 +1,4 @@
-import {AppComponent} from './app';
+import {AppComponent} from '../app.component';
 
 declare var electron: any;
 

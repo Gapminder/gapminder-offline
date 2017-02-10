@@ -1,4 +1,4 @@
-import {IAdditionalDataItem} from './additional-data';
+import {IAdditionalDataItem} from '../descriptors/additional-data-item.descriptor';
 
 export class TabModel {
   public active: boolean;

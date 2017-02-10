@@ -8669,8 +8669,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = {
   ext_resources: {},
-  build: 1486038988752,
-  version: "0.18.4-3"
+  build: 1486654391917,
+  version: "0.18.4-7"
 };
 
 /***/ },
@@ -21084,7 +21084,7 @@ var DataModel = _model2.default.extend({
     var query = {
       select: {
         key: ['concept'],
-        value: ['concept_type', 'domain', 'indicator_url', 'color', 'scales', 'interpolation', 'tags', 'name', 'unit', 'description']
+        value: ['concept_type', 'domain', 'indicator_url', 'color', 'scales', 'interpolation', 'tags', 'name', 'unit', 'description', 'format']
       },
       from: 'concepts',
       where: {},
@@ -21147,6 +21147,7 @@ var DataModel = _model2.default.extend({
       concept["concept"] = d.concept;
       concept["domain"] = d.domain;
       concept["tags"] = d.tags;
+      concept["format"] = d.format;
       concept["name"] = d.name || d.concept || "";
       concept["unit"] = d.unit || "";
       concept["description"] = d.description;
@@ -27091,6 +27092,12 @@ var AgePyramid = _tool2.default.extend('AgePyramid', {
         inpercent: false,
         flipSides: true
       },
+      "buttons": ['colors', 'inpercent', 'side', 'moreoptions', 'fullscreen'],
+      "dialogs": {
+        'popup': ['timedisplay', 'colors', 'side', 'moreoptions'],
+        'sidebar': ['timedisplay', 'colors', 'show'],
+        'moreoptions': ['opacity', 'speed', 'colors', 'side', 'presentation', 'about']
+      },
       presentation: false
     },
     locale: {}
@@ -27283,7 +27290,11 @@ var BarChart = _tool2.default.extend('BarChart', {
     locale: {},
     ui: {
       presentation: false,
-      chart: {}
+      chart: {},
+      "buttons": ['axes', 'colors', 'fullscreen'],
+      "dialogs": {
+        'popup': ['axes', 'colors']
+      }
     }
   }
 });
@@ -27403,6 +27414,12 @@ var BarRankChart = _tool2.default.extend('BarRankChart', {
       datawarning: {
         doubtDomain: [],
         doubtRange: []
+      },
+      "buttons": ['colors', 'find', 'show', 'moreoptions', 'fullscreen', 'presentation'],
+      "dialogs": {
+        'popup': ['timedisplay', 'colors', 'find', 'axes', 'show', 'moreoptions'],
+        'sidebar': ['timedisplay', 'colors', 'find'],
+        'moreoptions': ['opacity', 'speed', 'colors', 'presentation', 'about']
       },
       presentation: false
     }
@@ -27794,6 +27811,12 @@ var BubbleMap = _tool2.default.extend('BubbleMap', {
       datawarning: {
         doubtDomain: [],
         doubtRange: []
+      },
+      "buttons": ["colors", "find", "size", "moreoptions", "fullscreen", "presentation"],
+      "dialogs": {
+        "popup": ["colors", "find", "size", "moreoptions"],
+        "sidebar": ["colors", "find", "size"],
+        "moreoptions": ["opacity", "speed", "size", "colors", "presentation", "about"]
       },
       presentation: false
     }
@@ -28391,6 +28414,12 @@ var LineChart = _tool2.default.extend('LineChart', {
         doubtDomain: [],
         doubtRange: []
       },
+      "buttons": ['colors', 'find', 'show', 'moreoptions', 'fullscreen', 'presentation'],
+      "dialogs": {
+        'popup': ['colors', 'find', 'show', 'moreoptions'],
+        'sidebar': ['colors', 'show'],
+        'moreoptions': ['opacity', 'speed', 'axes', 'colors', 'presentation', 'about']
+      },
       "presentation": false
     }
   }
@@ -28521,6 +28550,12 @@ var MountainChart = _tool2.default.extend('MountainChart', {
         probeX: 1.85,
         xLogStops: [1, 2, 5],
         xPoints: 50
+      },
+      "buttons": ['colors', 'find', 'stack', 'show', 'moreoptions', 'fullscreen', 'presentation'],
+      "dialogs": {
+        'popup': ['colors', 'find', 'stack', 'show', 'moreoptions'],
+        'sidebar': ['colors', 'find', 'stack'],
+        'moreoptions': ['opacity', 'speed', 'stack', 'axesmc', 'colors', 'presentation', 'about']
       },
       datawarning: {
         doubtDomain: [],
@@ -41745,7 +41780,7 @@ module.exports = "<!-- Bar Chart Component -->\n<div class=\"vzb-barrankchart\">
 /* 449 */
 /***/ function(module, exports) {
 
-module.exports = "<!-- Bubble Chart Component -->\n<div class=\"vzb-bubblechart\">\n  <svg class=\"vzb-bubblechart-svg vzb-export\">\n    <g class=\"vzb-bc-graph\">\n      <g class=\"vzb-bc-year\"></g>\n\n      <svg class=\"vzb-bc-axis-x\"><g></g></svg>\n      <svg class=\"vzb-bc-axis-y\"><g></g></svg>\n      <line class=\"vzb-bc-projection-x\"></line>\n      <line class=\"vzb-bc-projection-y\"></line>\n\n      <svg class=\"vzb-bc-bubbles-crop\">\n        <line class=\"vzb-bc-line-equal-xy vzb-invisible\"></line>\n        <rect class=\"vzb-bc-eventarea\"></rect>\n        <g class=\"vzb-bc-trails\"></g>\n        <g class=\"vzb-bc-bubbles\"></g>\n        <g class=\"vzb-bc-lines\"></g>\n        <g class=\"vzb-bc-bubble-crown vzb-hidden\">\n          <circle class=\"vzb-crown-glow\"></circle>\n          <circle class=\"vzb-crown\"></circle>\n        </g>        \n      </svg>        \n\n      <g class=\"vzb-bc-axis-y-title\"></g>\n      <g class=\"vzb-bc-axis-x-title\"></g>\n      <g class=\"vzb-bc-axis-s-title\"></g>\n      <g class=\"vzb-bc-axis-c-title\"></g>\n\n      <g class=\"vzb-bc-axis-y-info vzb-noexport\"></g>\n      <g class=\"vzb-bc-axis-x-info vzb-noexport\"></g>\n      \n      <svg class=\"vzb-bc-labels-crop\">\n        <g class=\"vzb-bc-labels\"></g>        \n      </svg>       \n\n      <g class=\"vzb-data-warning vzb-noexport\">\n        <svg></svg>\n        <text></text>\n      </g>\n\n      <rect class=\"vzb-bc-zoom-rect\"></rect>\n      <g class=\"vzb-bc-tooltip vzb-hidden\">\n        <rect class=\"vzb-tooltip-glow\"></rect>\n        <rect class=\"vzb-tooltip-border\"></rect>\n        <text class=\"vzb-tooltip-text\"></text>\n      </g>\n    </g>\n  </svg>\n  <!-- This could possibly be another component -->\n  <div class=\"vzb-tooltip vzb-hidden vzb-tooltip-mobile\"></div>\n</div>\n";
+module.exports = "<!-- Bubble Chart Component -->\n<div class=\"vzb-bubblechart\">\n  <svg class=\"vzb-bubblechart-svg vzb-export\">\n    <g class=\"vzb-bc-graph\">\n      <g class=\"vzb-bc-year\"></g>\n\n      <svg class=\"vzb-bc-axis-x\"><g></g></svg>\n      <svg class=\"vzb-bc-axis-y\"><g></g></svg>\n      <line class=\"vzb-bc-projection-x\"></line>\n      <line class=\"vzb-bc-projection-y\"></line>\n\n      <svg class=\"vzb-bc-bubbles-crop\">\n        <line class=\"vzb-bc-line-equal-xy vzb-invisible\"></line>\n        <rect class=\"vzb-bc-eventarea\"></rect>\n        <g class=\"vzb-bc-trails\"></g>\n        <g class=\"vzb-bc-bubbles\"></g>\n        <g class=\"vzb-bc-lines\"></g>\n        <g class=\"vzb-bc-bubble-crown vzb-hidden\">\n          <circle class=\"vzb-crown-glow\"></circle>\n          <circle class=\"vzb-crown\"></circle>\n        </g>        \n      </svg>        \n\n      <g class=\"vzb-bc-axis-y-title\"></g>\n      <g class=\"vzb-bc-axis-x-title\"></g>\n      <g class=\"vzb-bc-axis-s-title\"></g>\n      <g class=\"vzb-bc-axis-c-title\"></g>\n\n      <g class=\"vzb-bc-axis-y-info vzb-noexport\"></g>\n      <g class=\"vzb-bc-axis-x-info vzb-noexport\"></g>\n      \n      <svg class=\"vzb-bc-labels-crop\">\n        <g class=\"vzb-bc-labels\"></g>        \n      </svg>       \n\n      <g class=\"vzb-data-warning vzb-noexport\">\n        <svg></svg>\n        <text></text>\n      </g>\n\n      <rect class=\"vzb-bc-zoom-rect\"></rect>\n      <g class=\"vzb-bc-tooltip vzb-hidden\">\n        <rect class=\"vzb-tooltip-glow\"></rect>\n        <rect class=\"vzb-tooltip-border\"></rect>\n        <text class=\"vzb-tooltip-text\"></text>\n      </g>\n    </g>\n  </svg>\n  <svg>\n    <defs>\n      <filter id=\"vzb-glow-filter\" x=\"-50%\" y=\"-50%\" width=\"200%\" height=\"200%\">\n        <feGaussianBlur in=\"SourceGraphic\" stdDeviation=\"2\"></feGaussianBlur>\n      </filter>\n    </defs>\n  </svg>\n  <!-- This could possibly be another component -->\n  <div class=\"vzb-tooltip vzb-hidden vzb-tooltip-mobile\"></div>\n</div>\n";
 
 /***/ },
 /* 450 */

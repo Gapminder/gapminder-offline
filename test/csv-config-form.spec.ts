@@ -1,5 +1,5 @@
 import {TestBed} from '@angular/core/testing';
-import {CsvConfigFormComponent} from "../src/app/components/csv-config-form";
+import {CsvConfigFormComponent} from "../src/app/csv-config-form/csv-config-form.component";
 
 describe('Component: CsvConfigFormComponent', () => {
     let fixture, component, context, de, element;
@@ -45,5 +45,3 @@ describe('Component: CsvConfigFormComponent', () => {
     });
 
 });
-
-

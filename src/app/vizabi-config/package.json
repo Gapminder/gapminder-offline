@@ -1,0 +1,84 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "vizabi-config-systema_globalis@git+https://github.com/vizabi/vizabi-config-systema_globalis.git",
+        "scope": null,
+        "escapedName": "vizabi-config-systema_globalis",
+        "name": "vizabi-config-systema_globalis",
+        "rawSpec": "git+https://github.com/vizabi/vizabi-config-systema_globalis.git",
+        "spec": "git+https://github.com/vizabi/vizabi-config-systema_globalis.git",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:vizabi/vizabi-config-systema_globalis.git",
+          "sshUrl": "git+ssh://git@github.com/vizabi/vizabi-config-systema_globalis.git",
+          "httpsUrl": "git+https://github.com/vizabi/vizabi-config-systema_globalis.git",
+          "gitUrl": "git://github.com/vizabi/vizabi-config-systema_globalis.git",
+          "shortcut": "github:vizabi/vizabi-config-systema_globalis",
+          "directUrl": "https://raw.githubusercontent.com/vizabi/vizabi-config-systema_globalis/master/package.json"
+        }
+      },
+      "/home/vs/projects2/gapminder-offline"
+    ]
+  ],
+  "_from": "git+https://github.com/vizabi/vizabi-config-systema_globalis.git",
+  "_id": "vizabi-config-systema_globalis@1.0.0",
+  "_inCache": true,
+  "_location": "/vizabi-config-systema_globalis",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "vizabi-config-systema_globalis@git+https://github.com/vizabi/vizabi-config-systema_globalis.git",
+    "scope": null,
+    "escapedName": "vizabi-config-systema_globalis",
+    "name": "vizabi-config-systema_globalis",
+    "rawSpec": "git+https://github.com/vizabi/vizabi-config-systema_globalis.git",
+    "spec": "git+https://github.com/vizabi/vizabi-config-systema_globalis.git",
+    "type": "hosted",
+    "hosted": {
+      "type": "github",
+      "ssh": "git@github.com:vizabi/vizabi-config-systema_globalis.git",
+      "sshUrl": "git+ssh://git@github.com/vizabi/vizabi-config-systema_globalis.git",
+      "httpsUrl": "git+https://github.com/vizabi/vizabi-config-systema_globalis.git",
+      "gitUrl": "git://github.com/vizabi/vizabi-config-systema_globalis.git",
+      "shortcut": "github:vizabi/vizabi-config-systema_globalis",
+      "directUrl": "https://raw.githubusercontent.com/vizabi/vizabi-config-systema_globalis/master/package.json"
+    }
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "git+https://github.com/vizabi/vizabi-config-systema_globalis.git#c6c83be2bef4351c68887e69cb25c6ca1231b029",
+  "_shasum": "9382f3bc3b81161604fbad8250232d043930910f",
+  "_shrinkwrap": null,
+  "_spec": "vizabi-config-systema_globalis@git+https://github.com/vizabi/vizabi-config-systema_globalis.git",
+  "_where": "/home/vs/projects2/gapminder-offline",
+  "author": {
+    "name": "Angie"
+  },
+  "bugs": {
+    "url": "https://github.com/vizabi/vizabi-config-systema_globalis/issues"
+  },
+  "dependencies": {},
+  "description": "This is a collection of vizabi tools configs for the specific dataset open-numbers/ddf--gapminder--systema_globalis",
+  "devDependencies": {},
+  "gitHead": "c6c83be2bef4351c68887e69cb25c6ca1231b029",
+  "homepage": "https://github.com/vizabi/vizabi-config-systema_globalis#readme",
+  "keywords": [
+    "vizabi",
+    "config"
+  ],
+  "license": "BSD-3-Clause",
+  "main": "index.js",
+  "name": "vizabi-config-systema_globalis",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vizabi/vizabi-config-systema_globalis.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}
