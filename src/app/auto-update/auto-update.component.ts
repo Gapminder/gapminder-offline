@@ -6,8 +6,8 @@ const ipc = electron.ipcRenderer;
 
 @Component({
   selector: 'ae-auto-update',
-  styleUrls: ['./auto-update/auto-update.component.css'],
-  templateUrl: './auto-update/auto-update.component.html'
+  styleUrls: ['./auto-update.component.css'],
+  templateUrl: './auto-update.component.html'
 })
 export class AutoUpdateComponent implements OnInit {
   public requestToUpdate: boolean = false;

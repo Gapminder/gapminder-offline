@@ -4,8 +4,8 @@ import {TabModel} from '../tabs/tab.model';
 @Injectable()
 @Component({
   selector: 'ae-csv-config-form',
-  templateUrl: './csv-config-form/csv-config-form.component.html',
-  styleUrls: ['./csv-config-form/csv-config-form.component.css'],
+  templateUrl: './csv-config-form.component.html',
+  styleUrls: ['./csv-config-form.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CsvConfigFormComponent implements OnInit {
