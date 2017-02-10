@@ -147,11 +147,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private onChartCreated() {
+  public onChartCreated() {
     this.setAddDataItemsAvailability(true);
   }
 
-  public onDdfFolderChanged(filePaths) {
+  public onDdfFolderChanged(filePaths: Array<string>) {
     if (filePaths && filePaths.length > 0) {
       this.chartService.ddfFolderDescriptor.ddfUrl = filePaths[0];
       this.chartService.initTab(this.tabsModel, 'BubbleChart');
