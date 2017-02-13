@@ -36,7 +36,8 @@ var config = {
     loaders: [
       {test: /\.ts$/, loaders: ['ts-loader']},
       {test: /\.json$/, loader: 'json-loader'},
-      {test: /\.html$/, loader: 'raw-loader', exclude: [helpers.root('app/index.html')]}
+      {test: /\.html$/, loader: 'raw-loader', exclude: [helpers.root('app/index.html')]},
+      {test: /\.css$/, loader: 'raw-loader'}
     ]
   },
 

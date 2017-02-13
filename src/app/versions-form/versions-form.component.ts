@@ -5,7 +5,7 @@ declare var electron: any;
 @Injectable()
 @Component({
   selector: 'ae-versions-form',
-  templateUrl: './versions-form.component.html'
+  template: require('./versions-form.component.html')
 })
 export class VersionsFormComponent implements OnInit {
   @Output() done: EventEmitter<any> = new EventEmitter();

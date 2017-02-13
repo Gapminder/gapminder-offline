@@ -10,7 +10,7 @@ const BackendFileReader = ddfCsvReaderLib.BackendFileReader;
 
 @Component({
   selector: 'ae-tabs',
-  templateUrl: './tabs.component.html'
+  template: require('./tabs.component.html')
 })
 export class TabsComponent implements OnInit {
   @Input() tabsModel: TabModel[] = [];

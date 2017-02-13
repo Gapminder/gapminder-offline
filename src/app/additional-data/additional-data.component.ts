@@ -4,7 +4,7 @@ import {IAdditionalDataItem} from '../descriptors/additional-data-item.descripto
 @Injectable()
 @Component({
   selector: 'ae-additional-data',
-  templateUrl: './additional-data.component.html'
+  template: require('./additional-data.component.html')
 })
 export class AdditionalDataComponent implements OnInit {
   @Output() additionalData: EventEmitter<any> = new EventEmitter();
