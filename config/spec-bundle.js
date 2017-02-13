@@ -47,7 +47,7 @@ testing.TestBed.initTestEnvironment(
  * any file that ends with spec.ts and get its path. By passing in true
  * we say do this recursively
  */
-var testContext = require.context('../test', true, /\.spec\.ts/);
+var testContext = require.context('../src', true, /\.spec\.ts/);
 
 var componentsContext = require.context('../src/app', true, /\.ts$/);
 

@@ -70,6 +70,7 @@
   "devDependencies": {
     "@types/jasmine": "^2.5.41",
     "@types/webpack": "2.2.1",
+    "angular2-template-loader": "^0.6.2",
     "awesome-typescript-loader": "3.0.0-beta.18",
     "codelyzer": "2.0.0-beta.4",
     "electron-easy-updater": "0.2.9",

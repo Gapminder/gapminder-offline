@@ -3,7 +3,7 @@ import {TabModel} from '../tabs/tab.model';
 
 @Component({
   selector: 'ae-hamburger-menu',
-  templateUrl: './menu/hamburger-menu.component.html'
+  templateUrl: './hamburger-menu.component.html'
 })
 export class HamburgerMenuComponent {
   @Input() isMenuOpen: boolean = false;

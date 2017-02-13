@@ -136,6 +136,12 @@ module.exports = {
             // Support for CSS as raw text
             {
                 test: /\.css$/,
+                exclude: helpers.root('src', 'app'),
+                loader: 'null-loader'
+            },
+            {
+                test: /\.css$/,
+                include: helpers.root('src', 'app'),
                 loader: 'raw-loader'
             },
 
@@ -147,10 +153,10 @@ module.exports = {
             },
 
             // Support for CSS as raw text
-            {
-                test: /\.css$/,
-                loader: ExtractTextPlugin.extract(['css'])
-            },
+            // {
+            //     test: /\.css$/,
+            //     loader: ExtractTextPlugin.extract(['css'])
+            // },
 
             // General sass should be included in a css file
             {
@@ -212,7 +218,7 @@ module.exports = {
              * See: https://github.com/deepsweet/istanbul-instrumenter-loader
              */
             {
-                test: /\.(js|ts)$/, loader: 'istanbul-instrumenter-loader',
+                test: /\.(js|ts)$/, loaders: ['istanbul-instrumenter-loader', 'angular2-template-loader'],
                 include: helpers.root('src'),
                 exclude: [
                     /\.(e2e|spec)\.ts$/,
