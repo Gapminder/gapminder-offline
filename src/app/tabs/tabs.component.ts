@@ -20,7 +20,7 @@ export class TabsComponent implements OnInit {
 
   public tabDataDescriptor: TabDataDescriptor = {};
 
-  constructor(private _ngZone: NgZone, private chartService: ChartService) {
+  constructor(private _ngZone: NgZone, public chartService: ChartService) {
     electron.ipcRenderer.send('get-app-path');
   }
 
@@ -54,6 +54,14 @@ export class TabsComponent implements OnInit {
 
   public getCurrentTab(): TabModel {
     return this.tabsModel.find(tab => tab.active);
+  }
+
+  public removeTab(data: any) {
+    setTimeout(() => {
+      if (this.tabsModel.length <= 0) {
+        this.chartService.initTab(this.tabsModel);
+      }
+    }, 300);
   }
 
   public selectChart(chartType, isDefault = true) {

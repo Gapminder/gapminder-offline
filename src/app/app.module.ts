@@ -12,6 +12,8 @@ import {CsvConfigFormComponent} from './csv-config-form/csv-config-form.componen
 import {VizabiModule} from 'ng2-vizabi';
 
 import {AutoUpdateComponent} from './auto-update/auto-update.component';
+import {TabsNewComponent} from './tabs-new/tabs.component';
+import {TabNewComponent} from './tabs-new/tab.component';
 import {TabsComponent} from './tabs/tabs.component';
 import {AppComponent} from './app.component';
 
@@ -23,6 +25,8 @@ import {AppComponent} from './app.component';
     AdditionalDataComponent,
     VersionsFormComponent,
     CsvConfigFormComponent,
+    TabsNewComponent,
+    TabNewComponent,
     TabsComponent
   ],
   imports: [
@@ -42,6 +46,8 @@ import {AppComponent} from './app.component';
     AdditionalDataComponent,
     VersionsFormComponent,
     CsvConfigFormComponent,
+    TabsNewComponent,
+    TabNewComponent,
     TabsComponent
   ],
   bootstrap: [AppComponent]

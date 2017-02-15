@@ -1,6 +1,8 @@
 import {IAdditionalDataItem} from '../descriptors/additional-data-item.descriptor';
 
 export class TabModel {
+  static globalOrder: number = 0;
+
   public active: boolean;
   public title: string;
   public removable: boolean = true;
@@ -17,14 +19,10 @@ export class TabModel {
 
   private order: number;
 
-  constructor(public chartType: string = '', order: number, active: boolean = false, title: string = '') {
-    this.order = order + 1;
+  constructor(public chartType: string = '', active: boolean = false, title: string = '') {
+    this.order = ++TabModel.globalOrder;
     this.active = active;
     this.title = title ? title : `Chart ${this.order}`;
-
-    if (order === 0) {
-      this.removable = false;
-    }
   }
 
   public getOrder() {

@@ -180,7 +180,7 @@ export class AppComponent implements OnInit {
 
   public doOpenCompleted(event, parameters) {
     const config = parameters.tab;
-    const tab = new TabModel(config.chartType, this.tabsModel.length, true, parameters.file);
+    const tab = new TabModel(config.chartType, true, parameters.file);
 
     delete config.bind;
     delete config.chartType;

@@ -1,5 +1,5 @@
-.glyphicon-remove-circle:before{
-    content:"\e014";
+.glyphicon-remove-circle:before {
+    content: "\e014";
     top: 1px;
     position: relative;
     right: -2px;
@@ -198,14 +198,13 @@
     cursor: pointer;
 }
 
-
 .nav-item > .active {
     background-color: #ffca34 ! important;
     border: none ! important;
 }
 
-.tab-container > ul li:first-child {
-    margin-left: 200px;
+.tab-container > ul li:nth-child(2) {
+    padding-left: 200px;
 }
 
 .tab-container > ul li:last-child {
@@ -236,14 +235,23 @@
     border: none ! important;
 }
 
+.nav-tabs > li:last-child > a:hover {
+    margin: 0;
+    background-color: inherit ! important;
+    font-weight: bold;
+    border: none ! important;
+}
+
+.nav-tabs > li:last-child > a:focus {
+    margin: 0;
+    background-color: inherit ! important;
+    border: none ! important;
+}
+
 .nav-link {
     border: none;
 }
 
 .tab-container > div {
     height: 100%;
-}
-
-.tab-container > ul li:last-child {
-    margin-right: 200px;
 }

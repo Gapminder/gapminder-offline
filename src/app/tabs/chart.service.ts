@@ -20,7 +20,7 @@ export class ChartService {
   }
 
   public initTab(tabsModel: TabModel[], chartType = '') {
-    const tab = new TabModel(chartType, tabsModel.length, true);
+    const tab = new TabModel(chartType, true);
 
     tabsModel.forEach(tab => tab.active = false);
     tabsModel.push(tab);
@@ -64,7 +64,7 @@ export class ChartService {
   }
 
   public newSimpleChart(tabsModel: TabModel[], properties, onChartReady) {
-    const tab = new TabModel(this.ddfFolderDescriptor.chartType, tabsModel.length, true);
+    const tab = new TabModel(this.ddfFolderDescriptor.chartType, true);
 
     tab.chartType = this.ddfFolderDescriptor.chartType;
     tab.model = {
