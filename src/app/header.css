@@ -203,9 +203,9 @@
     border: none ! important;
 }
 
-.tab-container > ul li:nth-child(2) {
+/*.tab-container > ul li:nth-child(2) {
     padding-left: 200px;
-}
+}*/
 
 .tab-container > ul li:last-child {
     margin-right: 200px;
@@ -235,14 +235,14 @@
     border: none ! important;
 }
 
-.nav-tabs > li:last-child > a:hover {
+.nav-tabs > li:last-child > a:hover, .nav-tabs > li:first-child > a:hover {
     margin: 0;
     background-color: inherit ! important;
     font-weight: bold;
     border: none ! important;
 }
 
-.nav-tabs > li:last-child > a:focus {
+.nav-tabs > li:last-child > a:focus, .nav-tabs > li:first-child > a:focus {
     margin: 0;
     background-color: inherit ! important;
     border: none ! important;

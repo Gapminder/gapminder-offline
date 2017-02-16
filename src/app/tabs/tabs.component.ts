@@ -73,6 +73,10 @@ export class TabsComponent implements OnInit {
     }
   }
 
+  public openGapminder() {
+    electron.shell.openExternal('http://www.gapminder.org');
+  }
+
   private defaultChart() {
     this.chartService.newChart(this.getCurrentTab(), this.tabDataDescriptor, () => {
       this._ngZone.run(() => {

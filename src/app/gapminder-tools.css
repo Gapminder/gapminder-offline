@@ -136,6 +136,7 @@ body {
     font-size: 17px;
     line-height: 50px;
     margin: 0;
+    z-index: 9999;
 }
 
 .column {
