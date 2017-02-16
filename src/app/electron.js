@@ -11,6 +11,7 @@ const autoUpdateConfig = require('./auto-update-config.json');
 const electronEasyUpdater = require('electron-easy-updater');
 const fileManagement = require('./file-management');
 const childProcess = require('child_process');
+const dataPackage = require(app.getAppPath() + '/ddf--gapminder--systema_globalis/datapackage.json');
 
 const spawn = childProcess.spawn;
 const dirs = {
@@ -131,6 +132,10 @@ function startMainApplication() {
     mainWindow.destroy();
   });
 
+  ipc.on('get-versions-info', event => {
+    event.sender.send('got-versions-info', {dataset: dataPackage.version, app: app.getVersion()});
+  });
+
   ipc.on('get-app-path', event => {
     event.sender.send('got-app-path', app.getAppPath());
   });
@@ -181,8 +186,6 @@ function startMainApplication() {
         event.sender.send('request-to-update', actualVersionGenericUpdate);
         return;
       }
-
-      const dataPackage = require(app.getAppPath() + '/ddf--gapminder--systema_globalis/datapackage.json');
 
       electronEasyUpdater.versionCheck({
         url: DS_FEED_VERSION_URL,

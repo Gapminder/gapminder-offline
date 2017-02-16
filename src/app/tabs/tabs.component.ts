@@ -22,12 +22,17 @@ export class TabsComponent implements OnInit {
 
   constructor(private _ngZone: NgZone, public chartService: ChartService) {
     electron.ipcRenderer.send('get-app-path');
+    electron.ipcRenderer.send('get-versions-info');
   }
 
   ngOnInit() {
     const that = this;
 
     let processed = false;
+
+    electron.ipcRenderer.on('got-versions-info', (event, versionsDescriptor) => {
+      document.title = `Gapminder offline tool v.${versionsDescriptor.app} (dataset v.${versionsDescriptor.dataset})`;
+    });
 
     electron.ipcRenderer.on('got-app-path', (event, path) => {
       this.chartService.ddfFolderDescriptor.electronPath = path;
