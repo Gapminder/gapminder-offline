@@ -50,7 +50,7 @@
     "/vizabi"
   ],
   "_resolved": "git+https://github.com/vizabi/vizabi-config-systema_globalis.git#c6c83be2bef4351c68887e69cb25c6ca1231b029",
-  "_shasum": "c7a27184c015dbbabedc665fbbda154419bdbba0",
+  "_shasum": "25eaf9313f6b968918559cded37a5cf247b246a7",
   "_shrinkwrap": null,
   "_spec": "vizabi-config-systema_globalis@git+https://github.com/vizabi/vizabi-config-systema_globalis.git",
   "_where": "/home/vs/projects2/gapminder-offline",
