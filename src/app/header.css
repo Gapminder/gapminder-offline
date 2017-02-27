@@ -11,6 +11,14 @@
     border-radius: 5px;
 }
 
+.nav-tabs > li > a .glyphicon-plus:before {
+    color: #ffca34;
+}
+
+.nav-tabs > li > a .glyphicon-plus:hover:before {
+    color: #555555;
+}
+
 .main-menu-btn {
     border: none ! important;
     background-color: #fff ! important;
