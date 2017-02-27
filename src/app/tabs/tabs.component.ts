@@ -62,6 +62,8 @@ export class TabsComponent implements OnInit {
   }
 
   public removeTab(data: any) {
+    this.forceResize();
+
     setTimeout(() => {
       if (this.tabsModel.length <= 0) {
         this.chartService.initTab(this.tabsModel);
