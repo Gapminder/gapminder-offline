@@ -3,7 +3,7 @@ import {Component, Input, Output, EventEmitter} from '@angular/core';
 @Component({
   selector: 'ae-tab-new',
   template: `
-      <div *ngIf = "active" class = "tab-pane" style = "height: 100%;">
+      <div [style.display]="getDisplayStyle()" class = "tab-pane" style = "height: 100%;">
           <ng-content></ng-content>
       </div>
 
@@ -18,4 +18,8 @@ export class TabNewComponent {
   @Output() public select: EventEmitter<TabNewComponent> = new EventEmitter();
   @Output() public deselect: EventEmitter<TabNewComponent> = new EventEmitter();
   @Output() public remove: EventEmitter<any> = new EventEmitter();
+
+  getDisplayStyle(): string {
+    return this.active ? 'block' : 'none';
+  }
 }
