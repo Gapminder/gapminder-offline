@@ -24,7 +24,7 @@
     "package-win": "npm run package -- --platform=win32",
     "package-win32": "npm run package -- --platform=win32 --arch=ia32",
     "package-lin": "npm run package -- --platform=linux",
-    "package-mac": "npm run package -- --platform=darwin && codesign --deep --force --verbose --sign 'Developer ID Application: Stiftelsen Gapminder (J7SD4Z498H)' ./release/Gapminder\\ Offline-darwin-x64/Gapminder\\ Offline.app",
+    "package-mac": "npm run package -- --platform=darwin && codesign --deep --force --verbose --sign 'Developer ID Application: Stiftelsen Gapminder (J7SD4Z498H)' ./release/Gapminder\\ Offline-darwin-x64/Gapminder\\ Offline.app && node package-dmg.js",
     "package-all": "npm run package-win && npm run package-lin && npm run package-mac",
     "mac": "rm -rf release && npm run build && npm run package-mac",
     "typings-install": "typings install",
@@ -108,7 +108,15 @@
     "typescript": "2.1.5",
     "typings": "2.1.0",
     "webpack": "1.14.0",
-    "webpack-dev-server": "1.16.2"
+    "webpack-dev-server": "1.16.2",
+    "appdmg": {
+      "version": "0.4.6",
+      "optional": true,
+      "os": [
+        "darwin"
+      ],
+      "dev": true
+    }
   },
   "engines": {
     "node": ">= 4.2.1 <= 6",
