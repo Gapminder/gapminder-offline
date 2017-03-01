@@ -108,15 +108,10 @@
     "typescript": "2.1.5",
     "typings": "2.1.0",
     "webpack": "1.14.0",
-    "webpack-dev-server": "1.16.2",
-    "appdmg": {
-      "version": "0.4.6",
-      "optional": true,
-      "os": [
-        "darwin"
-      ],
-      "dev": true
-    }
+    "webpack-dev-server": "1.16.2"
+  },
+  "optionalDependencies": {
+    "appdmg": "0.4.6"
   },
   "engines": {
     "node": ">= 4.2.1 <= 6",
