@@ -15,3 +15,4 @@ rm -r ./partial/Gapminder\ Offline-mac/Gapminder\ Offline.app/Contents/Resources
 cd partial/Gapminder\ Offline-mac
 zip --symlinks -r ./Gapminder\ Offline-mac.zip ./Gapminder\ Offline.app
 cd ../../..
+npm run package-dmg
