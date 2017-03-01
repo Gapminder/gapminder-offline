@@ -111,7 +111,7 @@
     "webpack-dev-server": "1.16.2"
   },
   "optionalDependencies": {
-    "appdmg": "0.4.6"
+    "appdmg": "0.4.5"
   },
   "engines": {
     "node": ">= 4.2.1 <= 6",
