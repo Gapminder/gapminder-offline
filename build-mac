@@ -1,4 +1,5 @@
 rm -r ./release/partial
+rm ./release/Install\ Gapminder\ Offline.dmg
 rm -r ./release/Gapminder\ Offline-mac.zip
 rm -r ./release/Gapminder\ Offline-mac
 npm run build
