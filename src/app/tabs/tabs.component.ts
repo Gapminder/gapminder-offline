@@ -2,6 +2,7 @@ import {NgZone, Component, OnInit, Input, Output, EventEmitter} from '@angular/c
 import {ChartService} from './chart.service';
 import {TabModel} from './tab.model';
 import {TabDataDescriptor} from '../descriptors/tab-data.descriptor';
+import {ITabActionsSynchronizer} from '../tabs-new/tabs.common';
 
 declare var electron: any;
 
@@ -55,6 +56,18 @@ export class TabsComponent implements OnInit {
         processed = true;
       }
     });
+  }
+
+  public getSyncActions(): ITabActionsSynchronizer {
+    return {
+      onSetTabActive: (index) => {
+        this.tabsModel.forEach(tab => tab.active = false);
+        this.tabsModel[index].active = true;
+      },
+      onTabRemove: (index) => {
+        this.tabsModel.splice(index, 1);
+      }
+    };
   }
 
   public getCurrentTab(): TabModel {
