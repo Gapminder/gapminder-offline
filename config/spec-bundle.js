@@ -48,7 +48,7 @@ testing.TestBed.initTestEnvironment(
  * we say do this recursively
  */
 var testContext = require.context('../src', true, /\.spec\.ts/);
-
+console.log(testContext.keys());
 var componentsContext = require.context('../src/app', true, /\.ts$/);
 
 componentsContext.keys().forEach(function(component) {
