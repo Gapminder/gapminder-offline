@@ -1,10 +1,11 @@
-import {Component, ContentChildren, AfterContentInit, QueryList, Input} from '@angular/core';
+import {Component, ContentChildren, QueryList, Input} from '@angular/core';
 import {TabNewComponent} from './tab.component';
+import {ITabActionsSynchronizer} from './tabs.common';
 
 @Component({
   selector: 'ae-tabs-new',
   template: `
-      <div class = "tab-container" *ngIf = "model" style = "height: 100%;">
+      <div class = "tab-container" style = "height: 100%;">
           <ul class = "nav nav-tabs" (click) = "$event.preventDefault()">
               <li class = "nav-item">
                   <ng-content select = "[tabs-head]"></ng-content>
@@ -28,12 +29,9 @@ import {TabNewComponent} from './tab.component';
       </div>
   `
 })
-export class TabsNewComponent implements AfterContentInit {
+export class TabsNewComponent {
   @ContentChildren(TabNewComponent) tabs: QueryList<TabNewComponent>;
-  @Input() model: Array<any>;
-
-  ngAfterContentInit() {
-  }
+  @Input() syncActions: ITabActionsSynchronizer;
 
   selectTab(selectedTab: TabNewComponent) {
     this.tabs.forEach(tab => {
@@ -48,8 +46,8 @@ export class TabsNewComponent implements AfterContentInit {
   }
 
   removeTab(tab: TabNewComponent) {
-    const tabsArr: Array<any> = this.tabs.toArray();
-    const index = tabsArr.indexOf(tab);
+    const tabsAsArray: Array<TabNewComponent> = this.getTabsAsArray();
+    const index = tabsAsArray.indexOf(tab);
 
     if (index === -1) {
       return;
@@ -61,37 +59,39 @@ export class TabsNewComponent implements AfterContentInit {
       newActiveIndex = this.getClosestTabIndex(index);
 
       if (newActiveIndex >= 0) {
-        this.tabs.forEach(tab => tab.active = false);
-        tabsArr[newActiveIndex].active = true;
-        this.model[newActiveIndex].active = true;
+        this.syncActions.onSetTabActive(newActiveIndex);
       }
     }
 
     tab.remove.emit({tab: this.tabs[index], newActiveIndex});
-    this.model.splice(index, 1);
+    this.syncActions.onTabRemove(index);
   }
 
   protected getClosestTabIndex(index: number): number {
-    const tabsArr: Array<any> = this.tabs.toArray();
+    const tabsAsArray: Array<TabNewComponent> = this.getTabsAsArray();
     const tabsLength = this.tabs.length;
 
     if (!tabsLength) {
       return -1;
     }
 
-    for (let step = 1; step <= tabsLength; step += 1) {
+    for (let step = 1; step <= tabsLength; step++) {
       const prevIndex = index - step;
       const nextIndex = index + step;
 
-      if (tabsArr[nextIndex] && !tabsArr[nextIndex].disabled) {
+      if (tabsAsArray[nextIndex] && !tabsAsArray[nextIndex].disabled) {
         return nextIndex;
       }
 
-      if (tabsArr[prevIndex] && !tabsArr[prevIndex].disabled) {
+      if (tabsAsArray[prevIndex] && !tabsAsArray[prevIndex].disabled) {
         return prevIndex;
       }
     }
 
     return -1;
+  }
+
+  protected getTabsAsArray(): Array<TabNewComponent> {
+    return this.tabs.toArray();
   }
 }

@@ -1,4 +1,4 @@
-<ae-tabs-new [model] = "tabsModel" style = "height: 100%;">
+<ae-tabs-new [syncActions]="getSyncActions()" style = "height: 100%;">
     <ae-tab-new *ngFor = "let tab of tabsModel"
                 [title] = "tab.title"
                 [active] = "tab.active"
