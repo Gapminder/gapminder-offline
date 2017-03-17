@@ -1,4 +1,5 @@
 rm -r ./release/partial
+rm ./release/Install\ Gapminder\ Offline.dmg
 rm -r ./release/Gapminder\ Offline-mac.zip
 rm -r ./release/Gapminder\ Offline-mac
 npm run build
@@ -6,7 +7,7 @@ npm run package-mac
 cd ./release
 mv ./Gapminder\ Offline-darwin-x64 ./Gapminder\ Offline-mac
 cd ./Gapminder\ Offline-mac
-codesign --deep --force --verbose --sign 'Stiftelsen Gapminder' ./Gapminder\ Offline.app
+codesign --deep --force --verbose --sign 'Developer ID Application: Stiftelsen Gapminder (J7SD4Z498H)' ./Gapminder\ Offline.app
 zip --symlinks -r ./Gapminder\ Offline-mac.zip ./Gapminder\ Offline.app
 cd ..
 mkdir -p partial/Gapminder\ Offline-mac/Gapminder\ Offline.app/Contents/Resources/app
@@ -15,3 +16,4 @@ rm -r ./partial/Gapminder\ Offline-mac/Gapminder\ Offline.app/Contents/Resources
 cd partial/Gapminder\ Offline-mac
 zip --symlinks -r ./Gapminder\ Offline-mac.zip ./Gapminder\ Offline.app
 cd ../../..
+npm run package-dmg

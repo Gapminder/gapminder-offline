@@ -22,7 +22,6 @@ const ENV = process.env.ENV = process.env.NODE_ENV = 'test';
  * See: http://webpack.github.io/docs/configuration.html#cli
  */
 module.exports = {
-
     /**
      * Source map for Karma from the help of karma-sourcemap-loader &  karma-webpack
      *
@@ -71,11 +70,13 @@ module.exports = {
              *
              * See: https://github.com/wbuchwalter/tslint-loader
              */
-            {
-                test: /\.ts$/,
-                loader: 'tslint-loader',
-                exclude: [helpers.root('node_modules')]
-            },
+
+            //OLD!
+            // {
+            //     test: /\.ts$/,
+            //     loader: 'tslint-loader',
+            //     exclude: [helpers.root('node_modules')]
+            // },
 
             /**
              * Source map loader support for *.js files
@@ -89,7 +90,8 @@ module.exports = {
                 exclude: [
                     // these packages have problems with their sourcemaps
                     helpers.root('node_modules/rxjs'),
-                    helpers.root('node_modules/@angular')
+                    helpers.root('node_modules/@angular'),
+                    helpers.root('node_modules/')
                 ]
             }
 
@@ -134,6 +136,12 @@ module.exports = {
             // Support for CSS as raw text
             {
                 test: /\.css$/,
+                exclude: helpers.root('src', 'app'),
+                loader: 'null-loader'
+            },
+            {
+                test: /\.css$/,
+                include: helpers.root('src', 'app'),
                 loader: 'raw-loader'
             },
 
@@ -145,10 +153,10 @@ module.exports = {
             },
 
             // Support for CSS as raw text
-            {
-                test: /\.css$/,
-                loader: ExtractTextPlugin.extract(['css'])
-            },
+            // {
+            //     test: /\.css$/,
+            //     loader: ExtractTextPlugin.extract(['css'])
+            // },
 
             // General sass should be included in a css file
             {
@@ -210,7 +218,7 @@ module.exports = {
              * See: https://github.com/deepsweet/istanbul-instrumenter-loader
              */
             {
-                test: /\.(js|ts)$/, loader: 'istanbul-instrumenter-loader',
+                test: /\.(js|ts)$/, loaders: ['istanbul-instrumenter-loader', 'angular2-template-loader'],
                 include: helpers.root('src'),
                 exclude: [
                     /\.(e2e|spec)\.ts$/,
@@ -227,7 +235,6 @@ module.exports = {
      * See: http://webpack.github.io/docs/configuration.html#plugins
      */
     plugins: [
-
         /**
          * Plugin: DefinePlugin
          * Description: Define free variables.
@@ -257,6 +264,7 @@ module.exports = {
      *
      * See: https://github.com/wbuchwalter/tslint-loader
      */
+
     tslint: {
         emitErrors: false,
         failOnHint: false,
@@ -271,6 +279,7 @@ module.exports = {
      */
     node: {
         global: 'window',
+        fs: 'empty',
         process: false,
         crypto: 'empty',
         module: false,

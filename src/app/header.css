@@ -1,8 +1,22 @@
-.glyphicon-remove-circle:before{
-    content:"\e014";
+.glyphicon-remove-circle:before {
+    content: "\e014";
     top: 1px;
     position: relative;
     right: -2px;
+}
+
+.nav-tabs > li > a .glyphicon-remove-circle:hover:before {
+    background-color: #ff0000;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.nav-tabs > li > a .glyphicon-plus:before {
+    color: #ffca34;
+}
+
+.nav-tabs > li > a .glyphicon-plus:hover:before {
+    color: #555555;
 }
 
 .main-menu-btn {
@@ -21,53 +35,6 @@
 .main-menu-btn:active {
     border: none ! important;
     outline: none ! important;
-}
-
-.nav-item > .active {
-    background-color: #ffca34 ! important;
-    border: none ! important;
-}
-
-.tab-container > ul li:first-child {
-    margin-left: 200px;
-}
-
-.tab-container > ul li:last-child {
-    margin-right: 200px;
-}
-
-.tab-container > ul > li > a {
-    margin: 0;
-    border: none;
-}
-
-.nav-tabs {
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-bottom: 2px solid #ffca34;
-}
-
-.nav-tabs > li > a {
-    margin: 0;
-    border: none;
-}
-
-.nav-tabs > li > a:hover {
-    margin: 0;
-    border: none;
-}
-
-.nav-link {
-    border: none;
-}
-
-.tab-container > div {
-    height: 100%;
-}
-
-.tab-container > ul li:last-child {
-    margin-right: 200px;
 }
 
 .ddf-menu .dropdown-menu {
@@ -239,4 +206,60 @@
     cursor: pointer;
 }
 
+.nav-item > .active {
+    background-color: #ffca34 ! important;
+    border: none ! important;
+}
 
+/*.tab-container > ul li:nth-child(2) {
+    padding-left: 200px;
+}*/
+
+.tab-container > ul li:last-child {
+    margin-right: 200px;
+}
+
+.tab-container > ul > li > a {
+    margin: 0;
+    border: none;
+}
+
+.nav-tabs {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 2px solid #ffca34;
+}
+
+.nav-tabs > li > a {
+    margin: 0;
+    border: none;
+    border-radius: 0 0 0 0;
+}
+
+.nav-tabs > li > a:hover {
+    margin: 0;
+    background-color: #ffca34 ! important;
+    border: none ! important;
+}
+
+.nav-tabs > li:last-child > a:hover, .nav-tabs > li:first-child > a:hover {
+    margin: 0;
+    background-color: inherit ! important;
+    font-weight: bold;
+    border: none ! important;
+}
+
+.nav-tabs > li:last-child > a:focus, .nav-tabs > li:first-child > a:focus {
+    margin: 0;
+    background-color: inherit ! important;
+    border: none ! important;
+}
+
+.nav-link {
+    border: none;
+}
+
+.tab-container > div {
+    height: 100%;
+}

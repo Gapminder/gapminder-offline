@@ -1,0 +1,27 @@
+.main-popup {
+    width: 100%;
+    height: 300px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.step-block {
+    margin-bottom: 20px;
+}
+.step-label {
+    font-size: large;
+}
+.example-image {
+    max-width: 100%;
+    height: auto;
+    padding-right: 10px;
+}
+.desc {
+    font-size: small
+}
+.highl {
+    background-color: yellow;
+    color: #b81f00;
+}
+label.step-label {
+    margin-left: 1px;
+}
