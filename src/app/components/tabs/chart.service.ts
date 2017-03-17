@@ -3,13 +3,13 @@ import { TabModel } from './tab.model';
 import { DdfFolderDescriptor } from '../descriptors/ddf-folder.descriptor';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 
-const AgePyramid = require('../../../../node_modules/vizabi-config-systema_globalis//AgePyramid.json');
+// const AgePyramid = require('../../../../node_modules/vizabi-config-systema_globalis/AgePyramid.json');
 const BarRankChart = require('../../../../node_modules/vizabi-config-systema_globalis/BarRankChart.json');
 const BubbleChart = require('../../../../node_modules/vizabi-config-systema_globalis/BubbleChart.json');
 const BubbleMap = require('../../../../node_modules/vizabi-config-systema_globalis/BubbleMap.json');
 const LineChart = require('../../../../node_modules/vizabi-config-systema_globalis/LineChart.json');
 const MountainChart = require('../../../../node_modules/vizabi-config-systema_globalis/MountainChart.json');
-const configSg = {AgePyramid, BarRankChart, BubbleChart, BubbleMap, LineChart, MountainChart};
+const configSg = {BarRankChart, BubbleChart, BubbleMap, LineChart, MountainChart};
 const ddfCsvReaderLib = require('vizabi-ddfcsv-reader');
 const BackendFileReader = ddfCsvReaderLib.BackendFileReader;
 
