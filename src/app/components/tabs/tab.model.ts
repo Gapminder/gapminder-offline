@@ -1,4 +1,5 @@
 import { IAdditionalDataItem } from '../descriptors/additional-data-item.descriptor';
+import { AlertModel } from './alert.model';
 
 export class TabModel {
   public static globalOrder: number = 0;
@@ -17,6 +18,7 @@ export class TabModel {
   public extResources: any;
   public component: any;
   public instance: any;
+  public alerts: AlertModel[] = [];
 
   private order: number;
 

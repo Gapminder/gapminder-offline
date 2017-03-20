@@ -9390,7 +9390,7 @@ module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
         while(index--)$instance[ADDER](index, index);
         return !$instance.has(-0);
       });
-    if(!ACCEPT_ITERABLES){
+    if(!ACCEPT_ITERABLES){ 
       C = wrapper(function(target, iterable){
         anInstance(target, C, NAME);
         var that = inheritIfRequired(new Base, target, C);
@@ -23327,7 +23327,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     i1++;
                   }
                   projectedArcs[i2++]=out1;
-
+        
                 }
         */
       });

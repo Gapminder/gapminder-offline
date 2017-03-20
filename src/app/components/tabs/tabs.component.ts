@@ -4,6 +4,7 @@ import { ChartService } from './chart.service';
 import { TabModel } from './tab.model';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { ITabActionsSynchronizer } from '../tabs-new/tabs.common';
+import { AlertModel } from './alert.model';
 
 declare const electron: any;
 
@@ -58,7 +59,7 @@ export class TabsComponent implements OnInit {
       this.chartService.ddfFolderDescriptor.defaults();
       this.chartService.setReaderDefaults(this.tabDataDescriptor);
       this.chartService.initTab(this.tabsModel);
-      this.onTabsInit.emit(null);
+      this.onTabsInit.emit();
     });
   }
 
@@ -67,11 +68,11 @@ export class TabsComponent implements OnInit {
       onSetTabActive: (index: number) => {
         this.tabsModel.forEach((tab: TabModel) => tab.active = false);
         this.tabsModel[index].active = true;
-        this.onTabSetActive.emit(null);
+        this.onTabSetActive.emit();
       },
       onTabRemove: (index: number) => {
         this.tabsModel.splice(index, 1);
-        this.onTabRemoved.emit(null);
+        this.onTabRemoved.emit();
       }
     };
   }
@@ -136,5 +137,13 @@ export class TabsComponent implements OnInit {
 
   private clickHandler(event: any): void {
     this.chartService.log('chart clickHandler', event);
+  }
+
+  private errorHandler(error: Error): void {
+    const currentTab = this.getCurrentTab();
+
+    currentTab.alerts.push(new AlertModel(error.message, error.stack));
+
+    this.onTabSetActive.emit();
   }
 }

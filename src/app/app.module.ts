@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { Ng2BootstrapModule, ProgressbarModule } from 'ng2-bootstrap';
+import { Ng2BootstrapModule, AlertModule, ProgressbarModule } from 'ng2-bootstrap';
 import { ModalModule } from 'ng2-bootstrap';
 
 import { HamburgerMenuComponent } from './components/menu/hamburger-menu.component';
@@ -32,6 +32,7 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     FormsModule,
+    AlertModule.forRoot(),
     ModalModule.forRoot(),
     ProgressbarModule.forRoot(),
     Ng2BootstrapModule,

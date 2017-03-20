@@ -22,10 +22,23 @@
             </ul>
         </div>
         <div *ngIf = "tab.chartType" style = "height: 100%">
-            <vizabi style = "height: 100%;"
+            <div *ngFor="let alert of tab.alerts">
+                <alert type="danger">
+                    An error has occurred during chart processing.
+                    <a href="#" (click)="alert.toggle()">Details...</a>
+                    <div *ngIf="!alert.collapsed">
+                        <div [innerHtml]="alert.message"></div>
+                        <div [innerHtml]="alert.stack"></div>
+                    </div>
+                </alert>
+            </div>
+
+            <vizabi *ngIf="tab.alerts.length <= 0"
+                    style = "height: 100%;"
                     (onCreated) = "chartCreated($event)"
                     (onChanged) = "chartChanged($event)"
                     (onClick) = "clickHandler($event)"
+                    (onError)="errorHandler($event)"
                     [order] = "tab.getOrder()"
                     [readerModuleObject] = "tab.readerModuleObject"
                     [readerGetMethod] = "tab.readerGetMethod"

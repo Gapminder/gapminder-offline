@@ -173,6 +173,7 @@ export class AppComponent implements OnInit {
       this.chartService.ddfFolderDescriptor.ddfUrl = firstFilePath;
       this.chartService.initTab(this.tabsModel, 'BubbleChart');
       this.chartService.newChart(this.getCurrentTab(), this.chartService.ddfFolderDescriptor, null, false);
+      this.doDetectChanges();
     }
   }
 
