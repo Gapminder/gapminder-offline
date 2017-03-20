@@ -6660,8 +6660,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = {
   ext_resources: {},
-  build: 1489764106583,
-  version: "0.20.2-13"
+  build: 1490022087196,
+  version: "0.20.2-19"
 };
 
 /***/ }),
@@ -6847,14 +6847,16 @@ var Reader = _class2.default.extend({
 
       var result = Object.keys(row).reduce(function (result, key) {
         if (correct) {
-          var value = utils.isString(row[key]) ? row[key].trim() : row[key];
+          var defaultValue = row[key];
+          var value = !utils.isString(defaultValue) ? defaultValue : defaultValue.trim().replace(",", ".").replace(new RegExp(defaultValue.includes(".") ? "0+$" : ""), "").replace(/\.$/, "");
+
           var parser = parsers[key];
           var resultValue = void 0;
 
           if (parser) {
             resultValue = parser(value);
           } else {
-            var numeric = parseFloat(value && value.replace(",", "."));
+            var numeric = parseFloat(value);
             resultValue = String(numeric) === value && !isNaN(numeric) && isFinite(numeric) ? numeric : value;
           }
 
@@ -21198,7 +21200,11 @@ var CSVReader = _reader2.default.extend({
                 delimiter = _delimiter === undefined ? _this._guessDelimiter(text) : _delimiter;
 
             var parser = d3.dsvFormat(delimiter);
-            var data = parser.parse(text);
+            var data = parser.parse(text, function (row) {
+              return Object.keys(row).every(function (key) {
+                return !row[key];
+              }) ? null : row;
+            });
 
             var result = { columns: data.columns, data: data };
             cached[path] = result;
