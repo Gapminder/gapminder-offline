@@ -15,6 +15,11 @@ coverage
 
 /release/
 
+src/app/preview-data/translation
+src/app/assets/cursors
+src/app/assets/translation
+src/app/export-template/assets/cursors
+src/app/export-template/assets/translation
 src/app/export-template/libs
 src/app/libs
 !src/app/libs/d3.min.js
