@@ -7,7 +7,7 @@
     "watch": "npm run watch:dev",
     "watch:dev": "webpack --watch --progress --profile --colors --display-error-details --display-cached",
     "build-linux": "npm run build-linux:dev",
-    "build-max": "npm run build-mac:dev",
+    "build-mac": "npm run build-mac:dev",
     "build-win": "npm run build-win:dev",
     "vizabi-linux": "./vizabi-copy-linux",
     "vizabi-mac": "./vizabi-copy-mac",
