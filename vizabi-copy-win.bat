@@ -5,13 +5,13 @@ copy .\node_modules\vizabi\build\dist\vizabi.js .\src\app\export-template\libs
 copy .\node_modules\vizabi\build\dist\vizabi.css .\src\app\libs
 copy .\node_modules\vizabi\build\dist\vizabi.css .\src\app\export-template\libs
 
-copy .\node_modules\vizabi\build\dist\assets\cursors\* .\src\app\assets\cursors
-copy .\node_modules\vizabi\build\dist\assets\cursors\* .\src\app\export-template\assets\cursors
+xcopy .\node_modules\vizabi\build\dist\assets\cursors\* .\src\app\assets\cursors/ /e
+xcopy .\node_modules\vizabi\build\dist\assets\cursors\* .\src\app\export-template\assets\cursors/ /e
 
-copy .\node_modules\vizabi\build\dist\assets\translation\* .\src\app\preview-data\translation
+xcopy .\node_modules\vizabi\build\dist\assets\translation\* .\src\app\preview-data\translation/ /e
 
-copy .\node_modules\vizabi\build\dist\assets\translation\* .\src\app\assets\translation
-copy .\node_modules\vizabi\build\dist\assets\translation\* .\src\app\export-template\assets\translation
+xcopy .\node_modules\vizabi\build\dist\assets\translation\* .\src\app\assets\translation/ /e
+xcopy .\node_modules\vizabi\build\dist\assets\translation\* .\src\app\export-template\assets\translation/ /e
 
 rem copy .\node_modules\vizabi-barrankchart\build\dist\barrankchart.css .\src\app\libs
 rem copy .\node_modules\vizabi-barrankchart\build\dist\barrankchart.css .\src\app\export-template\libs
