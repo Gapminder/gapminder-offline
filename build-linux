@@ -1,7 +1,7 @@
 rm -r ./release/partial
 rm -r ./release/Gapminder\ Offline-linux.zip
 rm -r ./release/Gapminder\ Offline-linux
-npm run build
+npm run build-linux
 npm run package-lin
 cd release
 mv ./Gapminder\ Offline-linux-x64 ./Gapminder\ Offline-linux

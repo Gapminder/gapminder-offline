@@ -2,7 +2,7 @@ rm -r ./release/partial
 rm ./release/Install\ Gapminder\ Offline.dmg
 rm -r ./release/Gapminder\ Offline-mac.zip
 rm -r ./release/Gapminder\ Offline-mac
-npm run build
+npm run build-mac
 npm run package-mac
 cd ./release
 mv ./Gapminder\ Offline-darwin-x64 ./Gapminder\ Offline-mac
