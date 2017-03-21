@@ -5,13 +5,17 @@ cp -R ./node_modules/vizabi/build/dist/vizabi.js ./src/app/export-template/libs
 cp -R ./node_modules/vizabi/build/dist/vizabi.css ./src/app/libs
 cp -R ./node_modules/vizabi/build/dist/vizabi.css ./src/app/export-template/libs
 
-cp -R ./node_modules/vizabi/build/dist/assets/cursors/* ./src/app/assets/cursors
-cp -R ./node_modules/vizabi/build/dist/assets/cursors/* ./src/app/export-template/assets/cursors
+mkdir -p ./src/app/assets
+mkdir -p ./src/app/export-template/assets
+mkdir -p ./src/app/preview-data
 
-cp -R ./node_modules/vizabi/build/dist/assets/translation/* ./src/app/preview-data/translation
+cp -R ./node_modules/vizabi/build/dist/assets/cursors ./src/app/assets
+cp -R ./node_modules/vizabi/build/dist/assets/cursors ./src/app/export-template/assets
 
-cp -R ./node_modules/vizabi/build/dist/assets/translation/* ./src/app/assets/translation
-cp -R ./node_modules/vizabi/build/dist/assets/translation/* ./src/app/export-template/assets/translation
+cp -R ./node_modules/vizabi/build/dist/assets/translation ./src/app/preview-data
+
+cp -R ./node_modules/vizabi/build/dist/assets/translation ./src/app/assets
+cp -R ./node_modules/vizabi/build/dist/assets/translation ./src/app/export-template/assets
 
 #cp -R ./node_modules/vizabi-barrankchart/build/dist/barrankchart.css ./src/app/libs
 #cp -R ./node_modules/vizabi-barrankchart/build/dist/barrankchart.css ./src/app/export-template/libs
