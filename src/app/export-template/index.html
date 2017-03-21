@@ -3,10 +3,16 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Gapminder Tools Offline export</title>
-    <link rel="stylesheet" type="text/css" href="libs/vizabi.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.js"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <link href="libs/vizabi.css" rel="stylesheet" type="text/css" >
+    <link href="libs/bubblechart.css" rel="stylesheet" type="text/css">
+    <link href="libs/bubblemap.css" rel="stylesheet" type="text/css">
+    <link href="libs/mountainchart.css" rel="stylesheet" type="text/css">
     <script src="libs/vizabi.js"></script>
-    <script src="libs/bundle.web.js"></script>
+    <script src="libs/bubblechart.js"></script>
+    <script src="libs/bubblemap.js"></script>
+    <script src="libs/mountainchart.js"></script>
+    <script src="libs/vizabi-ddfcsv-reader.js"></script>
   </head>
 
   <body style="width: 70%; max-width: 900px; height: 100%; margin: 0 auto; font-family: 'Arial';">
@@ -19,9 +25,8 @@
     <script src="config.js"></script>
     <script>
 
-      //DDFCsv reader integration
-	  var ddfcsvReader = new DDFCsvReader.getDDFCsvReaderObject()
-	  Vizabi.Reader.extend("ddf", ddfcsvReader);
+      var ddfcsvReader = new DDFCsvReader.getDDFCsvReaderObject();
+      Vizabi.Reader.extend("ddf", ddfcsvReader);
 
       var viz = Vizabi('#chartType#', document.getElementById('placeholder'), CONFIG);
 

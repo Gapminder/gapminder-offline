@@ -15,6 +15,10 @@ coverage
 
 /release/
 
+src/app/export-template/libs
+src/app/libs
+!src/app/libs/d3.min.js
+
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
