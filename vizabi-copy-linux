@@ -1,9 +1,15 @@
+mkdir -p ./src/app/export-template/libs
+
 cp ./node_modules/vizabi-ddfcsv-reader/dist/vizabi-ddfcsv-reader.js ./src/app/export-template/libs
 
 cp ./node_modules/vizabi/build/dist/vizabi.js ./src/app/libs
 cp ./node_modules/vizabi/build/dist/vizabi.js ./src/app/export-template/libs
 cp ./node_modules/vizabi/build/dist/vizabi.css ./src/app/libs
 cp ./node_modules/vizabi/build/dist/vizabi.css ./src/app/export-template/libs
+
+mkdir -p ./src/app/assets
+mkdir -p ./src/app/export-template/assets
+mkdir -p ./src/app/preview-data
 
 cp ./node_modules/vizabi/build/dist/assets/cursors/* ./src/app/assets/cursors
 cp ./node_modules/vizabi/build/dist/assets/cursors/* ./src/app/export-template/assets/cursors
