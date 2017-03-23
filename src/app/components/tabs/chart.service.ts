@@ -19,6 +19,7 @@ const configSg = {
 };
 const ddfCsvReaderLib = require('vizabi-ddfcsv-reader');
 const BackendFileReader = ddfCsvReaderLib.BackendFileReader;
+const GithubFileReader = ddfCsvReaderLib.GithubFileReader;
 
 @Injectable()
 export class ChartService {
@@ -49,8 +50,8 @@ export class ChartService {
 
   public setReaderDefaults(tab: TabModel | TabDataDescriptor): void {
     tab.readerModuleObject = ddfCsvReaderLib;
-    tab.readerGetMethod = 'getDDFCsvReaderObject';
-    tab.readerParams = this.isDevMode ? [new BackendFileReader(), console] : [new BackendFileReader()];
+    tab.readerGetMethod = 'getGithubDDFCsvReaderObject';
+    tab.readerParams = this.isDevMode ? [new GithubFileReader(), console] : [new GithubFileReader()];
     tab.readerName = 'ddf1-csv-ext';
     tab.extResources = {
       host: this.ddfFolderDescriptor.ddfUrl,
@@ -76,11 +77,12 @@ export class ChartService {
 
       config.data = {
         reader: 'ddf1-csv-ext',
-        ddfPath: this.ddfFolderDescriptor.ddfUrl,
-        path: this.ddfFolderDescriptor.ddfUrl
+        ddfPath: 'https://raw.githubusercontent.com/open-numbers/ddf--gapminder--systema_globalis/master',
+        path: 'https://raw.githubusercontent.com/open-numbers/ddf--gapminder--systema_globalis/master'
       };
       config.locale = {
         id: 'en',
+        //
         filePath: './preview-data/translation/'
       };
 
