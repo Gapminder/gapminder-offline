@@ -6,6 +6,9 @@ const fs = require('fs');
 const fsExtra = require('fs-extra');
 const zipdir = require('zip-dir');
 const request = require('request');
+const packageJSON = require('./package.json');
+const GoogleAnalytics = require('./google-analytics');
+const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 
 const DATA_PATH = {
   win32: '.\\resources\\app\\ddf--gapminder--systema_globalis',
@@ -118,9 +121,11 @@ exports.saveFile = (event, params) => {
     fs.writeFile(fileName, JSON.stringify(params.model, null, ' '), err => {
       if (err) {
         dialog.showErrorBox('File save error', err.message);
+        ga.error('Chart state was NOT saved: ' + err.toString());
         return;
       }
 
+      ga.error('Chart state successfully saved');
       console.info('Chart state successfully saved');
     });
   });
@@ -170,10 +175,12 @@ exports.exportForWeb = (event, params) => {
     zipdir(`${WEB_PATH[process.platform]}`, {saveTo: fileName}, err => {
       if (err) {
         dialog.showMessageBox({message: 'This chart has NOT been exported.', buttons: ['OK']});
+        ga.error('Export for Web was NOT completed: ' + err.toString());
         return;
       }
 
       dialog.showMessageBox({message: 'This chart has been exported.', buttons: ['OK']});
+      ga.eventMenu('Export for Web was completed');
     });
   });
 };

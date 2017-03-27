@@ -15,6 +15,10 @@ const dataPackage = require(app.getAppPath() + '/ddf--gapminder--systema_globali
 const devMode = process.argv.length > 1 && process.argv.indexOf('dev') > 0;
 const autoUpdateTestMode = process.argv.length > 1 && process.argv.indexOf('au-test') > 0;
 
+const packageJSON = require('./package.json');
+const GoogleAnalytics = require('./google-analytics');
+const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
+
 const spawn = childProcess.spawn;
 const dirs = {
   linux: './',
@@ -103,6 +107,7 @@ function startUpdate(event) {
     err => {
       if (err) {
         event.sender.send('unpack-complete', err);
+        ga.error('auto update -> download error: ' + err);
         return;
       }
 
@@ -114,8 +119,15 @@ function startUpdate(event) {
           event.sender.send('unpack-progress', progress);
         },
         err => {
-          fs.writeFile(UPDATE_FLAG_FILE, updateProcessDescriptor.type, () => {
+          if (err) {
+            ga.error('auto update -> unpacking error: ' + err);
             event.sender.send('unpack-complete', err);
+            return;
+          }
+
+          fs.writeFile(UPDATE_FLAG_FILE, updateProcessDescriptor.type, () => {
+            ga.event('Run', `starting and trying auto update from ${app.getVersion()} to ${updateProcessDescriptor.version}`);
+            event.sender.send('unpack-complete', null);
           });
         });
     }
@@ -220,6 +232,17 @@ function startMainApplication() {
   ipc.on('do-save', fileManagement.saveFile);
   ipc.on('do-export-for-web', fileManagement.exportForWeb);
 
+  ipc.on('new-chart', (event, chartType) => {
+    ga.chartEvent(chartType);
+  });
+  ipc.on('new-chart', (event, chartType) => {
+    ga.chartEvent(chartType);
+  });
+
+  ipc.on('modify-chart', (event, action) => {
+    ga.chartChangingEvent(action);
+  });
+
   ipc.on('exit-and-update', () => {
     finishUpdate(updateProcessDescriptor.type, () => {
       app.quit();
@@ -235,9 +258,14 @@ app.on('ready', () => {
   fs.readFile(UPDATE_FLAG_FILE, 'utf8', (err, content) => {
     if (err) {
       fsExtra.removeSync(CACHE_DIR);
+
+      ga.runEvent(false);
+
       startMainApplication();
       return;
     }
+
+    ga.runEvent(true);
 
     finishUpdate(content);
   });

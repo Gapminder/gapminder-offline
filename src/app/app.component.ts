@@ -173,6 +173,7 @@ export class AppComponent implements OnInit {
       this.chartService.ddfFolderDescriptor.ddfUrl = firstFilePath;
       this.chartService.initTab(this.tabsModel, 'BubbleChart');
       this.chartService.newChart(this.getCurrentTab(), this.chartService.ddfFolderDescriptor, null, false);
+      electron.ipcRenderer.send('new-chart', this.getCurrentTab().chartType + ' by DDF folder');
       this.doDetectChanges();
     }
   }
@@ -185,6 +186,8 @@ export class AppComponent implements OnInit {
 
     newAdditionalData.push(data);
     currentTab.additionalData = newAdditionalData;
+
+    electron.ipcRenderer.send('modify-chart', `user data was added to ${currentTab.chartType}`);
   }
 
   public onDdfExtFolderChanged(filePaths: string[]): void {
@@ -208,6 +211,8 @@ export class AppComponent implements OnInit {
     this.tabsModel.forEach((tab: TabModel) => tab.active = false);
     this.tabsModel.push(newTab);
     this.doDetectChanges();
+
+    electron.ipcRenderer.send('menu', 'new chart was opened');
   };
 
   public completeCsvConfigForm(event: any): void {
@@ -215,6 +220,8 @@ export class AppComponent implements OnInit {
 
     if (event) {
       this.chartService.newSimpleChart(this.tabsModel, event);
+
+      electron.ipcRenderer.send('new-chart', 'Simple chart: json based');
     }
   }
 

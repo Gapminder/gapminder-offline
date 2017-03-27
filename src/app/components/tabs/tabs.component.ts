@@ -106,6 +106,7 @@ export class TabsComponent implements OnInit {
 
   private defaultChart(): void {
     this.chartService.newChart(this.getCurrentTab(), this.tabDataDescriptor);
+    electron.ipcRenderer.send('new-chart', this.getCurrentTab().chartType);
   }
 
   private forceResize(): void {
@@ -143,6 +144,8 @@ export class TabsComponent implements OnInit {
     const currentTab = this.getCurrentTab();
 
     currentTab.alerts.push(new AlertModel(error.message, error.stack));
+
+    electron.ipcRenderer.send('chart-error', `${error.message} ${error.stack}`);
 
     this.onTabSetActive.emit();
   }
