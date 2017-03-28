@@ -19,10 +19,10 @@ cp -R ./node_modules/vizabi/build/dist/assets/translation ./src/app/preview-data
 cp -R ./node_modules/vizabi/build/dist/assets/translation ./src/app/assets
 cp -R ./node_modules/vizabi/build/dist/assets/translation ./src/app/export-template/assets
 
-#cp -R ./node_modules/vizabi-barrankchart/build/dist/barrankchart.css ./src/app/libs
-#cp -R ./node_modules/vizabi-barrankchart/build/dist/barrankchart.css ./src/app/export-template/libs
-#cp -R ./node_modules/vizabi-barrankchart/build/dist/barrankchart.js ./src/app/libs
-#cp -R ./node_modules/vizabi-barrankchart/build/dist/barrankchart.js ./src/app/export-template/libs
+cp -R ./node_modules/vizabi-barrankchart/build/dist/barrankchart.css ./src/app/libs
+cp -R ./node_modules/vizabi-barrankchart/build/dist/barrankchart.css ./src/app/export-template/libs
+cp -R ./node_modules/vizabi-barrankchart/build/dist/barrankchart.js ./src/app/libs
+cp -R ./node_modules/vizabi-barrankchart/build/dist/barrankchart.js ./src/app/export-template/libs
 
 cp -R ./node_modules/vizabi-bubblechart/build/dist/bubblechart.css ./src/app/libs
 cp -R ./node_modules/vizabi-bubblechart/build/dist/bubblechart.css ./src/app/export-template/libs
@@ -39,7 +39,7 @@ cp -R ./node_modules/vizabi-mountainchart/build/dist/mountainchart.css ./src/app
 cp -R ./node_modules/vizabi-mountainchart/build/dist/mountainchart.js ./src/app/libs
 cp -R ./node_modules/vizabi-mountainchart/build/dist/mountainchart.js ./src/app/export-template/libs
 
-#cp -R ./node_modules/vizabi-linechart/build/dist/linechart.css ./src/app/libs
-#cp -R ./node_modules/vizabi-linechart/build/dist/linechart.css ./src/app/export-template/libs
-#cp -R ./node_modules/vizabi-linechart/build/dist/linechart.js ./src/app/libs
-#cp -R ./node_modules/vizabi-linechart/build/dist/linechart.js ./src/app/export-template/libs
+cp -R ./node_modules/vizabi-linechart/build/dist/linechart.css ./src/app/libs
+cp -R ./node_modules/vizabi-linechart/build/dist/linechart.css ./src/app/export-template/libs
+cp -R ./node_modules/vizabi-linechart/build/dist/linechart.js ./src/app/libs
+cp -R ./node_modules/vizabi-linechart/build/dist/linechart.js ./src/app/export-template/libs

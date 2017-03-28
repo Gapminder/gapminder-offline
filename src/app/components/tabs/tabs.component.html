@@ -19,6 +19,12 @@
                 <li (click) = "selectChart('MountainChart')">
                     <div><img src = "./public/images/tools/mountainchart.png"><span>Mountain Chart</span></div>
                 </li>
+                <li (click) = "selectChart('BarRankChart')">
+                    <div><img src = "./public/images/tools/barrankchart.png"><span>Bar Rank Chart</span></div>
+                </li>
+                <li (click) = "selectChart('LineChart')">
+                    <div><img src = "./public/images/tools/linechart.png"><span>Line Chart</span></div>
+                </li>
             </ul>
         </div>
         <div *ngIf = "tab.chartType" style = "height: 100%">

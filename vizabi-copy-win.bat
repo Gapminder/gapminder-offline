@@ -13,10 +13,10 @@ xcopy .\node_modules\vizabi\build\dist\assets\translation\* .\src\app\preview-da
 xcopy .\node_modules\vizabi\build\dist\assets\translation\* .\src\app\assets\translation\ /E /Y
 xcopy .\node_modules\vizabi\build\dist\assets\translation\* .\src\app\export-template\assets\translation\ /E /Y
 
-rem copy .\node_modules\vizabi-barrankchart\build\dist\barrankchart.css .\src\app\libs
-rem copy .\node_modules\vizabi-barrankchart\build\dist\barrankchart.css .\src\app\export-template\libs
-rem copy .\node_modules\vizabi-barrankchart\build\dist\barrankchart.js .\src\app\libs
-rem copy .\node_modules\vizabi-barrankchart\build\dist\barrankchart.js .\src\app\export-template\libs
+copy .\node_modules\vizabi-barrankchart\build\dist\barrankchart.css .\src\app\libs
+copy .\node_modules\vizabi-barrankchart\build\dist\barrankchart.css .\src\app\export-template\libs
+copy .\node_modules\vizabi-barrankchart\build\dist\barrankchart.js .\src\app\libs
+copy .\node_modules\vizabi-barrankchart\build\dist\barrankchart.js .\src\app\export-template\libs
 
 copy .\node_modules\vizabi-bubblechart\build\dist\bubblechart.css .\src\app\libs
 copy .\node_modules\vizabi-bubblechart\build\dist\bubblechart.css .\src\app\export-template\libs
@@ -33,7 +33,7 @@ copy .\node_modules\vizabi-mountainchart\build\dist\mountainchart.css .\src\app\
 copy .\node_modules\vizabi-mountainchart\build\dist\mountainchart.js .\src\app\libs
 copy .\node_modules\vizabi-mountainchart\build\dist\mountainchart.js .\src\app\export-template\libs
 
-rem copy .\node_modules\vizabi-linechart\build\dist\linechart.css .\src\app\libs
-rem copy .\node_modules\vizabi-linechart\build\dist\linechart.css .\src\app\export-template\libs
-rem copy .\node_modules\vizabi-linechart\build\dist\linechart.js .\src\app\libs
-rem copy .\node_modules\vizabi-linechart\build\dist\linechart.js .\src\app\export-template\libs
+copy .\node_modules\vizabi-linechart\build\dist\linechart.css .\src\app\libs
+copy .\node_modules\vizabi-linechart\build\dist\linechart.css .\src\app\export-template\libs
+copy .\node_modules\vizabi-linechart\build\dist\linechart.js .\src\app\libs
+copy .\node_modules\vizabi-linechart\build\dist\linechart.js .\src\app\export-template\libs
