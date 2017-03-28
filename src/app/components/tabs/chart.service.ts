@@ -4,10 +4,10 @@ import { DdfFolderDescriptor } from '../descriptors/ddf-folder.descriptor';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 
 // const PopByAge = ;
-// const BarRankChart = require('vizabi-barrankchart');
+const BarRankChart = require('vizabi-barrankchart');
 const BubbleChart = require('vizabi-bubblechart');
 const BubbleMap = require('vizabi-bubblemap');
-// const LineChart = require('vizabi-linechart');
+const LineChart = require('vizabi-linechart');
 const MountainChart = require('vizabi-mountainchart');
 const configSg = {
   PopByAge: require('../../../../node_modules/vizabi-config-systema_globalis/PopByAge.json'),
