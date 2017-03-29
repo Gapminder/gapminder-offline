@@ -3,10 +3,8 @@
         <h4>Step 1: Pick a chart:</h4>
         <div class="chartType">
             <label class="chart-label"><input type="radio" name="chartTypeGroup" (change)="setChartType('BubbleChart')" [value]="'BubbleChart'" [checked]="chartType === 'BubbleChart'"> Bubbles</label>
-            <label class="chart-label"><input type="radio" name="chartTypeGroup" (change)="setChartType('BubbleMap')" [checked]="chartType === 'BubbleMap'" disabled="disabled"> Maps</label>
-            <label class="chart-label"><input type="radio" name="chartTypeGroup" (change)="setChartType('MountainChart')" [checked]="chartType === 'MountainChart'" disabled="disabled"> Mountains</label>
-            <label class="chart-label"><input type="radio" name="chartTypeGroup" (change)="setChartType('BarRankChart')" [value]="'BarRankChart'" [checked]="chartType === 'BarRankChart'"> Rankings</label>
             <label class="chart-label"><input type="radio" name="chartTypeGroup" (change)="setChartType('LineChart')" [value]="'LineChart'" [checked]="chartType === 'LineChart'"> Lines</label>
+            <label class="chart-label"><input type="radio" name="chartTypeGroup" (change)="setChartType('BarRankChart')" [value]="'BarRankChart'" [checked]="chartType === 'BarRankChart'"> Rankings</label>
         </div>
     </div>
 
