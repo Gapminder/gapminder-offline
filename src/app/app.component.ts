@@ -28,9 +28,9 @@ export class AppComponent implements OnInit {
   @ViewChild('additionalDataModal') public additionalDataModal: ModalDirective;
   @ViewChild('presetsModal') public presetsModal: ModalDirective;
   @ViewChild('versionsModal') public versionsModal: ModalDirective;
+  @ViewChild('ddfDatasetConfigModal') public ddfDatasetConfigModal: ModalDirective;
   @ViewChild('csvConfigModal') public csvConfigModal: ModalDirective;
   @ViewChild('additionalCsvConfigModal') public additionalCsvConfigModal: ModalDirective;
-  @ViewChild('newDdfFolder') public newDdfFolderInput: ElementRef;
   @ViewChild('addDdfFolder') public addDdfFolderInput: ElementRef;
 
   private viewContainerRef: ViewContainerRef;
@@ -47,8 +47,8 @@ export class AppComponent implements OnInit {
         this.chartService.initTab(this.tabsModel);
       },
       openDdfFolder: () => {
+        this.ddfDatasetConfigModal.show();
         this.isMenuOpened = false;
-        this.newDdfFolderInput.nativeElement.click();
       },
       openCsvFile: () => {
         this.csvConfigModal.show();
@@ -166,18 +166,6 @@ export class AppComponent implements OnInit {
     this.setAddDataItemsAvailability(true);
   }
 
-  public onDdfFolderChanged(filePaths: string[]): void {
-    const firstFilePath = ChartService.getFirst(filePaths);
-
-    if (firstFilePath) {
-      this.chartService.ddfFolderDescriptor.ddfUrl = firstFilePath;
-      this.chartService.initTab(this.tabsModel, 'BubbleChart');
-      this.chartService.newChart(this.getCurrentTab(), this.chartService.ddfFolderDescriptor, null, false);
-      electron.ipcRenderer.send('new-chart', this.getCurrentTab().chartType + ' by DDF folder');
-      this.doDetectChanges();
-    }
-  }
-
   public addData(data: any): void {
     const currentTab = this.getCurrentTab();
     const newAdditionalData = currentTab.additionalData.slice();
@@ -214,6 +202,23 @@ export class AppComponent implements OnInit {
 
     electron.ipcRenderer.send('menu', 'new chart was opened');
   };
+
+  public completeDdfDatasetConfigForm(event: any): void {
+    this.ddfDatasetConfigModal.hide();
+
+    if (event) {
+      const firstFilePath = event.selectedFolder;
+
+      if (firstFilePath) {
+        this.chartService.ddfFolderDescriptor.ddfUrl = firstFilePath;
+        this.chartService.initTab(this.tabsModel, event.chartType);
+        this.chartService.setReaderDefaults(this.chartService.ddfFolderDescriptor);
+        this.chartService.newChart(this.getCurrentTab(), this.chartService.ddfFolderDescriptor, null, false);
+        electron.ipcRenderer.send('new-chart', this.getCurrentTab().chartType + ' by DDF folder');
+        this.doDetectChanges();
+      }
+    }
+  }
 
   public completeCsvConfigForm(event: any): void {
     this.csvConfigModal.hide();

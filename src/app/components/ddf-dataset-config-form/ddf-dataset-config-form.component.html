@@ -1,0 +1,41 @@
+<div class="popup-block main-popup" style="overflow: auto">
+    <div class="step-block">
+        <h4>Step 1: Pick a chart:</h4>
+        <div class="chartType">
+            <label><input type="radio" [(ngModel)]="parameters.chartType" name="chartType" value="BubbleChart">Bubbles</label>
+            <label><input type="radio" [(ngModel)]="parameters.chartType" name="chartType" value="BubbleMap" disabled="disabled">Maps</label>
+            <label><input type="radio" [(ngModel)]="parameters.chartType" name="chartType" value="MountainChart" disabled="disabled">Mountains</label>
+            <label><input type="radio" [(ngModel)]="parameters.chartType" name="chartType" value="BarRankChart">Rankings</label>
+            <label><input type="radio" [(ngModel)]="parameters.chartType" name="chartType" value="LineChart">Lines</label>
+        </div>
+    </div>
+
+    <div class="step-block">
+        <h4>Step 2: Pick DDF folder:</h4>
+        <div>
+            <input placeholder="{{parameters.selectedFolder}}" disabled="disabled" style="width: 70%;" />
+            <div class="fileUpload btn btn-default">
+                <span>Choose DDF folder</span>
+                <input #uploadBtn type="file" webkitdirectory directory class="upload" (change)="onDdfFolderChanged($event)" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="popup-footer">
+    <div class="btn-group" style="width: 100%;">
+        <div class="footer-wrapper">
+            <div class="footer-content">
+                <div class="primary-nav">
+                </div>
+                <div class="secondary-nav">
+                    <input type="button" class="close-button" (click)="close()" value="Cancel" />
+                    <input type="button" class="ok-button" (click)="ok()" [disabled]="!parameters.selectedFolder" value="OK" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

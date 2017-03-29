@@ -28,6 +28,7 @@ export class CsvConfigFormComponent {
   @Output() public done: EventEmitter<any> = new EventEmitter();
 
   private chartService: ChartService;
+  private chartType: string = 'BubbleChart';
   private choice: string = '';
   private isExampleRows: boolean = false;
   private isExampleColumns: boolean = false;
@@ -41,6 +42,7 @@ export class CsvConfigFormComponent {
 
   public ok(): void {
     const config = {
+      chartType: this.chartType,
       reader: this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
       path: this.file,
       delimiter: this.delimiter
@@ -131,5 +133,9 @@ export class CsvConfigFormComponent {
 
   private setChoice(choice: string): void {
     this.choice = choice;
+  }
+
+  private setChartType(chartType: string): void {
+    this.chartType = chartType;
   }
 }
