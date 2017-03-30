@@ -8,6 +8,7 @@ import { HamburgerMenuComponent } from './components/menu/hamburger-menu.compone
 import { ChartService } from './components/tabs/chart.service';
 import { AdditionalDataComponent } from './components/additional-data/additional-data.component';
 import { VersionsFormComponent } from './components/versions-form/versions-form.component';
+import { DdfDatasetConfigFormComponent } from './components/ddf-dataset-config-form/ddf-dataset-config-form.component';
 import { CsvConfigFormComponent } from './components/csv-config-form/csv-config-form.component';
 import { VizabiModule } from 'ng2-vizabi';
 
@@ -24,6 +25,7 @@ import { AppComponent } from './app.component';
     HamburgerMenuComponent,
     AdditionalDataComponent,
     VersionsFormComponent,
+    DdfDatasetConfigFormComponent,
     CsvConfigFormComponent,
     TabsNewComponent,
     TabNewComponent,
@@ -45,6 +47,7 @@ import { AppComponent } from './app.component';
     HamburgerMenuComponent,
     AdditionalDataComponent,
     VersionsFormComponent,
+    DdfDatasetConfigFormComponent,
     CsvConfigFormComponent,
     TabsNewComponent,
     TabNewComponent,

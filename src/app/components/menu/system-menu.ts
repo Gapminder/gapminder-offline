@@ -15,7 +15,7 @@ export const initMenuComponent = (appComponent: AppComponent) => {
               click: () => appComponent.menuActions.gapminderChart()
             },
             {
-              label: 'Your data (bubble chart only)',
+              label: 'Your data',
               submenu: [
                 {
                   label: 'CSV file...',
@@ -23,7 +23,8 @@ export const initMenuComponent = (appComponent: AppComponent) => {
                 },
                 {
                   label: 'DDF folder',
-                  click: () => appComponent.menuActions.ddfFolderClick(new MouseEvent('click'), appComponent.onDdfFolderChanged.bind(appComponent))
+                  // click: () => appComponent.menuActions.ddfFolderClick(new MouseEvent('click'), appComponent.onDdfFolderChanged.bind(appComponent))
+                  click: () => appComponent.menuActions.openDdfFolder()
                 }
               ]
             }

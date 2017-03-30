@@ -17,6 +17,10 @@ export class DdfFolderDescriptor {
   public chartType: string = this.chartTypes[0].value;
 
   public defaults(): void {
-    this.ddfUrl = this.electronPath + '/ddf--gapminder--systema_globalis';
+    this.ddfUrl = this.getDefaultUrl();
+  }
+
+  public getDefaultUrl(): string {
+    return this.electronPath + '/ddf--gapminder--systema_globalis';
   }
 }

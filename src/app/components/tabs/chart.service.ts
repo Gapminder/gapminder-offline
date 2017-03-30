@@ -53,9 +53,10 @@ export class ChartService {
     tab.readerParams = this.isDevMode ? [new BackendFileReader(), console] : [new BackendFileReader()];
     tab.readerName = 'ddf1-csv-ext';
     tab.extResources = {
-      host: this.ddfFolderDescriptor.ddfUrl,
+      host: this.ddfFolderDescriptor.getDefaultUrl(),
       preloadPath: '/../preview-data/'
     };
+    console.log(tab.extResources);
   }
 
   public newChart(tab: TabModel, tabDataDescriptor: TabDataDescriptor, onChartReady?: Function, isDefaults: boolean = true): void {
@@ -98,9 +99,9 @@ export class ChartService {
   }
 
   public newSimpleChart(tabsModel: TabModel[], properties: any, onChartReady?: Function): void {
-    const newTab = new TabModel(this.ddfFolderDescriptor.chartType, true);
+    const newTab = new TabModel(properties.chartType, true);
 
-    newTab.chartType = this.ddfFolderDescriptor.chartType;
+    newTab.chartType = properties.chartType;
     newTab.model = {
       data: {
         reader: properties.reader,
