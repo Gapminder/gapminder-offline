@@ -1,6 +1,6 @@
 {
   "name": "gapminder-offline",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Gapminder offline tool",
   "main": "",
   "scripts": {
@@ -59,7 +59,7 @@
     "rxjs": "5.0.3",
     "vizabi": "0.21.0-17",
     "vizabi-barrankchart": "1.0.9",
-    "vizabi-bubblechart": "1.0.8-4",
+    "vizabi-bubblechart": "1.0.9-1",
     "vizabi-bubblemap": "1.0.2",
     "vizabi-config-systema_globalis": "1.2.0",
     "vizabi-ddfcsv-reader": "0.8.0",
