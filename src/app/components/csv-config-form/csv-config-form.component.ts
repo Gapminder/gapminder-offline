@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ChartService } from '../tabs/chart.service';
 
 const vizabiStateFacade: any = {
@@ -26,6 +26,7 @@ const vizabiStateFacade: any = {
 export class CsvConfigFormComponent {
   @Input() public addDataMode?: boolean = false;
   @Output() public done: EventEmitter<any> = new EventEmitter();
+  @ViewChild('uploadBtn') public uploadBtn: ElementRef;
 
   private chartService: ChartService;
   private chartType: string = 'BubbleChart';
@@ -65,6 +66,7 @@ export class CsvConfigFormComponent {
     this.isExampleRows = false;
     this.isExampleColumns = false;
     this.file = '';
+    this.uploadBtn.nativeElement.value = '';
   }
 
   private getCurrentTabInstance(): boolean {
