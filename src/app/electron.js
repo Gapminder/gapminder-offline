@@ -80,8 +80,10 @@ function finishUpdate(type) {
 
   if (process.platform === 'win32') {
     spawn(
-      'update-' + type + '-' + getTypeByOsAndArch(process.platform, process.arch) + '.exe',
+      'wscript.exe',
+      ['"invisible.vbs"', '"update-' + type + '-' + getTypeByOsAndArch(process.platform, process.arch) + '.exe"'],
       {
+        windowsVerbatimArguments: true,
         stdio: 'ignore',
         detached: true
       }
