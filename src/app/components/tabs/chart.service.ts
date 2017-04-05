@@ -56,7 +56,6 @@ export class ChartService {
       host: this.ddfFolderDescriptor.getDefaultUrl(),
       preloadPath: '/../preview-data/'
     };
-    console.log(tab.extResources);
   }
 
   public newChart(tab: TabModel, tabDataDescriptor: TabDataDescriptor, onChartReady?: Function, isDefaults: boolean = true): void {

@@ -1,10 +1,19 @@
 import { IAdditionalDataItem } from '../descriptors/additional-data-item.descriptor';
 import { AlertModel } from './alert.model';
 
+const LABEL_MAP = {
+  BarRankChart: 'Ranks',
+  BubbleChart: 'Bubbles',
+  BubbleMap: 'Maps',
+  LineChart: 'Lines',
+  MountainChart: 'Mountains',
+  PopByAge: 'PopByAge'
+};
+const DEFAULT_TITLE = 'Chart';
+
 export class TabModel {
   public static globalOrder: number = 0;
 
-  public chartType: string = '';
   public active: boolean;
   public title: string;
   public removable: boolean = true;
@@ -20,16 +29,33 @@ export class TabModel {
   public instance: any;
   public alerts: AlertModel[] = [];
 
+  private _chartType: string = '';
   private order: number;
 
   public constructor(chartType: string = '', active: boolean = false, title: string = '') {
     this.chartType = chartType;
     this.order = ++TabModel.globalOrder;
     this.active = active;
-    this.title = title ? title : `Chart ${this.order}`;
+    this.title = title ? title : this.getOrderedTitle();
   }
 
   public getOrder(): number {
     return this.order;
+  }
+
+  public get chartType(): string {
+    return this._chartType;
+  }
+
+  public set chartType(_chartType: string) {
+    this._chartType = _chartType;
+
+    if (this.title === `${DEFAULT_TITLE} ${this.order}`) {
+      this.title = this.getOrderedTitle();
+    }
+  }
+
+  private getOrderedTitle(): string {
+    return `${LABEL_MAP[this.chartType] || 'Chart'} ${this.order}`;
   }
 }
