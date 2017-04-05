@@ -3,6 +3,7 @@
     top: 1px;
     position: relative;
     right: -2px;
+    cursor: pointer;
 }
 
 .nav-tabs > li > a .glyphicon-remove-circle:hover:before {
@@ -100,8 +101,8 @@
     display: block;
     width: 100%;
     color: #444;
-    font-family: 'Roboto', sans-serif;
-    font-size: 13px;
+    /*font-family: 'Roboto', sans-serif;
+    font-size: 13px;*/
     text-align: left;
     cursor: pointer;
     border: 1px solid transparent;
