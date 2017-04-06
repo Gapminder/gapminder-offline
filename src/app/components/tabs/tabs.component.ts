@@ -73,6 +73,9 @@ export class TabsComponent implements OnInit {
       onTabRemove: (index: number) => {
         this.tabsModel.splice(index, 1);
         this.onTabRemoved.emit();
+      },
+      onTabChanged: (tabDescriptor: any, index: number) => {
+        this.tabsModel[index].title = tabDescriptor.title;
       }
     };
   }

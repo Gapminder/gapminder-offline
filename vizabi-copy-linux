@@ -10,6 +10,7 @@ cp ./node_modules/vizabi/build/dist/vizabi.css ./src/app/export-template/libs
 mkdir -p ./src/app/assets
 mkdir -p ./src/app/export-template/assets
 mkdir -p ./src/app/preview-data
+mkdir -p ./src/app/preview-data/translation
 
 cp ./node_modules/vizabi/build/dist/assets/cursors/* ./src/app/assets/cursors
 cp ./node_modules/vizabi/build/dist/assets/cursors/* ./src/app/export-template/assets/cursors
