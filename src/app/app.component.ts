@@ -11,6 +11,8 @@ import {
 import { ModalDirective } from 'ng2-bootstrap';
 import { ChartService } from './components/tabs/chart.service';
 import { TabModel } from './components/tabs/tab.model';
+import { MessageService } from './message.service';
+import { CLEAR_EDITABLE_TABS_ACTION } from './constants';
 import { initMenuComponent } from './components/menu/system-menu';
 import { Menu } from 'electron';
 
@@ -35,11 +37,16 @@ export class AppComponent implements OnInit {
 
   private viewContainerRef: ViewContainerRef;
   private chartService: ChartService;
+  private messageService: MessageService;
   private ref: ChangeDetectorRef;
 
-  public constructor(viewContainerRef: ViewContainerRef, chartService: ChartService, ref: ChangeDetectorRef) {
+  public constructor(viewContainerRef: ViewContainerRef,
+                     messageService: MessageService,
+                     chartService: ChartService,
+                     ref: ChangeDetectorRef) {
     this.viewContainerRef = viewContainerRef;
     this.chartService = chartService;
+    this.messageService = messageService;
     this.ref = ref;
     this.menuActions = {
       gapminderChart: () => {
@@ -81,7 +88,7 @@ export class AppComponent implements OnInit {
 
         this.isMenuOpened = false;
 
-        electron.ipcRenderer.send('do-save', {model, chartType: currentTab.chartType});
+        electron.ipcRenderer.send('do-save', {model, chartType: currentTab.chartType, title: currentTab.title});
       },
       exportForWeb: () => {
         const currentTab = this.getCurrentTab();
@@ -149,6 +156,8 @@ export class AppComponent implements OnInit {
         this.isMenuOpened = false;
       }
     }
+
+    this.messageService.sendMessage(CLEAR_EDITABLE_TABS_ACTION, event);
   }
 
   public switchMenu(): void {

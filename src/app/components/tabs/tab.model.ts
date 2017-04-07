@@ -2,7 +2,7 @@ import { IAdditionalDataItem } from '../descriptors/additional-data-item.descrip
 import { AlertModel } from './alert.model';
 
 const LABEL_MAP = {
-  BarRankChart: 'Ranks',
+  BarRankChart: 'Rankings',
   BubbleChart: 'Bubbles',
   BubbleMap: 'Maps',
   LineChart: 'Lines',

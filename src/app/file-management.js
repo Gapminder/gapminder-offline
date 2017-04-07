@@ -100,6 +100,7 @@ exports.openFile = event => {
 exports.saveFile = (event, params) => {
   dialog.showSaveDialog({
     title: 'Save current chart as ...',
+    defaultPath: `${params.title}.json`,
     filters: [{name: 'JSON', extensions: ['json']}]
   }, fileName => {
     if (!fileName) {
@@ -180,7 +181,6 @@ exports.exportForWeb = (event, params) => {
       }
 
       dialog.showMessageBox({message: 'This chart has been exported.', buttons: ['OK']});
-      ga.eventMenu('Export for Web was completed');
     });
   });
 };
