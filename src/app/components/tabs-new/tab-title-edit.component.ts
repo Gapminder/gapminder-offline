@@ -30,11 +30,15 @@ export class TabTitleEditComponent implements AfterContentInit {
   }
 
   protected doEnter(): void {
-    this.enter.emit();
+    if (this.title) {
+      this.enter.emit();
+    }
   }
 
   protected doEsc(): void {
-    this.esc.emit();
+    if (this.title) {
+      this.esc.emit();
+    }
   }
 
   protected update(val: string): void {
