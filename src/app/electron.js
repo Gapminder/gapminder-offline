@@ -230,6 +230,7 @@ function startMainApplication() {
 
   ipc.on('do-open', fileManagement.openFile);
   ipc.on('do-save', fileManagement.saveFile);
+  ipc.on('do-save-all-tabs', fileManagement.saveAllTabs);
   ipc.on('do-export-for-web', fileManagement.exportForWeb);
 
   ipc.on('new-chart', (event, chartType) => {

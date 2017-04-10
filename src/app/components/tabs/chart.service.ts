@@ -120,4 +120,12 @@ export class ChartService {
       onChartReady();
     }
   }
+
+  public getCurrentTab(tabsModel: TabModel[]): TabModel {
+    return tabsModel.find((tab: TabModel) => tab.active);
+  }
+
+  public areChartsAvailable(tabsModel: TabModel[]): boolean {
+    return tabsModel.filter((tab: TabModel) => tab.chartType).length > 0;
+  }
 }

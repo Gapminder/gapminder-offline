@@ -23,7 +23,6 @@ export const initMenuComponent = (appComponent: AppComponent) => {
                 },
                 {
                   label: 'DDF folder',
-                  // click: () => appComponent.menuActions.ddfFolderClick(new MouseEvent('click'), appComponent.onDdfFolderChanged.bind(appComponent))
                   click: () => appComponent.menuActions.openDdfFolder()
                 }
               ]
@@ -53,6 +52,10 @@ export const initMenuComponent = (appComponent: AppComponent) => {
         {
           label: 'Save...',
           click: () => appComponent.menuActions.save()
+        },
+        {
+          label: 'Save all tabs...',
+          click: () => appComponent.menuActions.saveAllTabs()
         },
         {
           label: 'Export for Web...',
