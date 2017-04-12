@@ -49,6 +49,34 @@ const isPathInternalWin = path => path.endsWith(DATA_PATH.win32);
 const isPathInternalLin = path => path.endsWith(DATA_PATH.linux);
 const isPathInternalMac = path => path.endsWith(DATA_PATH.darwin);
 const isPathInternal = path => isPathInternalWin(path) || isPathInternalLin(path) || isPathInternalMac(path);
+const normalizeModelToSave = (model, chartType) => {
+  Object.keys(model).forEach(key => {
+    if ((key === 'data' || key.indexOf('data_') === 0) && typeof model[key] === 'object') {
+      if (isPathInternal(model[key].path)) {
+        model[key].path = `@internal`
+      } else {
+        model[key].path = pathToRelative(fileName, model[key].path);
+      }
+    }
+  });
+
+  model.chartType = chartType;
+};
+const normalizeModelToOpen = (model, currentDir, brokenFileActions) => {
+  Object.keys(model).forEach(key => {
+    if ((key === 'data' || key.indexOf('data_') === 0) && typeof model[key] === 'object') {
+      if (model[key].path.indexOf('@internal') >= 0) {
+        model[key].path = DATA_PATH[process.platform];
+      } else {
+        model[key].path = path.resolve(currentDir, model[key].path);
+
+        if (!fs.existsSync(model[key].path)) {
+          brokenFileActions.push(getPathCorrectFunction(model[key]));
+        }
+      }
+    }
+  });
+};
 
 exports.openFile = event => {
   dialog.showOpenDialog({
@@ -68,30 +96,30 @@ exports.openFile = event => {
 
     fs.readFile(fileName, 'utf-8', (err, data) => {
       if (err) {
-        dialog.showErrorBox("File reading error", err.message);
+        dialog.showErrorBox('File reading error', err.message);
         return;
       }
 
       const config = JSON.parse(data);
       const brokenFileActions = [];
 
-      Object.keys(config).forEach(key => {
-        if ((key === 'data' || key.indexOf('data_') === 0) && typeof config[key] === 'object') {
-          if (config[key].path.indexOf('@internal') >= 0) {
-            config[key].path = DATA_PATH[process.platform];
-          } else {
-            config[key].path = path.resolve(currentDir, config[key].path);
+      if (config.length) {
+        config.forEach(configItem => {
+          normalizeModelToOpen(configItem.model, currentDir, brokenFileActions);
+        });
 
-            if (!fs.existsSync(config[key].path)) {
-              brokenFileActions.push(getPathCorrectFunction(config[key]));
-            }
-          }
-        }
-      });
+        Promise.all(brokenFileActions).then(() => {
+          event.sender.send('do-open-all-completed', config);
+        });
+      }
 
-      Promise.all(brokenFileActions).then(() => {
-        event.sender.send('do-open-completed', {tab: config, file: fileNameOnly});
-      });
+      if (!config.length) {
+        normalizeModelToOpen(config, currentDir, brokenFileActions);
+
+        Promise.all(brokenFileActions).then(() => {
+          event.sender.send('do-open-completed', {tab: config, file: fileNameOnly});
+        });
+      }
     });
   });
 };
@@ -107,17 +135,7 @@ exports.saveFile = (event, params) => {
       return;
     }
 
-    Object.keys(params.model).forEach(key => {
-      if ((key === 'data' || key.indexOf('data_') === 0) && typeof params.model[key] === 'object') {
-        if (isPathInternal(params.model[key].path)) {
-          params.model[key].path = `@internal`
-        } else {
-          params.model[key].path = pathToRelative(fileName, params.model[key].path);
-        }
-      }
-    });
-
-    params.model.chartType = params.chartType;
+    normalizeModelToSave(params.model, params.chartType);
 
     fs.writeFile(fileName, JSON.stringify(params.model, null, ' '), err => {
       if (err) {
@@ -128,6 +146,35 @@ exports.saveFile = (event, params) => {
 
       ga.error('Chart state successfully saved');
       console.info('Chart state successfully saved');
+    });
+  });
+};
+
+exports.saveAllTabs = (event, tabsDescriptor) => {
+  const timeLabel = (new Date()).toISOString();
+
+  dialog.showSaveDialog({
+    title: 'Save charts as ...',
+    defaultPath: `charts-${timeLabel}.json`,
+    filters: [{name: 'JSON', extensions: ['json']}]
+  }, fileName => {
+    if (!fileName) {
+      return;
+    }
+
+    tabsDescriptor.forEach(tabDescriptor => {
+      normalizeModelToSave(tabDescriptor.model, tabDescriptor.type);
+    });
+
+    fs.writeFile(fileName, JSON.stringify(tabsDescriptor, null, ' '), err => {
+      if (err) {
+        dialog.showErrorBox('File save error', err.message);
+        ga.error('Charts was NOT saved: ' + err.toString());
+        return;
+      }
+
+      ga.error('Charts successfully saved');
+      console.info('Charts successfully saved');
     });
   });
 };

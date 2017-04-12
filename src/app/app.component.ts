@@ -14,6 +14,7 @@ import { TabModel } from './components/tabs/tab.model';
 import { MessageService } from './message.service';
 import { CLEAR_EDITABLE_TABS_ACTION } from './constants';
 import { initMenuComponent } from './components/menu/system-menu';
+import { getMenuActions } from './components/menu/menu-actions';
 import { Menu } from 'electron';
 
 @Component({
@@ -34,9 +35,9 @@ export class AppComponent implements OnInit {
   @ViewChild('csvConfigModal') public csvConfigModal: ModalDirective;
   @ViewChild('additionalCsvConfigModal') public additionalCsvConfigModal: ModalDirective;
   @ViewChild('addDdfFolder') public addDdfFolderInput: ElementRef;
+  public chartService: ChartService;
 
   private viewContainerRef: ViewContainerRef;
-  private chartService: ChartService;
   private messageService: MessageService;
   private ref: ChangeDetectorRef;
 
@@ -48,65 +49,7 @@ export class AppComponent implements OnInit {
     this.chartService = chartService;
     this.messageService = messageService;
     this.ref = ref;
-    this.menuActions = {
-      gapminderChart: () => {
-        this.isMenuOpened = false;
-        this.chartService.initTab(this.tabsModel);
-      },
-      openDdfFolder: () => {
-        this.ddfDatasetConfigModal.show();
-        this.isMenuOpened = false;
-      },
-      openCsvFile: () => {
-        this.csvConfigModal.show();
-        this.isMenuOpened = false;
-      },
-      ddfFolderClick: (event: any, onFolderClickProcessed: Function) => {
-        const dialog = electron.remote.dialog;
-        const currentWindow = electron.remote.getCurrentWindow();
-
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        this.isMenuOpened = false;
-        dialog.showOpenDialog(currentWindow, {properties: ['openDirectory']}, onFolderClickProcessed.bind(this));
-      },
-      addCsvFile: () => {
-        this.additionalCsvConfigModal.show();
-        this.isMenuOpened = false;
-      },
-      addDdfFolder: () => {
-        this.isMenuOpened = false;
-        this.addDdfFolderInput.nativeElement.click();
-      },
-      open: () => {
-        this.isMenuOpened = false;
-        electron.ipcRenderer.send('do-open');
-      },
-      save: () => {
-        const currentTab = this.getCurrentTab();
-        const model = Object.assign({}, currentTab.instance.getModel());
-
-        this.isMenuOpened = false;
-
-        electron.ipcRenderer.send('do-save', {model, chartType: currentTab.chartType, title: currentTab.title});
-      },
-      exportForWeb: () => {
-        const currentTab = this.getCurrentTab();
-        const model = Object.assign({}, currentTab.instance.getModel());
-
-        this.isMenuOpened = false;
-
-        electron.ipcRenderer.send('do-export-for-web', {model, chartType: currentTab.chartType});
-      },
-      checkForUpdates: () => {
-        this.versionsModal.show();
-        this.isMenuOpened = false;
-      },
-      openDevTools: () => {
-        this.isMenuOpened = false;
-        electron.ipcRenderer.send('open-dev-tools');
-      }
-    };
+    this.menuActions = getMenuActions(this);
 
     initMenuComponent(this);
   }
@@ -116,35 +59,46 @@ export class AppComponent implements OnInit {
       this.doOpenCompleted(event, parameters);
     });
 
-    this.setAddDataItemsAvailability(false);
+    electron.ipcRenderer.on('do-open-all-completed', (event: any, parameters: any) => {
+      this.doOpenAllCompleted(event, parameters);
+    });
+
+    this.dataItemsAvailability();
   }
 
   public onMenuItemSelected(methodName: string): void {
     this.menuActions[methodName]();
   }
 
-  public setAddDataItemsAvailability(value: boolean): void {
+  public dataItemsAvailability(): void {
+    const currentTab = this.getCurrentTab();
+    const isItemEnabled = !!currentTab && !!currentTab.chartType;
     const fileMenu = this.menuComponent.items[0].submenu;
     const menuAddYourData = fileMenu.items[1];
     const csvFileItem = menuAddYourData.submenu.items[0];
     const ddfFolderItem = menuAddYourData.submenu.items[1];
-    const openMenu = fileMenu.items[4];
-    const saveForWebMenu = fileMenu.items[5];
+    const saveMenu = fileMenu.items[4];
+    const saveAllTabs = fileMenu.items[5];
+    const saveForWebMenu = fileMenu.items[6];
 
-    csvFileItem.enabled = value;
-    ddfFolderItem.enabled = value;
-    openMenu.enabled = value;
+    csvFileItem.enabled = isItemEnabled;
+    ddfFolderItem.enabled = isItemEnabled;
+    saveMenu.enabled = isItemEnabled;
     saveForWebMenu.enabled = false;
 
-    const currentTab = this.getCurrentTab();
-
     if (currentTab && currentTab.chartType === 'BubbleChart') {
-      saveForWebMenu.enabled = value;
+      saveForWebMenu.enabled = isItemEnabled;
     }
+
+    saveAllTabs.enabled = this.areChartsAvailable();
+  }
+
+  public areChartsAvailable(): boolean {
+    return this.chartService.areChartsAvailable(this.tabsModel);
   }
 
   public getCurrentTab(): TabModel {
-    return this.tabsModel.find((tab: TabModel) => tab.active);
+    return this.chartService.getCurrentTab(this.tabsModel);
   }
 
   public appMainClickHandler(event: any): void {
@@ -172,7 +126,7 @@ export class AppComponent implements OnInit {
   }
 
   public onChartCreated(): void {
-    this.setAddDataItemsAvailability(true);
+    this.dataItemsAvailability();
   }
 
   public addData(data: any): void {
@@ -210,6 +164,25 @@ export class AppComponent implements OnInit {
     this.doDetectChanges();
 
     electron.ipcRenderer.send('menu', 'new chart was opened');
+  };
+
+  public doOpenAllCompleted(event: any, tabsDescriptor: any): void {
+    tabsDescriptor.forEach((tabDescriptor: any) => {
+      const newTab = new TabModel(tabDescriptor.type, true, tabDescriptor.title);
+
+      delete tabDescriptor.model.bind;
+      delete tabDescriptor.model.type;
+
+      newTab.model = tabDescriptor.model;
+
+      this.chartService.setReaderDefaults(newTab);
+      this.tabsModel.forEach((tab: TabModel) => tab.active = false);
+      this.tabsModel.push(newTab);
+    });
+
+    this.doDetectChanges();
+
+    electron.ipcRenderer.send('menu', 'charts was opened');
   };
 
   public completeDdfDatasetConfigForm(event: any): void {
@@ -252,6 +225,7 @@ export class AppComponent implements OnInit {
   }
 
   public doDetectChanges(): void {
+    this.dataItemsAvailability();
     this.ref.detectChanges();
   }
 }

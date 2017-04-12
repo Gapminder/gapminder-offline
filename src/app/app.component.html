@@ -13,7 +13,7 @@
                         class="main-menu-btn"><img src="./public/images/hamburger.png" />
                 </button>
 
-                <ae-hamburger-menu [isMenuOpened]="isMenuOpened" [currentTab]="getCurrentTab()" (onMenuItemSelected)="onMenuItemSelected($event)"></ae-hamburger-menu>
+                <ae-hamburger-menu [isMenuOpened]="isMenuOpened" [tabsModel]="tabsModel" (onMenuItemSelected)="onMenuItemSelected($event)"></ae-hamburger-menu>
             </div>
         </div>
     </div>
