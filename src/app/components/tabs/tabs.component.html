@@ -41,8 +41,8 @@
 
             <vizabi *ngIf="tab.alerts.length <= 0"
                     style = "height: 100%;"
-                    (onCreated) = "chartCreated($event)"
-                    (onChanged) = "chartChanged($event)"
+                    (onCreated) = "chartCreated($event, tab)"
+                    (onChanged) = "chartChanged($event, tab)"
                     (onClick) = "clickHandler($event)"
                     (onError)="errorHandler($event)"
                     [order] = "tab.getOrder()"

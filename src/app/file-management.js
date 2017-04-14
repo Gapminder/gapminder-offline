@@ -11,19 +11,19 @@ const GoogleAnalytics = require('./google-analytics');
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 
 const DATA_PATH = {
-  win32: '.\\resources\\app\\ddf--gapminder--systema_globalis',
+  win32: app.getAppPath() + '\\ddf--gapminder--systema_globalis',
   linux: app.getAppPath() + '/ddf--gapminder--systema_globalis',
   darwin: app.getAppPath() + '/ddf--gapminder--systema_globalis'
 };
 
 const WEB_RESOURCE_PATH = {
-  win32: '.\\resources\\app\\export-template',
+  win32: app.getAppPath() + '\\export-template',
   linux: app.getAppPath() + '/export-template',
   darwin: app.getAppPath() + '/export-template'
 };
 
 const WEB_PATH = {
-  win32: '.\\web',
+  win32: app.getAppPath() + '\\web',
   linux: app.getAppPath() + '/../../web',
   darwin: app.getAppPath() + '/../../../../web'
 };
@@ -53,10 +53,12 @@ const normalizeModelToSave = (model, chartType) => {
   Object.keys(model).forEach(key => {
     if ((key === 'data' || key.indexOf('data_') === 0) && typeof model[key] === 'object') {
       if (isPathInternal(model[key].path)) {
-        model[key].path = `@internal`
+        model[key].path = `@internal`;
       } else {
         model[key].path = pathToRelative(fileName, model[key].path);
       }
+
+      model[key].ddfPath = model[key].path;
     }
   });
 
@@ -74,14 +76,45 @@ const normalizeModelToOpen = (model, currentDir, brokenFileActions) => {
           brokenFileActions.push(getPathCorrectFunction(model[key]));
         }
       }
+
+      model[key].ddfPath = model[key].path;
+    }
+  });
+};
+const openFile = (event, fileName, currentDir, fileNameOnly) => {
+  fs.readFile(fileName, 'utf-8', (err, data) => {
+    if (err) {
+      dialog.showErrorBox('File reading error', err.message);
+      return;
+    }
+
+    const config = JSON.parse(data);
+    const brokenFileActions = [];
+
+    if (config.length) {
+      config.forEach(configItem => {
+        normalizeModelToOpen(configItem.model, currentDir, brokenFileActions);
+      });
+
+      Promise.all(brokenFileActions).then(() => {
+        event.sender.send('do-open-all-completed', config);
+      });
+    }
+
+    if (!config.length) {
+      normalizeModelToOpen(config, currentDir, brokenFileActions);
+
+      Promise.all(brokenFileActions).then(() => {
+        event.sender.send('do-open-completed', {tab: config, file: fileNameOnly});
+      });
     }
   });
 };
 
-exports.openFile = event => {
+exports.openFileWithDialog = event => {
   dialog.showOpenDialog({
     title: 'Open chart state ...',
-    filters: [{name: 'JSON', extensions: ['json']}],
+    filters: [{name: 'Gapminder stat document', extensions: ['gmstat']}],
     properties: ['openFile']
   }, fileNames => {
 
@@ -94,42 +127,25 @@ exports.openFile = event => {
     const currentDir = parseFileData.dir;
     const fileNameOnly = parseFileData.name;
 
-    fs.readFile(fileName, 'utf-8', (err, data) => {
-      if (err) {
-        dialog.showErrorBox('File reading error', err.message);
-        return;
-      }
-
-      const config = JSON.parse(data);
-      const brokenFileActions = [];
-
-      if (config.length) {
-        config.forEach(configItem => {
-          normalizeModelToOpen(configItem.model, currentDir, brokenFileActions);
-        });
-
-        Promise.all(brokenFileActions).then(() => {
-          event.sender.send('do-open-all-completed', config);
-        });
-      }
-
-      if (!config.length) {
-        normalizeModelToOpen(config, currentDir, brokenFileActions);
-
-        Promise.all(brokenFileActions).then(() => {
-          event.sender.send('do-open-completed', {tab: config, file: fileNameOnly});
-        });
-      }
-    });
+    openFile(event, fileName, currentDir, fileNameOnly);
   });
 };
 
+exports.openFileWhenDoubleClick = (event, fileName) => {
+  const parseFileData = path.parse(fileName);
+  const currentDir = parseFileData.dir;
+  const fileNameOnly = parseFileData.name;
+
+  if (fs.existsSync(fileName) && fileName.indexOf('-psn_') === -1) {
+    openFile(event, fileName, currentDir, fileNameOnly);
+  }
+};
 
 exports.saveFile = (event, params) => {
   dialog.showSaveDialog({
     title: 'Save current chart as ...',
-    defaultPath: `${params.title}.json`,
-    filters: [{name: 'JSON', extensions: ['json']}]
+    defaultPath: `${params.title}.gmstat`,
+    filters: [{name: 'Gapminder stat document', extensions: ['gmstat']}]
   }, fileName => {
     if (!fileName) {
       return;
@@ -151,12 +167,12 @@ exports.saveFile = (event, params) => {
 };
 
 exports.saveAllTabs = (event, tabsDescriptor) => {
-  const timeLabel = (new Date()).toISOString();
+  const timeLabel = (new Date()).toISOString().replace(/[\/\\:]/g, '');
 
   dialog.showSaveDialog({
     title: 'Save charts as ...',
-    defaultPath: `charts-${timeLabel}.json`,
-    filters: [{name: 'JSON', extensions: ['json']}]
+    defaultPath: `charts-${timeLabel}.gmstat`,
+    filters: [{name: 'Gapminder stat document', extensions: ['gmstat']}]
   }, fileName => {
     if (!fileName) {
       return;
