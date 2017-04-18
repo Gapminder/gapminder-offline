@@ -73,5 +73,9 @@ function pack(plat, arch, cb) {
     out: `release`
   });
 
+  if (plat === 'darwin') {
+    opts['extend-info'] = 'dmg-builder/Info.plist';
+  }
+
   packager(opts, cb);
 }

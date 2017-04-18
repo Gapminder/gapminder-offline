@@ -8,7 +8,11 @@ cp ./node_modules/vizabi/build/dist/vizabi.css ./src/app/libs
 cp ./node_modules/vizabi/build/dist/vizabi.css ./src/app/export-template/libs
 
 mkdir -p ./src/app/assets
+mkdir -p ./src/app/assets/cursors
+mkdir -p ./src/app/assets/translation
 mkdir -p ./src/app/export-template/assets
+mkdir -p ./src/app/export-template/assets/cursors
+mkdir -p ./src/app/export-template/assets/translation
 mkdir -p ./src/app/preview-data
 mkdir -p ./src/app/preview-data/translation
 

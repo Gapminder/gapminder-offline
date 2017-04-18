@@ -36,17 +36,23 @@ export class TabsComponent implements OnInit {
     electron.ipcRenderer.on('got-versions-info', (event: any, versionsDescriptor: any) => {
       document.title = `Gapminder offline tool v.${versionsDescriptor.app} (dataset v.${versionsDescriptor.dataset})`;
     });
+    electron.ipcRenderer.send('get-app-arguments');
 
     const gotAppPathStream = Observable
       .fromEvent(electron.ipcRenderer, 'got-app-path', (event: any, path: string) => path);
     const devModeStream = Observable
       .fromEvent(electron.ipcRenderer, 'got-dev-mode', (event: any, isDevMode: boolean) => isDevMode);
+    const appArgumentsStream = Observable
+      .fromEvent(electron.ipcRenderer, 'got-app-file-argument', (event: any, appArguments: string[]) => appArguments);
 
     Observable.combineLatest(
       gotAppPathStream,
-      devModeStream
-    ).take(1).subscribe((result: (string | boolean)[]) => {
-      result.forEach((resultRecord: (string | boolean)) => {
+      devModeStream,
+      appArgumentsStream
+    ).take(1).subscribe((result: any[]) => {
+      let fileName = null;
+
+      result.forEach((resultRecord: any) => {
         if (typeof resultRecord === 'string') {
           this.chartService.ddfFolderDescriptor.electronPath = resultRecord;
         }
@@ -54,12 +60,22 @@ export class TabsComponent implements OnInit {
         if (typeof resultRecord === 'boolean') {
           this.chartService.isDevMode = resultRecord;
         }
+
+        if (typeof resultRecord === 'object') {
+          fileName = resultRecord.fileName;
+        }
       });
 
-      this.chartService.ddfFolderDescriptor.defaults();
-      this.chartService.setReaderDefaults(this.tabDataDescriptor);
-      this.chartService.initTab(this.tabsModel);
-      this.onTabsInit.emit();
+      if (!fileName) {
+        this.chartService.ddfFolderDescriptor.defaults();
+        this.chartService.setReaderDefaults(this.tabDataDescriptor);
+        this.chartService.initTab(this.tabsModel);
+        this.onTabsInit.emit();
+      }
+
+      if (fileName) {
+        electron.ipcRenderer.send('open-file-after-start');
+      }
     });
   }
 
@@ -123,17 +139,15 @@ export class TabsComponent implements OnInit {
     }, 10);
   }
 
-  private chartCreated(data: any): void {
+  private chartCreated(data: any, tab: TabModel): void {
     this.chartService.log('chartCreated', data);
-    this.getCurrentTab().component = data.model;
-    this.getCurrentTab().instance = data.component;
+    tab.component = data.model;
+    tab.instance = data.component;
     this.onChartCreated.emit();
   }
 
-  private chartChanged(data: any): void {
-    const currentTab = this.getCurrentTab();
-
-    currentTab.component = data.component;
+  private chartChanged(data: any, tab: TabModel): void {
+    tab.component = data.component;
 
     this.onChartChanged.emit();
     this.chartService.log('chartChanged', data);

@@ -54,6 +54,7 @@ const CACHE_DIR = `${dirs[process.platform]}cache`;
 
 let mainWindow = null;
 let updateProcessDescriptor;
+let currentFile;
 
 class UpdateProcessDescriptor {
   constructor(type, version, url) {
@@ -135,6 +136,8 @@ function startUpdate(event) {
 }
 
 function startMainApplication() {
+  const isFileArgumentValid = fileName => fs.existsSync(fileName) && fileName.indexOf('-psn_') === -1;
+
   mainWindow = new BrowserWindow({width: 1200, height: 800});
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
@@ -156,6 +159,29 @@ function startMainApplication() {
 
   ipc.on('get-app-path', event => {
     event.sender.send('got-app-path', app.getAppPath());
+  });
+
+  ipc.on('get-app-arguments', event => {
+    if (!devMode && !autoUpdateTestMode && (process.argv.length > 1 || currentFile)) {
+      const fileName = currentFile || process.argv[1];
+
+      if (isFileArgumentValid(fileName)) {
+        event.sender.send('got-app-file-argument', {fileName});
+        return;
+      }
+    }
+
+    event.sender.send('got-app-file-argument', {});
+  });
+
+  ipc.on('open-file-after-start', event => {
+    if (!devMode && !autoUpdateTestMode && (process.argv.length > 1 || currentFile)) {
+      const fileName = currentFile || process.argv[1];
+
+      if (isFileArgumentValid(fileName)) {
+        fileManagement.openFileWhenDoubleClick(event, fileName);
+      }
+    }
   });
 
   ipc.on('get-supported-versions', event => {
@@ -228,7 +254,7 @@ function startMainApplication() {
     startUpdate(event);
   });
 
-  ipc.on('do-open', fileManagement.openFile);
+  ipc.on('do-open', fileManagement.openFileWithDialog);
   ipc.on('do-save', fileManagement.saveFile);
   ipc.on('do-save-all-tabs', fileManagement.saveAllTabs);
   ipc.on('do-export-for-web', fileManagement.exportForWeb);
@@ -270,4 +296,12 @@ app.on('ready', () => {
 
     finishUpdate(content);
   });
+});
+
+app.on('open-file', (event, filePath) => {
+  event.preventDefault();
+
+  if (!devMode && !autoUpdateTestMode) {
+    currentFile = filePath;
+  }
 });
