@@ -1,6 +1,6 @@
 {
   "name": "gapminder-offline",
-  "version": "1.0.10",
+  "version": "1.5.0",
   "description": "Gapminder offline tool",
   "main": "",
   "scripts": {
@@ -74,7 +74,7 @@
     "angular2-template-loader": "^0.6.2",
     "awesome-typescript-loader": "3.1.2",
     "codelyzer": "3.0.0-beta.4",
-    "electron-easy-updater": "0.2.9",
+    "electron-easy-updater": "0.3.1",
     "electron-jasmine": "0.2.0",
     "electron-packager": "8.6.0",
     "es6-promise-loader": "1.0.2",

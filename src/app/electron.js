@@ -190,7 +190,7 @@ function startMainApplication() {
         try {
           const config = JSON.parse(body);
 
-          event.sender.send('got-supported-versions', config.supported, config.version, app.getVersion());
+          event.sender.send('got-supported-versions', config.modern.supported, config.modern.version, app.getVersion());
         } catch (e) {
         }
       }
