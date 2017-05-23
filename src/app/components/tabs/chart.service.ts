@@ -10,12 +10,12 @@ const BubbleMap = require('vizabi-bubblemap');
 const LineChart = require('vizabi-linechart');
 const MountainChart = require('vizabi-mountainchart');
 const configSg = {
-  PopByAge: require('../../../../node_modules/vizabi-config-systema_globalis/PopByAge.json'),
-  BarRankChart: require('../../../../node_modules/vizabi-config-systema_globalis/BarRankChart.json'),
-  BubbleChart: require('../../../../node_modules/vizabi-config-systema_globalis/BubbleChart.json'),
-  BubbleMap: require('../../../../node_modules/vizabi-config-systema_globalis/BubbleMap.json'),
-  LineChart: require('../../../../node_modules/vizabi-config-systema_globalis/LineChart.json'),
-  MountainChart: require('../../../../node_modules/vizabi-config-systema_globalis/MountainChart.json')
+  PopByAge: require('../../../../node_modules/vizabi-config-systema_globalis/dist/PopByAge.json'),
+  BarRankChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BarRankChart.json'),
+  BubbleChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleChart.json'),
+  BubbleMap: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleMap.json'),
+  LineChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/LineChart.json'),
+  MountainChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/MountainChart.json')
 };
 const ddfCsvReaderLib = require('vizabi-ddfcsv-reader');
 const BackendFileReader = ddfCsvReaderLib.BackendFileReader;
