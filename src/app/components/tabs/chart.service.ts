@@ -10,12 +10,12 @@ const BubbleMap = require('vizabi-bubblemap');
 const LineChart = require('vizabi-linechart');
 const MountainChart = require('vizabi-mountainchart');
 const configSg = {
-  PopByAge: require('../../../../node_modules/vizabi-config-systema_globalis/PopByAge.json'),
-  BarRankChart: require('../../../../node_modules/vizabi-config-systema_globalis/BarRankChart.json'),
-  BubbleChart: require('../../../../node_modules/vizabi-config-systema_globalis/BubbleChart.json'),
-  BubbleMap: require('../../../../node_modules/vizabi-config-systema_globalis/BubbleMap.json'),
-  LineChart: require('../../../../node_modules/vizabi-config-systema_globalis/LineChart.json'),
-  MountainChart: require('../../../../node_modules/vizabi-config-systema_globalis/MountainChart.json')
+  PopByAge: require('../../../../node_modules/vizabi-config-systema_globalis/dist/PopByAge.json'),
+  BarRankChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BarRankChart.json'),
+  BubbleChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleChart.json'),
+  BubbleMap: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleMap.json'),
+  LineChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/LineChart.json'),
+  MountainChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/MountainChart.json')
 };
 const ddfCsvReaderLib = require('vizabi-ddfcsv-reader');
 const BackendFileReader = ddfCsvReaderLib.BackendFileReader;
@@ -70,30 +70,30 @@ export class ChartService {
     tab.extResources = tabDataDescriptor.extResources;
     tab.additionalData = this.ddfFolderDescriptor.additionalData;
 
-    if (!this.ddfFolderDescriptor.ddfUrl || this.ddfFolderDescriptor.ddfUrl.includes('systema_globalis')) {
-      const chartType = tab.chartType;
-      const config = configSg[chartType];
+    const chartType = tab.chartType;
+    const config = !this.ddfFolderDescriptor.ddfUrl || this.ddfFolderDescriptor.ddfUrl.includes('systema_globalis') ? configSg[chartType] : {};
 
-      config.data = {
-        reader: 'ddf1-csv-ext',
-        ddfPath: this.ddfFolderDescriptor.ddfUrl,
-        path: this.ddfFolderDescriptor.ddfUrl
-      };
-      config.locale = {
-        id: 'en',
-        filePath: './preview-data/translation/'
-      };
+    config.data = {
+      reader: 'ddf1-csv-ext',
+      ddfPath: this.ddfFolderDescriptor.ddfUrl,
+      path: this.ddfFolderDescriptor.ddfUrl
+    };
+    config.locale = {
+      id: 'en',
+      filePath: './preview-data/translation/'
+    };
 
-      tab.model = config;
-      tab.model.ui.splash = false;
+    tab.model = config;
+    tab.model.ui.splash = false;
 
-      if (this.isDevMode) {
-        this.log(JSON.stringify(tab.model));
-      }
+    console.log('!!!!!!!', tab.model);
 
-      if (onChartReady) {
-        onChartReady(tab);
-      }
+    if (this.isDevMode) {
+      this.log(JSON.stringify(tab.model));
+    }
+
+    if (onChartReady) {
+      onChartReady(tab);
     }
   }
 
