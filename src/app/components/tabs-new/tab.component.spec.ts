@@ -2,7 +2,7 @@ import {TestBed, ComponentFixture} from '@angular/core/testing';
 import {TabNewComponent} from './tab.component';
 import {MessageService} from '../../message.service';
 
-describe('Component: TabNewComponent', () => {
+describe('TabNewComponent', () => {
   let component: TabNewComponent;
   let fixture: ComponentFixture<TabNewComponent>;
   let context;
@@ -14,7 +14,7 @@ describe('Component: TabNewComponent', () => {
     });
     fixture = TestBed.createComponent(TabNewComponent);
 
-    component = fixture.componentInstance;  // to access properties and methods
+    component = fixture.componentInstance;
     context = fixture.debugElement.componentInstance;
   });
 
@@ -22,28 +22,28 @@ describe('Component: TabNewComponent', () => {
     expect(context).toBeTruthy();
   });
 
-  it('should check that getDisplayStyle() returns block value', () => {
+  it('should check that active tab has display:block value', () => {
     context.active = true;
     expect(context.getDisplayStyle()).toBe('block');
   });
 
-  it('should check that getDisplayStyle() returns none value', () => {
+  it('should check that non-active tab has display:none value', () => {
     context.active = false;
     expect(context.getDisplayStyle()).toBe('none');
   });
 
-  it('should check applyEditedTitle()', () => {
+  it('should check that edited title applied', () => {
     spyOn(context, 'applyEditedTitle');
     context.applyEditedTitle();
     expect(context.applyEditedTitle).toHaveBeenCalled();
   });
 
-  it('should check that applyEditedTitle()', () => {
+  it('should check that edit mode disabled after title applied', () => {
     context.applyEditedTitle();
     expect(context.editMode).toBeFalsy();
   });
 
-  it('should check that dismissEditedTitle()', () => {
+  it('should check that edited title dismissed', () => {
     context.dismissEditedTitle();
     expect(context.editMode).toBeFalsy();
     expect(component.title).toEqual(context.titleCopy);
