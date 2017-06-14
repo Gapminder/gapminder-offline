@@ -1,19 +1,20 @@
-import { TestBed, ComponentFixture } from "@angular/core/testing";
-import { TabNewComponent } from "./tab.component";
+import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {TabNewComponent} from './tab.component';
+import {MessageService} from '../../message.service';
 
-describe('Component: TabNewComponent', () => {
-  let fixture: ComponentFixture<TabNewComponent>, component, element, de, context;
-
+describe('TabNewComponent', () => {
+  let component: TabNewComponent;
+  let fixture: ComponentFixture<TabNewComponent>;
+  let context;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TabNewComponent]
+      declarations: [TabNewComponent],
+      providers: [MessageService]
     });
     fixture = TestBed.createComponent(TabNewComponent);
 
-    component = fixture.componentInstance;  // to access properties and methods
-    de = fixture.debugElement;            // test helper
-    element = fixture.nativeElement;      // to access DOM element
+    component = fixture.componentInstance;
     context = fixture.debugElement.componentInstance;
   });
 
@@ -21,13 +22,31 @@ describe('Component: TabNewComponent', () => {
     expect(context).toBeTruthy();
   });
 
-  it('should check that getDisplayStyle returns block value', () => {
+  it('should check that active tab has display:block value', () => {
     context.active = true;
-    expect(context.getDisplayStyle()).toBe("block");
+    expect(context.getDisplayStyle()).toBe('block');
   });
 
-  it('should check that getDisplayStyle returns none value', () => {
+  it('should check that non-active tab has display:none value', () => {
     context.active = false;
-    expect(context.getDisplayStyle()).toBe("none");
+    expect(context.getDisplayStyle()).toBe('none');
   });
+
+  it('should check that edited title applied', () => {
+    spyOn(context, 'applyEditedTitle');
+    context.applyEditedTitle();
+    expect(context.applyEditedTitle).toHaveBeenCalled();
+  });
+
+  it('should check that edit mode disabled after title applied', () => {
+    context.applyEditedTitle();
+    expect(context.editMode).toBeFalsy();
+  });
+
+  it('should check that edited title dismissed', () => {
+    context.dismissEditedTitle();
+    expect(context.editMode).toBeFalsy();
+    expect(component.title).toEqual(context.titleCopy);
+  });
+
 });
