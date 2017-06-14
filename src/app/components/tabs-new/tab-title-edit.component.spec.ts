@@ -33,7 +33,7 @@ describe('TabTitleEditComponent', () => {
     expect(showSpy).toHaveBeenCalled();
   });
 
-  it('should emit enter event', () => {
+  it('should check that title changed on enter event', () => {
     const showSpy = spyOn(context.enter, 'emit').and.stub();
     context.doEnter();
     expect(context.enter).toBeDefined();
@@ -43,17 +43,19 @@ describe('TabTitleEditComponent', () => {
     expect(showSpy).toHaveBeenCalled();
   });
 
-  it('should emit escape event', () => {
+  it('should check that title did not change on escape event', () => {
     const showSpy = spyOn(context.esc, 'emit').and.stub();
     context.doEsc();
     expect(context.esc).toBeDefined();
 
     context.title = 'title';
     context.doEsc();
+    context.update();
     expect(showSpy).toHaveBeenCalled();
+    expect(context.title).toBeUndefined();
   });
 
-  it('should emit titleChange event', () => {
+  it('should check that title changed on update event', () => {
     const title = 'test';
     context.update(title);
     expect(context.title).toBe('test');
