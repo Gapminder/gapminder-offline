@@ -4,7 +4,6 @@ import { Component, Input, Output, EventEmitter, AfterContentInit, ViewChild, El
   selector: 'ae-tab-title-edit',
   template: `
       <input #tabEditInput
-             type = "text"
              class = "editTabInput"
              (blur) = "doBlur()"
              (keyup.enter) = "doEnter()"
@@ -14,34 +13,34 @@ import { Component, Input, Output, EventEmitter, AfterContentInit, ViewChild, El
   `
 })
 export class TabTitleEditComponent implements AfterContentInit {
-  @Input() protected title: string;
-  @Output() protected titleChange: EventEmitter<string> = new EventEmitter();
-  @Output() protected blur: EventEmitter<any> = new EventEmitter();
-  @Output() protected enter: EventEmitter<any> = new EventEmitter();
-  @Output() protected esc: EventEmitter<any> = new EventEmitter();
-  @ViewChild('tabEditInput') protected tabEditInput: ElementRef;
+  @Input() public title: string;
+  @Output() public titleChange: EventEmitter<string> = new EventEmitter();
+  @Output() public blur: EventEmitter<any> = new EventEmitter();
+  @Output() public enter: EventEmitter<any> = new EventEmitter();
+  @Output() public esc: EventEmitter<any> = new EventEmitter();
+  @ViewChild('tabEditInput') public tabEditInput: ElementRef;
 
   public ngAfterContentInit(): void {
     this.tabEditInput.nativeElement.focus();
   }
 
-  protected doBlur(): void {
+  public doBlur(): void {
     this.blur.emit();
   }
 
-  protected doEnter(): void {
+  public doEnter(): void {
     if (this.title) {
       this.enter.emit();
     }
   }
 
-  protected doEsc(): void {
+  public doEsc(): void {
     if (this.title) {
       this.esc.emit();
     }
   }
 
-  protected update(val: string): void {
+  public update(val: string): void {
     this.title = val;
     this.titleChange.emit(this.title);
   }
