@@ -71,11 +71,7 @@ export class ChartService {
     tab.additionalData = this.ddfFolderDescriptor.additionalData;
 
     const chartType = tab.chartType;
-    const config = !this.ddfFolderDescriptor.ddfUrl || this.ddfFolderDescriptor.ddfUrl.includes('systema_globalis') ? configSg[chartType] : {
-      ui: {
-        splash: true
-      }
-    };
+    const config = !this.ddfFolderDescriptor.ddfUrl || this.ddfFolderDescriptor.ddfUrl.includes('systema_globalis') ? configSg[chartType] : {};
 
     config.data = {
       reader: 'ddf1-csv-ext',
