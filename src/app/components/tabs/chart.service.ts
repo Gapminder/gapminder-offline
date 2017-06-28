@@ -90,7 +90,7 @@ export class ChartService {
     tab.model = config;
     tab.model.ui.splash = false;
 
-    console.log('!!!!!!!', tab.model);
+    console.log(tab.model);
 
     if (this.isDevMode) {
       this.log(JSON.stringify(tab.model));

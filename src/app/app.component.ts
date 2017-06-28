@@ -1,5 +1,3 @@
-declare const electron: any;
-
 import {
   Component,
   OnInit,
@@ -15,7 +13,8 @@ import { MessageService } from './message.service';
 import { CLEAR_EDITABLE_TABS_ACTION } from './constants';
 import { initMenuComponent } from './components/menu/system-menu';
 import { getMenuActions } from './components/menu/menu-actions';
-import { Menu } from 'electron';
+import { remote } from 'electron';
+import { Menu, ipcRenderer } from 'electron';
 
 @Component({
   selector: 'ae-app',
@@ -55,11 +54,11 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    electron.ipcRenderer.on('do-open-completed', (event: any, parameters: any) => {
+    ipcRenderer.on('do-open-completed', (event: any, parameters: any) => {
       this.doOpenCompleted(event, parameters);
     });
 
-    electron.ipcRenderer.on('do-open-all-completed', (event: any, parameters: any) => {
+    ipcRenderer.on('do-open-all-completed', (event: any, parameters: any) => {
       this.doOpenAllCompleted(event, parameters);
     });
 
@@ -120,7 +119,7 @@ export class AppComponent implements OnInit {
 
   public versionsFormComplete(version?: string): void {
     if (version) {
-      electron.ipcRenderer.send('request-custom-update', version);
+      ipcRenderer.send('request-custom-update', version);
       this.versionsModal.hide();
     }
   }
@@ -138,7 +137,7 @@ export class AppComponent implements OnInit {
     newAdditionalData.push(data);
     currentTab.additionalData = newAdditionalData;
 
-    electron.ipcRenderer.send('modify-chart', `user data was added to ${currentTab.chartType}`);
+    ipcRenderer.send('modify-chart', `user data was added to ${currentTab.chartType}`);
   }
 
   public onDdfExtFolderChanged(filePaths: string[]): void {
@@ -163,7 +162,7 @@ export class AppComponent implements OnInit {
     this.tabsModel.push(newTab);
     this.doDetectChanges();
 
-    electron.ipcRenderer.send('menu', 'new chart was opened');
+    ipcRenderer.send('menu', 'new chart was opened');
   };
 
   public doOpenAllCompleted(event: any, tabsDescriptor: any): void {
@@ -182,7 +181,7 @@ export class AppComponent implements OnInit {
 
     this.doDetectChanges();
 
-    electron.ipcRenderer.send('menu', 'charts was opened');
+    ipcRenderer.send('menu', 'charts was opened');
   };
 
   public completeDdfDatasetConfigForm(event: any): void {
@@ -196,7 +195,7 @@ export class AppComponent implements OnInit {
         this.chartService.initTab(this.tabsModel, event.chartType);
         this.chartService.setReaderDefaults(this.chartService.ddfFolderDescriptor);
         this.chartService.newChart(this.getCurrentTab(), this.chartService.ddfFolderDescriptor, null, false);
-        electron.ipcRenderer.send('new-chart', this.getCurrentTab().chartType + ' by DDF folder');
+        ipcRenderer.send('new-chart', this.getCurrentTab().chartType + ' by DDF folder');
         this.doDetectChanges();
       }
     }
@@ -208,7 +207,7 @@ export class AppComponent implements OnInit {
     if (event) {
       this.chartService.newSimpleChart(this.tabsModel, event);
 
-      electron.ipcRenderer.send('new-chart', 'Simple chart: json based');
+      ipcRenderer.send('new-chart', 'Simple chart: json based');
     }
   }
 

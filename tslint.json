@@ -1,7 +1,9 @@
 {
   "extends": "tslint-config-valorsoft",
   "rulesDirectory": "node_modules/codelyzer",
-
+  "exclude": [
+    "**/node_modules/**"
+  ],
   "rules": {
     "no-null-keyword": false
   }

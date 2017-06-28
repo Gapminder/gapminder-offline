@@ -1,4 +1,13 @@
-import { Component, ContentChildren, QueryList, Input, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  ContentChildren,
+  QueryList,
+  Input,
+  AfterViewInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 import { TabNewComponent } from './tab.component';
 import { ITabActionsSynchronizer } from './tabs.common';
 import { MessageService } from '../../message.service';
@@ -23,7 +32,7 @@ import { CLEAR_EDITABLE_TABS_ACTION } from '../../constants';
                           <ae-tab-title-edit (blur) = "resetEditMode()"
                                              (enter) = "applyEditedTitle()"
                                              (esc) = "dismissEditedTitle()"
-                                             [title] ="tab.title"
+                                             [title] = "tab.title"
                                              (titleChange) = "tab.title=$event">
                           </ae-tab-title-edit>
                       </span>
@@ -45,9 +54,9 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
   @ContentChildren(TabNewComponent) public tabs: QueryList<TabNewComponent>;
   @Input() public syncActions: ITabActionsSynchronizer;
 
-  @ViewChild('tabsContainer') private tabsContainer: ElementRef;
-  private messageService: MessageService;
-  private subscription: Subscription;
+  @ViewChild('tabsContainer') public tabsContainer: ElementRef;
+  public messageService: MessageService;
+  public subscription: Subscription;
 
   public constructor(messageService: MessageService) {
     this.messageService = messageService;
@@ -140,6 +149,30 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
     this.syncActions.onTabRemove(index);
   }
 
+  public getTabsAsArray(): TabNewComponent[] {
+    return this.tabs.toArray();
+  }
+
+  public applyEditedTitle(): void {
+    const editableTab = this.getEditableTab();
+
+    editableTab.applyEditedTitle();
+    this.syncActions.onTabChanged(editableTab, this.getTabIndex(editableTab));
+  }
+
+  public dismissEditedTitle(): void {
+    this.getEditableTab().dismissEditedTitle();
+  }
+
+  public resetEditMode(): void {
+    this.tabs.forEach((tab: TabNewComponent, index: number) => {
+      if (tab.editMode) {
+        tab.editMode = false;
+        this.syncActions.onTabChanged(tab, index);
+      }
+    });
+  }
+
   protected getClosestTabIndex(currentIndex: number): number {
     const tabsAsArray: TabNewComponent[] = this.getTabsAsArray();
     const tabsLength = this.tabs.length;
@@ -163,29 +196,5 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
     }
 
     return -1;
-  }
-
-  protected getTabsAsArray(): TabNewComponent[] {
-    return this.tabs.toArray();
-  }
-
-  protected applyEditedTitle(): void {
-    const editableTab = this.getEditableTab();
-
-    editableTab.applyEditedTitle();
-    this.syncActions.onTabChanged(editableTab, this.getTabIndex(editableTab));
-  }
-
-  protected dismissEditedTitle(): void {
-    this.getEditableTab().dismissEditedTitle();
-  }
-
-  protected resetEditMode(): void {
-    this.tabs.forEach((tab: TabNewComponent, index: number) => {
-      if (tab.editMode) {
-        tab.editMode = false;
-        this.syncActions.onTabChanged(tab, index);
-      }
-    });
   }
 }
