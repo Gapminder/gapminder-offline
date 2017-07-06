@@ -52,10 +52,6 @@ export class ChartService {
     tab.readerGetMethod = 'getDDFCsvReaderObject';
     tab.readerParams = this.isDevMode ? [new BackendFileReader(), console] : [new BackendFileReader()];
     tab.readerName = 'ddf1-csv-ext';
-    tab.extResources = {
-      host: this.ddfFolderDescriptor.getDefaultUrl(),
-      preloadPath: '/../preview-data/'
-    };
   }
 
   public newChart(tab: TabModel, tabDataDescriptor: TabDataDescriptor, onChartReady?: Function, isDefaults: boolean = true): void {
@@ -67,7 +63,6 @@ export class ChartService {
     tab.readerGetMethod = tabDataDescriptor.readerGetMethod;
     tab.readerParams = tabDataDescriptor.readerParams;
     tab.readerName = tabDataDescriptor.readerName;
-    tab.extResources = tabDataDescriptor.extResources;
     tab.additionalData = this.ddfFolderDescriptor.additionalData;
 
     const chartType = tab.chartType;
@@ -76,7 +71,8 @@ export class ChartService {
     config.data = {
       reader: 'ddf1-csv-ext',
       ddfPath: this.ddfFolderDescriptor.ddfUrl,
-      path: this.ddfFolderDescriptor.ddfUrl
+      path: this.ddfFolderDescriptor.ddfUrl,
+      assetsPath: './preview-data/'
     };
     config.locale = {
       id: 'en',

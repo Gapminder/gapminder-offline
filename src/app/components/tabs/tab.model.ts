@@ -24,7 +24,6 @@ export class TabModel {
   public readerGetMethod: string;
   public readerParams: any[];
   public readerName: string;
-  public extResources: any;
   public component: any;
   public instance: any;
   public alerts: AlertModel[] = [];

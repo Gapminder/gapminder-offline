@@ -3,5 +3,4 @@ export interface TabDataDescriptor {
   readerGetMethod?: string;
   readerParams?: Array<any>;
   readerName?: string;
-  extResources?: any;
 }
