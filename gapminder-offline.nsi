@@ -45,7 +45,6 @@ Section "Gapminder Offline tool" SecMain
 
   SetOutPath "$INSTDIR"
   
-  file "release\Gapminder Offline-${arch}\xinput1_3.dll"
   file "release\Gapminder Offline-${arch}\blink_image_resources_200_percent.pak"
   file "release\Gapminder Offline-${arch}\content_resources_200_percent.pak"
   file "release\Gapminder Offline-${arch}\content_shell.pak"
@@ -99,7 +98,6 @@ SectionEnd
 
 Section "Uninstall"
 
-  Delete "$INSTDIR\xinput1_3.dll"
   Delete "$INSTDIR\blink_image_resources_200_percent.pak"
   Delete "$INSTDIR\content_resources_200_percent.pak"
   Delete "$INSTDIR\content_shell.pak"

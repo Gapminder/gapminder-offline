@@ -12,7 +12,6 @@ signtool.exe sign /t http://timestamp.comodoca.com/authenticode /f gapminder.pfx
 signtool.exe sign /t http://timestamp.comodoca.com/authenticode /f gapminder.pfx /p %1 ".\Gapminder Offline-win32-ia32\libEGL.dll"
 signtool.exe sign /t http://timestamp.comodoca.com/authenticode /f gapminder.pfx /p %1 ".\Gapminder Offline-win32-ia32\libGLESv2.dll"
 signtool.exe sign /t http://timestamp.comodoca.com/authenticode /f gapminder.pfx /p %1 ".\Gapminder Offline-win32-ia32\node.dll"
-signtool.exe sign /t http://timestamp.comodoca.com/authenticode /f gapminder.pfx /p %1 ".\Gapminder Offline-win32-ia32\xinput1_3.dll"
 
 call powershell.exe -nologo -noprofile -command "& {Rename-Item 'Gapminder Offline-win32-ia32' 'Gapminder Offline-win32'}"
 call powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('Gapminder Offline-win32', 'Gapminder Offline-win32.zip'); }"
