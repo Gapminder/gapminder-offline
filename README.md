@@ -24,13 +24,13 @@ npm run build-mac
 npm run package-mac
 ```
 
-Win 64
+Win 64 *(should be done under Win 64 environment)*
 ```npm i
 npm run build-win
 npm run package-win
 ```
 
-Win 32
+Win 32 *(should be done under Win 32 environment)*
 ```npm i
 npm run build-win
 npm run package-win32
