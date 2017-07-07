@@ -7,6 +7,8 @@ With Gapminder Tools Offline you can show animated statistics from your own lapt
 • The software and the datasets will update automatically when connection is available  
 • It’s free  
 
+![app screenshot](https://s3-eu-west-1.amazonaws.com/static.gapminder.org/GapminderMedia/wp-uploads/20170113171243/Gapminder-Offline-Tools.png)
+
 ## Using the app
 
 Download the stable version from here http://www.gapminder.org/tools-offline/
@@ -40,9 +42,9 @@ Linux
 ```
 
 [Read how to build the application with code signing and stuff](https://github.com/Gapminder/gapminder-offline/blob/master/docs/build.md)  
+
 [Read about auto-update functionality](https://github.com/Gapminder/gapminder-offline/blob/master/docs/auto-update.md)
 
-![app screenshot](https://s3-eu-west-1.amazonaws.com/static.gapminder.org/GapminderMedia/wp-uploads/20170113171243/Gapminder-Offline-Tools.png)
 
 
 ## License
