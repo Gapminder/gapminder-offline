@@ -53,6 +53,7 @@ import { CLEAR_EDITABLE_TABS_ACTION } from '../../constants';
 export class TabsNewComponent implements AfterViewInit, OnDestroy {
   @ContentChildren(TabNewComponent) public tabs: QueryList<TabNewComponent>;
   @Input() public syncActions: ITabActionsSynchronizer;
+  @Input() public disabled: boolean;
 
   @ViewChild('tabsContainer') public tabsContainer: ElementRef;
   public messageService: MessageService;
@@ -62,7 +63,7 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
     this.messageService = messageService;
     this.subscription = this.messageService.getMessage()
       .subscribe((event: any) => {
-        if (event.message === CLEAR_EDITABLE_TABS_ACTION) {
+        if (event.message === CLEAR_EDITABLE_TABS_ACTION && !this.disabled) {
           const isEditMode = !!this.getEditableTab();
           const isOptionParamExists = () => !!event.options;
           const isTargetExists = () => isOptionParamExists() && event.options.target;
@@ -105,48 +106,52 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
   }
 
   public selectTab(selectedTab: TabNewComponent): void {
-    let editModeFired = false;
+    if (!this.disabled) {
+      let editModeFired = false;
 
-    this.tabs.forEach((tab: TabNewComponent) => {
-      if (selectedTab !== tab && tab.active) {
-        tab.deselect.emit(tab);
-        tab.active = false;
+      this.tabs.forEach((tab: TabNewComponent) => {
+        if (selectedTab !== tab && tab.active) {
+          tab.deselect.emit(tab);
+          tab.active = false;
+        }
+
+        if (selectedTab === tab && tab.active) {
+          tab.editMode = true;
+          editModeFired = true;
+        }
+      });
+
+      selectedTab.active = true;
+      selectedTab.select.emit(selectedTab);
+
+      if (!editModeFired) {
+        this.resetEditMode();
       }
-
-      if (selectedTab === tab && tab.active) {
-        tab.editMode = true;
-        editModeFired = true;
-      }
-    });
-
-    selectedTab.active = true;
-    selectedTab.select.emit(selectedTab);
-
-    if (!editModeFired) {
-      this.resetEditMode();
     }
   }
 
   public removeTab(tab: TabNewComponent): void {
-    const tabsAsArray: TabNewComponent[] = this.getTabsAsArray();
-    const index = tabsAsArray.indexOf(tab);
+    if (!this.disabled) {
+      const tabsAsArray: TabNewComponent[] = this.getTabsAsArray();
+      const index = tabsAsArray.indexOf(tab);
 
-    if (index === -1) {
-      return;
-    }
-
-    let newActiveIndex = -1;
-
-    if (this.tabs.length > 1) {
-      newActiveIndex = this.getClosestTabIndex(index);
-
-      if (newActiveIndex >= 0) {
-        this.syncActions.onSetTabActive(newActiveIndex);
+      if (index === -1) {
+        return;
       }
-    }
 
-    tab.remove.emit({tab: this.tabs[index], newActiveIndex});
-    this.syncActions.onTabRemove(index);
+      let newActiveIndex = -1;
+
+      if (this.tabs.length > 1) {
+        newActiveIndex = this.getClosestTabIndex(index);
+
+        if (newActiveIndex >= 0) {
+          this.syncActions.onSetTabActive(newActiveIndex);
+        }
+      }
+
+      tab.remove.emit({tab: this.tabs[index], newActiveIndex});
+      this.syncActions.onTabRemove(index);
+    }
   }
 
   public getTabsAsArray(): TabNewComponent[] {
@@ -154,23 +159,29 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
   }
 
   public applyEditedTitle(): void {
-    const editableTab = this.getEditableTab();
+    if (!this.disabled) {
+      const editableTab = this.getEditableTab();
 
-    editableTab.applyEditedTitle();
-    this.syncActions.onTabChanged(editableTab, this.getTabIndex(editableTab));
+      editableTab.applyEditedTitle();
+      this.syncActions.onTabChanged(editableTab, this.getTabIndex(editableTab));
+    }
   }
 
   public dismissEditedTitle(): void {
-    this.getEditableTab().dismissEditedTitle();
+    if (!this.disabled) {
+      this.getEditableTab().dismissEditedTitle();
+    }
   }
 
   public resetEditMode(): void {
-    this.tabs.forEach((tab: TabNewComponent, index: number) => {
-      if (tab.editMode) {
-        tab.editMode = false;
-        this.syncActions.onTabChanged(tab, index);
-      }
-    });
+    if (!this.disabled) {
+      this.tabs.forEach((tab: TabNewComponent, index: number) => {
+        if (tab.editMode) {
+          tab.editMode = false;
+          this.syncActions.onTabChanged(tab, index);
+        }
+      });
+    }
   }
 
   protected getClosestTabIndex(currentIndex: number): number {

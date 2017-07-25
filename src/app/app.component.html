@@ -20,8 +20,10 @@
 
     <div style="min-width: 800px; height: calc(100% - 52px);">
         <ae-tabs [tabsModel]="tabsModel"
+                 [disabled]="tabsDisabled"
                  (onTabsInit)="doDetectChanges()"
                  (onTabRemoved)="doDetectChanges()"
+                 (onTabReady)="onTabReady($event)"
                  (onTabSetActive)="doDetectChanges()"
                  (onChartCreated)="onChartCreated()"
                  (onChartClicked)="appMainClickHandler($event)"
