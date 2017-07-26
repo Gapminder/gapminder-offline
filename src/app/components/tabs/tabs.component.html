@@ -1,10 +1,10 @@
-<ae-tabs-new [syncActions]="getSyncActions()" style = "height: 100%;">
+<ae-tabs-new [syncActions]="getSyncActions()" [disabled]="disabled" style = "height: 100%;">
     <ae-tab-new *ngFor = "let tab of tabsModel"
                 [title] = "tab.title"
                 [active] = "tab.active"
                 [removable] = "true"
-                (select) = "tab.active = true;forceResize();"
-                (deselect) = "tab.active = false"
+                (select) = "selectTab(tab)"
+                (deselect) = "deselectTab(tab)"
                 (remove) = "removeTab($event)"
                 style = "height: 100%;">
         <div *ngIf = "!tab.chartType">
@@ -43,6 +43,7 @@
                     style = "height: 100%;"
                     (onCreated) = "chartCreated($event, tab)"
                     (onChanged) = "chartChanged($event, tab)"
+                    (onReadyOnce)="ready($event, tab)"
                     (onClick) = "clickHandler($event)"
                     (onError)="errorHandler($event)"
                     [order] = "tab.getOrder()"
@@ -56,7 +57,7 @@
         </div>
     </ae-tab-new>
     <a tabs-head href style="padding: 9px; z-index: 1000" (click)="openGapminder()" alt="GAPMINDER TOOLS"><img src="./public/logo.png" width="167" height="21"></a>
-    <a tabs-tail href (click) = "chartService.initTab(tabsModel);">
+    <a tabs-tail href (click) = "newTab()">
         <span class="glyphicon glyphicon-plus"></span>
     </a>
 </ae-tabs-new>

@@ -14,8 +14,10 @@ declare const electron: any;
 })
 export class TabsComponent implements OnInit {
   @Input() public tabsModel: TabModel[] = [];
+  @Input() public disabled: boolean;
   @Output() public onTabsInit: EventEmitter<any> = new EventEmitter();
   @Output() public onTabRemoved: EventEmitter<any> = new EventEmitter();
+  @Output() public onTabReady: EventEmitter<any> = new EventEmitter();
   @Output() public onTabSetActive: EventEmitter<any> = new EventEmitter();
   @Output() public onChartCreated: EventEmitter<any> = new EventEmitter();
   @Output() public onChartChanged: EventEmitter<any> = new EventEmitter();
@@ -100,14 +102,35 @@ export class TabsComponent implements OnInit {
     return this.tabsModel.find((tab: TabModel) => tab.active);
   }
 
-  public removeTab(data?: any): void {
-    this.forceResize();
+  public newTab(): void {
+    if (!this.disabled) {
+      this.chartService.initTab(this.tabsModel);
+    }
+  }
 
-    setTimeout(() => {
-      if (this.tabsModel.length <= 0) {
-        this.chartService.initTab(this.tabsModel);
-      }
-    }, 300);
+  public selectTab(tab: TabModel): void {
+    if (!this.disabled) {
+      tab.active = true;
+      this.forceResize();
+    }
+  }
+
+  public deselectTab(tab: TabModel): void {
+    if (!this.disabled) {
+      tab.active = false;
+    }
+  }
+
+  public removeTab(data?: any): void {
+    if (!this.disabled) {
+      this.forceResize();
+
+      setTimeout(() => {
+        if (this.tabsModel.length <= 0) {
+          this.chartService.initTab(this.tabsModel);
+        }
+      }, 300);
+    }
   }
 
   public selectChart(chartType: string, isDefault: boolean = true): void {
@@ -144,6 +167,10 @@ export class TabsComponent implements OnInit {
     tab.component = data.model;
     tab.instance = data.component;
     this.onChartCreated.emit();
+  }
+
+  private ready(data: any, tab: TabModel): void {
+    this.onTabReady.emit({data, tab});
   }
 
   private chartChanged(data: any, tab: TabModel): void {

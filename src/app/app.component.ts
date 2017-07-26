@@ -1,3 +1,4 @@
+import * as waterfall from 'async-waterfall';
 import {
   Component,
   OnInit,
@@ -6,11 +7,12 @@ import {
   ViewContainerRef,
   ChangeDetectorRef
 } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import { ModalDirective } from 'ng2-bootstrap';
 import { ChartService } from './components/tabs/chart.service';
 import { TabModel } from './components/tabs/tab.model';
 import { MessageService } from './message.service';
-import { CLEAR_EDITABLE_TABS_ACTION } from './constants';
+import { CLEAR_EDITABLE_TABS_ACTION, TAB_READY_ACTION } from './constants';
 import { initMenuComponent } from './components/menu/system-menu';
 import { getMenuActions } from './components/menu/menu-actions';
 import { remote } from 'electron';
@@ -35,6 +37,7 @@ export class AppComponent implements OnInit {
   @ViewChild('additionalCsvConfigModal') public additionalCsvConfigModal: ModalDirective;
   @ViewChild('addDdfFolder') public addDdfFolderInput: ElementRef;
   public chartService: ChartService;
+  public tabsDisabled: boolean = false;
 
   private viewContainerRef: ViewContainerRef;
   private messageService: MessageService;
@@ -114,7 +117,9 @@ export class AppComponent implements OnInit {
   }
 
   public switchMenu(): void {
-    this.isMenuOpened = !this.isMenuOpened;
+    if (!this.tabsDisabled) {
+      this.isMenuOpened = !this.isMenuOpened;
+    }
   }
 
   public versionsFormComplete(version?: string): void {
@@ -149,6 +154,19 @@ export class AppComponent implements OnInit {
   }
 
   public doOpenCompleted(event: any, parameters: any): void {
+    this.tabsDisabled = true;
+
+    const subscription: Subscription = this.messageService.getMessage().subscribe((tabEvent: any) => {
+      if (tabEvent.message === TAB_READY_ACTION) {
+        setTimeout(() => {
+          subscription.unsubscribe();
+
+          this.tabsDisabled = false;
+          this.doDetectChanges();
+        }, 1000);
+      }
+    });
+
     const config = parameters.tab;
     const newTab = new TabModel(config.chartType, true, parameters.file);
 
@@ -166,7 +184,20 @@ export class AppComponent implements OnInit {
   };
 
   public doOpenAllCompleted(event: any, tabsDescriptor: any): void {
-    tabsDescriptor.forEach((tabDescriptor: any) => {
+    this.tabsDisabled = true;
+
+    const actions = tabsDescriptor.map((tabDescriptor: any) => (onChartReady: Function) => {
+      const subscription: Subscription = this.messageService.getMessage().subscribe((tabEvent: any) => {
+        if (tabEvent.message === TAB_READY_ACTION) {
+          setTimeout(() => {
+            subscription.unsubscribe();
+            this.doDetectChanges();
+
+            onChartReady(null);
+          }, 1000);
+        }
+      });
+
       const newTab = new TabModel(tabDescriptor.type, true, tabDescriptor.title);
 
       delete tabDescriptor.model.bind;
@@ -177,11 +208,17 @@ export class AppComponent implements OnInit {
       this.chartService.setReaderDefaults(newTab);
       this.tabsModel.forEach((tab: TabModel) => tab.active = false);
       this.tabsModel.push(newTab);
+
+      this.doDetectChanges();
     });
 
-    this.doDetectChanges();
+    waterfall(actions, () => {
+      this.tabsDisabled = false;
 
-    ipcRenderer.send('menu', 'charts was opened');
+      this.doDetectChanges();
+
+      ipcRenderer.send('menu', 'charts was opened');
+    });
   };
 
   public completeDdfDatasetConfigForm(event: any): void {
@@ -226,5 +263,9 @@ export class AppComponent implements OnInit {
   public doDetectChanges(): void {
     this.dataItemsAvailability();
     this.ref.detectChanges();
+  }
+
+  public onTabReady(): void {
+    this.messageService.sendMessage(TAB_READY_ACTION);
   }
 }
