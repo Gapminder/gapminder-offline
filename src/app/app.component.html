@@ -8,11 +8,6 @@
     <div style="position: absolute; top: 0; right: 0;">
         <div class="ddf-menu">
             <div class="btn-group">
-                <button type="button"
-                        (click)="switchMenu()"
-                        class="main-menu-btn"><img src="./public/images/hamburger.png" />
-                </button>
-
                 <ae-hamburger-menu [isMenuOpened]="isMenuOpened" [tabsModel]="tabsModel" (onMenuItemSelected)="onMenuItemSelected($event)"></ae-hamburger-menu>
             </div>
         </div>

@@ -65,7 +65,7 @@
 }
 
 .menu {
-    top: 39px;
+    top: 24px;
     right: 0px;
     position: absolute;
     width: 200px;
@@ -101,8 +101,6 @@
     display: block;
     width: 100%;
     color: #444;
-    /*font-family: 'Roboto', sans-serif;
-    font-size: 13px;*/
     text-align: left;
     cursor: pointer;
     border: 1px solid transparent;
@@ -178,7 +176,6 @@
 
 .ddf-progress {
     margin: 0;
-    border-bottom: 2px solid #ffca34;
 }
 
 .inputfile {
@@ -212,24 +209,45 @@
     border: none ! important;
 }
 
-/*.tab-container > ul li:nth-child(2) {
-    padding-left: 200px;
-}*/
-
-.tab-container > ul li:last-child {
-    margin-right: 200px;
-}
-
 .tab-container > ul > li > a {
     margin: 0;
     border: none;
 }
 
-.nav-tabs {
+.tabs-wrapper {
+    height: auto;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+}
+
+.pre-nav-tabs {
+    height: auto;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    overflow: hidden;
+}
+
+.noscrollbar::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
+
+.yellow-border {
     border-top: none;
     border-left: none;
     border-right: none;
     border-bottom: 2px solid #ffca34;
+}
+
+.nav-tabs {
+    display: flex;
+    overflow-x: scroll;
+    width: 100%;
+    padding-bottom: 1px;
+    border-bottom: none;
 }
 
 .nav-tabs > li > a {
@@ -244,23 +262,52 @@
     border: none ! important;
 }
 
-.nav-tabs > li:last-child > a:hover, .nav-tabs > li:first-child > a:hover {
-    margin: 0;
-    background-color: inherit ! important;
-    font-weight: bold;
-    border: none ! important;
-}
-
-.nav-tabs > li:last-child > a:focus, .nav-tabs > li:first-child > a:focus {
-    margin: 0;
-    background-color: inherit ! important;
-    border: none ! important;
-}
-
 .nav-link {
+    white-space: nowrap;
     border: none;
 }
 
 .tab-container > div {
     height: 100%;
+}
+
+.add-tab {
+    margin: 0;
+    padding: 3px 5px 0 5px;
+}
+
+.add-tab > a .glyphicon-plus:before {
+    color: #ffca34;
+}
+
+.add-tab > a .glyphicon-plus:hover:before {
+    color: #555555;
+}
+
+.scroll-control, .scroll-control-inactive {
+    padding: 11px 3px 3px 0;
+}
+
+.scroll-control > a .glyphicon-triangle-right:before {
+    color: #ffca34;
+}
+
+.scroll-control-inactive > a .glyphicon-triangle-right:before {
+    color: #bbbbbb;
+}
+
+.scroll-control > a .glyphicon-triangle-right:hover:before {
+    color: #555555;
+}
+
+.scroll-control > a .glyphicon-triangle-left:before {
+    color: #ffca34;
+}
+
+.scroll-control-inactive > a .glyphicon-triangle-left:before {
+    color: #bbbbbb;
+}
+
+.scroll-control > a .glyphicon-triangle-left:hover:before {
+    color: #555555;
 }
