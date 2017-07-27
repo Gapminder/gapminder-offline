@@ -1,5 +1,7 @@
-import { Component, Output, EventEmitter,ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ChartService } from '../tabs/chart.service';
+import { MessageService } from '../../message.service';
+import { OPEN_DDF_FOLDER_ACTION } from '../../constants';
 
 declare const electron: any;
 
@@ -9,31 +11,26 @@ declare const electron: any;
   styles: [require('./ddf-dataset-config-form.component.css')]
 })
 export class DdfDatasetConfigFormComponent {
-  @Output() public done: EventEmitter<any> = new EventEmitter();
   @ViewChild('uploadBtn') public uploadBtn: ElementRef;
 
   private chartService: ChartService;
+  private messageService: MessageService;
   private parameters: any = {
     selectedFolder: '',
     chartType: 'BubbleChart'
   };
 
-  public constructor(chartService: ChartService) {
+  public constructor(chartService: ChartService, messageService: MessageService) {
     this.chartService = chartService;
+    this.messageService = messageService;
   }
 
   public ok(): void {
-    this.done.emit(this.parameters);
-    this.reset();
+    this.messageService.sendMessage(OPEN_DDF_FOLDER_ACTION, Object.assign({}, this.parameters));
   }
 
   public close(): void {
-    this.done.emit();
-  }
-
-  private reset(): void {
-    this.uploadBtn.nativeElement.value = '';
-    this.parameters.selectedFolder = '';
+    this.messageService.sendMessage(OPEN_DDF_FOLDER_ACTION);
   }
 
   private onDdfFolderChanged(event: any): void {

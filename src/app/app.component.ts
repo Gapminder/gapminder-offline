@@ -12,7 +12,7 @@ import { ModalDirective } from 'ng2-bootstrap';
 import { ChartService } from './components/tabs/chart.service';
 import { TabModel } from './components/tabs/tab.model';
 import { MessageService } from './message.service';
-import { CLEAR_EDITABLE_TABS_ACTION, TAB_READY_ACTION } from './constants';
+import { CLEAR_EDITABLE_TABS_ACTION, OPEN_DDF_FOLDER_ACTION, TAB_READY_ACTION } from './constants';
 import { initMenuComponent } from './components/menu/system-menu';
 import { getMenuActions } from './components/menu/menu-actions';
 import { remote } from 'electron';
@@ -57,6 +57,30 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.messageService.getMessage()
+      .subscribe((event: any) => {
+        if (event.message === OPEN_DDF_FOLDER_ACTION) {
+          this.ddfDatasetConfigModal.hide();
+
+          if (event.options && event.options.selectedFolder && event.options.chartType) {
+            const firstFilePath = event.options.selectedFolder;
+
+            if (firstFilePath) {
+              try {
+                this.chartService.ddfFolderDescriptor.ddfUrl = firstFilePath;
+                this.chartService.initTab(this.tabsModel, event.options.chartType);
+                this.chartService.setReaderDefaults(this.chartService.ddfFolderDescriptor);
+                this.chartService.newChart(this.getCurrentTab(), this.chartService.ddfFolderDescriptor, null, false);
+                ipcRenderer.send('new-chart', this.getCurrentTab().chartType + ' by DDF folder');
+                this.doDetectChanges();
+              } catch (chartError) {
+                console.log(chartError);
+              }
+            }
+          }
+        }
+      });
+
     ipcRenderer.on('do-open-completed', (event: any, parameters: any) => {
       this.doOpenCompleted(event, parameters);
     });
@@ -220,23 +244,6 @@ export class AppComponent implements OnInit {
       ipcRenderer.send('menu', 'charts was opened');
     });
   };
-
-  public completeDdfDatasetConfigForm(event: any): void {
-    this.ddfDatasetConfigModal.hide();
-
-    if (event) {
-      const firstFilePath = event.selectedFolder;
-
-      if (firstFilePath) {
-        this.chartService.ddfFolderDescriptor.ddfUrl = firstFilePath;
-        this.chartService.initTab(this.tabsModel, event.chartType);
-        this.chartService.setReaderDefaults(this.chartService.ddfFolderDescriptor);
-        this.chartService.newChart(this.getCurrentTab(), this.chartService.ddfFolderDescriptor, null, false);
-        ipcRenderer.send('new-chart', this.getCurrentTab().chartType + ' by DDF folder');
-        this.doDetectChanges();
-      }
-    }
-  }
 
   public completeCsvConfigForm(event: any): void {
     this.csvConfigModal.hide();
