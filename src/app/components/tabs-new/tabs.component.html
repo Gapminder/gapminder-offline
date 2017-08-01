@@ -1,0 +1,72 @@
+<div class = "tab-container" style = "height: 100%;">
+    <div class = "pre-nav-tabs yellow-border" style = "height: auto;">
+        <div class = "tabs-wrapper">
+            <div style = "padding: 9px;">
+                <a href style = "z-index: 1000" (click) = "$event.preventDefault(); logoAction()"
+                   alt = "GAPMINDER TOOLS"><img
+                        src = "./public/logo.png" width = "167" height = "21"></a>
+            </div>
+            <div class = "scroll-control" *ngIf = "canMoveRight()">
+                <a href (click) = "$event.preventDefault()" (mousedown) = "actionScrollStart(-1)"
+                   (mouseup) = "actionScrollFinish()">
+                    <span class = "glyphicon glyphicon-triangle-left"></span>
+                </a>
+            </div>
+            <div class = "scroll-control-inactive" *ngIf = "!canMoveRight()">
+                <a href (click) = "$event.preventDefault();" (mouseup) = "actionScrollFinish()">
+                    <span class = "glyphicon glyphicon-triangle-left"></span>
+                </a>
+            </div>
+            <div style = "flex-grow: 1; max-width: calc(100% - 290px)">
+                <ul #tabsContainer (window:resize) = "autoScroll()" class = "nav nav-tabs noscrollbar"
+                    (click) = "$event.preventDefault()">
+                    <li *ngFor = "let tab of tabs" class = "nav-item" [class.active] = "tab.active">
+                        <a href = "javascript:void(0);" class = "nav-link"
+                           [class.active] = "tab.active"
+                           (click) = "selectTab(tab)">
+                            <span *ngIf = "!tab.editMode"
+                                  class = "doNotEditTabInput">{{tab.title}}</span>
+                            <span *ngIf = "tab.editMode">
+                                <ae-tab-title-edit (blur) = "resetEditMode()"
+                                                   (enter) = "applyEditedTitle()"
+                                                   (esc) = "dismissEditedTitle()"
+                                                   [title] = "tab.title"
+                                                   (titleChange) = "tab.title=$event">
+                                </ae-tab-title-edit>
+                            </span>
+                            <span *ngIf = "tab.removable" (click) = "$event.preventDefault(); removeTab(tab);"
+                                  class = "glyphicon glyphicon-remove-circle"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class = "scroll-control" *ngIf = "canMoveLeft()">
+                <a href (click) = "$event.preventDefault()" (mousedown) = "actionScrollStart(1)"
+                   (mouseup) = "actionScrollFinish()">
+                    <span class = "glyphicon glyphicon-triangle-right"></span>
+                </a>
+            </div>
+            <div class = "scroll-control-inactive" *ngIf = "!canMoveLeft()">
+                <a href (click) = "$event.preventDefault();" (mouseup) = "actionScrollFinish()">
+                    <span class = "glyphicon glyphicon-triangle-right"></span>
+                </a>
+            </div>
+            <div>
+                <div class = "add-tab">
+                    <a href (click) = "$event.preventDefault(); addTabAction($event);">
+                        <span class = "glyphicon glyphicon-plus"></span>
+                    </a>
+                </div>
+            </div>
+            <div style = "width: 42px; height: 32px;">
+                <button type = "button"
+                        (click) = "switchMenuAction($event)"
+                        class = "main-menu-btn"><img src = "./public/images/hamburger.png"/>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class = "tab-content" style = "height: 100%;">
+        <ng-content></ng-content>
+    </div>
+</div>

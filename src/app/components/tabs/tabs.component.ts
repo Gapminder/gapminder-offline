@@ -5,6 +5,8 @@ import { TabModel } from './tab.model';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { ITabActionsSynchronizer } from '../tabs-new/tabs.common';
 import { AlertModel } from './alert.model';
+import { TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION } from '../../constants';
+import { MessageService } from '../../message.service';
 
 declare const electron: any;
 
@@ -25,9 +27,11 @@ export class TabsComponent implements OnInit {
 
   public tabDataDescriptor: TabDataDescriptor = {};
   private chartService: ChartService;
+  private messageService: MessageService;
 
-  public constructor(chartService: ChartService) {
+  public constructor(chartService: ChartService, messageService: MessageService) {
     this.chartService = chartService;
+    this.messageService = messageService;
 
     electron.ipcRenderer.send('get-app-path');
     electron.ipcRenderer.send('get-versions-info');
@@ -77,6 +81,16 @@ export class TabsComponent implements OnInit {
 
       if (fileName) {
         electron.ipcRenderer.send('open-file-after-start');
+      }
+    });
+
+    this.messageService.getMessage().subscribe((event: any) => {
+      if (event.message === TABS_LOGO_ACTION) {
+        this.openGapminder();
+      }
+
+      if (event.message === TABS_ADD_TAB_ACTION) {
+        this.newTab();
       }
     });
   }
