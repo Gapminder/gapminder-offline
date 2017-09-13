@@ -39,6 +39,20 @@
             </div>
         </div>
     </div>
+
+    <div class="step-block" *ngIf="!addDataMode">
+        <h4>Optional: choose time format</h4>
+        <div class="form-group">
+            <div class="col-md-2">
+                <select type="number" [(ngModel)]="timeFormat" class="form-control">
+                    <option *ngFor="let currentTimeFormat of timeFormats" [ngValue]="currentTimeFormat">{{currentTimeFormat}}</option>
+                </select>
+            </div>
+            <div class="col-md-10">
+                <h5>example: {{timeFormatDescription[timeFormat].example}}</h5>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="divider"></div>

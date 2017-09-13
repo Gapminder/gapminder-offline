@@ -105,6 +105,10 @@ export class ChartService {
       }
     };
 
+    if (properties.state) {
+      newTab.model.state = properties.state;
+    }
+
     if (this.isDevMode) {
       this.log(JSON.stringify(newTab.model));
     }

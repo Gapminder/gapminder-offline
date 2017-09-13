@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ChartService } from '../tabs/chart.service';
+import { isEmpty } from 'lodash';
 
 const vizabiStateFacade: any = {
   getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
@@ -28,6 +29,27 @@ export class CsvConfigFormComponent {
   @Output() public done: EventEmitter<any> = new EventEmitter();
   @ViewChild('uploadBtn') public uploadBtn: ElementRef;
 
+  public timeFormats: string[] = [ 'year', 'month'];
+  public timeFormat: string = this.timeFormats[0];
+  public timeFormatDescription: any = {
+    year: {
+      example: '2017',
+      state: {}
+    },
+    month: {
+      example: '2017-11',
+      state: {
+        time: {
+          unit: 'month',
+          format: {
+            data: '%Y-%m',
+            ui: '%B %Y'
+          }
+        }
+      }
+    }
+  };
+
   private chartService: ChartService;
   private chartType: string = 'BubbleChart';
   private choice: string = '';
@@ -42,7 +64,7 @@ export class CsvConfigFormComponent {
   }
 
   public ok(): void {
-    const config = {
+    const config: any = {
       chartType: this.chartType,
       reader: this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
       path: this.file,
@@ -52,6 +74,12 @@ export class CsvConfigFormComponent {
     if (this.delimiter === 'auto') {
       delete config.delimiter;
     }
+
+    if (!isEmpty(this.timeFormatDescription[this.timeFormat].state)) {
+      config.state = this.timeFormatDescription[this.timeFormat].state;
+    }
+
+    console.log(config);
 
     this.done.emit(config);
     this.reset();
