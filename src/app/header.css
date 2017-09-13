@@ -293,7 +293,7 @@
 }
 
 .scroll-control-inactive > a .glyphicon-triangle-right:before {
-    color: #bbbbbb;
+    color: #fff;
 }
 
 .scroll-control > a .glyphicon-triangle-right:hover:before {
@@ -305,7 +305,7 @@
 }
 
 .scroll-control-inactive > a .glyphicon-triangle-left:before {
-    color: #bbbbbb;
+    color: #fff;
 }
 
 .scroll-control > a .glyphicon-triangle-left:hover:before {
