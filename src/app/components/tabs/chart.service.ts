@@ -97,6 +97,7 @@ export class ChartService {
 
   public newSimpleChart(tabsModel: TabModel[], properties: any, onChartReady?: Function): void {
     const newTab = new TabModel(properties.chartType, true);
+    const _this = this;
 
     fs.stat(properties.path, (err: any, stats: any) => {
 
@@ -114,8 +115,8 @@ export class ChartService {
         newTab.model.state = properties.state;
       }
 
-      if (this.isDevMode) {
-        this.log(JSON.stringify(newTab.model));
+      if (_this.isDevMode) {
+        _this.log(JSON.stringify(newTab.model));
       }
 
       tabsModel.forEach((tab: TabModel) => tab.active = false);
