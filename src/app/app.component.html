@@ -97,7 +97,7 @@
          class="modal fade"
          tabindex="-1"
          role="dialog"
-         aria-labelledby="Add your data to bubble chart"
+         aria-labelledby="Add data to the active chart"
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -105,7 +105,7 @@
                     <button type="button" class="close" (click)="additionalCsvConfigModal.hide()" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">Add your data to the chart</h4>
+                    <h4 class="modal-title">Add data to the active chart</h4>
                 </div>
                 <div class="modal-body">
                     <ae-csv-config-form [addDataMode]="true" (done)="additionalCsvConfigFormComplete($event)"></ae-csv-config-form>

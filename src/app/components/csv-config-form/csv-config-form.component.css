@@ -48,6 +48,11 @@ label.step-label {
     width: 50%;
     height: 40px;
 }
+.fileUpload.btn.btn-default {
+    margin-bottom: 3px;
+    padding: 2px 12px;
+    -webkit-appearance: button;
+}
 .divider {
     border-bottom: 1px solid #e5e5e5;
     margin: 5px -15px 10px -15px;
@@ -70,22 +75,21 @@ label.step-label {
 .chart-label {
     font-size: large;
     margin-right: 5px;
+    margin-left: 1px;
 }
 .time-format-holder {
     overflow: auto;
     width: 100%;
     vertical-align: middle;
 }
-.time-format-block {
-    float: left;
-}
 .time-format-select {
     min-width: 150px;
     margin-right: 5px;
-    margin-left: 5px;
 }
-.time-format-example {
-    padding-top: 2px;
+.time-format-select select {
+    height: 24px;
+    display: inline-block;
+    width: auto;
 }
 .inactive-time-format div {
     color: #cccccc;

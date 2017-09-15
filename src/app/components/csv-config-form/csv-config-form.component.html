@@ -11,20 +11,20 @@
     <div class="step-block">
         <h4>Step {{addDataMode ? 1 : 2}}: Choose how your data is arranged:</h4>
         <div *ngIf="addDataMode" class="desc">Limitation: entities in the first column should match the ones already used in the chart:
-            <span class="highl">{{getCountries()}}</span> and so on... Time points should be expressed like <span class="highl">{{getTimePoints()}}</span>...
+            <span class="highl">{{getCountries()}}</span> and so on... Time values should be expressed like <span class="highl">{{getTimePoints()}}</span>...
             Observe the restrictions on column headers, as <span class="highl">highlighted</span> below.
             You can find more instructions <a href="https://docs.google.com/document/d/1pfMcCSKhC2wEVJRYa4Ex2TZkGS22du0Kz9NxSAIHjqU" target="_blank">on&nbsp;this&nbsp;web&nbsp;page</a>
         </div>
         <div>
-            <label class="step-label"><input type="radio" name="choiceGroup" (change)="setChoice('rows')" [checked]="choice === 'rows'"> Time is in rows</label>
-            <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: time points, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
+            <label class="step-label"><input type="radio" name="choiceGroup" (change)="setChoice('rows')" [checked]="choice === 'rows'"> Time goes down</label>
+            <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: time values, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
             <div *ngIf="addDataMode" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: <span class="highl">{{getTime()}}</span>, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
         </div>
         <div *ngIf="isExampleRows" class="example-container"><img src="./public/images/templates/time-as-rows-example.png" class="example-image"></div>
         <div>
-            <label class="step-label"><input type="radio" name="choiceGroup" (change)="setChoice('columns')" [checked]="choice === 'columns'"> Time is in columns</label>
-            <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: indicators, Column 3 and on: time points (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
-            <div *ngIf="addDataMode" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: indicators, Column 3 and on: time points (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
+            <label class="step-label"><input type="radio" name="choiceGroup" (change)="setChoice('columns')" [checked]="choice === 'columns'"> Time goes right</label>
+            <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: indicators, Column 3 and on: time values (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
+            <div *ngIf="addDataMode" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: indicators, Column 3 and on: time values (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
         </div>
         <div *ngIf="isExampleColumns" class="example-container"><img src="./public/images/templates/time-as-columns-example.png" class="example-image"></div>
     </div>
@@ -32,26 +32,25 @@
     <div class="step-block">
         <h4>Step {{addDataMode ? 2 : 3}}: Pick a file:</h4>
         <div>
-            <input placeholder="{{file}}" disabled="disabled" style="width: 70%;" />
             <div class="fileUpload btn btn-default">
                 <span>Choose CSV file</span>
                 <input #uploadBtn type="file" class="upload" (change)="onCsvFileChanged($event)" />
             </div>
+            <input placeholder="{{file}}" disabled="disabled" style="width: 60%;" />
         </div>
     </div>
 
     <div class="step-block" [ngClass]="addDataMode ? 'inactive-time-format' : ''">
         <div class="time-format-holder">
             <div class="time-format-block">
-                <h4>Optional: choose time format</h4>
+                <h4>Optional</h4>
             </div>
             <div class="time-format-block time-format-select">
+                Time values look like this: 
                 <select type="number" [disabled]="addDataMode" [(ngModel)]="timeFormat" class="form-control">
                     <option *ngFor="let currentTimeFormat of timeFormats" [ngValue]="currentTimeFormat">{{currentTimeFormat}}</option>
                 </select>
-            </div>
-            <div class="time-format-block time-format-example">
-                <h5>example: {{timeFormatDescription[timeFormat].example}}</h5>
+                {{timeFormatDescription[timeFormat].example}}
             </div>
         </div>
     </div>

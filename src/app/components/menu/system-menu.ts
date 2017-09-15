@@ -30,7 +30,7 @@ export const initMenuComponent = (appComponent: AppComponent) => {
           ]
         },
         {
-          label: 'Add your data',
+          label: 'Add data to the active chart',
           submenu: [
             {
               label: 'CSV file...',

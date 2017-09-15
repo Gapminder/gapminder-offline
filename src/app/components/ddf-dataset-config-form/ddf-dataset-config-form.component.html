@@ -11,11 +11,11 @@
     <div class="step-block">
         <h4>Step 2: Pick DDF folder:</h4>
         <div>
-            <input placeholder="{{parameters.selectedFolder}}" disabled="disabled" style="width: 70%;" />
             <div class="fileUpload btn btn-default">
                 <span>Choose DDF folder</span>
                 <input #uploadBtn type="file" webkitdirectory directory class="upload" (change)="onDdfFolderChanged($event)" />
             </div>
+            <input placeholder="{{parameters.selectedFolder}}" disabled="disabled" style="width: 60%;" />
         </div>
     </div>
 </div>

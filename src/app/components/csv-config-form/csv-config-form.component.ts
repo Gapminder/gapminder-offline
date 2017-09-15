@@ -29,7 +29,7 @@ export class CsvConfigFormComponent {
   @Output() public done: EventEmitter<any> = new EventEmitter();
   @ViewChild('uploadBtn') public uploadBtn: ElementRef;
 
-  public timeFormats: string[] = [ 'year', 'month'];
+  public timeFormats: string[] = [ 'year', 'month', 'day', 'week', 'quarter'];
   public timeFormat: string = this.timeFormats[0];
   public timeFormatDescription: any = {
     year: {
@@ -37,14 +37,34 @@ export class CsvConfigFormComponent {
       state: {}
     },
     month: {
-      example: '2017-11',
+      example: '2017-09',
       state: {
         time: {
-          unit: 'month',
-          format: {
-            data: '%Y-%m',
-            ui: '%B %Y'
-          }
+          unit: 'month'
+        }
+      }
+    },
+    day: {
+      example: '20170905',
+      state: {
+        time: {
+          unit: 'day'
+        }
+      }
+    },
+    week: {
+      example: '2017w37',
+      state: {
+        time: {
+          unit: 'week'
+        }
+      }
+    },
+    quarter: {
+      example: '2017q4',
+      state: {
+        time: {
+          unit: 'quarter'
         }
       }
     }
