@@ -40,15 +40,17 @@
         </div>
     </div>
 
-    <div class="step-block" *ngIf="!addDataMode">
-        <h4>Optional: choose time format</h4>
-        <div class="form-group">
-            <div class="col-md-2">
-                <select type="number" [(ngModel)]="timeFormat" class="form-control">
+    <div class="step-block" [ngClass]="addDataMode ? 'inactive-time-format' : ''">
+        <div class="time-format-holder">
+            <div class="time-format-block">
+                <h4>Optional: choose time format</h4>
+            </div>
+            <div class="time-format-block time-format-select">
+                <select type="number" [disabled]="addDataMode" [(ngModel)]="timeFormat" class="form-control">
                     <option *ngFor="let currentTimeFormat of timeFormats" [ngValue]="currentTimeFormat">{{currentTimeFormat}}</option>
                 </select>
             </div>
-            <div class="col-md-10">
+            <div class="time-format-block time-format-example">
                 <h5>example: {{timeFormatDescription[timeFormat].example}}</h5>
             </div>
         </div>

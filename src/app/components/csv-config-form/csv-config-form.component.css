@@ -68,5 +68,25 @@ label.step-label {
     filter: alpha(opacity=0);
 }
 .chart-label {
+    font-size: large;
     margin-right: 5px;
+}
+.time-format-holder {
+    overflow: auto;
+    width: 100%;
+    vertical-align: middle;
+}
+.time-format-block {
+    float: left;
+}
+.time-format-select {
+    min-width: 150px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.time-format-example {
+    padding-top: 2px;
+}
+.inactive-time-format div {
+    color: #cccccc;
 }
