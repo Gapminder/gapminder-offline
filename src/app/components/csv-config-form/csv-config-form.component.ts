@@ -31,7 +31,7 @@ export class CsvConfigFormComponent {
   @Output() public done: EventEmitter<any> = new EventEmitter();
   @ViewChild('uploadBtn') public uploadBtn: ElementRef;
 
-  public timeFormats: string[] = [ 'year', 'month', 'day', 'week', 'quarter'];
+  public timeFormats: string[] = ['year', 'month', 'day', 'week', 'quarter'];
   public timeFormat: string = this.timeFormats[0];
   public timeFormatDescription: any = {
     year: {
@@ -86,29 +86,28 @@ export class CsvConfigFormComponent {
   }
 
   public ok(): void {
-    const _this = this;
-    fs.stat(_this.file, (err: any, stats: any) => {
+    fs.stat(this.file, (err: any, stats: any) => {
 
       const config: any = {
-        chartType: _this.chartType,
-        reader: _this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
-        path: _this.file,
-        delimiter: _this.delimiter,
+        chartType: this.chartType,
+        reader: this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
+        path: this.file,
+        delimiter: this.delimiter,
         lastModified: stats.mtime.valueOf()
       };
 
-      if (_this.delimiter === 'auto') {
+      if (this.delimiter === 'auto') {
         delete config.delimiter;
       }
 
-      if (!isEmpty(_this.timeFormatDescription[_this.timeFormat].state)) {
-        config.state = _this.timeFormatDescription[_this.timeFormat].state;
+      if (!isEmpty(this.timeFormatDescription[this.timeFormat].state)) {
+        config.state = this.timeFormatDescription[this.timeFormat].state;
       }
 
       console.log(config);
 
-      _this.done.emit(config);
-      _this.reset();
+      this.done.emit(config);
+      this.reset();
     });
   }
 

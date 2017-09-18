@@ -253,7 +253,9 @@ export class AppComponent implements OnInit {
     this.csvConfigModal.hide();
 
     if (event) {
-      this.chartService.newSimpleChart(this.tabsModel, event);
+      this.chartService.newSimpleChart(this.tabsModel, event, () => {
+        this.doDetectChanges();
+      });
 
       ipcRenderer.send('new-chart', 'Simple chart: json based');
     }
