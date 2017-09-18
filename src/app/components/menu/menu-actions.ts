@@ -64,7 +64,8 @@ export const getMenuActions = (context: AppComponent) => ({
   },
   exportForWeb: () => {
     const currentTab = context.getCurrentTab();
-    const model = Object.assign({}, currentTab.instance.getModel());
+    const isAdditionalDataPresent = currentTab.component && currentTab.component.getModel;
+    const model = Object.assign({}, isAdditionalDataPresent ? currentTab.component.getModel() : currentTab.instance.getModel());
 
     context.isMenuOpened = false;
 
