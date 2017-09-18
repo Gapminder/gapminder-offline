@@ -39,7 +39,8 @@ export const getMenuActions = (context: AppComponent) => ({
   },
   save: () => {
     const currentTab = context.getCurrentTab();
-    const model = Object.assign({}, currentTab.instance.getModel());
+    const isAdditionalDataPresent = currentTab.component && currentTab.component.getModel;
+    const model = Object.assign({}, isAdditionalDataPresent ? currentTab.component.getModel() : currentTab.instance.getModel());
 
     context.isMenuOpened = false;
 
@@ -52,10 +53,12 @@ export const getMenuActions = (context: AppComponent) => ({
 
     context.tabsModel.forEach((tab: TabModel) => {
       if (tab.chartType) {
+        const isAdditionalDataPresent = tab.component && tab.component.getModel;
+
         tabsDescriptors.push({
           title: tab.title,
           type: tab.chartType,
-          model: Object.assign({}, tab.instance.getModel())
+          model: Object.assign({}, isAdditionalDataPresent ? tab.component.getModel() : tab.instance.getModel())
         });
       }
     });

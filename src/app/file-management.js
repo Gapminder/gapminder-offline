@@ -5,7 +5,6 @@ const path = require('path');
 const fs = require('fs');
 const fsExtra = require('fs-extra');
 const zipdir = require('zip-dir');
-const request = require('request');
 const packageJSON = require('./package.json');
 const GoogleAnalytics = require('./google-analytics');
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
@@ -28,7 +27,6 @@ const WEB_PATH = {
   darwin: app.getAppPath() + '/../../../../web'
 };
 
-const pathToRelative = (from, to) => path.relative(path.parse(from).dir, to);
 const getPathCorrectFunction = brokenPathObject => new Promise((resolve, reject) => {
   const parsed = path.parse(brokenPathObject.path);
 
@@ -55,7 +53,7 @@ const normalizeModelToSave = (model, chartType) => {
       if (isPathInternal(model[key].path)) {
         model[key].path = `@internal`;
       } else {
-        model[key].path = pathToRelative(fileName, model[key].path);
+        model[key].path = path.resolve(__dirname, '..', '..', model[key].path);
       }
 
       model[key].ddfPath = model[key].path;
@@ -70,7 +68,7 @@ const normalizeModelToOpen = (model, currentDir, brokenFileActions) => {
       if (model[key].path.indexOf('@internal') >= 0) {
         model[key].path = DATA_PATH[process.platform];
       } else {
-        model[key].path = path.resolve(currentDir, model[key].path);
+        model[key].path = path.resolve(__dirname, '..', '..', model[key].path);
 
         if (!fs.existsSync(model[key].path)) {
           brokenFileActions.push(getPathCorrectFunction(model[key]));
