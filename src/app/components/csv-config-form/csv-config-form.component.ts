@@ -1,8 +1,8 @@
+import * as fs from 'fs';
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ChartService } from '../tabs/chart.service';
 import { isEmpty } from 'lodash';
-
-const fs = require('fs');
+import { TabModel } from '../tabs/tab.model';
 
 const vizabiStateFacade: any = {
   getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
@@ -72,6 +72,8 @@ export class CsvConfigFormComponent {
     }
   };
 
+  private _currentTab: TabModel;
+
   private chartService: ChartService;
   private chartType: string = 'BubbleChart';
   private choice: string = '';
@@ -85,9 +87,25 @@ export class CsvConfigFormComponent {
     this.chartService = chartService;
   }
 
+  @Input()
+  public get currentTab(): TabModel {
+    return this._currentTab;
+  }
+
+  public set currentTab(currentTab: TabModel) {
+    this._currentTab = currentTab;
+
+    let newTimeFormat = '';
+
+    if (this._currentTab && this._currentTab.model && this._currentTab.model.state && this._currentTab.model.state.time) {
+      newTimeFormat = this._currentTab.model.state.time.unit;
+    }
+
+    this.timeFormat = newTimeFormat || this.timeFormats[0];
+  }
+
   public ok(): void {
     fs.stat(this.file, (err: any, stats: any) => {
-
       const config: any = {
         chartType: this.chartType,
         reader: this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
@@ -103,8 +121,6 @@ export class CsvConfigFormComponent {
       if (!isEmpty(this.timeFormatDescription[this.timeFormat].state)) {
         config.state = this.timeFormatDescription[this.timeFormat].state;
       }
-
-      console.log(config);
 
       this.done.emit(config);
       this.reset();

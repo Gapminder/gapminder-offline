@@ -85,7 +85,7 @@
                     <h4 class="modal-title">New chart from your data</h4>
                 </div>
                 <div class="modal-body">
-                    <ae-csv-config-form (done)="completeCsvConfigForm($event)"></ae-csv-config-form>
+                    <ae-csv-config-form [currentTab]="getCurrentTab()" (done)="completeCsvConfigForm($event)"></ae-csv-config-form>
                 </div>
             </div>
         </div>
@@ -108,11 +108,10 @@
                     <h4 class="modal-title">Add data to the active chart</h4>
                 </div>
                 <div class="modal-body">
-                    <ae-csv-config-form [addDataMode]="true" (done)="additionalCsvConfigFormComplete($event)"></ae-csv-config-form>
+                    <ae-csv-config-form [addDataMode]="true" [currentTab]="getCurrentTab()" (done)="additionalCsvConfigFormComplete($event)"></ae-csv-config-form>
                 </div>
             </div>
         </div>
     </div>
-
     <input id="addDdfFolder" type="file" style="display: none;" #addDdfFolder (click)="menuActions.ddfFolderClick($event, onDdfExtFolderChanged)"/>
 </div>

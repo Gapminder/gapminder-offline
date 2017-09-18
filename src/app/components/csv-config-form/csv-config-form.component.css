@@ -87,7 +87,7 @@ label.step-label {
     margin-right: 5px;
 }
 .time-format-select select {
-    height: 24px;
+    height: 32px;
     display: inline-block;
     width: auto;
 }
