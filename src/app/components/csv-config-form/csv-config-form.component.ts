@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@
 import { ChartService } from '../tabs/chart.service';
 import { isEmpty } from 'lodash';
 
+const fs = require('fs');
+
 const vizabiStateFacade: any = {
   getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
   getTime: (currentTabInstance: any) => currentTabInstance.model.state.time.dim,
@@ -84,25 +86,30 @@ export class CsvConfigFormComponent {
   }
 
   public ok(): void {
-    const config: any = {
-      chartType: this.chartType,
-      reader: this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
-      path: this.file,
-      delimiter: this.delimiter
-    };
+    const _this = this;
+    fs.stat(_this.file, (err: any, stats: any) => {
 
-    if (this.delimiter === 'auto') {
-      delete config.delimiter;
-    }
+      const config: any = {
+        chartType: _this.chartType,
+        reader: _this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
+        path: _this.file,
+        delimiter: _this.delimiter,
+        lastModified: stats.mtime.valueOf()
+      };
 
-    if (!isEmpty(this.timeFormatDescription[this.timeFormat].state)) {
-      config.state = this.timeFormatDescription[this.timeFormat].state;
-    }
+      if (_this.delimiter === 'auto') {
+        delete config.delimiter;
+      }
 
-    console.log(config);
+      if (!isEmpty(_this.timeFormatDescription[_this.timeFormat].state)) {
+        config.state = _this.timeFormatDescription[_this.timeFormat].state;
+      }
 
-    this.done.emit(config);
-    this.reset();
+      console.log(config);
+
+      _this.done.emit(config);
+      _this.reset();
+    });
   }
 
   public close(): void {

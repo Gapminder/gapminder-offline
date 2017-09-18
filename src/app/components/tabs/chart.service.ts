@@ -3,6 +3,8 @@ import { TabModel } from './tab.model';
 import { DdfFolderDescriptor } from '../descriptors/ddf-folder.descriptor';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 
+const fs = require('fs');
+
 // const PopByAge = ;
 const BarRankChart = require('vizabi-barrankchart');
 const BubbleChart = require('vizabi-bubblechart');
@@ -95,30 +97,36 @@ export class ChartService {
 
   public newSimpleChart(tabsModel: TabModel[], properties: any, onChartReady?: Function): void {
     const newTab = new TabModel(properties.chartType, true);
+    const _this = this;
 
-    newTab.chartType = properties.chartType;
-    newTab.model = {
-      data: {
-        reader: properties.reader,
-        delimiter: properties.delimiter,
-        path: properties.path
+    fs.stat(properties.path, (err: any, stats: any) => {
+
+      newTab.chartType = properties.chartType;
+      newTab.model = {
+        data: {
+          reader: properties.reader,
+          delimiter: properties.delimiter,
+          path: properties.path,
+          lastModified: stats.mtime.valueOf()
+        }
+      };
+
+      if (properties.state) {
+        newTab.model.state = properties.state;
       }
-    };
 
-    if (properties.state) {
-      newTab.model.state = properties.state;
-    }
+      if (_this.isDevMode) {
+        _this.log(JSON.stringify(newTab.model));
+      }
 
-    if (this.isDevMode) {
-      this.log(JSON.stringify(newTab.model));
-    }
+      tabsModel.forEach((tab: TabModel) => tab.active = false);
+      tabsModel.push(newTab);
 
-    tabsModel.forEach((tab: TabModel) => tab.active = false);
-    tabsModel.push(newTab);
+      if (onChartReady) {
+        onChartReady();
+      }
 
-    if (onChartReady) {
-      onChartReady();
-    }
+    });
   }
 
   public getCurrentTab(tabsModel: TabModel[]): TabModel {
