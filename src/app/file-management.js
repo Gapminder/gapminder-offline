@@ -1,6 +1,8 @@
 const electron = require('electron');
 const app = electron.app;
 const dialog = electron.dialog;
+const _ = require('lodash');
+const async = require('async');
 const path = require('path');
 const fs = require('fs');
 const fsExtra = require('fs-extra');
@@ -27,22 +29,36 @@ const WEB_PATH = {
   darwin: app.getAppPath() + '/../../../../web'
 };
 
-const getPathCorrectFunction = brokenPathObject => new Promise((resolve, reject) => {
+const getPathCorrectFunction = brokenPathObject => onPathReady => {
   const parsed = path.parse(brokenPathObject.path);
 
-  dialog.showOpenDialog({
-    title: `Choose correct location for "${parsed.base}"...`,
-    properties: parsed.ext ? [] : ['openDirectory']
-  }, dirPaths => {
-    if (!dirPaths || dirPaths.length < 0) {
-      reject();
-      return;
-    }
+  dialog.showMessageBox({
+    type: 'question',
+    buttons: ['OK', 'Cancel'],
+    title: 'Confirm',
+    message: `The chart you are about to open depends on the external file ${parsed.base}, which was not found because it was moved or renamed or left on some other computer. Press OK to help locate the file or Cancel to ignore and just open the app.`
+  }, function (response) {
+    if (response === 0) {
+      dialog.showOpenDialog({
+        title: `Choose correct location for "${parsed.base}"...`,
+      }, dirPaths => {
+        if (!dirPaths || dirPaths.length < 0) {
+          brokenPathObject.__abandoned = true;
+          onPathReady();
+          return;
+        }
 
-    brokenPathObject.path = dirPaths[0];
-    resolve();
+        brokenPathObject.path = dirPaths[0];
+        onPathReady();
+      });
+    } else {
+      brokenPathObject.__abandoned = true;
+
+      onPathReady();
+    }
   });
-});
+};
+
 const isPathInternalWin = path => path.endsWith(DATA_PATH.win32);
 const isPathInternalLin = path => path.endsWith(DATA_PATH.linux);
 const isPathInternalMac = path => path.endsWith(DATA_PATH.darwin);
@@ -65,6 +81,10 @@ const normalizeModelToSave = (model, chartType) => {
 const normalizeModelToOpen = (model, currentDir, brokenFileActions) => {
   Object.keys(model).forEach(key => {
     if ((key === 'data' || key.indexOf('data_') === 0) && typeof model[key] === 'object') {
+      if (model[key].__abandoned) {
+        return;
+      }
+
       if (model[key].path.indexOf('@internal') >= 0) {
         model[key].path = DATA_PATH[process.platform];
       } else {
@@ -78,6 +98,31 @@ const normalizeModelToOpen = (model, currentDir, brokenFileActions) => {
       model[key].ddfPath = model[key].path;
     }
   });
+};
+const getConfigWithoutAbandonedData = config => {
+  const newConfig = [];
+
+  for (let item of config) {
+    const model = item.model;
+    const keys = Object.keys(model);
+
+    let isAbandoned = false;
+
+    for (let key of keys) {
+      if ((key === 'data' || key.indexOf('data_') === 0) && typeof model[key] === 'object') {
+        if (model[key].__abandoned) {
+          isAbandoned = true;
+          break;
+        }
+      }
+    }
+
+    if (!isAbandoned) {
+      newConfig.push(item);
+    }
+  }
+
+  return newConfig;
 };
 const openFile = (event, fileName, currentDir, fileNameOnly) => {
   fs.readFile(fileName, 'utf-8', (err, data) => {
@@ -94,15 +139,19 @@ const openFile = (event, fileName, currentDir, fileNameOnly) => {
         normalizeModelToOpen(configItem.model, currentDir, brokenFileActions);
       });
 
-      Promise.all(brokenFileActions).then(() => {
-        event.sender.send('do-open-all-completed', config);
+      async.waterfall(brokenFileActions, () => {
+        const newConfig = getConfigWithoutAbandonedData(config);
+
+        if (!_.isEmpty(newConfig)) {
+          event.sender.send('do-open-all-completed', newConfig);
+        }
       });
     }
 
     if (!config.length) {
       normalizeModelToOpen(config, currentDir, brokenFileActions);
 
-      Promise.all(brokenFileActions).then(() => {
+      async.waterfall(brokenFileActions, () => {
         event.sender.send('do-open-completed', {tab: config, file: fileNameOnly});
       });
     }
