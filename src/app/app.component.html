@@ -1,5 +1,5 @@
 <div style="height: 100%" (click)="appMainClickHandler($event)">
-    <div style="position: absolute; top: 0; right: 50px; width: 300px;">
+    <div class="auto-update-container">
         <ae-auto-update (onAutoUpdateRequested)="doDetectChanges()"
                         (onAutoUpdateProgress)="doDetectChanges()"
                         (onAutoUpdateCompleted)="doDetectChanges()"></ae-auto-update>

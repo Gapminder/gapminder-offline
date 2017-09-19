@@ -17,7 +17,7 @@
                     <span class = "glyphicon glyphicon-triangle-left"></span>
                 </a>
             </div>
-            <div style = "flex-grow: 1; max-width: calc(100% - 290px)">
+            <div style = "flex-grow: 1; max-width: calc(100% - 270px)">
                 <ul #tabsContainer (window:resize) = "autoScroll()" class = "nav nav-tabs noscrollbar"
                     (click) = "$event.preventDefault()">
                     <li *ngFor = "let tab of tabs" class = "nav-item" [class.active] = "tab.active">
@@ -38,6 +38,11 @@
                                   class = "glyphicon glyphicon-remove-circle"></span>
                         </a>
                     </li>
+                    <li class = "add-tab">
+                        <a href (click) = "$event.preventDefault(); addTabAction($event);">
+                            <span class = "glyphicon glyphicon-plus"></span>
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div class = "scroll-control" *ngIf = "canMoveLeft()">
@@ -50,13 +55,6 @@
                 <a href (click) = "$event.preventDefault();" (mouseup) = "actionScrollFinish()">
                     <span class = "glyphicon glyphicon-triangle-right"></span>
                 </a>
-            </div>
-            <div>
-                <div class = "add-tab">
-                    <a href (click) = "$event.preventDefault(); addTabAction($event);">
-                        <span class = "glyphicon glyphicon-plus"></span>
-                    </a>
-                </div>
             </div>
             <div style = "width: 42px; height: 32px;">
                 <button type = "button"

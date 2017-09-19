@@ -262,6 +262,19 @@
     border: none ! important;
 }
 
+.nav-tabs > li:last-child > a:hover {
+    margin: 0;
+    background-color: inherit ! important;
+    font-weight: bold;
+    border: none ! important;
+}
+
+.nav-tabs > li:last-child > a:focus {
+    margin: 0;
+    background-color: inherit ! important;
+    border: none ! important;
+}
+
 .nav-link {
     white-space: nowrap;
     border: none;
@@ -273,7 +286,7 @@
 
 .add-tab {
     margin: 0;
-    padding: 3px 5px 0 5px;
+    padding: 0;
 }
 
 .add-tab > a .glyphicon-plus:before {

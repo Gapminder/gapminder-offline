@@ -280,18 +280,6 @@ body {
     }
 }
 
-.add-tab {
-    float: left;
-    padding: 0 10px;
-    font-size: 18px;
-    line-height: 36px;
-    margin-top: 10px;
-    outline: none;
-    background: none;
-    border: none;
-    font-family: 'Bariol Bold';
-}
-
 .tab-chart-choice {
     text-align: center;
     font-size: 20px;
@@ -329,4 +317,14 @@ body {
 
 .editTabInput {
     height: 20px;
+}
+
+.auto-update-container {
+    position: absolute;
+    top: 0;
+    right: 50px;
+    width: 300px;
+    z-index: 999999;
+    background-color: #ffffff;
+    padding: 1px 10px 1px 10px;
 }

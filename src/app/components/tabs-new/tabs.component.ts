@@ -6,7 +6,8 @@ import {
   AfterViewInit,
   OnDestroy,
   ViewChild,
-  ElementRef
+  ElementRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { TabNewComponent } from './tab.component';
 import { ITabActionsSynchronizer } from './tabs.common';
@@ -19,7 +20,8 @@ const SCROLL_TIMEOUT = 200;
 
 @Component({
   selector: 'ae-tabs-new',
-  template: require('./tabs.component.html')
+  template: require('./tabs.component.html'),
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsNewComponent implements AfterViewInit, OnDestroy {
   @ContentChildren(TabNewComponent) public tabs: QueryList<TabNewComponent>;

@@ -142,6 +142,7 @@ export class TabsComponent implements OnInit {
       setTimeout(() => {
         if (this.tabsModel.length <= 0) {
           this.chartService.initTab(this.tabsModel);
+          this.onTabsInit.emit();
         }
       }, 300);
     }
