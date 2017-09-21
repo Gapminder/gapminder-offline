@@ -1,7 +1,7 @@
 {
   "name": "gapminder-offline",
   "version": "2.1.0",
-  "description": "Gapminder offline tool",
+  "description": "Gapminder Tools Offline",
   "main": "",
   "scripts": {
     "watch": "npm run watch:dev",

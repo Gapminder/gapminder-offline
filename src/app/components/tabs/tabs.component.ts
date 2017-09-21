@@ -40,7 +40,7 @@ export class TabsComponent implements OnInit {
   public ngOnInit(): void {
     electron.ipcRenderer.send('get-dev-mode');
     electron.ipcRenderer.on('got-versions-info', (event: any, versionsDescriptor: any) => {
-      document.title = `Gapminder offline tool v.${versionsDescriptor.app} (dataset v.${versionsDescriptor.dataset})`;
+      document.title = `Gapminder Tools Offline v.${versionsDescriptor.app} (dataset v.${versionsDescriptor.dataset})`;
     });
     electron.ipcRenderer.send('get-app-arguments');
 

@@ -9,7 +9,7 @@
 ;General
 
   ;Name and file
-  Name "Gapminder Offline Tool"
+  Name "Gapminder Tools Offline"
   OutFile ".\release\Install Gapminder Offline.exe"
 
   ;Default installation folder
@@ -41,7 +41,7 @@
 ;--------------------------------
 ;Installer Sections
 
-Section "Gapminder Offline tool" SecMain
+Section "Gapminder Tools Offline" SecMain
 
   SetOutPath "$INSTDIR"
   
@@ -79,7 +79,7 @@ Section "Gapminder Offline tool" SecMain
 
   ${registerExtension} "$INSTDIR\Gapminder Offline.exe" ".gmstat" "GapminderStat_File"
 
-  CreateShortcut "$desktop\Gapminder Offline Tool.lnk" "$INSTDIR\Gapminder Offline.exe"
+  CreateShortcut "$desktop\Gapminder Tools Offline.lnk" "$INSTDIR\Gapminder Offline.exe"
 SectionEnd
 
 ;--------------------------------
@@ -122,7 +122,7 @@ Section "Uninstall"
   RMDir /r "$INSTDIR\locales"
 
   Delete "$INSTDIR\Uninstall.exe"
-  Delete "$desktop\Gapminder Offline Tool.lnk"
+  Delete "$desktop\Gapminder Tools Offline.lnk"
 
   RMDir "$INSTDIR"
 
