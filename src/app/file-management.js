@@ -101,9 +101,12 @@ const normalizeModelToOpen = (model, currentDir, brokenFileActions) => {
 };
 const getConfigWithoutAbandonedData = config => {
   const newConfig = [];
+  const processConfigItem = item => {
+    if (!item) {
+      return;
+    }
 
-  for (let item of config) {
-    const model = item.model;
+    const model = item.model || item;
     const keys = Object.keys(model);
 
     let isAbandoned = false;
@@ -120,6 +123,14 @@ const getConfigWithoutAbandonedData = config => {
     if (!isAbandoned) {
       newConfig.push(item);
     }
+  };
+
+  if (_.isArray(config)) {
+    for (let item of config) {
+      processConfigItem(item);
+    }
+  } else {
+    processConfigItem(config);
   }
 
   return newConfig;
@@ -152,7 +163,15 @@ const openFile = (event, fileName, currentDir, fileNameOnly) => {
       normalizeModelToOpen(config, currentDir, brokenFileActions);
 
       async.waterfall(brokenFileActions, () => {
-        event.sender.send('do-open-completed', {tab: config, file: fileNameOnly});
+        const newConfigAsArray = getConfigWithoutAbandonedData(config);
+
+        if (!_.isEmpty(newConfigAsArray)) {
+          const newConfig = _.head(newConfigAsArray);
+
+          if (!_.isEmpty(newConfig)) {
+            event.sender.send('do-open-completed', {tab: newConfig, file: fileNameOnly});
+          }
+        }
       });
     }
   });
