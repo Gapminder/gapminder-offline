@@ -2,7 +2,6 @@ const electron = require('electron');
 const app = electron.app;
 const ipc = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
-const path = require('path');
 const fs = require('fs');
 const fsExtra = require('fs-extra');
 const request = require('request');
@@ -107,7 +106,7 @@ function startUpdate(event) {
     },
     err => {
       if (err) {
-        event.sender.send('unpack-complete', err);
+        event.sender.send('auto-update-error', err);
         ga.error('auto update -> download error: ' + err);
         return;
       }
@@ -122,7 +121,7 @@ function startUpdate(event) {
         err => {
           if (err) {
             ga.error('auto update -> unpacking error: ' + err);
-            event.sender.send('unpack-complete', err);
+            event.sender.send('auto-update-error', err);
             return;
           }
 
