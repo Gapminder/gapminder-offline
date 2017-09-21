@@ -116,9 +116,11 @@ export class AppComponent implements OnInit {
     saveMenu.enabled = isItemEnabled;
     saveForWebMenu.enabled = false;
 
-    if (currentTab && currentTab.chartType === 'BubbleChart') {
-      saveForWebMenu.enabled = isItemEnabled;
-    }
+    // if (currentTab && currentTab.chartType === 'BubbleChart') {
+      // saveForWebMenu.enabled = isItemEnabled;
+    // }
+
+    saveForWebMenu.enabled = true;
 
     saveAllTabs.enabled = this.areChartsAvailable();
   }

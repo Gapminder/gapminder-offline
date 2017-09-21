@@ -51,10 +51,10 @@
     <li class="menu-item" *ngIf="!areChartsAvailable()">
         <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Save all tabs...</span></button>
     </li>
-    <li class="menu-item" *ngIf="getCurrentTab() && getCurrentTab().chartType === 'BubbleChart'" (click)="execute('exportForWeb')">
+    <li class="menu-item" *ngIf="getCurrentTab() && getCurrentTab().chartType" (click)="execute('exportForWeb')">
         <button type="button" class="menu-btn"><span class="menu-text">Export for Web...</span></button>
     </li>
-    <li class="menu-item" *ngIf="getCurrentTab() && getCurrentTab().chartType !== 'BubbleChart'">
+    <li class="menu-item" *ngIf="getCurrentTab() && !getCurrentTab().chartType">
         <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Export for Web...</span></button>
     </li>
     <li class="menu-separator"></li>
