@@ -16,3 +16,9 @@
       <input type="button" (click)="processExitAndFinishUpdateRequest()" value="Ok" class="btn" />
     </span>
 </div>
+<div *ngIf="error">
+    <div class="label">Unable to process update... More info in <i>auto-update-err.log</i></div>
+    <span>
+      <input type="button" (click)="resetError()" value="Ok" class="btn" />
+    </span>
+</div>

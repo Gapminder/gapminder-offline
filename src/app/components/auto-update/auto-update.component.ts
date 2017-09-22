@@ -15,6 +15,7 @@ export class AutoUpdateComponent implements OnInit {
   public requestToExitAndFinishUpdate: boolean = false;
   public max: number = 200;
   public progress: number = 0;
+  public error: boolean = false;
 
   @Output() public onAutoUpdateRequested: EventEmitter<any> = new EventEmitter();
   @Output() public onAutoUpdateProgress: EventEmitter<any> = new EventEmitter();
@@ -64,6 +65,12 @@ export class AutoUpdateComponent implements OnInit {
       this.requestToExitAndFinishUpdate = true;
       this.onAutoUpdateCompleted.emit();
     });
+
+    ipc.on('auto-update-error', () => {
+      this.error = true;
+      this.requestToProgress = false;
+      this.onAutoUpdateRequested.emit();
+    });
   }
 
   public processUpdateRequest(version?: string): void {
@@ -81,5 +88,9 @@ export class AutoUpdateComponent implements OnInit {
 
   public processExitAndFinishUpdateRequest(): void {
     electron.ipcRenderer.send('exit-and-update');
+  }
+
+  public resetError(): void {
+    this.error = false;
   }
 }
