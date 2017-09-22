@@ -13,7 +13,7 @@
   OutFile ".\release\Install Gapminder Offline.exe"
 
   ;Default installation folder
-  InstallDir "$PROGRAMFILES\Gapminder Offline"
+  InstallDir "$PROFILE\Gapminder Offline"
   
 ;--------------------------------
 ;Interface Settings
