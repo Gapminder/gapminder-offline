@@ -93,6 +93,13 @@ export class AppComponent implements OnInit {
       this.doOpenAllCompleted(event, parameters);
     });
 
+    ipcRenderer.on('check-tab-by-default', () => {
+      if (this.tabsModel.length <= 0) {
+        this.chartService.initTab(this.tabsModel);
+        this.doDetectChanges();
+      }
+    });
+
     this.dataItemsAvailability();
   }
 
@@ -117,7 +124,7 @@ export class AppComponent implements OnInit {
     saveForWebMenu.enabled = false;
 
     // if (currentTab && currentTab.chartType === 'BubbleChart') {
-      // saveForWebMenu.enabled = isItemEnabled;
+    // saveForWebMenu.enabled = isItemEnabled;
     // }
 
     saveForWebMenu.enabled = true;
