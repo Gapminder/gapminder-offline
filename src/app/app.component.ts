@@ -12,7 +12,7 @@ import { ModalDirective } from 'ng2-bootstrap';
 import { ChartService } from './components/tabs/chart.service';
 import { TabModel } from './components/tabs/tab.model';
 import { MessageService } from './message.service';
-import { CLEAR_EDITABLE_TABS_ACTION, OPEN_DDF_FOLDER_ACTION, TAB_READY_ACTION, SWITCH_MENU_ACTION } from './constants';
+import { CLEAR_EDITABLE_TABS_ACTION, OPEN_DDF_FOLDER_ACTION, TAB_READY_ACTION, SWITCH_MENU_ACTION, MODEL_CHANGED } from './constants';
 import { initMenuComponent } from './components/menu/system-menu';
 import { getMenuActions } from './components/menu/menu-actions';
 import { remote } from 'electron';
@@ -83,6 +83,10 @@ export class AppComponent implements OnInit {
         if (event.message === SWITCH_MENU_ACTION) {
           this.switchMenu();
         }
+
+        if (event.message === MODEL_CHANGED) {
+          this.dataItemsAvailability();
+        }
       });
 
     ipcRenderer.on('do-open-completed', (event: any, parameters: any) => {
@@ -121,12 +125,6 @@ export class AppComponent implements OnInit {
     csvFileItem.enabled = isItemEnabled;
     ddfFolderItem.enabled = isItemEnabled;
     saveMenu.enabled = isItemEnabled;
-    saveForWebMenu.enabled = false;
-
-    // if (currentTab && currentTab.chartType === 'BubbleChart') {
-    // saveForWebMenu.enabled = isItemEnabled;
-    // }
-
     saveForWebMenu.enabled = true;
 
     saveAllTabs.enabled = this.areChartsAvailable();

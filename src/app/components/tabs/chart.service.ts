@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { TabModel } from './tab.model';
 import { DdfFolderDescriptor } from '../descriptors/ddf-folder.descriptor';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
+import { MessageService } from '../../message.service';
+import { MODEL_CHANGED } from '../../constants';
 
 const fs = require('fs');
 
@@ -27,12 +29,14 @@ export class ChartService {
   public isDevMode: boolean = false;
   public ddfFolderDescriptor: DdfFolderDescriptor;
   public currentTab: TabModel;
+  public messageService: MessageService;
 
   public static getFirst(arr: any[]): any {
     return arr && arr.length > 0 ? arr[0] : null;
   }
 
-  public constructor() {
+  public constructor(messageService: MessageService) {
+    this.messageService = messageService;
     this.ddfFolderDescriptor = new DdfFolderDescriptor();
   }
 
@@ -47,6 +51,8 @@ export class ChartService {
 
     tabsModel.forEach((tab: TabModel) => tab.active = false);
     tabsModel.push(newTab);
+
+    this.messageService.sendMessage(MODEL_CHANGED);
   }
 
   public setReaderDefaults(tab: TabModel | TabDataDescriptor): void {
@@ -86,6 +92,8 @@ export class ChartService {
 
     console.log(tab.model);
 
+    this.messageService.sendMessage(MODEL_CHANGED);
+
     if (this.isDevMode) {
       this.log(JSON.stringify(tab.model));
     }
@@ -119,6 +127,8 @@ export class ChartService {
 
       tabsModel.forEach((tab: TabModel) => tab.active = false);
       tabsModel.push(newTab);
+
+      this.messageService.sendMessage(MODEL_CHANGED);
 
       if (onChartReady) {
         onChartReady();
