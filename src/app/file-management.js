@@ -156,6 +156,10 @@ const openFile = (event, fileName, currentDir, fileNameOnly) => {
         if (!_.isEmpty(newConfig)) {
           event.sender.send('do-open-all-completed', newConfig);
         }
+
+        setTimeout(() => {
+          event.sender.send('check-tab-by-default');
+        }, 500);
       });
     }
 
@@ -172,6 +176,10 @@ const openFile = (event, fileName, currentDir, fileNameOnly) => {
             event.sender.send('do-open-completed', {tab: newConfig, file: fileNameOnly});
           }
         }
+
+        setTimeout(() => {
+          event.sender.send('check-tab-by-default');
+        }, 500);
       });
     }
   });
