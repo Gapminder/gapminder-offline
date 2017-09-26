@@ -4,3 +4,4 @@ export const OPEN_DDF_FOLDER_ACTION: string = 'open ddf folder';
 export const TABS_LOGO_ACTION: string = 'tabs logo';
 export const TABS_ADD_TAB_ACTION: string = 'tabs add tab';
 export const SWITCH_MENU_ACTION: string = 'switch menu';
+export const MODEL_CHANGED: string = 'model changed';

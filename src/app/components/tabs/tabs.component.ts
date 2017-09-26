@@ -5,7 +5,7 @@ import { TabModel } from './tab.model';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { ITabActionsSynchronizer } from '../tabs-new/tabs.common';
 import { AlertModel } from './alert.model';
-import { TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION } from '../../constants';
+import { TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, MODEL_CHANGED } from '../../constants';
 import { MessageService } from '../../message.service';
 
 declare const electron: any;
@@ -105,6 +105,8 @@ export class TabsComponent implements OnInit {
       onTabRemove: (index: number) => {
         this.tabsModel.splice(index, 1);
         this.onTabRemoved.emit();
+
+        this.messageService.sendMessage(MODEL_CHANGED);
       },
       onTabChanged: (tabDescriptor: any, index: number) => {
         this.tabsModel[index].title = tabDescriptor.title;

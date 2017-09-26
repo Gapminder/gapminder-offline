@@ -13,7 +13,10 @@ import { TabNewComponent } from './tab.component';
 import { ITabActionsSynchronizer } from './tabs.common';
 import { MessageService } from '../../message.service';
 import { Subscription } from 'rxjs/Subscription';
-import { CLEAR_EDITABLE_TABS_ACTION, TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, SWITCH_MENU_ACTION } from '../../constants';
+import {
+  CLEAR_EDITABLE_TABS_ACTION, TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, SWITCH_MENU_ACTION,
+  MODEL_CHANGED
+} from '../../constants';
 
 const TAB_TIMEOUT = 100;
 const SCROLL_TIMEOUT = 200;
@@ -103,6 +106,8 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
         this.resetEditMode();
       }
     }
+
+    this.messageService.sendMessage(MODEL_CHANGED);
   }
 
   public removeTab(tab: TabNewComponent): void {
