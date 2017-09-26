@@ -1,3 +1,7 @@
+rmdir .\src\app\export-template\libs /s /q
+del .\src\app\export-template\libs
+mkdir .\src\app\export-template\libs
+
 copy .\node_modules\vizabi-ddfcsv-reader\dist\vizabi-ddfcsv-reader.js .\src\app\export-template\libs
 
 copy .\node_modules\vizabi\build\vizabi.js .\src\app\libs
