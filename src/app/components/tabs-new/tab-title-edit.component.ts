@@ -5,7 +5,7 @@ import { Component, Input, Output, EventEmitter, AfterContentInit, ViewChild, El
   template: `
       <input #tabEditInput
              class = "editTabInput"
-             (blur) = "doBlur()"
+             (blur) = "doBlur($event)"
              (keyup.enter) = "doEnter()"
              (keyup.esc) = "doEsc()"
              [ngModel] = "title"
@@ -20,11 +20,21 @@ export class TabTitleEditComponent implements AfterContentInit {
   @Output() public esc: EventEmitter<any> = new EventEmitter();
   @ViewChild('tabEditInput') public tabEditInput: ElementRef;
 
+  private initTitle: string;
+  private escFlag: boolean;
+
   public ngAfterContentInit(): void {
+    this.escFlag = false;
+    this.initTitle = this.title;
     this.tabEditInput.nativeElement.focus();
   }
 
-  public doBlur(): void {
+  public doBlur(event: any): void {
+    if (event.srcElement && event.srcElement.value && !this.escFlag) {
+      this.title = event.srcElement.value;
+      this.titleChange.emit(this.title);
+    }
+
     this.blur.emit();
   }
 
@@ -36,6 +46,8 @@ export class TabTitleEditComponent implements AfterContentInit {
 
   public doEsc(): void {
     if (this.title) {
+      this.escFlag = true;
+      this.title = this.initTitle;
       this.esc.emit();
     }
   }
