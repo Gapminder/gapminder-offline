@@ -1,8 +1,8 @@
-import * as fs from 'fs';
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ChartService } from '../tabs/chart.service';
 import { isEmpty } from 'lodash';
 import { TabModel } from '../tabs/tab.model';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 const vizabiStateFacade: any = {
   getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
@@ -29,8 +29,8 @@ const vizabiStateFacade: any = {
 export class CsvConfigFormComponent {
   @Input() public addDataMode?: boolean = false;
   @Output() public done: EventEmitter<any> = new EventEmitter();
-  @ViewChild('uploadBtn') public uploadBtn: ElementRef;
 
+  public reactiveForm: FormGroup;
   public timeFormats: string[] = ['year', 'month', 'day', 'week', 'quarter'];
   public timeFormat: string = this.timeFormats[0];
   public timeFormatDescription: any = {
@@ -82,9 +82,13 @@ export class CsvConfigFormComponent {
   private useYourDataVisible: boolean = false;
   private delimiter: string = 'auto';
   private file: string = '';
+  private lastModified: string = '';
 
-  public constructor(chartService: ChartService) {
+  public constructor(chartService: ChartService, fb: FormBuilder) {
     this.chartService = chartService;
+    this.reactiveForm = fb.group({
+      result: ['']
+    });
   }
 
   @Input()
@@ -105,26 +109,24 @@ export class CsvConfigFormComponent {
   }
 
   public ok(): void {
-    fs.stat(this.file, (err: any, stats: any) => {
-      const config: any = {
-        chartType: this.chartType,
-        reader: this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
-        path: this.file,
-        delimiter: this.delimiter,
-        lastModified: stats.mtime.valueOf()
-      };
+    const config: any = {
+      chartType: this.chartType,
+      reader: this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
+      path: this.file,
+      delimiter: this.delimiter,
+      lastModified: this.lastModified
+    };
 
-      if (this.delimiter === 'auto') {
-        delete config.delimiter;
-      }
+    if (this.delimiter === 'auto') {
+      delete config.delimiter;
+    }
 
-      if (!isEmpty(this.timeFormatDescription[this.timeFormat].state)) {
-        config.state = this.timeFormatDescription[this.timeFormat].state;
-      }
+    if (!isEmpty(this.timeFormatDescription[this.timeFormat].state)) {
+      config.state = this.timeFormatDescription[this.timeFormat].state;
+    }
 
-      this.done.emit(config);
-      this.reset();
-    });
+    this.done.emit(config);
+    this.reset();
   }
 
   public close(): void {
@@ -136,7 +138,6 @@ export class CsvConfigFormComponent {
     this.isExampleRows = false;
     this.isExampleColumns = false;
     this.file = '';
-    this.uploadBtn.nativeElement.value = '';
   }
 
   private getCurrentTabInstance(): boolean {
@@ -195,11 +196,13 @@ export class CsvConfigFormComponent {
     this.useYourDataVisible = !this.useYourDataVisible;
   }
 
-  private onCsvFileChanged(event: any): void {
-    const selectedFile = ChartService.getFirst(event.srcElement.files);
-
-    if (selectedFile) {
-      this.file = selectedFile.path;
+  private onCsvFileChanged(fileDescriptor: any): void {
+    if (fileDescriptor) {
+      this.file = fileDescriptor.file;
+      this.lastModified = fileDescriptor.lastModified;
+    } else {
+      this.file = '';
+      this.lastModified = null;
     }
   }
 

@@ -1,0 +1,10 @@
+<div class = "fileUpload btn btn-default">
+    <span>Choose CSV file</span>
+    <input #uploadBtn type = "file" accept = ".csv" class = "upload" (change) = "onCsvFileChanged($event)"/>
+</div>
+<input #uploadFileInput
+       [value] = "file"
+       (change) = "onChange($event)"
+       (keyup) = "onChange($event)"
+       [ngClass] = "fileDoesNotExistsError && file ? 'wrong-file' : 'good-file'"
+       size = "90"/>
