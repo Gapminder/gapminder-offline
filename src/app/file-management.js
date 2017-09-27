@@ -136,6 +136,8 @@ const getConfigWithoutAbandonedData = config => {
   return newConfig;
 };
 const openFile = (event, fileName, currentDir, fileNameOnly) => {
+  const sender = event.sender || event.webContents;
+
   fs.readFile(fileName, 'utf-8', (err, data) => {
     if (err) {
       dialog.showErrorBox('File reading error', err.message);
@@ -154,11 +156,11 @@ const openFile = (event, fileName, currentDir, fileNameOnly) => {
         const newConfig = getConfigWithoutAbandonedData(config);
 
         if (!_.isEmpty(newConfig)) {
-          event.sender.send('do-open-all-completed', newConfig);
+          sender.send('do-open-all-completed', newConfig);
         }
 
         setTimeout(() => {
-          event.sender.send('check-tab-by-default');
+          sender.send('check-tab-by-default');
         }, 500);
       });
     }
@@ -173,12 +175,12 @@ const openFile = (event, fileName, currentDir, fileNameOnly) => {
           const newConfig = _.head(newConfigAsArray);
 
           if (!_.isEmpty(newConfig)) {
-            event.sender.send('do-open-completed', {tab: newConfig, file: fileNameOnly});
+            sender.send('do-open-completed', {tab: newConfig, file: fileNameOnly});
           }
         }
 
         setTimeout(() => {
-          event.sender.send('check-tab-by-default');
+          sender.send('check-tab-by-default');
         }, 500);
       });
     }

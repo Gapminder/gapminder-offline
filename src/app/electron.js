@@ -300,7 +300,11 @@ app.on('ready', () => {
 app.on('open-file', (event, filePath) => {
   event.preventDefault();
 
-  if (!devMode && !autoUpdateTestMode) {
-    currentFile = filePath;
+  if (mainWindow && mainWindow.webContents) {
+    fileManagement.openFileWhenDoubleClick(mainWindow, filePath);
+  } else {
+    if (!devMode && !autoUpdateTestMode) {
+      currentFile = filePath;
+    }
   }
 });
