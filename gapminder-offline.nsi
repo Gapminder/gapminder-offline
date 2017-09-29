@@ -9,6 +9,7 @@
 ;General
 
   ;Name and file
+  AutoCloseWindow true
   Name "Gapminder Tools Offline"
   OutFile ".\release\Install Gapminder Offline.exe"
 
