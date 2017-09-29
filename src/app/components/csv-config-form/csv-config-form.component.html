@@ -32,11 +32,10 @@
     <div class="step-block">
         <h4>Step {{addDataMode ? 2 : 3}}: Pick a file:</h4>
         <div>
-            <div class="fileUpload btn btn-default">
-                <span>Choose CSV file</span>
-                <input #uploadBtn type="file" accept=".csv" class="upload" (change)="onCsvFileChanged($event)" />
-            </div>
-            <input placeholder="{{file}}" disabled="disabled" style="width: 60%;" />
+            <form [formGroup]="reactiveForm">
+                <smart-file-selector formControlName="result" (done) = "onCsvFileChanged($event)"></smart-file-selector>
+            </form>
+            <!--<p>form is valid: {{ reactiveForm.valid ? 'true' : 'false' }}</p>-->
         </div>
     </div>
 
