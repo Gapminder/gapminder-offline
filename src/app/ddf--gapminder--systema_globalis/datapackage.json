@@ -1,12 +1,19 @@
 {
     "name": "ddf--gapminder--systema_globalis",
+    "title": "ddf--gapminder--systema_globalis",
+    "author": "Gapminder",
+    "description": "",
+    "license": "",
+    "version": "1.2.3",
     "language": {
-        "id": "en"
+        "id": "en",
+        "name": "English"
     },
     "last_updated": "2017-09-06 14:03:17",
     "translations": [
         {
-            "id": "ar-SA"
+            "id": "ar-SA",
+            "name": "العربية"
         },
         {
             "id": "es-ES"
@@ -25,7 +32,6 @@
         }
     ],
     "id": "sg-dataset",
-    "version": "1.2.2",
     "resources": [
         {
             "path": "ddf--concepts.csv",
