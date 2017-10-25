@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { Injectable } from '@angular/core';
 import { TabModel } from './tab.model';
 import { DdfFolderDescriptor } from '../descriptors/ddf-folder.descriptor';
@@ -62,7 +63,7 @@ export class ChartService {
     tab.readerName = 'ddf1-csv-ext';
   }
 
-  public newChart(tab: TabModel, tabDataDescriptor: TabDataDescriptor, onChartReady?: Function, isDefaults: boolean = true): void {
+  public newChart(tab: TabModel, tabDataDescriptor: TabDataDescriptor, isDefaults: boolean = true): string {
     if (isDefaults) {
       this.ddfFolderDescriptor.defaults();
     }
@@ -74,21 +75,28 @@ export class ChartService {
     tab.additionalData = this.ddfFolderDescriptor.additionalData;
 
     const chartType = tab.chartType;
-    const config = isDefaults ? configSg[chartType] : {};
+    const config = isDefaults ? {...configSg[chartType]} : {ui: {}};
+    const ddfFolderDescriptor = this.getDdfFolderDescriptor(this.ddfFolderDescriptor.ddfUrl);
+
+    if (ddfFolderDescriptor.error) {
+      return ddfFolderDescriptor.error;
+    }
 
     config.data = {
       reader: 'ddf1-csv-ext',
       ddfPath: this.ddfFolderDescriptor.ddfUrl,
       path: this.ddfFolderDescriptor.ddfUrl,
-      assetsPath: './preview-data/'
+      assetsPath: './preview-data/',
+      _lastModified: ddfFolderDescriptor.lastModified
     };
+
     config.locale = {
       id: 'en',
       filePath: './preview-data/translation/'
     };
 
+    config.ui.splash = false;
     tab.model = config;
-    tab.model.ui.splash = false;
 
     console.log(tab.model);
 
@@ -98,12 +106,10 @@ export class ChartService {
       this.log(JSON.stringify(tab.model));
     }
 
-    if (onChartReady) {
-      onChartReady(tab);
-    }
+    return null;
   }
 
-  public newSimpleChart(tabsModel: TabModel[], properties: any, onChartReady?: Function): void {
+  public newSimpleChart(tabsModel: TabModel[], properties: any, onChartReady ?: Function): void {
     const newTab = new TabModel(properties.chartType, true);
 
     fs.stat(properties.path, (err: any, stats: any) => {
@@ -143,5 +149,26 @@ export class ChartService {
 
   public areChartsAvailable(tabsModel: TabModel[]): boolean {
     return tabsModel.filter((tab: TabModel) => tab.chartType).length > 0;
+  }
+
+  private getDdfFolderDescriptor(ddfUrl: string): { error: string; lastModified: string } {
+    let error = null;
+    let lastModified = null;
+
+    try {
+      const folderStats = fs.statSync(ddfUrl);
+      const dataPackageFile = path.resolve(ddfUrl, 'datapackage.json');
+      const dataPackageStats = fs.statSync(dataPackageFile);
+
+      lastModified = folderStats.isDirectory() && dataPackageStats.isFile() ? folderStats.mtime.toISOString() : null;
+    } catch (_error) {
+      error = _error.message;
+    }
+
+    if (!error && !lastModified) {
+      error = 'wrong path type';
+    }
+
+    return {error, lastModified};
   }
 }
