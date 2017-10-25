@@ -22,7 +22,7 @@ export class TabModel {
 
   public readerModuleObject: any;
   public readerGetMethod: string;
-  public readerParams: any[];
+  public readerPlugins: any[];
   public readerName: string;
   public component: any;
   public instance: any;

@@ -1,6 +1,6 @@
 export interface TabDataDescriptor {
   readerModuleObject?: any;
   readerGetMethod?: string;
-  readerParams?: Array<any>;
+  readerPlugins?: any[];
   readerName?: string;
 }
