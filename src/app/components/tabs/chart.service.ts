@@ -59,7 +59,7 @@ export class ChartService {
   public setReaderDefaults(tab: TabModel | TabDataDescriptor): void {
     tab.readerModuleObject = ddfCsvReaderLib;
     tab.readerGetMethod = 'getDDFCsvReaderObject';
-    tab.readerParams = this.isDevMode ? [new BackendFileReader(), console] : [new BackendFileReader()];
+    tab.readerPlugins = this.isDevMode ? [new BackendFileReader(), console] : [new BackendFileReader()];
     tab.readerName = 'ddf1-csv-ext';
   }
 
@@ -70,7 +70,7 @@ export class ChartService {
 
     tab.readerModuleObject = tabDataDescriptor.readerModuleObject;
     tab.readerGetMethod = tabDataDescriptor.readerGetMethod;
-    tab.readerParams = tabDataDescriptor.readerParams;
+    tab.readerPlugins = tabDataDescriptor.readerPlugins;
     tab.readerName = tabDataDescriptor.readerName;
     tab.additionalData = this.ddfFolderDescriptor.additionalData;
 

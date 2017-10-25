@@ -57,7 +57,7 @@
     "lodash": "4.17.4",
     "minimist": "1.2.0",
     "ng2-bootstrap": "1.6.3",
-    "ng2-vizabi": "1.1.6",
+    "ng2-vizabi": "2.0.0",
     "rxjs": "5.4.1",
     "vizabi": "0.26.6-4",
     "vizabi-barrankchart": "1.0.23",
