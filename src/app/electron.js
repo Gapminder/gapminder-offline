@@ -237,7 +237,7 @@ function startMainApplication() {
         if (!errDsUpdate && actualVersionDsUpdate) {
           updateProcessDescriptor = new UpdateProcessDescriptor('dataset', actualVersionDsUpdate, DS_FEED_URL);
 
-          event.sender.send('request-to-update', actualVersionDsUpdate);
+          event.sender.send('request-to-ds-update', actualVersionDsUpdate);
         }
       });
     });

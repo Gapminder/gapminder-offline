@@ -4,6 +4,12 @@
       <input type="button" (click)="processUpdateRequest()" value="Update now" class="btn" />
     </span>
 </div>
+<div *ngIf="requestToDatasetUpdate" style="display: inline;">
+    <div class="label">New dataset is available!</div>
+    <span>
+      <input type="button" (click)="processUpdateRequest()" value="Update now" class="btn" />
+    </span>
+</div>
 <div *ngIf="requestToProgress" class="progress">
     <progressbar [max]="max"
                  type="warning"
