@@ -11,6 +11,7 @@ const ipc = electron.ipcRenderer;
 })
 export class AutoUpdateComponent implements OnInit {
   public requestToUpdate: boolean = false;
+  public requestToDatasetUpdate: boolean = false;
   public requestToProgress: boolean = false;
   public requestToExitAndFinishUpdate: boolean = false;
   public max: number = 200;
@@ -34,6 +35,13 @@ export class AutoUpdateComponent implements OnInit {
     ipc.on('request-to-update', (event: any, version: string) => {
       if (version) {
         this.requestToUpdate = true;
+        this.onAutoUpdateRequested.emit();
+      }
+    });
+
+    ipc.on('request-to-ds-update', (event: any, version: string) => {
+      if (version) {
+        this.requestToDatasetUpdate = true;
         this.onAutoUpdateRequested.emit();
       }
     });
