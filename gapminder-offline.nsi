@@ -50,6 +50,7 @@ Section "Gapminder Tools Offline" SecMain
   
   file "release\Gapminder Offline-${arch}\blink_image_resources_200_percent.pak"
   file "release\Gapminder Offline-${arch}\content_resources_200_percent.pak"
+  file "release\Gapminder Offline-${arch}\pdf_viewer_resources.pak"
   file "release\Gapminder Offline-${arch}\content_shell.pak"
   file "release\Gapminder Offline-${arch}\d3dcompiler_47.dll"
   file "release\Gapminder Offline-${arch}\ffmpeg.dll"
@@ -128,6 +129,7 @@ Section "Uninstall"
   Delete "$INSTDIR\update-dataset-${arch}.exe"
   Delete "$INSTDIR\version"
   Delete "$INSTDIR\views_resources_200_percent.pak"
+  Delete "$INSTDIR\pdf_viewer_resources.pak"
   RMDir /r "$INSTDIR\resources"
   RMDir /r "$INSTDIR\locales"
 
