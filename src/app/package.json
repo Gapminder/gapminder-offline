@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "main": "electron.js",
   "googleAnalyticsId": "UA-67908993-4"
 }
