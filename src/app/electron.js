@@ -1,4 +1,5 @@
 const electron = require('electron');
+const path = require('path');
 const app = electron.app;
 const ipc = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
@@ -18,11 +19,12 @@ const packageJSON = require('./package.json');
 const GoogleAnalytics = require('./google-analytics');
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 
+const currentDir = path.resolve(__dirname, '..', '..');
 const spawn = childProcess.spawn;
 const dirs = {
-  linux: './',
-  darwin: __dirname + '/',
-  win32: '.\\'
+  linux: currentDir + path.sep,
+  darwin: __dirname + path.sep,
+  win32: currentDir + path.sep
 };
 
 process.noAsar = true;
