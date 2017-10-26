@@ -126,19 +126,21 @@ export class CsvConfigFormComponent {
     }
 
     this.done.emit(config);
-    this.reset();
+    // this.reset();
   }
 
   public close(): void {
     this.done.emit();
   }
 
+  /*
   private reset(): void {
     this.choice = '';
     this.isExampleRows = false;
     this.isExampleColumns = false;
     this.file = '';
   }
+  */
 
   private getCurrentTabInstance(): boolean {
     return this.chartService.currentTab && this.chartService.currentTab.instance ? this.chartService.currentTab.instance : null;
