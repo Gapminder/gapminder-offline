@@ -1,1 +1,0 @@
-xattr -dr com.apple.quarantine /Applications/Gapminder\ Offline-mac/Gapminder\ Offline.app
