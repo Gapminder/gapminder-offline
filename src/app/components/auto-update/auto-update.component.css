@@ -10,6 +10,7 @@
 }
 .progress {
     margin-top: 8px;
+    margin-bottom: 0;
 }
 .label {
     font-size: smaller;

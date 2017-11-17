@@ -1,6 +1,0 @@
-sleep 2
-cp -R ./cache/Gapminder\ Offline.app ../../../..
-rm -rf ./cache
-rm ./update-required
-sleep 1
-../../../Contents/MacOS/Gapminder\ Offline &

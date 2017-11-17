@@ -27,12 +27,12 @@ pack(platform, arch, err => {
   const exec = require('child_process').exec;
   const cmd = {
     'x64': {
-      linux: 'cp ./update-app-linux \"./release/Gapminder Offline-linux-x64/update-app\" && cp ./update-dataset-linux \"./release/Gapminder Offline-linux-x64/update-dataset\" && cd \"./release/Gapminder Offline-linux-x64/resources/app\" && npm i electron-easy-updater fs-extra zip-dir semver universal-analytics is-online',
-      darwin: 'cp ./init-macos-sierra \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app\" && cp ./update-app-darwin \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app/update-app\" && cp ./update-dataset-darwin \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app/update-dataset\" && cd \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app\" && npm i electron-easy-updater fs-extra zip-dir semver universal-analytics is-online',
-      win32: 'copy invisible.vbs \"release\\Gapminder Offline-win32-x64\\invisible.vbs\" && copy update-app-win64.exe \"release\\Gapminder Offline-win32-x64\\update-app-win64.exe\" && copy update-dataset-win64.exe \"release\\Gapminder Offline-win32-x64\\update-dataset-win64.exe\" && cd \"release\\Gapminder Offline-win32-x64\\resources\\app\" && npm i electron-easy-updater fs-extra zip-dir semver universal-analytics is-online'
+      linux: 'cp ./updater-linux \"./release/Gapminder Offline-linux-x64/updater\" && cd \"./release/Gapminder Offline-linux-x64/resources/app\" && npm i electron-easy-updater fs-extra zip-dir semver universal-analytics is-online',
+      darwin: 'cp ./updater-darwin \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app/updater\" && cd \"./release/Gapminder Offline-darwin-x64/Gapminder Offline.app/Contents/Resources/app\" && npm i electron-easy-updater fs-extra zip-dir semver universal-analytics is-online',
+      win32: 'copy invisible.vbs \"release\\Gapminder Offline-win32-x64\\invisible.vbs\" && copy updater-win64.exe \"release\\Gapminder Offline-win32-x64\\updater-win64.exe\" && cd \"release\\Gapminder Offline-win32-x64\\resources\\app\" && npm i electron-easy-updater fs-extra zip-dir semver universal-analytics is-online'
     },
     'ia32': {
-      win32: 'copy invisible.vbs \"release\\Gapminder Offline-win32-ia32\\invisible.vbs\" && copy update-app-win32.exe \"release\\Gapminder Offline-win32-ia32\\update-app-win32.exe\" && copy update-dataset-win32.exe \"release\\Gapminder Offline-win32-ia32\\update-dataset-win32.exe\" && cd \"release\\Gapminder Offline-win32-ia32\\resources\\app\" && npm i electron-easy-updater fs-extra zip-dir semver universal-analytics is-online'
+      win32: 'copy invisible.vbs \"release\\Gapminder Offline-win32-ia32\\invisible.vbs\" && copy updater-win32.exe \"release\\Gapminder Offline-win32-ia32\\updater-win32.exe\" && cd \"release\\Gapminder Offline-win32-ia32\\resources\\app\" && npm i electron-easy-updater fs-extra zip-dir semver universal-analytics is-online'
     }
   };
 

@@ -1,5 +1,0 @@
-sleep 5
-yes | cp -rf ./cache/Gapminder\ Offline-linux/* .
-rm -rf ./cache
-rm ./update-required
-./Gapminder\ Offline

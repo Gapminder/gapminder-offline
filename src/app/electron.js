@@ -5,6 +5,7 @@ const ipc = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 const fs = require('fs');
 const fsExtra = require('fs-extra');
+const async = require('async');
 const request = require('request');
 const semver = require('semver');
 const autoUpdateConfig = require('./auto-update-config.json');
@@ -43,7 +44,8 @@ const getTypeByOsAndArch = (os, arch) => {
 
   return os;
 };
-const RELEASE_ARCHIVE = 'release.zip';
+const RELEASE_APP_ARCHIVE = 'release-app.zip';
+const RELEASE_DS_ARCHIVE = 'release-ds.zip';
 const FEED_VERSION_URL = autoUpdateTestMode ? autoUpdateConfig.FEED_VERSION_URL_TEST : autoUpdateConfig.FEED_VERSION_URL;
 const FEED_URL = autoUpdateConfig.FEED_URL.replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch));
 const PARTIAL_FEED_URL = autoUpdateConfig.PARTIAL_FEED_URL.replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch));
@@ -51,23 +53,30 @@ const DS_FEED_VERSION_URL = autoUpdateConfig.DS_FEED_VERSION_URL;
 const DS_FEED_URL = autoUpdateConfig.DS_FEED_URL;
 const PRESETS_FILE = __dirname + '/presets.json';
 const UPDATE_FLAG_FILE = `${dirs[process.platform]}update-required`;
-const CACHE_DIR = `${dirs[process.platform]}cache`;
+const CACHE_APP_DIR = `${dirs[process.platform]}cache-app`;
+const CACHE_DS_DIR = `${dirs[process.platform]}cache-ds`;
+const rollback = () => {
+  fsExtra.removeSync(CACHE_APP_DIR);
+  fsExtra.removeSync(CACHE_DS_DIR);
+};
+
+let updateProcessAppDescriptor;
+let updateProcessDsDescriptor;
 
 let mainWindow = null;
-let updateProcessDescriptor;
+
 let currentFile;
 
 class UpdateProcessDescriptor {
-  constructor(type, version, url) {
-    this.type = type;
+  constructor(version, url) {
     this.version = version;
     this.url = url || FEED_URL;
   }
 }
 
-function finishUpdate(type) {
+function finishUpdate() {
   if (process.platform !== 'win32') {
-    const updateCommand = dirs[process.platform] + 'update-' + type;
+    const updateCommand = dirs[process.platform] + 'updater';
 
     spawn(
       updateCommand,
@@ -83,7 +92,7 @@ function finishUpdate(type) {
   if (process.platform === 'win32') {
     spawn(
       'wscript.exe',
-      ['"invisible.vbs"', '"update-' + type + '-' + getTypeByOsAndArch(process.platform, process.arch) + '.exe"'],
+      ['"invisible.vbs"', '"updater-' + getTypeByOsAndArch(process.platform, process.arch) + '.exe"'],
       {
         windowsVerbatimArguments: true,
         stdio: 'ignore',
@@ -96,44 +105,65 @@ function finishUpdate(type) {
 }
 
 function startUpdate(event) {
-  const releaseUrl = updateProcessDescriptor.url.replace('#version#', updateProcessDescriptor.version);
-
-  electronEasyUpdater.download({
-      url: releaseUrl,
-      version: app.getVersion(),
-      path: CACHE_DIR,
-      file: RELEASE_ARCHIVE
-    }, progress => {
-      event.sender.send('download-progress', progress);
-    },
-    err => {
-      if (err) {
-        event.sender.send('auto-update-error', err);
-        ga.error('auto update -> download error: ' + err);
-        return;
-      }
-
-      electronEasyUpdater.unpack({
-          directory: CACHE_DIR,
-          file: RELEASE_ARCHIVE
-        },
-        progress => {
-          event.sender.send('unpack-progress', progress);
-        },
-        err => {
-          if (err) {
-            ga.error('auto update -> unpacking error: ' + err);
-            event.sender.send('auto-update-error', err);
-            return;
-          }
-
-          fs.writeFile(UPDATE_FLAG_FILE, updateProcessDescriptor.type, () => {
-            ga.event('Run', `starting and trying auto update from ${app.getVersion()} to ${updateProcessDescriptor.version}`);
-            event.sender.send('unpack-complete', null);
-          });
-        });
+  const getLoader = (cacheDir, releaseArchive, updateProcessDescriptor) => cb => {
+    if (!updateProcessDescriptor) {
+      cb();
+      return;
     }
-  );
+
+    const releaseUrl = updateProcessDescriptor.url.replace('#version#', updateProcessDescriptor.version);
+
+    ga.event('Run', `starting and trying auto update from ${app.getVersion()} to ${updateProcessDescriptor.version}`);
+
+    electronEasyUpdater.download({
+        url: releaseUrl,
+        version: app.getVersion(),
+        path: cacheDir,
+        file: releaseArchive
+      }, progress => {
+        event.sender.send('download-progress', {progress, cacheDir});
+      },
+      err => {
+        if (err) {
+          event.sender.send('auto-update-error', err);
+          ga.error('auto update -> download error: ' + err);
+
+          cb(err);
+          return;
+        }
+
+        electronEasyUpdater.unpack({
+            directory: cacheDir,
+            file: releaseArchive
+          },
+          progress => {
+            event.sender.send('unpack-progress', {progress, cacheDir});
+          },
+          err => {
+            if (err) {
+              ga.error('auto update -> unpacking error: ' + err);
+              event.sender.send('auto-update-error', err);
+            }
+
+            cb(err);
+          });
+      }
+    );
+  };
+
+  async.parallel([
+    getLoader(CACHE_APP_DIR, RELEASE_APP_ARCHIVE, updateProcessAppDescriptor),
+    getLoader(CACHE_DS_DIR, RELEASE_DS_ARCHIVE, updateProcessDsDescriptor)
+  ], err => {
+    if (err) {
+      rollback();
+      return;
+    }
+
+    fs.writeFile(UPDATE_FLAG_FILE, 'need-to-update', () => {
+      event.sender.send('unpack-complete', null);
+    });
+  });
 }
 
 function startMainApplication() {
@@ -223,33 +253,38 @@ function startMainApplication() {
       url: FEED_VERSION_URL,
       version: app.getVersion()
     }, (errGenericUpdate, actualVersionGenericUpdate, versionDiffType) => {
-      if (!errGenericUpdate && actualVersionGenericUpdate) {
+      if (errGenericUpdate) {
+        return;
+      }
+
+      if (actualVersionGenericUpdate) {
         const url = versionDiffType === 'major' ? FEED_URL : PARTIAL_FEED_URL;
 
-        updateProcessDescriptor = new UpdateProcessDescriptor('app', actualVersionGenericUpdate, url);
-
-        event.sender.send('request-to-update', actualVersionGenericUpdate);
-        return;
+        updateProcessAppDescriptor = new UpdateProcessDescriptor(actualVersionGenericUpdate, url);
       }
 
       electronEasyUpdater.versionCheck({
         url: DS_FEED_VERSION_URL,
         version: dataPackage.version
       }, (errDsUpdate, actualVersionDsUpdate) => {
-        if (!errDsUpdate && actualVersionDsUpdate) {
-          updateProcessDescriptor = new UpdateProcessDescriptor('dataset', actualVersionDsUpdate, DS_FEED_URL);
+        if (errDsUpdate) {
+          return;
+        }
 
-          event.sender.send('request-to-ds-update', actualVersionDsUpdate);
+        if (actualVersionDsUpdate || actualVersionGenericUpdate) {
+          updateProcessDsDescriptor = new UpdateProcessDescriptor(actualVersionDsUpdate, DS_FEED_URL);
+
+          event.sender.send('request-to-update', {actualVersionDsUpdate, actualVersionGenericUpdate});
         }
       });
     });
   });
 
-  ipc.on('prepare-update', (event, version, type) => {
+  ipc.on('prepare-update', (event, version) => {
     if (version) {
       const url = semver.diff(app.getVersion(), version) === 'major' ? FEED_URL : PARTIAL_FEED_URL;
 
-      updateProcessDescriptor = new UpdateProcessDescriptor(type, version, url);
+      updateProcessAppDescriptor = new UpdateProcessDescriptor(version, url);
     }
 
     startUpdate(event);
@@ -272,9 +307,7 @@ function startMainApplication() {
   });
 
   ipc.on('exit-and-update', () => {
-    finishUpdate(updateProcessDescriptor.type, () => {
-      app.quit();
-    });
+    finishUpdate();
   });
 }
 
@@ -283,9 +316,9 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
-  fs.readFile(UPDATE_FLAG_FILE, 'utf8', (err, content) => {
+  fs.readFile(UPDATE_FLAG_FILE, 'utf8', (err) => {
     if (err) {
-      fsExtra.removeSync(CACHE_DIR);
+      rollback();
 
       ga.runEvent(false);
 
@@ -295,7 +328,7 @@ app.on('ready', () => {
 
     ga.runEvent(true);
 
-    finishUpdate(content);
+    finishUpdate();
   });
 });
 

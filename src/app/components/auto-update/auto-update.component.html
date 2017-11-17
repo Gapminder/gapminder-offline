@@ -16,7 +16,7 @@
                  class="progress-striped"
                  [value]="progress"></progressbar>
 </div>
-<div *ngIf="requestToExitAndFinishUpdate">
+<div *ngIf="!error && requestToExitAndFinishUpdate">
     <div class="label">Press OK and wait — the app will restart automatically.</div>
     <span>
       <input type="button" (click)="processExitAndFinishUpdateRequest()" value="OK" class="btn" />
