@@ -98,8 +98,6 @@ export class ChartService {
     config.ui.splash = false;
     tab.model = config;
 
-    console.log(tab.model);
-
     this.messageService.sendMessage(MODEL_CHANGED);
 
     if (this.isDevMode) {
