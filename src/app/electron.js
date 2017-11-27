@@ -106,7 +106,7 @@ function finishUpdate() {
 
 function startUpdate(event) {
   const getLoader = (cacheDir, releaseArchive, updateProcessDescriptor) => cb => {
-    if (!updateProcessDescriptor) {
+    if (!updateProcessDescriptor || !updateProcessDescriptor.version) {
       cb();
       return;
     }
