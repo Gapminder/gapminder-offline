@@ -194,6 +194,7 @@ export class AppComponent implements OnInit {
 
     if (firstFilePath) {
       this.addData({reader: 'ddf1-csv-ext', path: firstFilePath});
+      this.doDetectChanges();
     }
   }
 
