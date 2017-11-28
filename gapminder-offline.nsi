@@ -2,8 +2,6 @@
 ;Include Modern UI
 
   !include "MUI2.nsh"
-  !include "FileAssociation.nsh"
-  ;!include "FileFunc.nsh"
 
 ;--------------------------------
 ;General
@@ -13,11 +11,11 @@
   Name "Gapminder Tools Offline"
   OutFile ".\release\Install Gapminder Offline.exe"
 
-  RequestExecutionLevel user
+  RequestExecutionLevel admin
 
   ;Default installation folder
   InstallDir "$PROFILE\Gapminder Offline"
-  
+
 ;--------------------------------
 ;Interface Settings
 
@@ -32,13 +30,13 @@
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
-  
+
   !insertmacro MUI_UNPAGE_CONFIRM
   !insertmacro MUI_UNPAGE_INSTFILES
-  
+
 ;--------------------------------
 ;Languages
- 
+
   !insertmacro MUI_LANGUAGE "English"
 
 ;--------------------------------
@@ -47,7 +45,7 @@
 Section "Gapminder Tools Offline" SecMain
 
   SetOutPath "$INSTDIR"
-  
+
   file "release\Gapminder Offline-${arch}\blink_image_resources_200_percent.pak"
   file "release\Gapminder Offline-${arch}\content_resources_200_percent.pak"
   file "release\Gapminder Offline-${arch}\pdf_viewer_resources.pak"
@@ -71,16 +69,20 @@ Section "Gapminder Tools Offline" SecMain
   file /r "release\Gapminder Offline-${arch}\resources"
   file /r "release\Gapminder Offline-${arch}\locales"
 
-  
+
   ;Store installation folder
-  ;WriteRegStr HKCU "Software\Gapminder Offline" "" $INSTDIR
-  
+  WriteRegStr HKCU "Software\Gapminder Offline" "" $INSTDIR
+
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
   ; ExecWait '"C:\Program Files (x86)\Windows Kits\10\bin\x64\signtool.exe" sign /t http://timestamp.comodoca.com/authenticode /f gapminder.pfx /p main "$INSTDIR\Uninstall.exe"'
 
-  ${registerExtension} "$INSTDIR\Gapminder Offline.exe" ".gmstat" "GapminderStat_File"
+  WriteRegStr HKCR ".gmstat" "" "Gapminder.gmstat"
+  WriteRegStr HKCR "Gapminder.gmstat" "" "Gapminder Statistics File"
+  WriteRegStr HKCR "Gapminder.gmstat\shell" "" "open"
+  WriteRegStr HKCR "Gapminder.gmstat\shell\open\command" "" '"$INSTDIR\Gapminder Offline.exe" "%1"'
+  WriteRegStr HKCR "Gapminder.gmstat\DefaultIcon" "" "$INSTDIR\resources\app\app-icon.ico"
 
   CreateShortcut "$desktop\Gapminder Tools Offline.lnk" "$INSTDIR\Gapminder Offline.exe"
   CreateDirectory "$SMPROGRAMS\Gapminder Tools Offline"
@@ -139,9 +141,12 @@ Section "Uninstall"
 
   RMDir "$INSTDIR"
 
-  DeleteRegKey /ifempty HKCU "Software\Gapminder Offline"
+  DeleteRegKey HKCU "Software\Gapminder Offline"
 
-  ${unregisterExtension} ".gmstat" "GapminderStat_File"
+  DeleteRegKey HKCR "Gapminder.gmstat\shell\Play\command"
+  DeleteRegKey HKCR "Gapminder.gmstat\shell"
+  DeleteRegKey HKCR "Gapminder.gmstat\DefaultIcon"
+  DeleteRegKey HKCR "Gapminder.gmstat"
 
 SectionEnd
 
