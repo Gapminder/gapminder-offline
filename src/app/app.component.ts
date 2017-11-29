@@ -73,10 +73,16 @@ export class AppComponent implements OnInit {
 
             if (firstFilePath) {
               this.chartService.ddfFolderDescriptor.ddfUrl = firstFilePath;
-              this.chartService.initTab(this.tabsModel, event.options.chartType);
               this.chartService.setReaderDefaults(this.chartService.ddfFolderDescriptor);
 
-              const chartIssue = this.chartService.newChart(this.getCurrentTab(), this.chartService.ddfFolderDescriptor, false);
+              const newTab = new TabModel(event.options.chartType, false);
+              const chartIssue = this.chartService.newChart(newTab, this.chartService.ddfFolderDescriptor, false);
+
+              this.tabsModel.forEach((tab: TabModel) => tab.active = false);
+
+              newTab.active = true;
+
+              this.tabsModel.push(newTab);
 
               if (chartIssue) {
                 remote.dialog.showErrorBox('Error', `Could not open DDF folder ${this.chartService.ddfFolderDescriptor.ddfUrl}, because ${chartIssue}`);
