@@ -1,13 +1,17 @@
 sleep 2
 
-cp -R ./cache-app/Gapminder\ Offline.app ../../../..
-rm -rf ./cache-app
+if [ -d "cache-app" ]; then
+  cp -R ./cache-app/Gapminder\ Offline.app ../../../..
+  rm -rf ./cache-app
+fi
 
-cd cache-ds
-mv ddf--gapminder--systema_globalis* ddf--gapminder--systema_globalis
-cp -R ./ddf--gapminder--systema_globalis ..
-cd ..
-rm -rf ./cache-ds
+if [ -d "cd cache-ds" ]; then
+  cd cache-ds
+  mv ddf--gapminder--systema_globalis* ddf--gapminder--systema_globalis
+  cp -R ./ddf--gapminder--systema_globalis ..
+  cd ..
+  rm -rf ./cache-ds
+fi
 
 rm ./update-required
 sleep 1
