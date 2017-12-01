@@ -258,7 +258,7 @@ function startMainApplication() {
       }
 
       if (actualVersionGenericUpdate) {
-        const url = versionDiffType === 'major' ? FEED_URL : PARTIAL_FEED_URL;
+        const url = versionDiffType === 'patch' ? PARTIAL_FEED_URL : FEED_URL;
 
         updateProcessAppDescriptor = new UpdateProcessDescriptor(actualVersionGenericUpdate, url);
       }
