@@ -282,7 +282,7 @@ function startMainApplication() {
 
   ipc.on('prepare-update', (event, version) => {
     if (version) {
-      const url = semver.diff(app.getVersion(), version) === 'major' ? FEED_URL : PARTIAL_FEED_URL;
+      const url = semver.diff(app.getVersion(), version) === 'patch' ? PARTIAL_FEED_URL: FEED_URL;
 
       updateProcessAppDescriptor = new UpdateProcessDescriptor(version, url);
     }
