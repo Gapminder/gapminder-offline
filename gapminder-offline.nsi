@@ -84,6 +84,11 @@ Section "Gapminder Tools Offline" SecMain
   WriteRegStr HKCR "Gapminder.gmstat\shell\open\command" "" '"$INSTDIR\Gapminder Offline.exe" "%1"'
   WriteRegStr HKCR "Gapminder.gmstat\DefaultIcon" "" "$INSTDIR\resources\app\app-icon.ico"
 
+  WriteRegStr HKCR "Applications\Gapminder Offline.exe" "" ""
+  WriteRegStr HKCR "Applications\Gapminder Offline.exe" "FriendlyAppName" "Gapminder Offline"
+  WriteRegStr HKCR "Applications\Gapminder Offline.exe\shell\open" "" $ContextMenuEntry_PlayWith
+  WriteRegStr HKCR "Applications\Gapminder Offline.exe\shell\open\command" "" '"$INSTDIR\Gapminder Offline.exe" "%1"'
+
   CreateShortcut "$desktop\Gapminder Tools Offline.lnk" "$INSTDIR\Gapminder Offline.exe"
   CreateDirectory "$SMPROGRAMS\Gapminder Tools Offline"
   CreateShortcut "$SMPROGRAMS\Gapminder Tools Offline\Gapminder Tools Offline.lnk" "$INSTDIR\Gapminder Offline.exe"
@@ -147,6 +152,11 @@ Section "Uninstall"
   DeleteRegKey HKCR "Gapminder.gmstat\shell"
   DeleteRegKey HKCR "Gapminder.gmstat\DefaultIcon"
   DeleteRegKey HKCR "Gapminder.gmstat"
+
+  DeleteRegKey HKCR "Applications\Gapminder Offline.exe"
+  DeleteRegKey HKCR "Applications\Gapminder Offline.exe"
+  DeleteRegKey HKCR "Applications\Gapminder Offline.exe\shell\open"
+  DeleteRegKey HKCR "Applications\Gapminder Offline.exe\shell\open\command"
 
 SectionEnd
 

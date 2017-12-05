@@ -62,7 +62,7 @@ function pack(plat, arch, cb) {
     platform: plat,
     arch,
     prune: true,
-    'app-version': pkg.version || DEFAULT_OPTS.version,
+    'appVersion': pkg.version || DEFAULT_OPTS.version,
     'version-string': {
       CompanyName: companyName,
       ProductName: appName,
