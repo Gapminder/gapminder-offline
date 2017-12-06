@@ -17,6 +17,14 @@
                 <input #uploadBtn type="file" webkitdirectory directory class="upload" (change)="onDdfFolderChanged($event)" />
             </div>
             <input placeholder="{{parameters.selectedFolder}}" disabled="disabled" style="width: 60%;" />
+            <div *ngIf="!isDataPackageExists && !!parameters.selectedFolder">
+                Opening DDF directory was unsuccessful because the file datapackage.json is missing in it.<br>
+                This file is the key to a DDF dataset. If you don’t know how to add it, see how you can generate one here:<br>
+                <a href="#" (click)="openURL('https://github.com/Gapminder/ddf-validation')">https://github.com/Gapminder/ddf-validation/</a>.
+                If your dataset doesn’t follow DDF structure or if you are<br>
+                unsure what all of this means, see DDF docs here
+                <a href="#" (click)="openURL('https://open-numbers.github.io/ddf.html')">https://open-numbers.github.io/ddf.html</a>
+            </div>
         </div>
     </div>
 </div>
@@ -31,7 +39,7 @@
                 </div>
                 <div class="secondary-nav">
                     <input type="button" class="close-button" (click)="close()" value="Cancel" />
-                    <input type="button" class="ok-button" (click)="ok()" [disabled]="!parameters.selectedFolder" value="OK" />
+                    <input type="button" class="ok-button" (click)="ok()" [disabled]="!parameters.selectedFolder || !isDataPackageExists" value="OK" />
                 </div>
             </div>
         </div>
