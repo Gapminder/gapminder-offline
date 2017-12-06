@@ -95,6 +95,7 @@ function finishUpdate() {
       ['"invisible.vbs"', '"updater-' + getTypeByOsAndArch(process.platform, process.arch) + '.exe"'],
       {
         windowsVerbatimArguments: true,
+        cwd: dirs[process.platform],
         stdio: 'ignore',
         detached: true
       }
@@ -282,7 +283,7 @@ function startMainApplication() {
 
   ipc.on('prepare-update', (event, version) => {
     if (version) {
-      const url = semver.diff(app.getVersion(), version) === 'patch' ? PARTIAL_FEED_URL: FEED_URL;
+      const url = semver.diff(app.getVersion(), version) === 'patch' ? PARTIAL_FEED_URL : FEED_URL;
 
       updateProcessAppDescriptor = new UpdateProcessDescriptor(version, url);
     }
@@ -314,6 +315,24 @@ function startMainApplication() {
 app.on('window-all-closed', () => {
   app.quit();
 });
+
+const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) {
+      mainWindow.restore();
+    }
+
+    mainWindow.focus();
+
+    if (commandLine.length > 1) {
+      fileManagement.openFileWhenDoubleClick(mainWindow, commandLine[1]);
+    }
+  }
+});
+
+if (isSecondInstance) {
+  app.quit()
+}
 
 app.on('ready', () => {
   fs.readFile(UPDATE_FLAG_FILE, 'utf8', (err) => {
