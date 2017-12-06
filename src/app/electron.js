@@ -185,8 +185,8 @@ function startMainApplication() {
     event.sender.send('got-dev-mode', devMode);
   });
 
-  ipc.on('get-versions-info', event => {
-    event.sender.send('got-versions-info', {dataset: dataPackage.version, app: app.getVersion()});
+  ipc.on('get-versions-info', () => {
+    mainWindow.setTitle(`Gapminder Tools Offline v.${app.getVersion()} (dataset v.${dataPackage.version})`);
   });
 
   ipc.on('get-app-path', event => {
