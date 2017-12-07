@@ -1,6 +1,6 @@
 {
   "name": "gapminder-offline",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Gapminder Tools Offline",
   "main": "",
   "scripts": {
@@ -58,6 +58,7 @@
     "minimist": "1.2.0",
     "ng2-bootstrap": "1.6.3",
     "ng2-vizabi": "3.0.9",
+    "online-branch-exist": "2.0.2",
     "rxjs": "5.5.1",
     "vizabi": "0.27.0",
     "vizabi-barrankchart": "1.0.25",
