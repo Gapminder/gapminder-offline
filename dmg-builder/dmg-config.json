@@ -1,6 +1,6 @@
 {
   "title": "Gapminder Tools Offline",
-  "icon": "gapminder.icns",
+  "icon": "gapminder_package.icns",
   "background": "gapminder.png",
   "window": {
      "with": 898,
