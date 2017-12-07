@@ -29,8 +29,17 @@ const WEB_PATH = {
   darwin: app.getAppPath() + '/../../../../web'
 };
 
+const previouslyOpened = {};
+
 const getPathCorrectFunction = brokenPathObject => onPathReady => {
   const parsed = path.parse(brokenPathObject.path);
+
+  if (previouslyOpened[parsed.base]) {
+    brokenPathObject.path = previouslyOpened[parsed.base];
+
+    onPathReady();
+    return;
+  }
 
   dialog.showMessageBox({
     type: 'question',
@@ -39,8 +48,11 @@ const getPathCorrectFunction = brokenPathObject => onPathReady => {
     message: `The chart you are about to open depends on the external file ${parsed.base}, which was not found because it was moved or renamed or left on some other computer. Press OK to help locate the file or Cancel to ignore and just open the app.`
   }, function (response) {
     if (response === 0) {
+      const properties = brokenPathObject.reader.indexOf('ddf') === 0 ? ['openDirectory'] : ['openFile'];
+
       dialog.showOpenDialog({
         title: `Choose correct location for "${parsed.base}"...`,
+        properties
       }, dirPaths => {
         if (!dirPaths || dirPaths.length < 0) {
           brokenPathObject.__abandoned = true;
@@ -49,6 +61,8 @@ const getPathCorrectFunction = brokenPathObject => onPathReady => {
         }
 
         brokenPathObject.path = dirPaths[0];
+        previouslyOpened[parsed.base] = brokenPathObject.path;
+
         onPathReady();
       });
     } else {
