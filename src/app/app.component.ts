@@ -1,4 +1,5 @@
 import * as waterfall from 'async-waterfall';
+import { isEmpty } from 'lodash';
 import {
   Component,
   OnInit,
@@ -185,12 +186,19 @@ export class AppComponent implements OnInit {
 
   public addData(data: any): void {
     const currentTab = this.getCurrentTab();
-    const newAdditionalData = currentTab.additionalData.slice();
+    const pathDoesNotExist = isEmpty(currentTab.additionalData.filter((item: any) => item.path === data.path));
 
-    this.chartService.log('add data', data);
+    let newAdditionalData = [];
 
-    newAdditionalData.push(data);
+    if (pathDoesNotExist) {
+      newAdditionalData.push(data);
+    } else {
+      newAdditionalData = currentTab.additionalData.map((item: any) => item.path === data.path ? data : item);
+    }
+
     currentTab.additionalData = newAdditionalData;
+
+    this.chartService.log('add data', data, currentTab.additionalData);
 
     ipcRenderer.send('modify-chart', `user data was added to ${currentTab.chartType}`);
   }
