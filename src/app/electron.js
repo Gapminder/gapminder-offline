@@ -8,6 +8,7 @@ const fsExtra = require('fs-extra');
 const async = require('async');
 const request = require('request');
 const semver = require('semver');
+const onlineBranchExist = require('online-branch-exist');
 const autoUpdateConfig = require('./auto-update-config.json');
 const electronEasyUpdater = require('electron-easy-updater');
 const fileManagement = require('./file-management');
@@ -267,15 +268,29 @@ function startMainApplication() {
       electronEasyUpdater.versionCheck({
         url: DS_FEED_VERSION_URL,
         version: dataPackage.version
-      }, (errDsUpdate, actualVersionDsUpdate) => {
+      }, (errDsUpdate, actualVersionDsUpdateParam) => {
         if (errDsUpdate) {
           return;
         }
 
-        if (actualVersionDsUpdate || actualVersionGenericUpdate) {
-          updateProcessDsDescriptor = new UpdateProcessDescriptor(actualVersionDsUpdate, DS_FEED_URL);
+        let actualVersionDsUpdate = null;
 
-          event.sender.send('request-to-update', {actualVersionDsUpdate, actualVersionGenericUpdate});
+        if (actualVersionDsUpdateParam || actualVersionGenericUpdate) {
+          if (actualVersionDsUpdateParam && semver.valid(actualVersionDsUpdateParam)) {
+            const tagVersion = autoUpdateConfig.DS_TAG.replace(/#version#/, actualVersionDsUpdateParam);
+
+            onlineBranchExist.tag(tagVersion, (err, res) => {
+              if (res) {
+                actualVersionDsUpdate = actualVersionDsUpdateParam;
+              }
+
+              updateProcessDsDescriptor = new UpdateProcessDescriptor(actualVersionDsUpdate, DS_FEED_URL);
+
+              event.sender.send('request-to-update', {actualVersionDsUpdate, actualVersionGenericUpdate});
+            });
+          } else {
+            event.sender.send('request-to-update', {actualVersionGenericUpdate});
+          }
         }
       });
     });
