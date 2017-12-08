@@ -149,6 +149,16 @@ export class ChartService {
     return tabsModel.filter((tab: TabModel) => tab.chartType).length > 0;
   }
 
+  public getLastModifiedForFile(filePath: string): void {
+    try {
+      const stats = fs.statSync(filePath);
+
+      return stats.mtime.valueOf();
+    } catch (err) {
+      return null;
+    }
+  }
+
   private getDdfFolderDescriptor(ddfUrl: string): { error: string; lastModified: string } {
     let error = null;
     let lastModified = null;

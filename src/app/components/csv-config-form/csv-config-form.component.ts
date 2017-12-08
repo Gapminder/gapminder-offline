@@ -116,7 +116,7 @@ export class CsvConfigFormComponent {
       reader: this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
       path: this.file,
       delimiter: this.delimiter,
-      lastModified: this.lastModified
+      lastModified: this.chartService.getLastModifiedForFile(this.file)
     };
 
     if (this.delimiter === 'auto') {
