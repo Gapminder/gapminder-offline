@@ -4,6 +4,8 @@ import { isEmpty } from 'lodash';
 import { TabModel } from '../tabs/tab.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
+declare const electron: any;
+
 const vizabiStateFacade: any = {
   getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
   getTime: (currentTabInstance: any) => currentTabInstance.model.state.time.dim,
@@ -131,6 +133,10 @@ export class CsvConfigFormComponent {
 
   public close(): void {
     this.done.emit();
+  }
+
+  public openURL(url: string): void {
+    electron.shell.openExternal(url);
   }
 
   /*

@@ -13,7 +13,7 @@
         <div *ngIf="addDataMode" class="desc">Limitation: entities in the first column should match the ones already used in the chart:
             <span class="highl">{{getCountries()}}</span> and so on... Time values should be expressed like <span class="highl">{{getTimePoints()}}</span>...
             Observe the restrictions on column headers, as <span class="highl">highlighted</span> below.
-            Follow <a href="http://vizabi.org/tutorials/2017/04/04/join-your-data-with-g/" target="_blank">this&nbsp;tutorial</a>
+            Follow <a href="#" (click)="openURL('http://vizabi.org/tutorials/2017/04/04/join-your-data-with-g/')">this&nbsp;tutorial</a>
         </div>
         <div>
             <label class="step-label"><input type="radio" name="choiceGroup" (change)="setChoice('rows')" [checked]="choice === 'rows'"> Time goes down</label>
@@ -61,10 +61,10 @@
     <div class="btn-group" style="width: 100%">
         <div class="row bottom-row">
             <div class="col-sm-8">
-                <div><a href="http://vizabi.org/tutorials/2017/04/03/show-your-data/" target="_blank">How to prepare and export a file from MS Excel</a></div>
-                <div><a href="https://docs.google.com/document/d/1GEgBscyLSbAkiXbrDrixGDrlTG4DekuFETD5AQaRBvs" target="_blank">How to export a file from Google Docs</a></div>
-                <div><a href="https://csvlint.io/" target="_blank">Online csv validator (a handy tool)</a></div>
-                <div><a href="#" (click)="switchUseYourDataVisible()">How do we use your data?</a><br><span *ngIf="useYourDataVisible">— We don't. Everything stays local on your computer. <a href="https://raw.githubusercontent.com/Gapminder/gapminder-offline/master/LICENSE" target="_blank">Read more</a></span></div>
+                <div><a href="#" (click)="openURL('http://vizabi.org/tutorials/2017/04/03/show-your-data/')">How to prepare and export a file from MS Excel</a></div>
+                <div><a href="#" (click)="openURL('https://docs.google.com/document/d/1GEgBscyLSbAkiXbrDrixGDrlTG4DekuFETD5AQaRBvs')">How to export a file from Google Docs</a></div>
+                <div><a href="#" (click)="openURL('https://csvlint.io/')">Online csv validator (a handy tool)</a></div>
+                <div><a href="#" (click)="switchUseYourDataVisible()">How do we use your data?</a><br><span *ngIf="useYourDataVisible">— We don't. Everything stays local on your computer. <a href="#" (click)="openURL('https://raw.githubusercontent.com/Gapminder/gapminder-offline/master/LICENSE')">Read more</a></span></div>
             </div>
             <div class="col-sm-4 bottom-controls">
                 <input type="button" class="close-btn" (click)="close()" value="Cancel" />
