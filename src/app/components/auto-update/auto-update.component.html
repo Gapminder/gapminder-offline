@@ -1,4 +1,4 @@
-<div *ngIf="requestToUpdate" style="display: inline;">
+<div *ngIf="requestToUpdate && !requestToDatasetUpdate && !requestToExitAndFinishUpdate" style="display: inline;">
     <div class="label">New version is available!</div>
     <span>
       <input type="button" (click)="processUpdateRequest()" value="Update now" class="btn" />

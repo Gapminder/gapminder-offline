@@ -14,5 +14,6 @@ if [ -d "cd cache-ds" ]; then
 fi
 
 rm ./update-required
+rm ./updating
 sleep 1
 ../../../Contents/MacOS/Gapminder\ Offline &

@@ -54,11 +54,15 @@ const DS_FEED_VERSION_URL = autoUpdateConfig.DS_FEED_VERSION_URL;
 const DS_FEED_URL = autoUpdateConfig.DS_FEED_URL;
 const PRESETS_FILE = __dirname + '/presets.json';
 const UPDATE_FLAG_FILE = `${dirs[process.platform]}update-required`;
+const UPDATE_PROCESS_FLAG_FILE = `${dirs[process.platform]}updating`;
 const CACHE_APP_DIR = `${dirs[process.platform]}cache-app`;
 const CACHE_DS_DIR = `${dirs[process.platform]}cache-ds`;
 const rollback = () => {
-  fsExtra.removeSync(CACHE_APP_DIR);
-  fsExtra.removeSync(CACHE_DS_DIR);
+  try {
+    fsExtra.removeSync(CACHE_APP_DIR);
+    fsExtra.removeSync(CACHE_DS_DIR);
+  } catch (e) {
+  }
 };
 
 let updateProcessAppDescriptor;
@@ -76,6 +80,8 @@ class UpdateProcessDescriptor {
 }
 
 function finishUpdate() {
+  fs.writeFileSync(UPDATE_PROCESS_FLAG_FILE, 'updating');
+
   if (process.platform !== 'win32') {
     const updateCommand = dirs[process.platform] + 'updater';
 
@@ -346,23 +352,30 @@ const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) 
 });
 
 if (isSecondInstance) {
-  app.quit()
+  app.quit();
 }
 
 app.on('ready', () => {
-  fs.readFile(UPDATE_FLAG_FILE, 'utf8', (err) => {
-    if (err) {
-      rollback();
+  fs.readFile(UPDATE_PROCESS_FLAG_FILE, 'utf8', updatingFileDoesNotExist => {
+    if (updatingFileDoesNotExist) {
+      fs.readFile(UPDATE_FLAG_FILE, 'utf8', updateFileDoesNotExist => {
+        if (updateFileDoesNotExist) {
+          rollback();
 
-      ga.runEvent(false);
+          ga.runEvent(false);
 
-      startMainApplication();
-      return;
+          startMainApplication();
+          return;
+        }
+
+        ga.runEvent(true);
+
+        finishUpdate();
+      });
+    } else {
+      // don't run during update process!
+      app.quit();
     }
-
-    ga.runEvent(true);
-
-    finishUpdate();
   });
 });
 

@@ -47,6 +47,7 @@ export class AutoUpdateComponent implements OnInit {
     ipc.on('request-to-update', (event: any, versionDescriptor: VersionDescriptor) => {
       if (versionDescriptor.actualVersionDsUpdate || versionDescriptor.actualVersionGenericUpdate) {
         this.max = versionDescriptor.actualVersionDsUpdate && versionDescriptor.actualVersionGenericUpdate ? 400 : 200;
+        this.requestToDatasetUpdate = versionDescriptor.actualVersionDsUpdate && !versionDescriptor.actualVersionGenericUpdate;
         this.requestToUpdate = true;
         this.onAutoUpdateRequested.emit();
       }
