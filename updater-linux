@@ -7,4 +7,5 @@ rm -rf ./cache-app
 rm -rf ./cache-ds
 
 rm ./update-required
+rm ./updating
 ./Gapminder\ Offline

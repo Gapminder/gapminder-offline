@@ -10,6 +10,7 @@ int main() {
   system("cd cache-ds & powershell.exe -nologo -noprofile -command \"& {Get-ChildItem -Filter ddf--gapminder--systema_globalis* | Rename-Item -NewName ddf--gapminder--systema_globalis}\" & robocopy ddf--gapminder--systema_globalis ..\\resources\\app\\ddf--gapminder--systema_globalis /E & cd .. & rmdir /s /q cache-ds");
 
   system("del .\\update-required");
+  system("del .\\updating");
   system("start \"\" \".\\Gapminder Offline.exe\"");
 
   return 0;
