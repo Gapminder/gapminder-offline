@@ -1,4 +1,4 @@
-import { AppComponent } from '../../app.component';
+import {AppComponent} from '../../app.component';
 
 declare const electron: any;
 
@@ -58,8 +58,21 @@ export const initMenuComponent = (appComponent: AppComponent) => {
           click: () => appComponent.menuActions.saveAllTabs()
         },
         {
-          label: 'Export for Web...',
-          click: () => appComponent.menuActions.exportForWeb()
+          label: 'Export',
+          submenu: [
+            {
+              label: 'for Web...',
+              click: () => appComponent.menuActions.exportForWeb()
+            },
+            {
+              label: 'to SVG...',
+              click: () => appComponent.menuActions.exportToSvg()
+            },
+            {
+              label: 'to PNG...',
+              click: () => appComponent.menuActions.exportToPng()
+            }
+          ]
         },
         {
           type: 'separator'
@@ -75,7 +88,7 @@ export const initMenuComponent = (appComponent: AppComponent) => {
         {
           label: 'Reload',
           accelerator: 'CmdOrCtrl+R',
-          click (item: any, focusedWindow: any): void {
+          click(item: any, focusedWindow: any): void {
             if (focusedWindow) {
               focusedWindow.reload();
             }
@@ -84,7 +97,7 @@ export const initMenuComponent = (appComponent: AppComponent) => {
         {
           label: 'Toggle Developer Tools',
           accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-          click (item: any, focusedWindow: any): void {
+          click(item: any, focusedWindow: any): void {
             if (focusedWindow) {
               focusedWindow.webContents.toggleDevTools();
             }

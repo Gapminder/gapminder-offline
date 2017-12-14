@@ -74,6 +74,43 @@ export const getMenuActions = (context: AppComponent) => ({
 
     electron.ipcRenderer.send('do-export-for-web', {model, chartType: currentTab.chartType});
   },
+  exportToSvg: () => {
+    context.isMenuOpened = false;
+
+    const ee = document.getElementById('svg-crowbar');
+
+    if (ee) {
+      ee.remove();
+    }
+
+    const e = document.createElement('script');
+
+    e.setAttribute('src', '../../resources/app/svg-crowbar.js');
+    e.setAttribute('id', 'svg-crowbar');
+    e.setAttribute('class', 'svg-crowbar');
+    e.setAttribute('data-svg-select', 'div>svg.vzb-export');
+    e.setAttribute('data-exclude-element-select', '.vzb-noexport');
+    document.body.appendChild(e);
+  },
+  exportToPng: () => {
+    context.isMenuOpened = false;
+
+    const ee = document.getElementById('svg-crowbar');
+
+    if (ee) {
+      ee.remove();
+    }
+
+    const e = document.createElement('script');
+
+    e.setAttribute('src', '../../resources/app/svg-crowbar.js');
+    e.setAttribute('id', 'svg-crowbar');
+    e.setAttribute('class', 'svg-crowbar');
+    e.setAttribute('transform', 'png');
+    e.setAttribute('data-svg-select', 'div>svg.vzb-export');
+    e.setAttribute('data-exclude-element-select', '.vzb-noexport');
+    document.body.appendChild(e);
+  },
   checkForUpdates: () => {
     context.versionsModal.show();
     context.isMenuOpened = false;
