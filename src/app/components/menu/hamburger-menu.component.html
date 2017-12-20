@@ -51,11 +51,33 @@
     <li class="menu-item" *ngIf="!areChartsAvailable()">
         <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Save all tabs...</span></button>
     </li>
-    <li class="menu-item" *ngIf="getCurrentTab() && getCurrentTab().chartType" (click)="execute('exportForWeb')">
-        <button type="button" class="menu-btn"><span class="menu-text">Export for Web...</span></button>
+    <li class="menu-item submenu" *ngIf="getCurrentTab() && getCurrentTab().chartType">
+      <button type="button" class="menu-btn"><span class="menu-text">Export</span></button>
+      <ul class="menu">
+        <li class="menu-item" (click)="execute('exportForWeb')">
+          <button type="button" class="menu-btn"><span class="menu-text">for Web...</span> </button>
+        </li>
+        <li class="menu-item" (click)="execute('exportToSvg')">
+          <button type="button" class="menu-btn"><span class="menu-text">to SVG...</span> </button>
+        </li>
+        <li class="menu-item" (click)="execute('exportToPng')">
+          <button type="button" class="menu-btn"><span class="menu-text">to PNG...</span> </button>
+        </li>
+      </ul>
     </li>
-    <li class="menu-item" *ngIf="getCurrentTab() && !getCurrentTab().chartType">
-        <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Export for Web...</span></button>
+    <li class="menu-item submenu" *ngIf="getCurrentTab() && !getCurrentTab().chartType">
+      <button type="button" class="menu-btn"><span class="menu-text">Export</span></button>
+      <ul class="menu">
+        <li class="menu-item">
+          <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">for Web...</span></button>
+        </li>
+        <li class="menu-item">
+          <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">to SVG...</span></button>
+        </li>
+        <li class="menu-item">
+          <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">to PNG...</span></button>
+        </li>
+      </ul>
     </li>
     <li class="menu-separator"></li>
     <li class="menu-item" (click)="execute('checkForUpdates')">

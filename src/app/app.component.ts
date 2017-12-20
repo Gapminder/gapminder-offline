@@ -136,12 +136,12 @@ export class AppComponent implements OnInit {
     const ddfFolderItem = menuAddYourData.submenu.items[1];
     const saveMenu = fileMenu.items[4];
     const saveAllTabs = fileMenu.items[5];
-    const saveForWebMenu = fileMenu.items[6];
+    const exportMenu = fileMenu.items[6];
 
     csvFileItem.enabled = isItemEnabled;
     ddfFolderItem.enabled = isItemEnabled;
     saveMenu.enabled = isItemEnabled;
-    saveForWebMenu.enabled = true;
+    exportMenu.enabled = isItemEnabled;
 
     saveAllTabs.enabled = this.areChartsAvailable();
   }
