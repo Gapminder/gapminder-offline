@@ -11,7 +11,20 @@
   let svgSelect;
   let excludeSelect;
 
+  const setFontForContainer = fontFamily => {
+    document.getElementsByClassName('vzb-tool')[0].style.setProperty('font-family', fontFamily, 'important');
+
+    const event = document.createEvent('HTMLEvents');
+
+    event.initEvent('resize', true, true);
+    event.eventName = 'resize';
+    event.force = true;
+    window.dispatchEvent(event);
+  };
+
   const initialize = () => {
+    setFontForContainer('Arial');
+
     const documents = [window.document];
     const SVGSources = [];
     const iframes = document.querySelectorAll('iframe');
@@ -58,6 +71,9 @@
       download(SVGSources[0], script[0].getAttribute('transform'));
     } else {
       console.warn('Couldn’t find any SVG nodes for download.');
+
+      setFontForContainer('Bariol Regular');
+      cleanup();
     }
   };
 
@@ -177,6 +193,7 @@
     const svgPos = svgContent.indexOf('<svg');
     const normalizedSvg = svgContent.substr(svgPos).replace(/<svg/, '<svg xmlns="' + prefix.svg + '" ');
 
+    setFontForContainer('Bariol Regular');
     cleanup();
 
     dialog.showSaveDialog({
@@ -225,6 +242,7 @@
 
     const svgContent = source.source.join();
 
+    setFontForContainer('Bariol Regular');
     cleanup();
 
     const svgPos = svgContent.indexOf('<svg');
