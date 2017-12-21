@@ -23,7 +23,7 @@
   };
 
   const initialize = () => {
-    setFontForContainer('Arial');
+    setFontForContainer('Lucida Sans Unicode');
 
     const documents = [window.document];
     const SVGSources = [];
