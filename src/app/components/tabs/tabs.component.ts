@@ -9,6 +9,7 @@ import { TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, MODEL_CHANGED } from '../../cons
 import { MessageService } from '../../message.service';
 
 declare const electron: any;
+declare const d3: any;
 
 @Component({
   selector: 'ae-tabs',
@@ -183,6 +184,21 @@ export class TabsComponent implements OnInit {
     this.onChartCreated.emit();
   }
 
+  private redefineHrefs(): void {
+    d3.selectAll('.vzb-dialogs-dialog, .vzb-data-warning-box, .vzb-tool-datanotes').selectAll('a').each(function () {
+      const view = d3.select(this);
+      const href = view.attr('_href') || view.attr('href');
+
+      view
+        .attr('_href', href)
+        .attr('target', null)
+        .attr('href', '#')
+        .on('click', () => {
+          electron.shell.openExternal(href);
+        });
+    });
+  }
+
   private ready(data: any, tab: TabModel): void {
     this.onTabReady.emit({data, tab});
   }
@@ -191,6 +207,7 @@ export class TabsComponent implements OnInit {
     tab.component = data.component;
 
     this.onChartChanged.emit();
+    this.redefineHrefs();
     this.chartService.log('chartChanged', data);
   }
 
