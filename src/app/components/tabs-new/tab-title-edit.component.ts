@@ -9,7 +9,7 @@ import { Component, Input, Output, EventEmitter, AfterContentInit, ViewChild, El
              (keyup.enter) = "doEnter()"
              (keyup.esc) = "doEsc()"
              [ngModel] = "title"
-             (keypress) = "update($event.target.value)"/>
+             (input) = "update($event.target.value)"/>
   `
 })
 export class TabTitleEditComponent implements AfterContentInit {
