@@ -9,7 +9,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { ModalDirective } from 'ng2-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap';
 import { ChartService } from './components/tabs/chart.service';
 import { TabModel } from './components/tabs/tab.model';
 import { MessageService } from './message.service';
