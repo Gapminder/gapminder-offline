@@ -8,9 +8,8 @@
     -moz-border-radius: 0;
     border-radius: 0px;
 }
-.progress {
+.progress-addition {
     margin-top: 8px;
-    margin-bottom: 0;
 }
 .label {
     font-size: smaller;
