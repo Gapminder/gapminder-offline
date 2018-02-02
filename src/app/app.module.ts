@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { Ng2BootstrapModule, AlertModule, ProgressbarModule } from 'ng2-bootstrap';
-import { ModalModule } from 'ng2-bootstrap';
+import { ModalModule, ProgressbarModule, AlertModule } from 'ngx-bootstrap';
 
 import { HamburgerMenuComponent } from './components/menu/hamburger-menu.component';
 import { ChartService } from './components/tabs/chart.service';
@@ -42,7 +41,6 @@ import { AppComponent } from './app.component';
     AlertModule.forRoot(),
     ModalModule.forRoot(),
     ProgressbarModule.forRoot(),
-    Ng2BootstrapModule,
     ReactiveFormsModule,
     VizabiModule
   ],
