@@ -88,7 +88,7 @@ export const getMenuActions = (context: AppComponent) => ({
     e.setAttribute('src', '../../resources/app/svg-crowbar.js');
     e.setAttribute('id', 'svg-crowbar');
     e.setAttribute('class', 'svg-crowbar');
-    e.setAttribute('data-svg-select', 'div>svg.vzb-export');
+    e.setAttribute('data-svg-select', 'div[class="tab-pane"][style*="display: block"] div>svg.vzb-export');
     e.setAttribute('data-exclude-element-select', '.vzb-noexport');
     document.body.appendChild(e);
   },
@@ -107,7 +107,7 @@ export const getMenuActions = (context: AppComponent) => ({
     e.setAttribute('id', 'svg-crowbar');
     e.setAttribute('class', 'svg-crowbar');
     e.setAttribute('transform', 'png');
-    e.setAttribute('data-svg-select', 'div>svg.vzb-export');
+    e.setAttribute('data-svg-select', 'div[class="tab-pane"][style*="display: block"] div>svg.vzb-export');
     e.setAttribute('data-exclude-element-select', '.vzb-noexport');
     document.body.appendChild(e);
   },
