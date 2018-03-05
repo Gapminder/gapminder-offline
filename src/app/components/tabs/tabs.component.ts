@@ -7,6 +7,8 @@ import { ITabActionsSynchronizer } from '../tabs-new/tabs.common';
 import { AlertModel } from './alert.model';
 import { TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, MODEL_CHANGED } from '../../constants';
 import { MessageService } from '../../message.service';
+import { FreshenerService } from '../tab-freshener/freshener.service';
+import { IAdditionalDataItem } from '../descriptors/additional-data-item.descriptor';
 
 declare const electron: any;
 declare const d3: any;
@@ -29,10 +31,14 @@ export class TabsComponent implements OnInit {
   public tabDataDescriptor: TabDataDescriptor = {};
   private chartService: ChartService;
   private messageService: MessageService;
+  private freshenerService: FreshenerService;
 
-  public constructor(chartService: ChartService, messageService: MessageService) {
+  public constructor(chartService: ChartService,
+                     messageService: MessageService,
+                     freshenerService: FreshenerService) {
     this.chartService = chartService;
     this.messageService = messageService;
+    this.freshenerService = freshenerService;
 
     electron.ipcRenderer.send('get-app-path');
     electron.ipcRenderer.send('get-versions-info');
@@ -103,6 +109,7 @@ export class TabsComponent implements OnInit {
       onTabRemove: (index: number) => {
         this.tabsModel.splice(index, 1);
         this.onTabRemoved.emit();
+        this.sendCurrentPathToFreshener();
 
         this.messageService.sendMessage(MODEL_CHANGED);
       },
@@ -125,7 +132,24 @@ export class TabsComponent implements OnInit {
   public selectTab(tab: TabModel): void {
     if (!this.disabled) {
       tab.active = true;
+
+      if (tab.model) {
+        const additionalPaths = tab.additionalData
+          .map((additionalItem: IAdditionalDataItem) => additionalItem.path);
+        const paths = [tab.model.data.path, ...additionalPaths];
+
+        this.freshenerService.reloadAlert(paths, tab);
+      }
+
       this.forceResize();
+    }
+  }
+
+  public sendCurrentPathToFreshener(): void {
+    const currentTab = this.getCurrentTab();
+
+    if (currentTab.chartType) {
+      this.freshenerService.reloadAlert([currentTab.model.data.path], currentTab);
     }
   }
 
@@ -181,6 +205,7 @@ export class TabsComponent implements OnInit {
     this.chartService.log('chartCreated', data);
     tab.component = data.model;
     tab.instance = data.component;
+    this.sendCurrentPathToFreshener();
     this.onChartCreated.emit();
   }
 

@@ -1,0 +1,26 @@
+.freshener-block {
+  display: inline;
+  position: absolute;
+  top: 60px;
+  left: 20px;
+  z-index: 99999;
+  background-color: #ffffff;
+  opacity: 0.8;
+  padding: 4px;
+  border: #f9cc3e solid 1px;
+}
+
+.btn {
+  font-size: 9px;
+  color: #444444;
+  background: #f9cc3e;
+  padding: 2px 2px 2px 2px;
+  text-decoration: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+.label {
+  font-size: smaller;
+}

@@ -57,7 +57,7 @@
     "lodash": "4.17.4",
     "minimist": "1.2.0",
     "ngx-bootstrap": "2.0.2",
-    "ng2-vizabi": "3.0.9",
+    "ng2-vizabi": "4.0.2",
     "online-branch-exist": "2.0.2",
     "rxjs": "5.5.6",
     "vizabi": "0.28.3",
