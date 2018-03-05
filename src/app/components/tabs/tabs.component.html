@@ -39,6 +39,8 @@
                 </alert>
             </div>
 
+            <ae-tab-freshener *ngIf="tab.isDataExpired" [tab]="tab"></ae-tab-freshener>
+
             <vizabi *ngIf="tab.alerts.length <= 0"
                     style = "height: 100%;"
                     (onCreated) = "chartCreated($event, tab)"
@@ -53,6 +55,8 @@
                     [readerName] = "tab.readerName"
                     [model] = "tab.model"
                     [additionalItems] = "tab.additionalData"
+                    [reloadTime]="tab.reloadTime"
+                    [restoreStateAfterReload]="true"
                     [chartType] = "tab.chartType"></vizabi>
         </div>
     </ae-tab-new>

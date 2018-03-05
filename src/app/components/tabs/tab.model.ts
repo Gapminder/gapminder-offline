@@ -27,6 +27,8 @@ export class TabModel {
   public component: any;
   public instance: any;
   public alerts: AlertModel[] = [];
+  public isDataExpired: boolean = false;
+  public reloadTime: number;
 
   private _chartType: string = '';
   private order: number;

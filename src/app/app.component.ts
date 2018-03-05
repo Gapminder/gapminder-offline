@@ -24,6 +24,7 @@ import { initMenuComponent } from './components/menu/system-menu';
 import { getMenuActions } from './components/menu/menu-actions';
 import { remote } from 'electron';
 import { Menu, ipcRenderer } from 'electron';
+import { FreshenerService } from './components/tab-freshener/freshener.service';
 
 @Component({
   selector: 'ae-app',
@@ -48,15 +49,18 @@ export class AppComponent implements OnInit {
 
   private viewContainerRef: ViewContainerRef;
   private messageService: MessageService;
+  private freshenerService: FreshenerService;
   private ref: ChangeDetectorRef;
 
   public constructor(viewContainerRef: ViewContainerRef,
                      messageService: MessageService,
                      chartService: ChartService,
+                     freshenerService: FreshenerService,
                      ref: ChangeDetectorRef) {
     this.viewContainerRef = viewContainerRef;
     this.chartService = chartService;
     this.messageService = messageService;
+    this.freshenerService = freshenerService;
     this.ref = ref;
     this.menuActions = getMenuActions(this);
 
@@ -199,6 +203,7 @@ export class AppComponent implements OnInit {
     currentTab.additionalData = newAdditionalData;
 
     this.chartService.log('add data', data, currentTab.additionalData);
+    this.freshenerService.reloadAlert([data.path], currentTab);
 
     ipcRenderer.send('modify-chart', `user data was added to ${currentTab.chartType}`);
   }
@@ -208,6 +213,7 @@ export class AppComponent implements OnInit {
 
     if (firstFilePath) {
       this.addData({reader: 'ddf1-csv-ext', path: firstFilePath});
+      this.freshenerService.reloadAlert([firstFilePath], this.getCurrentTab());
       this.doDetectChanges();
     }
   }

@@ -19,11 +19,14 @@ import { TabTitleEditComponent } from './components/tabs-new/tab-title-edit.comp
 import { TabsComponent } from './components/tabs/tabs.component';
 import { SmartFileSelectorComponent } from './components/smart-file-selector/smart-file-selector.component';
 import { AppComponent } from './app.component';
+import { FreshenerService } from './components/tab-freshener/freshener.service';
+import { TabFreshenerComponent } from './components/tab-freshener/tab-freshener.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AutoUpdateComponent,
+    TabFreshenerComponent,
     HamburgerMenuComponent,
     AdditionalDataComponent,
     VersionsFormComponent,
@@ -47,7 +50,9 @@ import { AppComponent } from './app.component';
   providers: [
     {provide: ChartService, useClass: ChartService},
     {provide: MessageService, useClass: MessageService},
+    {provide: FreshenerService, useClass: FreshenerService},
     AutoUpdateComponent,
+    TabFreshenerComponent,
     HamburgerMenuComponent,
     AdditionalDataComponent,
     VersionsFormComponent,
