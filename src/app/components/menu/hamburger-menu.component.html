@@ -51,6 +51,9 @@
     <li class="menu-item" *ngIf="!areChartsAvailable()">
         <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Save all tabs...</span></button>
     </li>
+    <li class="menu-item" (click)="execute('openValidationWindow')">
+        <button type="button" class="menu-btn"><span class="menu-text">DDF tools</span></button>
+    </li>
     <li class="menu-item submenu" *ngIf="getCurrentTab() && getCurrentTab().chartType">
       <button type="button" class="menu-btn"><span class="menu-text">Export</span></button>
       <ul class="menu">

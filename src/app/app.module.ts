@@ -8,6 +8,7 @@ import { ChartService } from './components/tabs/chart.service';
 import { MessageService } from './message.service';
 import { AdditionalDataComponent } from './components/additional-data/additional-data.component';
 import { VersionsFormComponent } from './components/versions-form/versions-form.component';
+import { ValidationFormComponent } from './components/validation-form/validation-form.component';
 import { DdfDatasetConfigFormComponent } from './components/ddf-dataset-config-form/ddf-dataset-config-form.component';
 import { CsvConfigFormComponent } from './components/csv-config-form/csv-config-form.component';
 import { VizabiModule } from 'ng2-vizabi';
@@ -17,7 +18,7 @@ import { TabsNewComponent } from './components/tabs-new/tabs.component';
 import { TabNewComponent } from './components/tabs-new/tab.component';
 import { TabTitleEditComponent } from './components/tabs-new/tab-title-edit.component';
 import { TabsComponent } from './components/tabs/tabs.component';
-import { SmartFileSelectorComponent } from './components/smart-file-selector/smart-file-selector.component';
+import { SmartPathSelectorComponent } from './components/smart-path-selector/smart-path-selector.component';
 import { AppComponent } from './app.component';
 import { FreshenerService } from './components/tab-freshener/freshener.service';
 import { TabFreshenerComponent } from './components/tab-freshener/tab-freshener.component';
@@ -30,13 +31,14 @@ import { TabFreshenerComponent } from './components/tab-freshener/tab-freshener.
     HamburgerMenuComponent,
     AdditionalDataComponent,
     VersionsFormComponent,
+    ValidationFormComponent,
     DdfDatasetConfigFormComponent,
     CsvConfigFormComponent,
     TabsNewComponent,
     TabNewComponent,
     TabTitleEditComponent,
     TabsComponent,
-    SmartFileSelectorComponent
+    SmartPathSelectorComponent
   ],
   imports: [
     BrowserModule,
@@ -50,19 +52,7 @@ import { TabFreshenerComponent } from './components/tab-freshener/tab-freshener.
   providers: [
     {provide: ChartService, useClass: ChartService},
     {provide: MessageService, useClass: MessageService},
-    {provide: FreshenerService, useClass: FreshenerService},
-    AutoUpdateComponent,
-    TabFreshenerComponent,
-    HamburgerMenuComponent,
-    AdditionalDataComponent,
-    VersionsFormComponent,
-    DdfDatasetConfigFormComponent,
-    CsvConfigFormComponent,
-    TabsNewComponent,
-    TabNewComponent,
-    TabTitleEditComponent,
-    TabsComponent,
-    SmartFileSelectorComponent
+    {provide: FreshenerService, useClass: FreshenerService}
   ],
   bootstrap: [AppComponent]
 })

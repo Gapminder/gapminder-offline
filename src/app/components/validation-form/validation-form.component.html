@@ -1,0 +1,84 @@
+<div>
+  <div class="popup-block">
+    <div class="title">Choose a folder with DDF dataset</div>
+    <smart-path-selector [isDirectory]="true"
+                         [title]="'Choose directory'"
+                         [clearValueAfterHide]="true"
+                         (done)="onDirectorySelected($event)"></smart-path-selector>
+    <button (click)="validate()" [disabled]="!ddfFolder">Validate</button>
+    <a href="#" (click)="areOptionsVisible=!areOptionsVisible" style="margin-left: 5px;">{{areOptionsVisible ? 'Hide' : 'Show'}} Options</a>
+  </div>
+
+  <div *ngIf="areOptionsVisible" class="popup-block" style="margin-bottom: 5px; margin-top: 5px;">
+    <div class="options-container">
+      <div>
+        <label class="radio-label">
+          <input type="radio"
+                 name="dataPackageModeGroup"
+                 (change)="setDataPackageMode(USE_CURRENT_DATA_PACKAGE)"
+                 [value]="USE_CURRENT_DATA_PACKAGE"
+                 [checked]="dataPackageMode === USE_CURRENT_DATA_PACKAGE"> Use current datapackage.json</label>
+      </div>
+      <div>
+        <label class="radio-label">
+          <input type="radio"
+                 name="dataPackageModeGroup"
+                 (change)="setDataPackageMode(CREATE_NEW_DATA_PACKAGE)"
+                 [value]="CREATE_NEW_DATA_PACKAGE"
+                 [checked]="dataPackageMode === CREATE_NEW_DATA_PACKAGE"> Create new datapackage.json</label>
+        <label style="margin-left: 20px;">
+          <input type="checkbox"
+                 [checked]="preserveHeaders"
+                 (change)="preserveHeaders = !preserveHeaders"
+                 [disabled]="dataPackageMode !== CREATE_NEW_DATA_PACKAGE"> but preserve headers
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="doesValidationRunning || isResultReady" class="popup-block validating-container">
+    <div *ngIf="doesValidationRunning" class="validating-container">
+      <div><img src="./public/images/hourglass.gif"></div>
+      <div><b>Dataset is validating:</b> <span>{{statusLine}}</span></div>
+      <div><a href="#" (click)="abandon()" style="margin-left: 10px;">Stop validation</a></div>
+    </div>
+
+    <div *ngIf="isResultReady">
+      <div *ngIf="issues.length === 0" class="validation-result validating-container">
+          <div>
+            <span class="glyphicon glyphicon-ok validation-glyph green"></span>
+            <span class="green">Dataset is valid :)</span>
+          </div>
+          <div><span>You can now <a href="#" (click)="openNewDdfTab()">open this dataset</a> in a new tab</span></div>
+      </div>
+      <div *ngIf="issues.length > 0" class="validation-result validating-container">
+        <div>
+          <span class="glyphicon glyphicon-remove validation-glyph red"></span>
+          <span class="red">Dataset is not valid :(</span>
+        </div>
+        <div><span>Please fix the following issues and <a href="#" (click)="validate()">validate again</a></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isResultReady && issues.length > 0" class="popup-block">
+    <div id="tableContainer" class="tableContainer">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" class="scrollTable">
+        <thead class="fixedHeader">
+        <tr>
+          <th width="20%">Description</th>
+          <th width="20%">howToFix</th>
+          <th width="70%">Details</th>
+        </tr>
+        </thead>
+        <tbody class="scrollContent">
+        <tr *ngFor="let issue of issues">
+          <td width="20%" valign="top" [innerHTML]="issue.desc"></td>
+          <td width="20%" valign="top" [innerHTML]="issue.howToFix"></td>
+          <td width="68%" valign="top" [innerHTML]="issue.details"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

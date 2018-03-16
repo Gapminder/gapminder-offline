@@ -1,12 +1,12 @@
 import * as path from 'path';
+import * as api from 'ddf-validation';
+import * as fs from 'fs';
 import { Injectable } from '@angular/core';
 import { TabModel } from './tab.model';
 import { DdfFolderDescriptor } from '../descriptors/ddf-folder.descriptor';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { MessageService } from '../../message.service';
-import { MODEL_CHANGED } from '../../constants';
-
-const fs = require('fs');
+import { ABANDON_VALIDATION, MODEL_CHANGED } from '../../constants';
 
 // const PopByAge = ;
 const BarRankChart = require('vizabi-barrankchart');
@@ -31,6 +31,7 @@ export class ChartService {
   public ddfFolderDescriptor: DdfFolderDescriptor;
   public currentTab: TabModel;
   public messageService: MessageService;
+  public ddfPathFromValidationToOpen: string;
 
   public static getFirst(arr: any[]): any {
     return arr && arr.length > 0 ? arr[0] : null;
@@ -64,7 +65,10 @@ export class ChartService {
   }
 
   public newChart(tab: TabModel, tabDataDescriptor: TabDataDescriptor, isDefaults: boolean = true): string {
-    if (isDefaults) {
+    if (this.ddfPathFromValidationToOpen) {
+      this.ddfFolderDescriptor.ddfUrl = this.ddfPathFromValidationToOpen;
+      this.ddfPathFromValidationToOpen = null;
+    } else if (isDefaults) {
       this.ddfFolderDescriptor.defaults();
     }
 
@@ -149,7 +153,7 @@ export class ChartService {
     return tabsModel.filter((tab: TabModel) => tab.chartType).length > 0;
   }
 
-  public getLastModifiedForFile(filePath: string): void {
+  public getLastModifiedForFile(filePath: string): number | null {
     try {
       const stats = fs.statSync(filePath);
 
