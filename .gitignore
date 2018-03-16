@@ -42,6 +42,7 @@ Thumbs.db
 # Node Files #
 /node_modules
 /bower_components
+package-lock.json
 
 # Typing #
 /src/typings/tsd/
