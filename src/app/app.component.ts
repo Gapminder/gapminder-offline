@@ -18,12 +18,11 @@ import {
   OPEN_DDF_FOLDER_ACTION,
   TAB_READY_ACTION,
   SWITCH_MENU_ACTION,
-  MODEL_CHANGED
+  MODEL_CHANGED, CLEAR_VALIDATION_FORM, ABANDON_VALIDATION
 } from './constants';
 import { initMenuComponent } from './components/menu/system-menu';
 import { getMenuActions } from './components/menu/menu-actions';
-import { remote } from 'electron';
-import { Menu, ipcRenderer } from 'electron';
+import { remote, Menu, ipcRenderer } from 'electron';
 import { FreshenerService } from './components/tab-freshener/freshener.service';
 
 @Component({
@@ -40,6 +39,7 @@ export class AppComponent implements OnInit {
   @ViewChild('additionalDataModal') public additionalDataModal: ModalDirective;
   @ViewChild('presetsModal') public presetsModal: ModalDirective;
   @ViewChild('versionsModal') public versionsModal: ModalDirective;
+  @ViewChild('validationModal') public validationModal: ModalDirective;
   @ViewChild('ddfDatasetConfigModal') public ddfDatasetConfigModal: ModalDirective;
   @ViewChild('csvConfigModal') public csvConfigModal: ModalDirective;
   @ViewChild('additionalCsvConfigModal') public additionalCsvConfigModal: ModalDirective;
@@ -140,7 +140,7 @@ export class AppComponent implements OnInit {
     const ddfFolderItem = menuAddYourData.submenu.items[1];
     const saveMenu = fileMenu.items[4];
     const saveAllTabs = fileMenu.items[5];
-    const exportMenu = fileMenu.items[6];
+    const exportMenu = fileMenu.items[7];
 
     csvFileItem.enabled = isItemEnabled;
     ddfFolderItem.enabled = isItemEnabled;
@@ -182,6 +182,16 @@ export class AppComponent implements OnInit {
       ipcRenderer.send('request-custom-update', version);
       this.versionsModal.hide();
     }
+  }
+
+  public onValidationModalHide(): void {
+    this.messageService.sendMessage(ABANDON_VALIDATION);
+    this.messageService.sendMessage(CLEAR_VALIDATION_FORM);
+  }
+
+  public validationFormComplete(): void {
+    this.messageService.sendMessage(ABANDON_VALIDATION);
+    this.validationModal.hide();
   }
 
   public onChartCreated(): void {

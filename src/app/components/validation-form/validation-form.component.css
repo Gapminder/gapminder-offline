@@ -1,0 +1,114 @@
+div.tableContainer {
+  clear: both;
+  border: 1px solid #963;
+  height: 485px;
+  overflow: auto;
+  width: 850px
+}
+
+html>body div.tableContainer {
+  overflow: hidden;
+  width: 850px
+}
+
+div.tableContainer table {
+  float: left;
+  /* width: 740px */
+}
+
+html>body div.tableContainer table {
+  /* width: 756px */
+}
+
+thead.fixedHeader tr {
+  position: relative;
+}
+
+thead.fixedHeader th {
+  background: #ffca32;
+  border-left: 1px solid #ffca32;
+  border-right: 1px solid #ffca32;
+  border-top: 1px solid #ffca32;
+  color: #555555;
+  font-weight: normal;
+  padding: 4px 3px;
+  text-align: left
+}
+
+html>body tbody.scrollContent {
+  display: block;
+  height: 462px;
+  overflow: auto;
+  width: 100%
+}
+
+html>body thead.fixedHeader {
+  display: table;
+  overflow: auto;
+  width: 100%
+}
+
+tbody.scrollContent td, tbody.scrollContent tr.normalRow td {
+  background: #FFF;
+  border-bottom: none;
+  border-left: none;
+  border-right: 1px solid #CCC;
+  border-top: 1px solid #DDD;
+  padding: 2px 3px 3px 4px
+}
+
+tbody.scrollContent tr.alternateRow td {
+  background: #EEE;
+  border-bottom: none;
+  border-left: none;
+  border-right: 1px solid #CCC;
+  border-top: 1px solid #DDD;
+  padding: 2px 3px 3px 4px
+}
+
+.radio-label {
+  font-size: large;
+  margin-right: 5px;
+  margin-left: 1px;
+}
+
+.options-container {
+  display: flex;
+}
+
+.options-container > div {
+  width: 50%;
+}
+
+.validating-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
+}
+
+.validation-glyph {
+  font-size: 16px;
+}
+
+.validation-result {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.validation-result > div {
+  margin-right: 10px;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 7px;
+}

@@ -252,6 +252,10 @@ function startMainApplication() {
     });
   });
 
+  ipc.on('do-open-validation-window', event => {
+    event.sender.send('open-validation-window', 'open-validation-window');
+  });
+
   ipc.on('open-dev-tools', () => {
     mainWindow.webContents.openDevTools();
   });

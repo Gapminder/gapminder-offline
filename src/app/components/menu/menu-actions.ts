@@ -65,6 +65,11 @@ export const getMenuActions = (context: AppComponent) => ({
 
     electron.ipcRenderer.send('do-save-all-tabs', tabsDescriptors);
   },
+  openValidationWindow: () => {
+    context.validationModal.show();
+
+    context.isMenuOpened = false;
+  },
   exportForWeb: () => {
     const currentTab = context.getCurrentTab();
     const isAdditionalDataPresent = currentTab.component && currentTab.component.getModel;
