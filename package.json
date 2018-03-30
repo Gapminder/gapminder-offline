@@ -45,7 +45,7 @@
     "electron": "1.6.16",
     "lodash": "4.17.4",
     "minimist": "1.2.0",
-    "ng2-vizabi": "4.0.6",
+    "ng2-vizabi": "4.0.9",
     "ngx-bootstrap": "2.0.2",
     "online-branch-exist": "2.0.2",
     "rxjs": "5.5.6",

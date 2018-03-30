@@ -1,58 +1,52 @@
 import * as fs from 'fs';
+import { isEmpty } from 'lodash';
 import { Injectable, OnDestroy } from '@angular/core';
 import { TabModel } from '../tabs/tab.model';
+import { IAdditionalDataItem } from '../descriptors/additional-data-item.descriptor';
 
 const timeHash: any = {};
 
 @Injectable()
 export class FreshenerService implements OnDestroy {
-  private activePaths: string[] = [];
   private activeTab: TabModel;
-  private interval: number;
 
-  public constructor() {
-    this.interval = setInterval(() => {
-      if (!this.activeTab) {
-        return;
+  public checkCurrentTabModification(tab: TabModel): void {
+    if (tab.model) {
+      this.activeTab = tab;
+
+      const activePaths = [this.activeTab.model.data.path];
+
+      if (!isEmpty(this.activeTab.additionalData)) {
+        const additionalPaths =
+          this.activeTab.additionalData.map((additionalItem: IAdditionalDataItem) => additionalItem.path);
+
+        activePaths.push(...additionalPaths);
       }
 
-      let modificationFlag = false;
-
-      for (const activePath of this.activePaths) {
-        const modificationTime = fs.statSync(activePath).mtime;
-        const key = this.getKey(activePath);
-
-        if (activePath && modificationTime > timeHash[key]) {
-          modificationFlag = true;
-        }
-
-        timeHash[key] = modificationTime;
-      }
-
-      if (modificationFlag) {
-        this.activeTab.isDataExpired = true;
-      }
-    }, 10000);
-  }
-
-  public ngOnDestroy(): void {
-    clearInterval(this.interval);
-  }
-
-  public reloadAlert(what: any, tab: TabModel): void {
-    this.activeTab = tab;
-    this.activePaths = what;
-
-    for (const activePath of this.activePaths) {
-      const key = this.getKey(activePath);
-
-      if (!timeHash[key]) {
-        timeHash[key] = fs.statSync(activePath).mtime;
-      }
+      this.checkPathModification(activePaths);
     }
   }
 
   private getKey(activePath: string): string {
     return `${this.activeTab.getOrder()}${activePath}`;
+  }
+
+  private checkPathModification(activePaths: string[]): void {
+    let modificationFlag = false;
+
+    for (const activePath of activePaths) {
+      const modificationTime = fs.statSync(activePath).mtime.getTime();
+      const key = this.getKey(activePath);
+
+      if (activePath && !!timeHash[key] && modificationTime !== timeHash[key]) {
+        modificationFlag = true;
+      }
+
+      timeHash[key] = modificationTime;
+    }
+
+    if (modificationFlag) {
+      this.activeTab.isDataExpired = true;
+    }
   }
 }
