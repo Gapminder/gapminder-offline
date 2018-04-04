@@ -32,7 +32,6 @@ export class ChartService {
   public currentTab: TabModel;
   public messageService: MessageService;
   public ddfPathFromValidationToOpen: string;
-  public validator: api.StreamValidator;
 
   public static getFirst(arr: any[]): any {
     return arr && arr.length > 0 ? arr[0] : null;

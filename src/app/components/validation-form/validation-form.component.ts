@@ -1,17 +1,18 @@
-import { Component, Output, EventEmitter, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
 import * as path from 'path';
-import * as api from 'ddf-validation';
 import { ChartService } from '../tabs/chart.service';
 import { MessageService } from '../../message.service';
 import { CLEAR_VALIDATION_FORM, OPEN_NEW_DDF_TAB_FROM_VALIDATOR } from '../../constants';
 import { Subscription } from 'rxjs/Subscription';
+
+declare var electron: any;
 
 @Component({
   selector: 'ae-validation-form',
   template: require('./validation-form.component.html'),
   styles: [require('./validation-form.component.css')]
 })
-export class ValidationFormComponent implements OnDestroy {
+export class ValidationFormComponent implements OnInit, OnDestroy {
   @Output() public done: EventEmitter<any> = new EventEmitter();
 
   public USE_CURRENT_DATA_PACKAGE: string = 'useCurrentDataPackage';
@@ -34,10 +35,38 @@ export class ValidationFormComponent implements OnDestroy {
     this.ref = ref;
     this.chartService = chartService;
     this.messageService = messageService;
+  }
+
+  public ngOnInit(): void {
     this.subscription = this.messageService.getMessage().subscribe((event: any) => {
       if (event.message === CLEAR_VALIDATION_FORM) {
         this.reset();
       }
+    });
+
+    electron.ipcRenderer.on('validation-message', (event: any, message: string) => {
+      this.statusLine = message;
+      this.ref.detectChanges();
+    });
+
+    electron.ipcRenderer.on('validation-error', (event: any, error: any) => {
+      alert(error.message);
+    });
+
+    electron.ipcRenderer.on('validation-issue', (event: any, issue: any) => {
+      this.issues.push({
+        desc: issue.type.replace(/\n/g, '<br>'),
+        howToFix: issue.howToFix,
+        details: JSON.stringify(issue.data, null, 2)
+          .replace(/\n/g, '<br>')
+          .replace(/ /g, '&nbsp;')
+      });
+    });
+
+    electron.ipcRenderer.on('validation-completed', (event: any, params: any) => {
+      this.doesValidationRunning = params.doesValidationRunning;
+      this.isResultReady = params.isResultReady;
+      this.ref.detectChanges();
     });
   }
 
@@ -71,67 +100,19 @@ export class ValidationFormComponent implements OnDestroy {
 
     this.doesValidationRunning = true;
     this.isResultReady = false;
+    this.issues = [];
 
-    const {exists} = api.getDataPackageInfo(this.ddfFolder);
-
-    if (!exists || (exists && this.dataPackageMode === this.CREATE_NEW_DATA_PACKAGE)) {
-      const externalSettings = this.getValidatorOptions();
-      const dataPackageCreationParameters: api.IDataPackageCreationParameters = {
-        ddfRootFolder: this.ddfFolder,
-        newDataPackagePriority: true,
-        externalSettings
-      };
-      api.createDataPackage(dataPackageCreationParameters, (message: string) => {
-        this.statusLine = message;
-        this.ref.detectChanges();
-      }, (error: any) => {
-        if (error) {
-          alert(error.message);
-          return;
-        }
-
-        this.validationProcess();
-      }, true);
-    } else {
-      this.validationProcess();
-    }
+    electron.ipcRenderer.send('start-validation', {
+      createNewDataPackage: this.CREATE_NEW_DATA_PACKAGE,
+      dataPackageMode: this.dataPackageMode,
+      options: this.getValidatorOptions(),
+      ddfFolder: this.ddfFolder
+    });
   }
 
   public abandon(): void {
-    this.chartService.validator.abandon();
-  }
-
-  private validationProcess(): void {
-    const options = this.getValidatorOptions();
-    this.chartService.validator = new api.StreamValidator(this.ddfFolder, options);
-
-    this.chartService.validator.onMessage((message: string) => {
-      this.statusLine = message;
-      this.ref.detectChanges();
-    });
-
-    this.issues = [];
-
-    this.chartService.validator.on('issue', (issue: any) => {
-      this.issues.push({
-        desc: issue.type.replace(/\n/g, '<br>'),
-        howToFix: issue.howToFix,
-        details: JSON.stringify(issue.data, null, 2)
-          .replace(/\n/g, '<br>')
-          .replace(/ /g, '&nbsp;')
-      });
-    });
-
-    this.chartService.validator.on('finish', (err: any) => {
-      if (err) {
-        alert(err.message);
-      }
-
-      this.doesValidationRunning = false;
-      this.isResultReady = !this.chartService.validator.isAbandoned();
-    });
-
-    api.validate(this.chartService.validator);
+    this.statusLine = ' ... abandoning ...';
+    electron.ipcRenderer.send('abandon-validation');
   }
 
   private getValidatorOptions(): any {
@@ -144,7 +125,6 @@ export class ValidationFormComponent implements OnDestroy {
     const appPath = validatorPaths[process.platform];
     const options: any = {
       silent: true,
-      isMultithread: true,
       appPath
     };
 

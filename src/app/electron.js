@@ -72,6 +72,9 @@ let mainWindow = null;
 
 let currentFile;
 
+const DdfValidatorWrapper = require('./validator-wrapper').DdfValidatorWrapper;
+const ddfValidatorWrapper = new DdfValidatorWrapper();
+
 class UpdateProcessDescriptor {
   constructor(version, url) {
     this.version = version;
@@ -334,6 +337,14 @@ function startMainApplication() {
 
   ipc.on('exit-and-update', () => {
     finishUpdate();
+  });
+
+  ipc.on('start-validation', (event, params) => {
+    ddfValidatorWrapper.start(event, params);
+  });
+
+  ipc.on('abandon-validation', () => {
+    ddfValidatorWrapper.abandon();
   });
 }
 
