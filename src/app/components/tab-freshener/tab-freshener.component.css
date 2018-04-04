@@ -11,7 +11,7 @@
 }
 
 .btn {
-  font-size: 9px;
+  font-size: 13px;
   color: #444444;
   background: #f9cc3e;
   padding: 2px 2px 2px 2px;
@@ -22,5 +22,5 @@
 }
 
 .label {
-  font-size: smaller;
+  font-size: initial;
 }
