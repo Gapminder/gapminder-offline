@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ChartService } from './chart.service';
 import { TabModel } from './tab.model';
@@ -8,7 +8,6 @@ import { AlertModel } from './alert.model';
 import { TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, MODEL_CHANGED } from '../../constants';
 import { MessageService } from '../../message.service';
 import { FreshenerService } from '../tab-freshener/freshener.service';
-import { IAdditionalDataItem } from '../descriptors/additional-data-item.descriptor';
 
 declare const electron: any;
 declare const d3: any;
@@ -42,6 +41,11 @@ export class TabsComponent implements OnInit {
 
     electron.ipcRenderer.send('get-app-path');
     electron.ipcRenderer.send('get-versions-info');
+  }
+
+  @HostListener('window:focus')
+  onFocus(): void {
+    this.freshenerService.checkCurrentTabModification(this.getCurrentTab());
   }
 
   public ngOnInit(): void {
@@ -133,14 +137,7 @@ export class TabsComponent implements OnInit {
     if (!this.disabled) {
       tab.active = true;
 
-      if (tab.model) {
-        const additionalPaths = tab.additionalData
-          .map((additionalItem: IAdditionalDataItem) => additionalItem.path);
-        const paths = [tab.model.data.path, ...additionalPaths];
-
-        this.freshenerService.reloadAlert(paths, tab);
-      }
-
+      this.freshenerService.checkCurrentTabModification(tab);
       this.forceResize();
     }
   }
@@ -149,7 +146,7 @@ export class TabsComponent implements OnInit {
     const currentTab = this.getCurrentTab();
 
     if (currentTab.chartType) {
-      this.freshenerService.reloadAlert([currentTab.model.data.path], currentTab);
+      this.freshenerService.checkCurrentTabModification(currentTab);
     }
   }
 
