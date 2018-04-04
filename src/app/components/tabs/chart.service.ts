@@ -40,12 +40,6 @@ export class ChartService {
   public constructor(messageService: MessageService) {
     this.messageService = messageService;
     this.ddfFolderDescriptor = new DdfFolderDescriptor();
-
-    this.messageService.getMessage().subscribe((event: any) => {
-      if (event.message === ABANDON_VALIDATION) {
-        this.validator.abandon();
-      }
-    });
   }
 
   public log(message?: any, ...optionalParams: any[]): void {

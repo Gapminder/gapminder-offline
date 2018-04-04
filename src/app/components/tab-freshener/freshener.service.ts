@@ -1,13 +1,13 @@
 import * as fs from 'fs';
 import { isEmpty } from 'lodash';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { TabModel } from '../tabs/tab.model';
 import { IAdditionalDataItem } from '../descriptors/additional-data-item.descriptor';
 
 const timeHash: any = {};
 
 @Injectable()
-export class FreshenerService implements OnDestroy {
+export class FreshenerService {
   private activeTab: TabModel;
 
   public checkCurrentTabModification(tab: TabModel): void {

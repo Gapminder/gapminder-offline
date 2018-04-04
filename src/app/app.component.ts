@@ -213,7 +213,6 @@ export class AppComponent implements OnInit {
     currentTab.additionalData = newAdditionalData;
 
     this.chartService.log('add data', data, currentTab.additionalData);
-    this.freshenerService.reloadAlert([data.path], currentTab);
 
     ipcRenderer.send('modify-chart', `user data was added to ${currentTab.chartType}`);
   }
@@ -223,7 +222,6 @@ export class AppComponent implements OnInit {
 
     if (firstFilePath) {
       this.addData({reader: 'ddf1-csv-ext', path: firstFilePath});
-      this.freshenerService.reloadAlert([firstFilePath], this.getCurrentTab());
       this.doDetectChanges();
     }
   }

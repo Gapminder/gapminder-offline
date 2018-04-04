@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, ChangeDetectorRef, OnDestroy, OnInit }
 import * as path from 'path';
 import { ChartService } from '../tabs/chart.service';
 import { MessageService } from '../../message.service';
-import { CLEAR_VALIDATION_FORM, OPEN_NEW_DDF_TAB_FROM_VALIDATOR } from '../../constants';
+import { CLEAR_VALIDATION_FORM, OPEN_NEW_DDF_TAB_FROM_VALIDATOR, ABANDON_VALIDATION } from '../../constants';
 import { Subscription } from 'rxjs/Subscription';
 
 declare var electron: any;
@@ -41,6 +41,10 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
     this.subscription = this.messageService.getMessage().subscribe((event: any) => {
       if (event.message === CLEAR_VALIDATION_FORM) {
         this.reset();
+      }
+
+      if (event.message === ABANDON_VALIDATION) {
+        this.abandon();
       }
     });
 
@@ -111,8 +115,10 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
   }
 
   public abandon(): void {
-    this.statusLine = ' ... abandoning ...';
-    electron.ipcRenderer.send('abandon-validation');
+    if (this.doesValidationRunning) {
+      this.statusLine = ' ... abandoning ...';
+      electron.ipcRenderer.send('abandon-validation');
+    }
   }
 
   private getValidatorOptions(): any {
