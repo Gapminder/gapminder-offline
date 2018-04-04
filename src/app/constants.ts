@@ -5,3 +5,5 @@ export const TABS_LOGO_ACTION: string = 'tabs logo';
 export const TABS_ADD_TAB_ACTION: string = 'tabs add tab';
 export const SWITCH_MENU_ACTION: string = 'switch menu';
 export const MODEL_CHANGED: string = 'model changed';
+export const OPEN_NEW_DDF_TAB_FROM_VALIDATOR = 'openNewDdfTabFromValidator';
+export const CLEAR_VALIDATION_FORM = 'clear-validation-form';

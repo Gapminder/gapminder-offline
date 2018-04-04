@@ -58,6 +58,10 @@ export const initMenuComponent = (appComponent: AppComponent) => {
           click: () => appComponent.menuActions.saveAllTabs()
         },
         {
+          label: 'DDF tools',
+          click: () => appComponent.menuActions.openValidationWindow()
+        },
+        {
           label: 'Export',
           submenu: [
             {

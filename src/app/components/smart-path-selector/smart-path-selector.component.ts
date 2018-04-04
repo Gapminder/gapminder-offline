@@ -1,29 +1,43 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import { Component, ElementRef, EventEmitter, forwardRef, Output, ViewChild } from '@angular/core';
+import {
+  AfterContentChecked,
+  Component,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl, Validator } from '@angular/forms';
 import { ChartService } from '../tabs/chart.service';
 
 @Component({
-  selector: 'smart-file-selector',
-  template: require('./smart-file-selector.component.html'),
-  styles: [require('./smart-file-selector.component.css')],
+  selector: 'smart-path-selector',
+  template: require('./smart-path-selector.component.html'),
+  styles: [require('./smart-path-selector.component.css')],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => SmartFileSelectorComponent),
+      useExisting: forwardRef(() => SmartPathSelectorComponent),
       multi: true
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => SmartFileSelectorComponent),
+      useExisting: forwardRef(() => SmartPathSelectorComponent),
       multi: true
     }]
 })
-export class SmartFileSelectorComponent implements ControlValueAccessor, Validator {
+export class SmartPathSelectorComponent implements ControlValueAccessor, Validator, AfterContentChecked {
+  @Input() public isDirectory: boolean;
+  @Input() public title: string = 'Choose CSV file';
+  @Input() public accept: string = '.csv';
+  @Input() public clearValueAfterHide: boolean;
   @Output() public done: EventEmitter<any> = new EventEmitter();
   @ViewChild('uploadBtn') public uploadBtn: ElementRef;
   @ViewChild('uploadFileInput') public uploadFileInput: ElementRef;
+  public directory: string = '';
   public file: string = '';
   public fileDoesNotExistsError: boolean;
   public data: any;
@@ -31,10 +45,23 @@ export class SmartFileSelectorComponent implements ControlValueAccessor, Validat
   private filePath: string = '';
   private lastModified: number;
 
+  public ngAfterContentChecked(): void {
+    if (!this.clearValueAfterHide) {
+      return;
+    }
+
+    if (this.uploadFileInput && this.uploadFileInput.nativeElement && !this.uploadFileInput.nativeElement.offsetParent) {
+      this.uploadFileInput.nativeElement.value = '';
+      this.directory = '';
+      this.file = '';
+      this.fileDoesNotExistsError = false;
+    }
+  }
+
   public writeValue(obj: any): void {
     if (obj) {
       this.data = obj;
-      this.extractFilenameIfOk(this.data);
+      this.prepareResultIfOk(this.data);
     }
   }
 
@@ -60,12 +87,12 @@ export class SmartFileSelectorComponent implements ControlValueAccessor, Validat
 
       this.data = newValue;
       this.lastModified = stats.mtime.valueOf();
-      this.fileDoesNotExistsError = !stats.isFile();
+      this.fileDoesNotExistsError = this.isDirectory ? !stats.isDirectory() : !stats.isFile();
     } catch (err) {
       this.fileDoesNotExistsError = true;
     }
 
-    this.extractFilenameIfOk(newValue);
+    this.prepareResultIfOk(newValue);
   }
 
   public onCsvFileChanged(event: any): void {
@@ -79,14 +106,19 @@ export class SmartFileSelectorComponent implements ControlValueAccessor, Validat
     }
   }
 
-  private extractFilenameIfOk(file: string): void {
+  private prepareResultIfOk(fileOrDirectory: string): void {
     if (!this.fileDoesNotExistsError) {
-      const fileDescriptor = path.parse(file);
-      this.file = fileDescriptor.base;
-      this.filePath = fileDescriptor.dir;
-      this.done.emit({file, lastModified: this.lastModified});
+      if (this.isDirectory) {
+        this.directory = fileOrDirectory;
+        this.done.emit({file: fileOrDirectory, lastModified: this.lastModified});
+      } else {
+        const fileDescriptor = path.parse(fileOrDirectory);
+        this.file = fileDescriptor.base;
+        this.filePath = fileDescriptor.dir;
+        this.done.emit({file: fileOrDirectory, lastModified: this.lastModified});
+      }
     } else {
-      this.file = file;
+      this.file = fileOrDirectory;
       this.filePath = '';
       this.done.emit();
     }

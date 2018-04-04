@@ -1,0 +1,14 @@
+<div *ngIf="!isDirectory" class = "fileUpload btn btn-default">
+    <span>{{title}}</span>
+    <input #uploadBtn type = "file" accept = "{{accept}}" class = "upload" (change) = "onCsvFileChanged($event)"/>
+</div>
+<div *ngIf="isDirectory" class = "fileUpload btn btn-default">
+  <span>{{title}}</span>
+  <input #uploadBtn type = "file" class = "upload" (change) = "onCsvFileChanged($event)" webkitdirectory directory />
+</div>
+<input #uploadFileInput
+       [value] = "file"
+       (change) = "onChange($event)"
+       (keyup) = "onChange($event)"
+       [ngClass] = "fileDoesNotExistsError && (file || directory) ? 'wrong-file' : 'good-file'"
+       size = "90"/>

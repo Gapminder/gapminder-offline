@@ -33,7 +33,7 @@
         <h4>Step {{addDataMode ? 2 : 3}}: Pick a file:</h4>
         <div>
             <form [formGroup]="reactiveForm">
-                <smart-file-selector formControlName="result" (done) = "onCsvFileChanged($event)"></smart-file-selector>
+                <smart-path-selector formControlName="result" (done) = "onCsvFileChanged($event)"></smart-path-selector>
             </form>
             <!--<p>form is valid: {{ reactiveForm.valid ? 'true' : 'false' }}</p>-->
         </div>
@@ -45,7 +45,7 @@
                 <h4>Optional</h4>
             </div>
             <div class="time-format-block time-format-select">
-                Time values look like this: 
+                Time values look like this:
                 <select type="number" [disabled]="addDataMode" [(ngModel)]="timeFormat" class="form-control">
                     <option *ngFor="let currentTimeFormat of timeFormats" [ngValue]="currentTimeFormat">{{currentTimeFormat}}</option>
                 </select>
