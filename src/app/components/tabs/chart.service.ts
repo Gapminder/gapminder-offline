@@ -8,14 +8,12 @@ import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { MessageService } from '../../message.service';
 import { ABANDON_VALIDATION, MODEL_CHANGED } from '../../constants';
 
-// const PopByAge = ;
 const BarRankChart = require('vizabi-barrankchart');
 const BubbleChart = require('vizabi-bubblechart');
 const BubbleMap = require('vizabi-bubblemap');
 const LineChart = require('vizabi-linechart');
 const MountainChart = require('vizabi-mountainchart');
 const configSg = {
-  PopByAge: require('../../../../node_modules/vizabi-config-systema_globalis/dist/PopByAge.json'),
   BarRankChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BarRankChart.json'),
   BubbleChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleChart.json'),
   BubbleMap: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleMap.json'),

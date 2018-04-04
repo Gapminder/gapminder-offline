@@ -6,8 +6,7 @@ const LABEL_MAP = {
   BubbleChart: 'Bubbles',
   BubbleMap: 'Maps',
   LineChart: 'Lines',
-  MountainChart: 'Mountains',
-  PopByAge: 'PopByAge'
+  MountainChart: 'Mountains'
 };
 const DEFAULT_TITLE = 'Chart';
 
