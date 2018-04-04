@@ -97,6 +97,10 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
     this.close();
   }
 
+  public openURL(url: string): void {
+    electron.shell.openExternal(url);
+  }
+
   public validate(): void {
     if (!this.ddfFolder) {
       return;
