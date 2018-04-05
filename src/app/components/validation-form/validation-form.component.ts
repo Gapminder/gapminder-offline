@@ -21,6 +21,7 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
   public issues: any[] = [];
   public areOptionsVisible: boolean = false;
   public statusLine: string = '';
+  public error: string = '';
   public doesValidationRunning: boolean = false;
   public isResultReady: boolean = false;
   public preserveHeaders: boolean = false;
@@ -54,7 +55,10 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
     });
 
     electron.ipcRenderer.on('validation-error', (event: any, error: any) => {
-      alert(error.message);
+      this.error = error;
+      this.doesValidationRunning = false;
+      this.isResultReady = true;
+      this.ref.detectChanges();
     });
 
     electron.ipcRenderer.on('validation-issue', (event: any, issue: any) => {
@@ -105,6 +109,7 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
     this.doesValidationRunning = true;
     this.isResultReady = false;
     this.issues = [];
+    this.error = '';
 
     electron.ipcRenderer.send('start-validation', {
       createNewDataPackage: this.CREATE_NEW_DATA_PACKAGE,
@@ -144,6 +149,7 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
 
   private reset(): void {
     this.issues = [];
+    this.error = '';
     this.dataPackageMode = this.USE_CURRENT_DATA_PACKAGE;
     this.preserveHeaders = false;
     this.areOptionsVisible = false;
