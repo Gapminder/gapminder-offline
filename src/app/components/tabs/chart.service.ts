@@ -29,7 +29,6 @@ export class ChartService {
   public ddfFolderDescriptor: DdfFolderDescriptor;
   public currentTab: TabModel;
   public messageService: MessageService;
-  public ddfPathFromValidationToOpen: string;
 
   public static getFirst(arr: any[]): any {
     return arr && arr.length > 0 ? arr[0] : null;
@@ -63,12 +62,7 @@ export class ChartService {
   }
 
   public newChart(tab: TabModel, tabDataDescriptor: TabDataDescriptor, isDefaults: boolean = true): string {
-    if (this.ddfPathFromValidationToOpen) {
-      this.ddfFolderDescriptor.ddfUrl = this.ddfPathFromValidationToOpen;
-      this.ddfPathFromValidationToOpen = null;
-    } else if (isDefaults) {
-      this.ddfFolderDescriptor.defaults();
-    }
+    this.ddfFolderDescriptor.defaults();
 
     tab.readerModuleObject = tabDataDescriptor.readerModuleObject;
     tab.readerGetMethod = tabDataDescriptor.readerGetMethod;

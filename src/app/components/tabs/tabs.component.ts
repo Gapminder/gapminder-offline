@@ -5,7 +5,7 @@ import { TabModel } from './tab.model';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { ITabActionsSynchronizer } from '../tabs-new/tabs.common';
 import { AlertModel } from './alert.model';
-import { TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, MODEL_CHANGED } from '../../constants';
+import { TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, MODEL_CHANGED, OPEN_NEW_DDF_TAB_FROM_VALIDATOR } from '../../constants';
 import { MessageService } from '../../message.service';
 import { FreshenerService } from '../tab-freshener/freshener.service';
 
@@ -99,6 +99,20 @@ export class TabsComponent implements OnInit {
 
       if (event.message === TABS_ADD_TAB_ACTION) {
         this.newTab();
+      }
+
+      if (event.message === OPEN_NEW_DDF_TAB_FROM_VALIDATOR) {
+        this.chartService.ddfFolderDescriptor.ddfUrl = event.options.ddfPath;
+        this.chartService.setReaderDefaults(this.chartService.ddfFolderDescriptor);
+
+        const newTab = new TabModel(event.options.chartType, false);
+
+        this.chartService.newChart(newTab, this.chartService.ddfFolderDescriptor, false);
+        this.tabsModel.forEach((tab: TabModel) => tab.active = false);
+
+        newTab.active = true;
+
+        this.tabsModel.push(newTab);
       }
     });
   }
@@ -238,12 +252,6 @@ export class TabsComponent implements OnInit {
   }
 
   private errorHandler(error: Error): void {
-    const currentTab = this.getCurrentTab();
-
-    currentTab.alerts.push(new AlertModel(error.message, error.stack));
-
-    electron.ipcRenderer.send('chart-error', `${error.message} ${error.stack}`);
-
-    this.onTabSetActive.emit();
+    console.log(error);
   }
 }
