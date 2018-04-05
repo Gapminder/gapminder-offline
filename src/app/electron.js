@@ -17,6 +17,7 @@ const dataPackage = require(app.getAppPath() + '/ddf--gapminder--systema_globali
 const devMode = process.argv.length > 1 && process.argv.indexOf('dev') > 0;
 const autoUpdateTestMode = process.argv.length > 1 && process.argv.indexOf('au-test') > 0;
 
+const DdfValidatorWrapper = require('./validator-wrapper').DdfValidatorWrapper;
 const packageJSON = require('./package.json');
 const GoogleAnalytics = require('./google-analytics');
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
@@ -67,13 +68,9 @@ const rollback = () => {
 
 let updateProcessAppDescriptor;
 let updateProcessDsDescriptor;
-
 let mainWindow = null;
-
 let currentFile;
-
-const DdfValidatorWrapper = require('./validator-wrapper').DdfValidatorWrapper;
-const ddfValidatorWrapper = new DdfValidatorWrapper();
+let ddfValidatorWrapper;
 
 class UpdateProcessDescriptor {
   constructor(version, url) {
@@ -340,11 +337,18 @@ function startMainApplication() {
   });
 
   ipc.on('start-validation', (event, params) => {
+    if (ddfValidatorWrapper) {
+      ddfValidatorWrapper.abandon();
+    }
+
+    ddfValidatorWrapper = new DdfValidatorWrapper();
     ddfValidatorWrapper.start(event, params);
   });
 
   ipc.on('abandon-validation', () => {
-    ddfValidatorWrapper.abandon();
+    if (ddfValidatorWrapper) {
+      ddfValidatorWrapper.abandon();
+    }
   });
 }
 
