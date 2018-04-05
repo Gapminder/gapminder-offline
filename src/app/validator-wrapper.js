@@ -23,7 +23,7 @@ exports.DdfValidatorWrapper = class DdfValidatorWrapper {
         }
 
         this.validationProcess();
-      }, true);
+      });
     } else {
       this.validationProcess();
     }
@@ -55,6 +55,8 @@ exports.DdfValidatorWrapper = class DdfValidatorWrapper {
   }
 
   abandon() {
-    this.validator.abandon();
+    if (this.validator && this.validator.abandon) {
+      this.validator.abandon();
+    }
   }
-}
+};

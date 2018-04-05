@@ -43,7 +43,7 @@
       <div><a href="#" (click)="abandon()" style="margin-left: 10px;">Stop validation</a></div>
     </div>
 
-    <div *ngIf="isResultReady">
+    <div *ngIf="isResultReady && !error">
       <div *ngIf="issues.length === 0" class="validation-result validating-container">
           <div>
             <span class="glyphicon glyphicon-ok validation-glyph green"></span>
@@ -51,12 +51,18 @@
           </div>
           <div><span>You can now <a href="#" (click)="openNewDdfTab()">open this dataset</a> in a new tab</span></div>
       </div>
-      <div *ngIf="issues.length > 0" class="validation-result validating-container">
+      <div *ngIf="issues.length > 0 && !error" class="validation-result validating-container">
         <div>
           <span class="glyphicon glyphicon-remove validation-glyph red"></span>
           <span class="red">Dataset is not valid :(</span>
         </div>
         <div><span>Please fix the following issues and <a href="#" (click)="validate()">validate again</a></span></div>
+      </div>
+    </div>
+    <div *ngIf="error" class="validation-result validating-container">
+      <div>
+        <span class="glyphicon glyphicon-remove validation-glyph red"></span>
+        <span class="red">{{error}}</span>
       </div>
     </div>
   </div>
