@@ -62,7 +62,9 @@ export class ChartService {
   }
 
   public newChart(tab: TabModel, tabDataDescriptor: TabDataDescriptor, isDefaults: boolean = true): string {
-    this.ddfFolderDescriptor.defaults();
+    if (isDefaults) {
+      this.ddfFolderDescriptor.defaults();
+    }
 
     tab.readerModuleObject = tabDataDescriptor.readerModuleObject;
     tab.readerGetMethod = tabDataDescriptor.readerGetMethod;

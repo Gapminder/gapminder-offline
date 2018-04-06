@@ -102,8 +102,8 @@ export class TabsComponent implements OnInit {
       }
 
       if (event.message === OPEN_NEW_DDF_TAB_FROM_VALIDATOR) {
-        this.chartService.ddfFolderDescriptor.ddfUrl = event.options.ddfPath;
         this.chartService.setReaderDefaults(this.chartService.ddfFolderDescriptor);
+        this.chartService.ddfFolderDescriptor.ddfUrl = event.options.ddfPath;
 
         const newTab = new TabModel(event.options.chartType, false);
 
