@@ -32,8 +32,6 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
   public preserveHeaders: boolean = false;
   public chartsToOpen: ChartOption[] = [
     {label: 'Bubbles', type: 'BubbleChart'},
-    {label: 'Maps', type: 'BubbleMap'},
-    {label: 'Mountains', type: 'MountainChart'},
     {label: 'Rankings', type: 'BarRankChart'},
     {label: 'Lines', type: 'LineChart'}
   ];
