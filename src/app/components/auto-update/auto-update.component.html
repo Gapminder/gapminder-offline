@@ -1,13 +1,15 @@
 <div *ngIf="requestToUpdate && !requestToDatasetUpdate && !requestToExitAndFinishUpdate" style="display: inline;">
-    <div class="label">New version is available!</div>
+    <div class="label">New version <b>{{versionDescriptor.actualVersionGenericUpdate}}</b> is available!</div>
     <span>
       <input type="button" (click)="processUpdateRequest()" value="Update now" class="btn" />
+      <input type="button" (click)="cancel()" value="Cancel" class="btn" />
     </span>
 </div>
 <div *ngIf="requestToDatasetUpdate && !requestToExitAndFinishUpdate" style="display: inline;">
-    <div class="label">New dataset is available!</div>
+    <div class="label">New dataset (v{{versionDescriptor.actualVersionDsUpdate}}) is available!</div>
     <span>
       <input type="button" (click)="processUpdateRequest()" value="Update now" class="btn" />
+      <input type="button" (click)="cancel()" value="Cancel" class="btn" />
     </span>
 </div>
 <div *ngIf="requestToProgress" class="progress-addition">
@@ -23,8 +25,9 @@
     </span>
 </div>
 <div *ngIf="error">
-    <div class="label">Unable to process update... More info in <i>auto-update-err.log</i></div>
+    <div class="label">Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version
+      <a href="#" (click)="openURL('https://www.gapminder.org/tools-offline/')">from here</a></div>
     <span>
-      <input type="button" (click)="resetError()" value="Ok" class="btn" />
+      <input type="button" (click)="resetError()" value="Cancel" class="btn" />
     </span>
 </div>

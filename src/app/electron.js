@@ -236,8 +236,8 @@ function startMainApplication() {
     });
   });
 
-  ipc.on('request-custom-update', (event, version) => {
-    event.sender.send('request-and-update', version);
+  ipc.on('request-custom-update', (event, actualVersionGenericUpdate) => {
+    event.sender.send('request-and-update', {actualVersionGenericUpdate, os: process.platform, arch: process.arch});
   });
 
   ipc.on('presets-export', (event, content) => {
@@ -296,10 +296,19 @@ function startMainApplication() {
 
               updateProcessDsDescriptor = new UpdateProcessDescriptor(actualVersionDsUpdate, DS_FEED_URL);
 
-              event.sender.send('request-to-update', {actualVersionDsUpdate, actualVersionGenericUpdate});
+              event.sender.send('request-to-update', {
+                actualVersionDsUpdate,
+                actualVersionGenericUpdate,
+                os: process.platform,
+                arch: process.arch
+              });
             });
           } else {
-            event.sender.send('request-to-update', {actualVersionGenericUpdate});
+            event.sender.send('request-to-update', {
+              actualVersionGenericUpdate,
+              os: process.platform,
+              arch: process.arch
+            });
           }
         }
       });
