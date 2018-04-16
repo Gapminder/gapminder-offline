@@ -10,8 +10,10 @@ export interface ProgressDescriptor {
 }
 
 export interface VersionDescriptor {
-  actualVersionDsUpdate: string;
-  actualVersionGenericUpdate: string
+  actualVersionDsUpdate?: string;
+  actualVersionGenericUpdate?: string;
+  os: string;
+  arch: string;
 }
 
 @Component({
@@ -31,20 +33,32 @@ export class AutoUpdateComponent implements OnInit {
   public max: number = 200;
   public progress: number = 0;
   public error: boolean = false;
+  public versionDescriptor: VersionDescriptor;
+  /* todo: try to use it later */
+  public downloadLinks: any = {
+    linux: 'https://s3-eu-west-1.amazonaws.com/gapminder-offline/Gapminder%20Offline-linux.zip',
+    darwin: 'https://s3-eu-west-1.amazonaws.com/gapminder-offline/Install%20Gapminder%20Offline.dmg',
+    win32x64: 'https://s3-eu-west-1.amazonaws.com/gapminder-offline/Install%20Gapminder%20Offline-64.exe',
+    win32ia32: 'https://s3-eu-west-1.amazonaws.com/gapminder-offline/Install%20Gapminder%20Offline-32.exe'
+  };
 
   private progressMap: Map<string, ProgressDescriptor> = new Map<string, ProgressDescriptor>();
 
   public ngOnInit(): void {
     electron.ipcRenderer.send('check-version');
 
-    ipc.on('request-and-update', (event: any, version: string) => {
-      if (version) {
+    ipc.on('request-and-update', (event: any, versionDescriptor: VersionDescriptor) => {
+      this.versionDescriptor = versionDescriptor;
+
+      if (versionDescriptor.actualVersionGenericUpdate) {
         this.requestToUpdate = true;
-        this.processUpdateRequest(version);
+        this.processUpdateRequest(versionDescriptor.actualVersionGenericUpdate);
       }
     });
 
     ipc.on('request-to-update', (event: any, versionDescriptor: VersionDescriptor) => {
+      this.versionDescriptor = versionDescriptor;
+
       if (versionDescriptor.actualVersionDsUpdate || versionDescriptor.actualVersionGenericUpdate) {
         this.max = versionDescriptor.actualVersionDsUpdate && versionDescriptor.actualVersionGenericUpdate ? 400 : 200;
         this.requestToDatasetUpdate = versionDescriptor.actualVersionDsUpdate && !versionDescriptor.actualVersionGenericUpdate;
@@ -112,6 +126,15 @@ export class AutoUpdateComponent implements OnInit {
 
   public resetError(): void {
     this.error = false;
+  }
+
+  public openURL(url: string): void {
+    electron.shell.openItem(url);
+  }
+
+  public cancel(): void {
+    this.requestToUpdate = false;
+    this.requestToDatasetUpdate = false;
   }
 
   private getTotalProgress(): number {
