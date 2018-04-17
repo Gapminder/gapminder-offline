@@ -41,7 +41,7 @@
     "async-waterfall": "0.1.5",
     "core-js": "2.5.3",
     "csv-parse": "2.0.0",
-    "ddf-validation": "1.15.2",
+    "ddf-validation": "1.16.3",
     "electron": "1.6.16",
     "lodash": "4.17.4",
     "minimist": "1.2.0",

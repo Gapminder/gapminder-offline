@@ -20,6 +20,7 @@ interface ChartOption {
 export class ValidationFormComponent implements OnInit, OnDestroy {
   @Output() public done: EventEmitter<any> = new EventEmitter();
 
+  public ERRORS_LIMIT: number = 50;
   public USE_CURRENT_DATA_PACKAGE: string = 'useCurrentDataPackage';
   public CREATE_NEW_DATA_PACKAGE: string = 'createNewDataPackage';
   public dataPackageMode: string = this.USE_CURRENT_DATA_PACKAGE;
@@ -37,6 +38,8 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
   ];
   public chartTypeToOpen: string = this.chartsToOpen[0].type;
   public isChartOpenSectionVisible: boolean = false;
+  public errorCount: number = 0;
+  public issuesCount: number = 0;
 
   private ddfFolder: string;
   private ref: ChangeDetectorRef;
@@ -74,13 +77,21 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
     });
 
     electron.ipcRenderer.on('validation-issue', (event: any, issue: any) => {
-      this.issues.push({
-        desc: issue.type.replace(/\n/g, '<br>'),
-        howToFix: issue.howToFix,
-        details: JSON.stringify(issue.data, null, 2)
-          .replace(/\n/g, '<br>')
-          .replace(/ /g, '&nbsp;')
-      });
+      if (!issue.isWarning) {
+        this.errorCount++;
+      }
+
+      this.issuesCount++;
+
+      if (this.issuesCount <= this.ERRORS_LIMIT) {
+        this.issues.push({
+          desc: issue.type.replace(/\n/g, '<br>'),
+          howToFix: issue.howToFix,
+          details: JSON.stringify(issue.data, null, 2)
+            .replace(/\n/g, '<br>')
+            .replace(/ /g, '&nbsp;')
+        });
+      }
     });
 
     electron.ipcRenderer.on('validation-completed', (event: any, params: any) => {
@@ -131,6 +142,8 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
     this.issues = [];
     this.error = '';
     this.isChartOpenSectionVisible = false;
+    this.errorCount = 0;
+    this.issuesCount = 0;
 
     electron.ipcRenderer.send('start-validation', {
       createNewDataPackage: this.CREATE_NEW_DATA_PACKAGE,
