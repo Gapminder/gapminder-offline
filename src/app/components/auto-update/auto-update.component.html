@@ -1,33 +1,9 @@
-<div *ngIf="requestToUpdate && !requestToDatasetUpdate && !requestToExitAndFinishUpdate" style="display: inline;">
-    <div class="label">New version <b>{{versionDescriptor.actualVersionGenericUpdate}}</b> is available!</div>
+<div *ngIf="isPopupVisible">
+  <div class="label">New version is available!
+    Please uninstall Gapminder Offline and install the new version
+    <a href="#" (click)="openURL('https://www.gapminder.org/tools-offline/')">from here</a>
     <span>
-      <input type="button" (click)="processUpdateRequest()" value="Update now" class="btn" />
-      <input type="button" (click)="cancel()" value="Cancel" class="btn" />
+        <input type="button" (click)="cancel()" value="Cancel" class="btn btn-margin-left" />
     </span>
-</div>
-<div *ngIf="requestToDatasetUpdate && !requestToExitAndFinishUpdate" style="display: inline;">
-    <div class="label">New dataset (v{{versionDescriptor.actualVersionDsUpdate}}) is available!</div>
-    <span>
-      <input type="button" (click)="processUpdateRequest()" value="Update now" class="btn" />
-      <input type="button" (click)="cancel()" value="Cancel" class="btn" />
-    </span>
-</div>
-<div *ngIf="requestToProgress" class="progress-addition">
-    <progressbar [max]="max"
-                 type="warning"
-                 class="progress-striped"
-                 [value]="progress"></progressbar>
-</div>
-<div *ngIf="!error && requestToExitAndFinishUpdate">
-    <div class="label">Press OK and wait — the app will restart automatically.</div>
-    <span>
-      <input type="button" (click)="processExitAndFinishUpdateRequest()" value="OK" class="btn" />
-    </span>
-</div>
-<div *ngIf="error">
-    <div class="label">Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version
-      <a href="#" (click)="openURL('https://www.gapminder.org/tools-offline/')">from here</a></div>
-    <span>
-      <input type="button" (click)="resetError()" value="Cancel" class="btn" />
-    </span>
+  </div>
 </div>
