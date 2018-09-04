@@ -1,0 +1,37 @@
+cp -a ./extra-data/* ./app-builds/linux-unpacked/resources
+
+mkdir -p ./app-builds/linux-unpacked/resources/export-template/libs
+
+cp ./node_modules/vizabi-ddfcsv-reader/dist/vizabi-ddfcsv-reader.js ./app-builds/linux-unpacked/resources/export-template/libs
+
+cp ./node_modules/vizabi/build/vizabi.js ./app-builds/linux-unpacked/resources/export-template/libs
+cp ./node_modules/vizabi/build/vizabi.css ./app-builds/linux-unpacked/resources/export-template/libs
+
+mkdir -p ./app-builds/linux-unpacked/resources/export-template/assets
+mkdir -p ./app-builds/linux-unpacked/resources/export-template/assets/cursors
+mkdir -p ./app-builds/linux-unpacked/resources/export-template/assets/translation
+mkdir -p ./app-builds/linux-unpacked/resources/preview-data
+mkdir -p ./app-builds/linux-unpacked/resources/preview-data/translation
+
+cp ./node_modules/vizabi/build/assets/cursors/* ./app-builds/linux-unpacked/resources/export-template/assets/cursors
+
+cp ./node_modules/vizabi/build/assets/translation/* ./app-builds/linux-unpacked/resources/preview-data/translation
+
+cp ./node_modules/vizabi/build/assets/translation/* ./app-builds/linux-unpacked/resources/export-template/assets/translation
+
+cp ./node_modules/vizabi-barrankchart/build/barrankchart.css ./app-builds/linux-unpacked/resources/export-template/libs
+cp ./node_modules/vizabi-barrankchart/build/barrankchart.js ./app-builds/linux-unpacked/resources/export-template/libs
+
+cp ./node_modules/vizabi-bubblechart/build/bubblechart.css ./app-builds/linux-unpacked/resources/export-template/libs
+cp ./node_modules/vizabi-bubblechart/build/bubblechart.js ./app-builds/linux-unpacked/resources/export-template/libs
+
+cp ./node_modules/vizabi-bubblemap/build/bubblemap.css ./app-builds/linux-unpacked/resources/export-template/libs
+cp ./node_modules/vizabi-bubblemap/build/bubblemap.js ./app-builds/linux-unpacked/resources/export-template/libs
+
+cp ./node_modules/vizabi-mountainchart/build/mountainchart.css ./app-builds/linux-unpacked/resources/export-template/libs
+cp ./node_modules/vizabi-mountainchart/build/mountainchart.js ./app-builds/linux-unpacked/resources/export-template/libs
+
+cp ./node_modules/vizabi-linechart/build/linechart.css ./app-builds/linux-unpacked/resources/export-template/libs
+cp ./node_modules/vizabi-linechart/build/linechart.js ./app-builds/linux-unpacked/resources/export-template/libs
+
+cp ./updater-linux ./app-builds/linux-unpacked/updater

@@ -1,11 +1,9 @@
-import { Component, Output, EventEmitter, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
-import * as path from 'path';
+import { Component, Output, EventEmitter, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import { ChartService } from '../tabs/chart.service';
 import { MessageService } from '../../message.service';
-import { CLEAR_VALIDATION_FORM, OPEN_NEW_DDF_TAB_FROM_VALIDATOR, ABANDON_VALIDATION } from '../../constants';
-import { Subscription } from 'rxjs/Subscription';
-
-declare var electron: any;
+import { ABANDON_VALIDATION, CLEAR_VALIDATION_FORM, OPEN_NEW_DDF_TAB_FROM_VALIDATOR } from '../../constants';
+import { ElectronService } from '../../providers/electron.service';
 
 interface ChartOption {
   label: string;
@@ -13,47 +11,46 @@ interface ChartOption {
 }
 
 @Component({
-  selector: 'ae-validation-form',
-  template: require('./validation-form.component.html'),
-  styles: [require('./validation-form.component.css')]
+  selector: 'app-validation-form',
+  templateUrl: './validation-form.component.html',
+  styleUrls: ['./validation-form.component.css']
 })
 export class ValidationFormComponent implements OnInit, OnDestroy {
-  @Output() public done: EventEmitter<any> = new EventEmitter();
+  @Output() done: EventEmitter<any> = new EventEmitter();
 
-  public ERRORS_LIMIT: number = 50;
-  public USE_CURRENT_DATA_PACKAGE: string = 'useCurrentDataPackage';
-  public CREATE_NEW_DATA_PACKAGE: string = 'createNewDataPackage';
-  public dataPackageMode: string = this.USE_CURRENT_DATA_PACKAGE;
-  public issues: any[] = [];
-  public areOptionsVisible: boolean = false;
-  public statusLine: string = '';
-  public error: string = '';
-  public doesValidationRunning: boolean = false;
-  public isResultReady: boolean = false;
-  public preserveHeaders: boolean = false;
-  public chartsToOpen: ChartOption[] = [
+  ERRORS_LIMIT = 50;
+  USE_CURRENT_DATA_PACKAGE = 'useCurrentDataPackage';
+  CREATE_NEW_DATA_PACKAGE = 'createNewDataPackage';
+  dataPackageMode: string = this.USE_CURRENT_DATA_PACKAGE;
+  issues: any[] = [];
+  areOptionsVisible = false;
+  statusLine = '';
+  error = '';
+  doesValidationRunning = false;
+  isResultReady = false;
+  preserveHeaders = false;
+  chartsToOpen: ChartOption[] = [
     {label: 'Bubbles', type: 'BubbleChart'},
     {label: 'Rankings', type: 'BarRankChart'},
     {label: 'Lines', type: 'LineChart'}
   ];
-  public chartTypeToOpen: string = this.chartsToOpen[0].type;
-  public isChartOpenSectionVisible: boolean = false;
-  public errorCount: number = 0;
-  public issuesCount: number = 0;
+  chartTypeToOpen: string = this.chartsToOpen[0].type;
+  isChartOpenSectionVisible = false;
+  errorCount = 0;
+  issuesCount = 0;
 
-  private ddfFolder: string;
-  private ref: ChangeDetectorRef;
-  private chartService: ChartService;
-  private messageService: MessageService;
-  private subscription: Subscription;
+  ddfFolder: string;
+  validator;
+  subscription: Subscription;
 
-  public constructor(ref: ChangeDetectorRef, chartService: ChartService, messageService: MessageService) {
-    this.ref = ref;
-    this.chartService = chartService;
-    this.messageService = messageService;
+  constructor(
+    private ref: ChangeDetectorRef,
+    private chartService: ChartService,
+    private messageService: MessageService,
+    private es: ElectronService) {
   }
 
-  public ngOnInit(): void {
+  ngOnInit() {
     this.subscription = this.messageService.getMessage().subscribe((event: any) => {
       if (event.message === CLEAR_VALIDATION_FORM) {
         this.reset();
@@ -63,20 +60,95 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
         this.abandon();
       }
     });
+  }
 
-    electron.ipcRenderer.on('validation-message', (event: any, message: string) => {
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  close() {
+    this.done.emit();
+  }
+
+  onDirectorySelected(event: any) {
+    this.ddfFolder = event.file;
+  }
+
+  setDataPackageMode(mode: string) {
+    this.dataPackageMode = mode;
+  }
+
+  openNewDdfTab() {
+    this.messageService.sendMessage(
+      OPEN_NEW_DDF_TAB_FROM_VALIDATOR,
+      {
+        ddfPath: this.ddfFolder,
+        chartType: this.chartTypeToOpen
+      });
+    this.reset();
+    this.close();
+  }
+
+  openURL(url: string) {
+    this.es.shell.openExternal(url);
+  }
+
+  validate() {
+    if (!this.ddfFolder || this.doesValidationRunning) {
+      return;
+    }
+
+    this.doesValidationRunning = true;
+    this.isResultReady = false;
+    this.issues = [];
+    this.error = '';
+    this.isChartOpenSectionVisible = false;
+    this.errorCount = 0;
+    this.issuesCount = 0;
+
+    const params = {
+      createNewDataPackage: this.CREATE_NEW_DATA_PACKAGE,
+      dataPackageMode: this.dataPackageMode,
+      options: this.getValidatorOptions(),
+      ddfFolder: this.ddfFolder
+    };
+    const {exists} = this.es.ddfValidation.getDataPackageInfo(this.ddfFolder);
+
+    if (!exists || (exists && params.dataPackageMode === params.createNewDataPackage)) {
+      const dataPackageCreationParameters = {
+        ddfRootFolder: this.ddfFolder,
+        newDataPackagePriority: true,
+        externalSettings: params.options
+      };
+      this.es.ddfValidation.createDataPackage(dataPackageCreationParameters, message => {
+        this.statusLine = message;
+        this.ref.detectChanges();
+      }, error => {
+        if (error) {
+          this.error = error;
+          this.doesValidationRunning = false;
+          this.isResultReady = true;
+          this.ref.detectChanges();
+
+          return;
+        }
+
+        this.validationProcess();
+      });
+    } else {
+      this.validationProcess();
+    }
+  }
+
+  validationProcess() {
+    this.validator = new this.es.ddfValidation.StreamValidator(this.ddfFolder, this.getValidatorOptions());
+
+    this.validator.onMessage(message => {
       this.statusLine = message;
       this.ref.detectChanges();
     });
 
-    electron.ipcRenderer.on('validation-error', (event: any, error: any) => {
-      this.error = error;
-      this.doesValidationRunning = false;
-      this.isResultReady = true;
-      this.ref.detectChanges();
-    });
-
-    electron.ipcRenderer.on('validation-issue', (event: any, issue: any) => {
+    this.validator.on('issue', issue => {
       if (!issue.isWarning) {
         this.errorCount++;
       }
@@ -94,83 +166,35 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
       }
     });
 
-    electron.ipcRenderer.on('validation-completed', (event: any, params: any) => {
-      this.doesValidationRunning = params.doesValidationRunning;
-      this.isResultReady = params.isResultReady;
+    this.validator.on('finish', err => {
+      if (err) {
+        this.error = err;
+        this.doesValidationRunning = false;
+        this.isResultReady = true;
+
+      } else {
+        this.doesValidationRunning = false;
+        this.isResultReady = !this.validator.isAbandoned();
+      }
+
       this.ref.detectChanges();
     });
+
+    this.es.ddfValidation.validate(this.validator);
   }
 
-  public ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  public close(): void {
-    this.done.emit();
-  }
-
-  public onDirectorySelected(event: any): void {
-    this.ddfFolder = event.file;
-  }
-
-  public setDataPackageMode(mode: string): void {
-    this.dataPackageMode = mode;
-  }
-
-  public openNewDdfTab(): void {
-    this.messageService.sendMessage(
-      OPEN_NEW_DDF_TAB_FROM_VALIDATOR,
-      {
-        ddfPath: this.ddfFolder,
-        chartType: this.chartTypeToOpen
-      });
-    this.reset();
-    this.close();
-  }
-
-  public openURL(url: string): void {
-    electron.shell.openExternal(url);
-  }
-
-  public validate(): void {
-    if (!this.ddfFolder) {
-      return;
-    }
-
-    this.doesValidationRunning = true;
-    this.isResultReady = false;
-    this.issues = [];
-    this.error = '';
-    this.isChartOpenSectionVisible = false;
-    this.errorCount = 0;
-    this.issuesCount = 0;
-
-    electron.ipcRenderer.send('start-validation', {
-      createNewDataPackage: this.CREATE_NEW_DATA_PACKAGE,
-      dataPackageMode: this.dataPackageMode,
-      options: this.getValidatorOptions(),
-      ddfFolder: this.ddfFolder
-    });
-  }
-
-  public abandon(): void {
+  abandon() {
     if (this.doesValidationRunning) {
       this.statusLine = ' ... abandoning ...';
-      electron.ipcRenderer.send('abandon-validation');
+      if (this.validator && this.validator.abandon) {
+        this.validator.abandon();
+      }
     }
   }
 
-  private getValidatorOptions(): any {
-    const electronPath = this.chartService.ddfFolderDescriptor.electronPath;
-    const validatorPaths = {
-      linux: path.resolve(electronPath, 'node_modules', 'ddf-validation', 'lib'),
-      darwin: path.resolve(electronPath, 'resources', 'app', 'node_modules', 'ddf-validation', 'lib'),
-      win32: path.resolve(electronPath, 'node_modules', 'ddf-validation', 'lib')
-    };
-    const appPath = validatorPaths[process.platform];
+  getValidatorOptions(): any {
     const options: any = {
-      silent: true,
-      appPath
+      silent: true
     };
 
     if (this.dataPackageMode === this.CREATE_NEW_DATA_PACKAGE && this.preserveHeaders) {
@@ -181,7 +205,7 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
     return options;
   }
 
-  private reset(): void {
+  reset() {
     this.issues = [];
     this.error = '';
     this.dataPackageMode = this.USE_CURRENT_DATA_PACKAGE;

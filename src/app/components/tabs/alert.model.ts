@@ -1,14 +1,14 @@
 export class AlertModel {
-  public message: string;
-  public stack: string;
-  public collapsed: boolean = true;
+  message: string;
+  stack: string;
+  collapsed = true;
 
-  public constructor(message: string, stack: string) {
+  constructor(message: string, stack: string) {
     this.message = message;
     this.stack = stack;
   }
 
-  public toggle(): void {
+  toggle() {
     this.collapsed = !this.collapsed;
   }
 }

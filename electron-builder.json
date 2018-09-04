@@ -1,0 +1,44 @@
+{
+  "productName": "Gapminder Offline",
+  "directories": {
+    "output": "app-builds"
+  },
+    "files": [
+        "**/*",
+        "!*.ts",
+        "!*.code-workspace",
+        "!LICENSE.md",
+        "!package.json",
+        "!package-lock.json",
+        "!src/",
+        "!e2e/",
+        "!hooks/",
+        "!extra-data/",
+        "!scripts/",
+        "!update-app-src",
+        "!dmg-builder",
+        "!.angular-cli.json",
+        "!_config.yml",
+        "!karma.conf.js",
+        "!tsconfig.json",
+        "!tslint.json"
+    ],
+  "win": {
+    "icon": "dist/app-icon.png",
+    "target": [
+      "dir"
+    ]
+  },
+  "mac": {
+    "icon": "dist/app-icon.icns",
+    "target": [
+      "dir"
+    ]
+  },
+  "linux": {
+    "icon": "dist",
+    "target": [
+      "dir"
+    ]
+  }
+}

@@ -1,0 +1,140 @@
+<div style="height: 100%" (click)="appMainClickHandler($event)">
+  <div class="auto-update-container">
+    <app-auto-update (onAutoUpdateRequested)="doDetectChanges()"
+                     (onAutoUpdateProgress)="doDetectChanges()"
+                     (onAutoUpdateCompleted)="doDetectChanges()"></app-auto-update>
+  </div>
+
+  <div style="position: absolute; top: 0; right: 0;">
+    <div class="ddf-menu">
+      <div class="btn-group">
+        <app-hamburger-menu [isMenuOpened]="isMenuOpened" [tabsModel]="tabsModel" (onMenuItemSelected)="onMenuItemSelected($event)"></app-hamburger-menu>
+      </div>
+    </div>
+  </div>
+
+  <div style="min-width: 800px; height: calc(100% - 52px);">
+    <app-tabs [tabsModel]="tabsModel"
+              [disabled]="tabsDisabled"
+              (onTabsInit)="doDetectChanges()"
+              (onTabRemoved)="doDetectChanges()"
+              (onTabReady)="onTabReady()"
+              (onTabSetActive)="doDetectChanges()"
+              (onChartCreated)="onChartCreated()"
+              (onChartClicked)="appMainClickHandler($event)"
+              style="height: 100%;"></app-tabs>
+  </div>
+
+  <div bsModal
+       #versionsModal="bs-modal"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="Check for updates"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" (click)="versionsModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Check for updates</h4>
+        </div>
+        <div class="modal-body">
+          <app-versions-form (done)="versionsFormComplete($event)"></app-versions-form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div bsModal
+       #validationModal="bs-modal"
+       (onHide)="onValidationModalHide()"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="Validation"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" (click)="validationModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">DDF tools</h4>
+        </div>
+        <div class="modal-body">
+          <app-validation-form (done)="validationFormComplete()"></app-validation-form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div bsModal
+       #ddfDatasetConfigModal="bs-modal"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="New chart from your data"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" (click)="ddfDatasetConfigModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">New chart from your data</h4>
+        </div>
+        <div class="modal-body">
+          <app-ddf-dataset-config-form></app-ddf-dataset-config-form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div bsModal
+       #csvConfigModal="bs-modal"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="New chart from your data"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" (click)="csvConfigModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">New chart from your data</h4>
+        </div>
+        <div class="modal-body">
+          <app-csv-config-form [currentTab]="getCurrentTab()" (done)="completeCsvConfigForm($event)"></app-csv-config-form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div bsModal
+       (onShown)="onAdditionalCsvConfigModalShown()"
+       #additionalCsvConfigModal="bs-modal"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="Add data to the active chart"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" (click)="additionalCsvConfigModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Add data to the active chart</h4>
+        </div>
+        <div class="modal-body">
+          <app-csv-config-form [addDataMode]="true" [currentTab]="getCurrentTab()" (done)="additionalCsvConfigFormComplete($event)"></app-csv-config-form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <input id="addDdfFolder" type="file" style="display: none;" #addDdfFolder (click)="menuActions.ddfFolderClick($event, onDdfExtFolderChanged)"/>
+</div>
