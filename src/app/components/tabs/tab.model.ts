@@ -11,43 +11,43 @@ const LABEL_MAP = {
 const DEFAULT_TITLE = 'Chart';
 
 export class TabModel {
-  public static globalOrder: number = 0;
+  static globalOrder = 0;
 
-  public active: boolean;
-  public title: string;
-  public removable: boolean = true;
-  public model: any;
-  public additionalData: IAdditionalDataItem[] = [];
+  active: boolean;
+  title: string;
+  removable = true;
+  model: any;
+  additionalData: IAdditionalDataItem[] = [];
 
-  public readerModuleObject: any;
-  public readerGetMethod: string;
-  public readerPlugins: any[];
-  public readerName: string;
-  public component: any;
-  public instance: any;
-  public alerts: AlertModel[] = [];
-  public isDataExpired: boolean = false;
-  public reloadTime: number;
+  readerModuleObject: any;
+  readerGetMethod: string;
+  readerPlugins: any[];
+  readerName: string;
+  component: any;
+  instance: any;
+  alerts: AlertModel[] = [];
+  isDataExpired = false;
+  reloadTime: number;
 
-  private _chartType: string = '';
+  private _chartType = '';
   private order: number;
 
-  public constructor(chartType: string = '', active: boolean = false, title: string = '') {
+  constructor(chartType: string = '', active: boolean = false, title: string = '') {
     this.chartType = chartType;
     this.order = ++TabModel.globalOrder;
     this.active = active;
     this.title = title ? title : this.getOrderedTitle();
   }
 
-  public getOrder(): number {
+  getOrder(): number {
     return this.order;
   }
 
-  public get chartType(): string {
+  get chartType(): string {
     return this._chartType;
   }
 
-  public set chartType(_chartType: string) {
+  set chartType(_chartType: string) {
     this._chartType = _chartType;
 
     if (this.title === `${DEFAULT_TITLE} ${this.order}`) {

@@ -1,8 +1,8 @@
-import * as fs from 'fs';
 import { isEmpty } from 'lodash';
 import { Injectable } from '@angular/core';
 import { TabModel } from '../tabs/tab.model';
 import { IAdditionalDataItem } from '../descriptors/additional-data-item.descriptor';
+import { ElectronService } from '../../providers/electron.service';
 
 const timeHash: any = {};
 
@@ -10,7 +10,10 @@ const timeHash: any = {};
 export class FreshenerService {
   private activeTab: TabModel;
 
-  public checkCurrentTabModification(tab: TabModel): void {
+  constructor(private es: ElectronService) {
+  }
+
+  checkCurrentTabModification(tab: TabModel) {
     if (tab.model) {
       this.activeTab = tab;
 
@@ -31,11 +34,11 @@ export class FreshenerService {
     return `${this.activeTab.getOrder()}${activePath}`;
   }
 
-  private checkPathModification(activePaths: string[]): void {
+  private checkPathModification(activePaths: string[]) {
     let modificationFlag = false;
 
     for (const activePath of activePaths) {
-      const modificationTime = fs.statSync(activePath).mtime.getTime();
+      const modificationTime = this.es.fs.statSync(activePath).mtime.getTime();
       const key = this.getKey(activePath);
 
       if (activePath && !!timeHash[key] && modificationTime !== timeHash[key]) {

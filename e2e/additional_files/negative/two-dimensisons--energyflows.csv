@@ -1,0 +1,2449 @@
+phase_from,phase_to,year,amount
+Agricultural 'waste',Bio-conversion,2014,124.729
+Bio-conversion,Liquid,2014,0.597
+Bio-conversion,Losses,2014,26.862
+Bio-conversion,Solid,2014,280.322
+Bio-conversion,Gas,2014,81.144
+Biofuel imports,Liquid,2014,35
+Biomass imports,Solid,2014,35
+Coal imports,Coal,2014,11.606
+Coal reserves,Coal,2014,63.965
+Coal,Solid,2014,75.571
+District heating,Industry,2014,10.639
+District heating,Heating and cooling - commercial,2014,22.505
+District heating,Heating and cooling - homes,2014,46.184
+Electricity grid,Over generation / exports,2014,104.453
+Electricity grid,Heating and cooling - homes,2014,113.726
+Electricity grid,H2 conversion,2014,27.14
+Electricity grid,Industry,2014,342.165
+Electricity grid,Road transport,2014,37.797
+Electricity grid,Agriculture,2014,4.412
+Electricity grid,Heating and cooling - commercial,2014,40.858
+Electricity grid,Losses,2014,56.691
+Electricity grid,Rail transport,2014,7.863
+Electricity grid,Lighting & appliances - commercial,2014,90.008
+Electricity grid,Lighting & appliances - homes,2014,93.494
+Gas imports,Ngas,2014,40.719
+Gas reserves,Ngas,2014,82.233
+Gas,Heating and cooling - commercial,2014,0.129
+Gas,Losses,2014,1.401
+Gas,Thermal generation,2014,151.891
+Gas,Agriculture,2014,2.096
+Gas,Industry,2014,48.58
+Geothermal,Electricity grid,2014,7.013
+H2 conversion,H2,2014,20.897
+H2 conversion,Losses,2014,6.242
+H2,Road transport,2014,20.897
+Hydro,Electricity grid,2014,6.995
+Liquid,Industry,2014,121.066
+Liquid,International shipping,2014,128.69
+Liquid,Road transport,2014,135.835
+Liquid,Domestic aviation,2014,14.458
+Liquid,International aviation,2014,206.267
+Liquid,Agriculture,2014,3.64
+Liquid,National navigation,2014,33.218
+Liquid,Rail transport,2014,4.413
+Marine algae,Bio-conversion,2014,4.375
+Ngas,Gas,2014,122.952
+Nuclear,Thermal generation,2014,839.978
+Oil imports,Oil,2014,504.287
+Oil reserves,Oil,2014,107.703
+Oil,Liquid,2014,611.99
+Other waste,Solid,2014,56.587
+Other waste,Bio-conversion,2014,77.81
+Pumped heat,Heating and cooling - homes,2014,193.026
+Pumped heat,Heating and cooling - commercial,2014,70.672
+Solar PV,Electricity grid,2014,59.901
+Solar Thermal,Heating and cooling - homes,2014,19.263
+Solar,Solar Thermal,2014,19.263
+Solar,Solar PV,2014,59.901
+Solid,Agriculture,2014,0.882
+Solid,Thermal generation,2014,400.12
+Solid,Industry,2014,46.477
+Thermal generation,Electricity grid,2014,525.531
+Thermal generation,Losses,2014,787.129
+Thermal generation,District heating,2014,79.329
+Tidal,Electricity grid,2014,9.452
+UK land based bioenergy,Bio-conversion,2014,182.01
+Wave,Electricity grid,2014,19.013
+Wind,Electricity grid,2014,289.366
+Agricultural 'waste',Bio-conversion,2015,210.7290
+Bio-conversion,Liquid,2015,97.5970
+Bio-conversion,Losses,2015,39.8620
+Bio-conversion,Solid,2015,339.3220
+Bio-conversion,Gas,2015,179.1440
+Biofuel imports,Liquid,2015,120.0000
+Biomass imports,Solid,2015,99.0000
+Coal imports,Coal,2015,106.6060
+Coal reserves,Coal,2015,65.9650
+Coal,Solid,2015,80.5710
+District heating,Industry,2015,43.6390
+District heating,Heating and cooling - commercial,2015,25.5050
+District heating,Heating and cooling - homes,2015,121.1840
+Electricity grid,Over generation / exports,2015,130.4530
+Electricity grid,Heating and cooling - homes,2015,191.7260
+Electricity grid,H2 conversion,2015,37.1400
+Electricity grid,Industry,2015,348.1650
+Electricity grid,Road transport,2015,50.7970
+Electricity grid,Agriculture,2015,64.4120
+Electricity grid,Heating and cooling - commercial,2015,88.8580
+Electricity grid,Losses,2015,61.6910
+Electricity grid,Rail transport,2015,32.8630
+Electricity grid,Lighting & appliances - commercial,2015,116.0080
+Electricity grid,Lighting & appliances - homes,2015,191.4940
+Gas imports,Ngas,2015,139.7190
+Gas reserves,Ngas,2015,168.2330
+Gas,Heating and cooling - commercial,2015,59.1290
+Gas,Losses,2015,42.4010
+Gas,Thermal generation,2015,224.8910
+Gas,Agriculture,2015,25.0960
+Gas,Industry,2015,61.5800
+Geothermal,Electricity grid,2015,46.0130
+H2 conversion,H2,2015,88.8970
+H2 conversion,Losses,2015,67.2420
+H2,Road transport,2015,55.8970
+Hydro,Electricity grid,2015,30.9950
+Liquid,Industry,2015,181.0660
+Liquid,International shipping,2015,175.6900
+Liquid,Road transport,2015,227.8350
+Liquid,Domestic aviation,2015,43.4580
+Liquid,International aviation,2015,221.2670
+Liquid,Agriculture,2015,38.6400
+Liquid,National navigation,2015,128.2180
+Liquid,Rail transport,2015,31.4130
+Marine algae,Bio-conversion,2015,20.3750
+Ngas,Gas,2015,151.9520
+Nuclear,Thermal generation,2015,897.9780
+Oil imports,Oil,2015,511.2870
+Oil reserves,Oil,2015,189.7030
+Oil,Liquid,2015,697.9900
+Other waste,Solid,2015,65.5870
+Other waste,Bio-conversion,2015,132.8100
+Pumped heat,Heating and cooling - homes,2015,230.0260
+Pumped heat,Heating and cooling - commercial,2015,143.6720
+Solar PV,Electricity grid,2015,84.9010
+Solar Thermal,Heating and cooling - homes,2015,53.2630
+Solar,Solar Thermal,2015,24.2630
+Solar,Solar PV,2015,131.9010
+Solid,Agriculture,2015,39.8820
+Solid,Thermal generation,2015,436.1200
+Solid,Industry,2015,79.4770
+Thermal generation,Electricity grid,2015,612.5310
+Thermal generation,Losses,2015,840.1290
+Thermal generation,District heating,2015,169.3290
+Tidal,Electricity grid,2015,18.4520
+UK land based bioenergy,Bio-conversion,2015,276.0100
+Wave,Electricity grid,2015,58.0130
+Wind,Electricity grid,2015,342.3660
+Agricultural 'waste',Bio-conversion,2016,126.7290
+Bio-conversion,Liquid,2016,5.5970
+Bio-conversion,Losses,2016,111.8620
+Bio-conversion,Solid,2016,379.3220
+Bio-conversion,Gas,2016,89.1440
+Biofuel imports,Liquid,2016,56.0000
+Biomass imports,Solid,2016,75.0000
+Coal imports,Coal,2016,31.6060
+Coal reserves,Coal,2016,75.9650
+Coal,Solid,2016,150.5710
+District heating,Industry,2016,36.6390
+District heating,Heating and cooling - commercial,2016,26.5050
+District heating,Heating and cooling - homes,2016,141.1840
+Electricity grid,Over generation / exports,2016,191.4530
+Electricity grid,Heating and cooling - homes,2016,153.7260
+Electricity grid,H2 conversion,2016,67.1400
+Electricity grid,Industry,2016,382.1650
+Electricity grid,Road transport,2016,117.7970
+Electricity grid,Agriculture,2016,21.4120
+Electricity grid,Heating and cooling - commercial,2016,84.8580
+Electricity grid,Losses,2016,138.6910
+Electricity grid,Rail transport,2016,90.8630
+Electricity grid,Lighting & appliances - commercial,2016,151.0080
+Electricity grid,Lighting & appliances - homes,2016,153.4940
+Gas imports,Ngas,2016,94.7190
+Gas reserves,Ngas,2016,146.2330
+Gas,Heating and cooling - commercial,2016,93.1290
+Gas,Losses,2016,87.4010
+Gas,Thermal generation,2016,249.8910
+Gas,Agriculture,2016,54.0960
+Gas,Industry,2016,90.5800
+Geothermal,Electricity grid,2016,85.0130
+H2 conversion,H2,2016,26.8970
+H2 conversion,Losses,2016,102.2420
+H2,Road transport,2016,87.8970
+Hydro,Electricity grid,2016,66.9950
+Liquid,Industry,2016,133.0660
+Liquid,International shipping,2016,163.6900
+Liquid,Road transport,2016,169.8350
+Liquid,Domestic aviation,2016,73.4580
+Liquid,International aviation,2016,259.2670
+Liquid,Agriculture,2016,22.6400
+Liquid,National navigation,2016,116.2180
+Liquid,Rail transport,2016,35.4130
+Marine algae,Bio-conversion,2016,87.3750
+Ngas,Gas,2016,173.9520
+Nuclear,Thermal generation,2016,894.9780
+Oil imports,Oil,2016,585.2870
+Oil reserves,Oil,2016,125.7030
+Oil,Liquid,2016,651.9900
+Other waste,Solid,2016,80.5870
+Other waste,Bio-conversion,2016,128.8100
+Pumped heat,Heating and cooling - homes,2016,278.0260
+Pumped heat,Heating and cooling - commercial,2016,103.6720
+Solar PV,Electricity grid,2016,87.9010
+Solar Thermal,Heating and cooling - homes,2016,42.2630
+Solar,Solar Thermal,2016,33.2630
+Solar,Solar PV,2016,106.9010
+Solid,Agriculture,2016,29.8820
+Solid,Thermal generation,2016,489.1200
+Solid,Industry,2016,83.4770
+Thermal generation,Electricity grid,2016,552.5310
+Thermal generation,Losses,2016,822.1290
+Thermal generation,District heating,2016,90.3290
+Tidal,Electricity grid,2016,80.4520
+UK land based bioenergy,Bio-conversion,2016,203.0100
+Wave,Electricity grid,2016,30.0130
+Wind,Electricity grid,2016,326.3660
+Agricultural 'waste',Bio-conversion,2017,139.7290
+Bio-conversion,Liquid,2017,77.5970
+Bio-conversion,Losses,2017,93.8620
+Bio-conversion,Solid,2017,318.3220
+Bio-conversion,Gas,2017,156.1440
+Biofuel imports,Liquid,2017,64.0000
+Biomass imports,Solid,2017,97.0000
+Coal imports,Coal,2017,87.6060
+Coal reserves,Coal,2017,64.9650
+Coal,Solid,2017,147.5710
+District heating,Industry,2017,51.6390
+District heating,Heating and cooling - commercial,2017,75.5050
+District heating,Heating and cooling - homes,2017,55.1840
+Electricity grid,Over generation / exports,2017,175.4530
+Electricity grid,Heating and cooling - homes,2017,148.7260
+Electricity grid,H2 conversion,2017,67.1400
+Electricity grid,Industry,2017,369.1650
+Electricity grid,Road transport,2017,61.7970
+Electricity grid,Agriculture,2017,32.4120
+Electricity grid,Heating and cooling - commercial,2017,93.8580
+Electricity grid,Losses,2017,99.6910
+Electricity grid,Rail transport,2017,11.8630
+Electricity grid,Lighting & appliances - commercial,2017,172.0080
+Electricity grid,Lighting & appliances - homes,2017,143.4940
+Gas imports,Ngas,2017,96.7190
+Gas reserves,Ngas,2017,133.2330
+Gas,Heating and cooling - commercial,2017,23.1290
+Gas,Losses,2017,68.4010
+Gas,Thermal generation,2017,189.8910
+Gas,Agriculture,2017,49.0960
+Gas,Industry,2017,132.5800
+Geothermal,Electricity grid,2017,23.0130
+H2 conversion,H2,2017,62.8970
+H2 conversion,Losses,2017,85.2420
+H2,Road transport,2017,96.8970
+Hydro,Electricity grid,2017,28.9950
+Liquid,Industry,2017,130.0660
+Liquid,International shipping,2017,147.6900
+Liquid,Road transport,2017,216.8350
+Liquid,Domestic aviation,2017,106.4580
+Liquid,International aviation,2017,244.2670
+Liquid,Agriculture,2017,37.6400
+Liquid,National navigation,2017,90.2180
+Liquid,Rail transport,2017,6.4130
+Marine algae,Bio-conversion,2017,43.3750
+Ngas,Gas,2017,192.9520
+Nuclear,Thermal generation,2017,912.9780
+Oil imports,Oil,2017,546.2870
+Oil reserves,Oil,2017,176.7030
+Oil,Liquid,2017,669.9900
+Other waste,Solid,2017,103.5870
+Other waste,Bio-conversion,2017,171.8100
+Pumped heat,Heating and cooling - homes,2017,248.0260
+Pumped heat,Heating and cooling - commercial,2017,112.6720
+Solar PV,Electricity grid,2017,113.9010
+Solar Thermal,Heating and cooling - homes,2017,63.2630
+Solar,Solar Thermal,2017,44.2630
+Solar,Solar PV,2017,72.9010
+Solid,Agriculture,2017,77.8820
+Solid,Thermal generation,2017,483.1200
+Solid,Industry,2017,125.4770
+Thermal generation,Electricity grid,2017,566.5310
+Thermal generation,Losses,2017,803.1290
+Thermal generation,District heating,2017,169.3290
+Tidal,Electricity grid,2017,70.4520
+UK land based bioenergy,Bio-conversion,2017,194.0100
+Wave,Electricity grid,2017,48.0130
+Wind,Electricity grid,2017,384.3660
+Agricultural 'waste',Bio-conversion,2018,211.7290
+Bio-conversion,Liquid,2018,82.5970
+Bio-conversion,Losses,2018,125.8620
+Bio-conversion,Solid,2018,302.3220
+Bio-conversion,Gas,2018,145.1440
+Biofuel imports,Liquid,2018,69.0000
+Biomass imports,Solid,2018,36.0000
+Coal imports,Coal,2018,24.6060
+Coal reserves,Coal,2018,96.9650
+Coal,Solid,2018,108.5710
+District heating,Industry,2018,78.6390
+District heating,Heating and cooling - commercial,2018,105.5050
+District heating,Heating and cooling - homes,2018,101.1840
+Electricity grid,Over generation / exports,2018,190.4530
+Electricity grid,Heating and cooling - homes,2018,123.7260
+Electricity grid,H2 conversion,2018,68.1400
+Electricity grid,Industry,2018,384.1650
+Electricity grid,Road transport,2018,110.7970
+Electricity grid,Agriculture,2018,85.4120
+Electricity grid,Heating and cooling - commercial,2018,78.8580
+Electricity grid,Losses,2018,125.6910
+Electricity grid,Rail transport,2018,62.8630
+Electricity grid,Lighting & appliances - commercial,2018,184.0080
+Electricity grid,Lighting & appliances - homes,2018,187.4940
+Gas imports,Ngas,2018,77.7190
+Gas reserves,Ngas,2018,82.2330
+Gas,Heating and cooling - commercial,2018,49.1290
+Gas,Losses,2018,91.4010
+Gas,Thermal generation,2018,227.8910
+Gas,Agriculture,2018,14.0960
+Gas,Industry,2018,80.5800
+Geothermal,Electricity grid,2018,37.0130
+H2 conversion,H2,2018,92.8970
+H2 conversion,Losses,2018,26.2420
+H2,Road transport,2018,115.8970
+Hydro,Electricity grid,2018,75.9950
+Liquid,Industry,2018,123.0660
+Liquid,International shipping,2018,152.6900
+Liquid,Road transport,2018,214.8350
+Liquid,Domestic aviation,2018,93.4580
+Liquid,International aviation,2018,232.2670
+Liquid,Agriculture,2018,36.6400
+Liquid,National navigation,2018,37.2180
+Liquid,Rail transport,2018,8.4130
+Marine algae,Bio-conversion,2018,99.3750
+Ngas,Gas,2018,205.9520
+Nuclear,Thermal generation,2018,840.9780
+Oil imports,Oil,2018,550.2870
+Oil reserves,Oil,2018,149.7030
+Oil,Liquid,2018,651.9900
+Other waste,Solid,2018,81.5870
+Other waste,Bio-conversion,2018,80.8100
+Pumped heat,Heating and cooling - homes,2018,238.0260
+Pumped heat,Heating and cooling - commercial,2018,125.6720
+Solar PV,Electricity grid,2018,63.9010
+Solar Thermal,Heating and cooling - homes,2018,20.2630
+Solar,Solar Thermal,2018,56.2630
+Solar,Solar PV,2018,114.9010
+Solid,Agriculture,2018,52.8820
+Solid,Thermal generation,2018,411.1200
+Solid,Industry,2018,95.4770
+Thermal generation,Electricity grid,2018,550.5310
+Thermal generation,Losses,2018,791.1290
+Thermal generation,District heating,2018,125.3290
+Tidal,Electricity grid,2018,21.4520
+UK land based bioenergy,Bio-conversion,2018,238.0100
+Wave,Electricity grid,2018,77.0130
+Wind,Electricity grid,2018,308.3660
+Agricultural 'waste',Bio-conversion,2019,159.7290
+Bio-conversion,Liquid,2019,49.5970
+Bio-conversion,Losses,2019,112.8620
+Bio-conversion,Solid,2019,331.3220
+Bio-conversion,Gas,2019,154.1440
+Biofuel imports,Liquid,2019,102.0000
+Biomass imports,Solid,2019,76.0000
+Coal imports,Coal,2019,72.6060
+Coal reserves,Coal,2019,93.9650
+Coal,Solid,2019,170.5710
+District heating,Industry,2019,86.6390
+District heating,Heating and cooling - commercial,2019,69.5050
+District heating,Heating and cooling - homes,2019,133.1840
+Electricity grid,Over generation / exports,2019,142.4530
+Electricity grid,Heating and cooling - homes,2019,119.7260
+Electricity grid,H2 conversion,2019,86.1400
+Electricity grid,Industry,2019,417.1650
+Electricity grid,Road transport,2019,92.7970
+Electricity grid,Agriculture,2019,24.4120
+Electricity grid,Heating and cooling - commercial,2019,137.8580
+Electricity grid,Losses,2019,91.6910
+Electricity grid,Rail transport,2019,29.8630
+Electricity grid,Lighting & appliances - commercial,2019,106.0080
+Electricity grid,Lighting & appliances - homes,2019,160.4940
+Gas imports,Ngas,2019,101.7190
+Gas reserves,Ngas,2019,145.2330
+Gas,Heating and cooling - commercial,2019,65.1290
+Gas,Losses,2019,7.4010
+Gas,Thermal generation,2019,183.8910
+Gas,Agriculture,2019,7.0960
+Gas,Industry,2019,61.5800
+Geothermal,Electricity grid,2019,80.0130
+H2 conversion,H2,2019,44.8970
+H2 conversion,Losses,2019,14.2420
+H2,Road transport,2019,77.8970
+Hydro,Electricity grid,2019,15.9950
+Liquid,Industry,2019,160.0660
+Liquid,International shipping,2019,154.6900
+Liquid,Road transport,2019,195.8350
+Liquid,Domestic aviation,2019,61.4580
+Liquid,International aviation,2019,240.2670
+Liquid,Agriculture,2019,37.6400
+Liquid,National navigation,2019,119.2180
+Liquid,Rail transport,2019,40.4130
+Marine algae,Bio-conversion,2019,92.3750
+Ngas,Gas,2019,186.9520
+Nuclear,Thermal generation,2019,889.9780
+Oil imports,Oil,2019,598.2870
+Oil reserves,Oil,2019,112.7030
+Oil,Liquid,2019,660.9900
+Other waste,Solid,2019,69.5870
+Other waste,Bio-conversion,2019,92.8100
+Pumped heat,Heating and cooling - homes,2019,239.0260
+Pumped heat,Heating and cooling - commercial,2019,90.6720
+Solar PV,Electricity grid,2019,115.9010
+Solar Thermal,Heating and cooling - homes,2019,107.2630
+Solar,Solar Thermal,2019,66.2630
+Solar,Solar PV,2019,128.9010
+Solid,Agriculture,2019,59.8820
+Solid,Thermal generation,2019,455.1200
+Solid,Industry,2019,83.4770
+Thermal generation,Electricity grid,2019,593.5310
+Thermal generation,Losses,2019,815.1290
+Thermal generation,District heating,2019,94.3290
+Tidal,Electricity grid,2019,60.4520
+UK land based bioenergy,Bio-conversion,2019,211.0100
+Wave,Electricity grid,2019,103.0130
+Wind,Electricity grid,2019,342.3660
+Agricultural 'waste',Bio-conversion,2020,142.7290
+Bio-conversion,Liquid,2020,52.5970
+Bio-conversion,Losses,2020,38.8620
+Bio-conversion,Solid,2020,311.3220
+Bio-conversion,Gas,2020,104.1440
+Biofuel imports,Liquid,2020,81.0000
+Biomass imports,Solid,2020,105.0000
+Coal imports,Coal,2020,94.6060
+Coal reserves,Coal,2020,78.9650
+Coal,Solid,2020,131.5710
+District heating,Industry,2020,67.6390
+District heating,Heating and cooling - commercial,2020,66.5050
+District heating,Heating and cooling - homes,2020,123.1840
+Electricity grid,Over generation / exports,2020,173.4530
+Electricity grid,Heating and cooling - homes,2020,189.7260
+Electricity grid,H2 conversion,2020,83.1400
+Electricity grid,Industry,2020,383.1650
+Electricity grid,Road transport,2020,48.7970
+Electricity grid,Agriculture,2020,25.4120
+Electricity grid,Heating and cooling - commercial,2020,93.8580
+Electricity grid,Losses,2020,129.6910
+Electricity grid,Rail transport,2020,65.8630
+Electricity grid,Lighting & appliances - commercial,2020,159.0080
+Electricity grid,Lighting & appliances - homes,2020,123.4940
+Gas imports,Ngas,2020,57.7190
+Gas reserves,Ngas,2020,125.2330
+Gas,Heating and cooling - commercial,2020,47.1290
+Gas,Losses,2020,22.4010
+Gas,Thermal generation,2020,196.8910
+Gas,Agriculture,2020,87.0960
+Gas,Industry,2020,130.5800
+Geothermal,Electricity grid,2020,69.0130
+H2 conversion,H2,2020,35.8970
+H2 conversion,Losses,2020,71.2420
+H2,Road transport,2020,106.8970
+Hydro,Electricity grid,2020,34.9950
+Liquid,Industry,2020,196.0660
+Liquid,International shipping,2020,205.6900
+Liquid,Road transport,2020,213.8350
+Liquid,Domestic aviation,2020,112.4580
+Liquid,International aviation,2020,279.2670
+Liquid,Agriculture,2020,88.6400
+Liquid,National navigation,2020,77.2180
+Liquid,Rail transport,2020,46.4130
+Marine algae,Bio-conversion,2020,62.3750
+Ngas,Gas,2020,195.9520
+Nuclear,Thermal generation,2020,870.9780
+Oil imports,Oil,2020,583.2870
+Oil reserves,Oil,2020,206.7030
+Oil,Liquid,2020,670.9900
+Other waste,Solid,2020,86.5870
+Other waste,Bio-conversion,2020,108.8100
+Pumped heat,Heating and cooling - homes,2020,254.0260
+Pumped heat,Heating and cooling - commercial,2020,89.6720
+Solar PV,Electricity grid,2020,79.9010
+Solar Thermal,Heating and cooling - homes,2020,52.2630
+Solar,Solar Thermal,2020,96.2630
+Solar,Solar PV,2020,86.9010
+Solid,Agriculture,2020,61.8820
+Solid,Thermal generation,2020,491.1200
+Solid,Industry,2020,59.4770
+Thermal generation,Electricity grid,2020,607.5310
+Thermal generation,Losses,2020,875.1290
+Thermal generation,District heating,2020,174.3290
+Tidal,Electricity grid,2020,52.4520
+UK land based bioenergy,Bio-conversion,2020,199.0100
+Wave,Electricity grid,2020,37.0130
+Wind,Electricity grid,2020,370.3660
+Agricultural 'waste',Bio-conversion,2021,141.7290
+Bio-conversion,Liquid,2021,70.5970
+Bio-conversion,Losses,2021,64.8620
+Bio-conversion,Solid,2021,316.3220
+Bio-conversion,Gas,2021,167.1440
+Biofuel imports,Liquid,2021,60.0000
+Biomass imports,Solid,2021,56.0000
+Coal imports,Coal,2021,64.6060
+Coal reserves,Coal,2021,86.9650
+Coal,Solid,2021,164.5710
+District heating,Industry,2021,12.6390
+District heating,Heating and cooling - commercial,2021,88.5050
+District heating,Heating and cooling - homes,2021,135.1840
+Electricity grid,Over generation / exports,2021,120.4530
+Electricity grid,Heating and cooling - homes,2021,167.7260
+Electricity grid,H2 conversion,2021,37.1400
+Electricity grid,Industry,2021,398.1650
+Electricity grid,Road transport,2021,89.7970
+Electricity grid,Agriculture,2021,65.4120
+Electricity grid,Heating and cooling - commercial,2021,115.8580
+Electricity grid,Losses,2021,116.6910
+Electricity grid,Rail transport,2021,80.8630
+Electricity grid,Lighting & appliances - commercial,2021,90.0080
+Electricity grid,Lighting & appliances - homes,2021,161.4940
+Gas imports,Ngas,2021,42.7190
+Gas reserves,Ngas,2021,129.2330
+Gas,Heating and cooling - commercial,2021,67.1290
+Gas,Losses,2021,1.4010
+Gas,Thermal generation,2021,208.8910
+Gas,Agriculture,2021,24.0960
+Gas,Industry,2021,55.5800
+Geothermal,Electricity grid,2021,48.0130
+H2 conversion,H2,2021,21.8970
+H2 conversion,Losses,2021,59.2420
+H2,Road transport,2021,91.8970
+Hydro,Electricity grid,2021,36.9950
+Liquid,Industry,2021,144.0660
+Liquid,International shipping,2021,130.6900
+Liquid,Road transport,2021,167.8350
+Liquid,Domestic aviation,2021,86.4580
+Liquid,International aviation,2021,253.2670
+Liquid,Agriculture,2021,37.6400
+Liquid,National navigation,2021,101.2180
+Liquid,Rail transport,2021,82.4130
+Marine algae,Bio-conversion,2021,45.3750
+Ngas,Gas,2021,140.9520
+Nuclear,Thermal generation,2021,870.9780
+Oil imports,Oil,2021,586.2870
+Oil reserves,Oil,2021,185.7030
+Oil,Liquid,2021,706.9900
+Other waste,Solid,2021,59.5870
+Other waste,Bio-conversion,2021,128.8100
+Pumped heat,Heating and cooling - homes,2021,286.0260
+Pumped heat,Heating and cooling - commercial,2021,116.6720
+Solar PV,Electricity grid,2021,77.9010
+Solar Thermal,Heating and cooling - homes,2021,86.2630
+Solar,Solar Thermal,2021,116.2630
+Solar,Solar PV,2021,143.9010
+Solid,Agriculture,2021,14.8820
+Solid,Thermal generation,2021,451.1200
+Solid,Industry,2021,87.4770
+Thermal generation,Electricity grid,2021,531.5310
+Thermal generation,Losses,2021,871.1290
+Thermal generation,District heating,2021,153.3290
+Tidal,Electricity grid,2021,27.4520
+UK land based bioenergy,Bio-conversion,2021,183.0100
+Wave,Electricity grid,2021,30.0130
+Wind,Electricity grid,2021,297.3660
+Agricultural 'waste',Bio-conversion,2022,125.7290
+Bio-conversion,Liquid,2022,48.5970
+Bio-conversion,Losses,2022,33.8620
+Bio-conversion,Solid,2022,285.3220
+Bio-conversion,Gas,2022,147.1440
+Biofuel imports,Liquid,2022,92.0000
+Biomass imports,Solid,2022,69.0000
+Coal imports,Coal,2022,89.6060
+Coal reserves,Coal,2022,133.9650
+Coal,Solid,2022,145.5710
+District heating,Industry,2022,100.6390
+District heating,Heating and cooling - commercial,2022,65.5050
+District heating,Heating and cooling - homes,2022,133.1840
+Electricity grid,Over generation / exports,2022,165.4530
+Electricity grid,Heating and cooling - homes,2022,175.7260
+Electricity grid,H2 conversion,2022,51.1400
+Electricity grid,Industry,2022,374.1650
+Electricity grid,Road transport,2022,58.7970
+Electricity grid,Agriculture,2022,84.4120
+Electricity grid,Heating and cooling - commercial,2022,53.8580
+Electricity grid,Losses,2022,83.6910
+Electricity grid,Rail transport,2022,32.8630
+Electricity grid,Lighting & appliances - commercial,2022,128.0080
+Electricity grid,Lighting & appliances - homes,2022,176.4940
+Gas imports,Ngas,2022,63.7190
+Gas reserves,Ngas,2022,180.2330
+Gas,Heating and cooling - commercial,2022,77.1290
+Gas,Losses,2022,63.4010
+Gas,Thermal generation,2022,202.8910
+Gas,Agriculture,2022,53.0960
+Gas,Industry,2022,116.5800
+Geothermal,Electricity grid,2022,106.0130
+H2 conversion,H2,2022,47.8970
+H2 conversion,Losses,2022,19.2420
+H2,Road transport,2022,93.8970
+Hydro,Electricity grid,2022,9.9950
+Liquid,Industry,2022,143.0660
+Liquid,International shipping,2022,199.6900
+Liquid,Road transport,2022,176.8350
+Liquid,Domestic aviation,2022,14.4580
+Liquid,International aviation,2022,213.2670
+Liquid,Agriculture,2022,79.6400
+Liquid,National navigation,2022,53.2180
+Liquid,Rail transport,2022,19.4130
+Marine algae,Bio-conversion,2022,100.3750
+Ngas,Gas,2022,191.9520
+Nuclear,Thermal generation,2022,923.9780
+Oil imports,Oil,2022,516.2870
+Oil reserves,Oil,2022,177.7030
+Oil,Liquid,2022,689.9900
+Other waste,Solid,2022,74.5870
+Other waste,Bio-conversion,2022,97.8100
+Pumped heat,Heating and cooling - homes,2022,240.0260
+Pumped heat,Heating and cooling - commercial,2022,109.6720
+Solar PV,Electricity grid,2022,76.9010
+Solar Thermal,Heating and cooling - homes,2022,43.2630
+Solar,Solar Thermal,2022,37.2630
+Solar,Solar PV,2022,115.9010
+Solid,Agriculture,2022,29.8820
+Solid,Thermal generation,2022,432.1200
+Solid,Industry,2022,81.4770
+Thermal generation,Electricity grid,2022,535.5310
+Thermal generation,Losses,2022,822.1290
+Thermal generation,District heating,2022,160.3290
+Tidal,Electricity grid,2022,102.4520
+UK land based bioenergy,Bio-conversion,2022,218.0100
+Wave,Electricity grid,2022,73.0130
+Wind,Electricity grid,2022,368.3660
+Agricultural 'waste',Bio-conversion,2023,219.7290
+Bio-conversion,Liquid,2023,85.5970
+Bio-conversion,Losses,2023,83.8620
+Bio-conversion,Solid,2023,336.3220
+Bio-conversion,Gas,2023,92.1440
+Biofuel imports,Liquid,2023,131.0000
+Biomass imports,Solid,2023,120.0000
+Coal imports,Coal,2023,29.6060
+Coal reserves,Coal,2023,159.9650
+Coal,Solid,2023,129.5710
+District heating,Industry,2023,83.6390
+District heating,Heating and cooling - commercial,2023,77.5050
+District heating,Heating and cooling - homes,2023,49.1840
+Electricity grid,Over generation / exports,2023,142.4530
+Electricity grid,Heating and cooling - homes,2023,124.7260
+Electricity grid,H2 conversion,2023,49.1400
+Electricity grid,Industry,2023,413.1650
+Electricity grid,Road transport,2023,93.7970
+Electricity grid,Agriculture,2023,46.4120
+Electricity grid,Heating and cooling - commercial,2023,99.8580
+Electricity grid,Losses,2023,68.6910
+Electricity grid,Rail transport,2023,32.8630
+Electricity grid,Lighting & appliances - commercial,2023,144.0080
+Electricity grid,Lighting & appliances - homes,2023,183.4940
+Gas imports,Ngas,2023,130.7190
+Gas reserves,Ngas,2023,153.2330
+Gas,Heating and cooling - commercial,2023,37.1290
+Gas,Losses,2023,62.4010
+Gas,Thermal generation,2023,173.8910
+Gas,Agriculture,2023,31.0960
+Gas,Industry,2023,135.5800
+Geothermal,Electricity grid,2023,96.0130
+H2 conversion,H2,2023,96.8970
+H2 conversion,Losses,2023,58.2420
+H2,Road transport,2023,100.8970
+Hydro,Electricity grid,2023,43.9950
+Liquid,Industry,2023,122.0660
+Liquid,International shipping,2023,133.6900
+Liquid,Road transport,2023,194.8350
+Liquid,Domestic aviation,2023,27.4580
+Liquid,International aviation,2023,294.2670
+Liquid,Agriculture,2023,40.6400
+Liquid,National navigation,2023,81.2180
+Liquid,Rail transport,2023,7.4130
+Marine algae,Bio-conversion,2023,71.3750
+Ngas,Gas,2023,129.9520
+Nuclear,Thermal generation,2023,842.9780
+Oil imports,Oil,2023,555.2870
+Oil reserves,Oil,2023,139.7030
+Oil,Liquid,2023,621.9900
+Other waste,Solid,2023,92.5870
+Other waste,Bio-conversion,2023,82.8100
+Pumped heat,Heating and cooling - homes,2023,262.0260
+Pumped heat,Heating and cooling - commercial,2023,139.6720
+Solar PV,Electricity grid,2023,132.9010
+Solar Thermal,Heating and cooling - homes,2023,51.2630
+Solar,Solar Thermal,2023,89.2630
+Solar,Solar PV,2023,103.9010
+Solid,Agriculture,2023,10.8820
+Solid,Thermal generation,2023,428.1200
+Solid,Industry,2023,130.4770
+Thermal generation,Electricity grid,2023,591.5310
+Thermal generation,Losses,2023,802.1290
+Thermal generation,District heating,2023,89.3290
+Tidal,Electricity grid,2023,73.4520
+UK land based bioenergy,Bio-conversion,2023,266.0100
+Wave,Electricity grid,2023,100.0130
+Wind,Electricity grid,2023,380.3660
+Agricultural 'waste',Bio-conversion,2024,160.7290
+Bio-conversion,Liquid,2024,45.5970
+Bio-conversion,Losses,2024,104.8620
+Bio-conversion,Solid,2024,378.3220
+Bio-conversion,Gas,2024,171.1440
+Biofuel imports,Liquid,2024,47.0000
+Biomass imports,Solid,2024,80.0000
+Coal imports,Coal,2024,50.6060
+Coal reserves,Coal,2024,151.9650
+Coal,Solid,2024,145.5710
+District heating,Industry,2024,47.6390
+District heating,Heating and cooling - commercial,2024,72.5050
+District heating,Heating and cooling - homes,2024,64.1840
+Electricity grid,Over generation / exports,2024,190.4530
+Electricity grid,Heating and cooling - homes,2024,116.7260
+Electricity grid,H2 conversion,2024,98.1400
+Electricity grid,Industry,2024,414.1650
+Electricity grid,Road transport,2024,114.7970
+Electricity grid,Agriculture,2024,100.4120
+Electricity grid,Heating and cooling - commercial,2024,93.8580
+Electricity grid,Losses,2024,86.6910
+Electricity grid,Rail transport,2024,41.8630
+Electricity grid,Lighting & appliances - commercial,2024,93.0080
+Electricity grid,Lighting & appliances - homes,2024,162.4940
+Gas imports,Ngas,2024,77.7190
+Gas reserves,Ngas,2024,88.2330
+Gas,Heating and cooling - commercial,2024,31.1290
+Gas,Losses,2024,34.4010
+Gas,Thermal generation,2024,210.8910
+Gas,Agriculture,2024,39.0960
+Gas,Industry,2024,78.5800
+Geothermal,Electricity grid,2024,45.0130
+H2 conversion,H2,2024,24.8970
+H2 conversion,Losses,2024,98.2420
+H2,Road transport,2024,70.8970
+Hydro,Electricity grid,2024,51.9950
+Liquid,Industry,2024,206.0660
+Liquid,International shipping,2024,128.6900
+Liquid,Road transport,2024,208.8350
+Liquid,Domestic aviation,2024,72.4580
+Liquid,International aviation,2024,277.2670
+Liquid,Agriculture,2024,78.6400
+Liquid,National navigation,2024,80.2180
+Liquid,Rail transport,2024,85.4130
+Marine algae,Bio-conversion,2024,23.3750
+Ngas,Gas,2024,188.9520
+Nuclear,Thermal generation,2024,904.9780
+Oil imports,Oil,2024,586.2870
+Oil reserves,Oil,2024,165.7030
+Oil,Liquid,2024,677.9900
+Other waste,Solid,2024,128.5870
+Other waste,Bio-conversion,2024,95.8100
+Pumped heat,Heating and cooling - homes,2024,230.0260
+Pumped heat,Heating and cooling - commercial,2024,151.6720
+Solar PV,Electricity grid,2024,82.9010
+Solar Thermal,Heating and cooling - homes,2024,95.2630
+Solar,Solar Thermal,2024,32.2630
+Solar,Solar PV,2024,135.9010
+Solid,Agriculture,2024,23.8820
+Solid,Thermal generation,2024,442.1200
+Solid,Industry,2024,142.4770
+Thermal generation,Electricity grid,2024,561.5310
+Thermal generation,Losses,2024,814.1290
+Thermal generation,District heating,2024,136.3290
+Tidal,Electricity grid,2024,95.4520
+UK land based bioenergy,Bio-conversion,2024,203.0100
+Wave,Electricity grid,2024,41.0130
+Wind,Electricity grid,2024,375.3660
+Agricultural 'waste',Bio-conversion,2025,167.7290
+Bio-conversion,Liquid,2025,16.5970
+Bio-conversion,Losses,2025,89.8620
+Bio-conversion,Solid,2025,349.3220
+Bio-conversion,Gas,2025,118.1440
+Biofuel imports,Liquid,2025,68.0000
+Biomass imports,Solid,2025,63.0000
+Coal imports,Coal,2025,75.6060
+Coal reserves,Coal,2025,146.9650
+Coal,Solid,2025,154.5710
+District heating,Industry,2025,86.6390
+District heating,Heating and cooling - commercial,2025,46.5050
+District heating,Heating and cooling - homes,2025,123.1840
+Electricity grid,Over generation / exports,2025,194.4530
+Electricity grid,Heating and cooling - homes,2025,203.7260
+Electricity grid,H2 conversion,2025,54.1400
+Electricity grid,Industry,2025,424.1650
+Electricity grid,Road transport,2025,118.7970
+Electricity grid,Agriculture,2025,74.4120
+Electricity grid,Heating and cooling - commercial,2025,70.8580
+Electricity grid,Losses,2025,127.6910
+Electricity grid,Rail transport,2025,10.8630
+Electricity grid,Lighting & appliances - commercial,2025,90.0080
+Electricity grid,Lighting & appliances - homes,2025,127.4940
+Gas imports,Ngas,2025,128.7190
+Gas reserves,Ngas,2025,158.2330
+Gas,Heating and cooling - commercial,2025,79.1290
+Gas,Losses,2025,65.4010
+Gas,Thermal generation,2025,183.8910
+Gas,Agriculture,2025,74.0960
+Gas,Industry,2025,133.5800
+Geothermal,Electricity grid,2025,78.0130
+H2 conversion,H2,2025,37.8970
+H2 conversion,Losses,2025,89.2420
+H2,Road transport,2025,69.8970
+Hydro,Electricity grid,2025,89.9950
+Liquid,Industry,2025,158.0660
+Liquid,International shipping,2025,190.6900
+Liquid,Road transport,2025,202.8350
+Liquid,Domestic aviation,2025,26.4580
+Liquid,International aviation,2025,241.2670
+Liquid,Agriculture,2025,58.6400
+Liquid,National navigation,2025,130.2180
+Liquid,Rail transport,2025,19.4130
+Marine algae,Bio-conversion,2025,6.3750
+Ngas,Gas,2025,170.9520
+Nuclear,Thermal generation,2025,911.9780
+Oil imports,Oil,2025,552.2870
+Oil reserves,Oil,2025,122.7030
+Oil,Liquid,2025,707.9900
+Other waste,Solid,2025,133.5870
+Other waste,Bio-conversion,2025,118.8100
+Pumped heat,Heating and cooling - homes,2025,194.0260
+Pumped heat,Heating and cooling - commercial,2025,73.6720
+Solar PV,Electricity grid,2025,123.9010
+Solar Thermal,Heating and cooling - homes,2025,98.2630
+Solar,Solar Thermal,2025,111.2630
+Solar,Solar PV,2025,94.9010
+Solid,Agriculture,2025,46.8820
+Solid,Thermal generation,2025,436.1200
+Solid,Industry,2025,76.4770
+Thermal generation,Electricity grid,2025,548.5310
+Thermal generation,Losses,2025,795.1290
+Thermal generation,District heating,2025,131.3290
+Tidal,Electricity grid,2025,33.4520
+UK land based bioenergy,Bio-conversion,2025,242.0100
+Wave,Electricity grid,2025,76.0130
+Wind,Electricity grid,2025,365.3660
+Agricultural 'waste',Bio-conversion,2026,161.7290
+Bio-conversion,Liquid,2026,12.5970
+Bio-conversion,Losses,2026,26.8620
+Bio-conversion,Solid,2026,302.3220
+Bio-conversion,Gas,2026,114.1440
+Biofuel imports,Liquid,2026,90.0000
+Biomass imports,Solid,2026,87.0000
+Coal imports,Coal,2026,66.6060
+Coal reserves,Coal,2026,70.9650
+Coal,Solid,2026,103.5710
+District heating,Industry,2026,69.6390
+District heating,Heating and cooling - commercial,2026,74.5050
+District heating,Heating and cooling - homes,2026,87.1840
+Electricity grid,Over generation / exports,2026,129.4530
+Electricity grid,Heating and cooling - homes,2026,173.7260
+Electricity grid,H2 conversion,2026,77.1400
+Electricity grid,Industry,2026,378.1650
+Electricity grid,Road transport,2026,39.7970
+Electricity grid,Agriculture,2026,90.4120
+Electricity grid,Heating and cooling - commercial,2026,133.8580
+Electricity grid,Losses,2026,101.6910
+Electricity grid,Rail transport,2026,100.8630
+Electricity grid,Lighting & appliances - commercial,2026,177.0080
+Electricity grid,Lighting & appliances - homes,2026,160.4940
+Gas imports,Ngas,2026,112.7190
+Gas reserves,Ngas,2026,127.2330
+Gas,Heating and cooling - commercial,2026,78.1290
+Gas,Losses,2026,47.4010
+Gas,Thermal generation,2026,180.8910
+Gas,Agriculture,2026,90.0960
+Gas,Industry,2026,71.5800
+Geothermal,Electricity grid,2026,70.0130
+H2 conversion,H2,2026,79.8970
+H2 conversion,Losses,2026,80.2420
+H2,Road transport,2026,35.8970
+Hydro,Electricity grid,2026,17.9950
+Liquid,Industry,2026,176.0660
+Liquid,International shipping,2026,138.6900
+Liquid,Road transport,2026,179.8350
+Liquid,Domestic aviation,2026,33.4580
+Liquid,International aviation,2026,274.2670
+Liquid,Agriculture,2026,25.6400
+Liquid,National navigation,2026,116.2180
+Liquid,Rail transport,2026,74.4130
+Marine algae,Bio-conversion,2026,101.3750
+Ngas,Gas,2026,220.9520
+Nuclear,Thermal generation,2026,869.9780
+Oil imports,Oil,2026,539.2870
+Oil reserves,Oil,2026,167.7030
+Oil,Liquid,2026,633.9900
+Other waste,Solid,2026,137.5870
+Other waste,Bio-conversion,2026,125.8100
+Pumped heat,Heating and cooling - homes,2026,221.0260
+Pumped heat,Heating and cooling - commercial,2026,118.6720
+Solar PV,Electricity grid,2026,61.9010
+Solar Thermal,Heating and cooling - homes,2026,107.2630
+Solar,Solar Thermal,2026,72.2630
+Solar,Solar PV,2026,92.9010
+Solid,Agriculture,2026,32.8820
+Solid,Thermal generation,2026,488.1200
+Solid,Industry,2026,141.4770
+Thermal generation,Electricity grid,2026,614.5310
+Thermal generation,Losses,2026,833.1290
+Thermal generation,District heating,2026,124.3290
+Tidal,Electricity grid,2026,33.4520
+UK land based bioenergy,Bio-conversion,2026,241.0100
+Wave,Electricity grid,2026,56.0130
+Wind,Electricity grid,2026,338.3660
+Agricultural 'waste',Bio-conversion,2027,190.7290
+Bio-conversion,Liquid,2027,13.5970
+Bio-conversion,Losses,2027,70.8620
+Bio-conversion,Solid,2027,290.3220
+Bio-conversion,Gas,2027,149.1440
+Biofuel imports,Liquid,2027,48.0000
+Biomass imports,Solid,2027,120.0000
+Coal imports,Coal,2027,108.6060
+Coal reserves,Coal,2027,146.9650
+Coal,Solid,2027,85.5710
+District heating,Industry,2027,66.6390
+District heating,Heating and cooling - commercial,2027,35.5050
+District heating,Heating and cooling - homes,2027,120.1840
+Electricity grid,Over generation / exports,2027,191.4530
+Electricity grid,Heating and cooling - homes,2027,187.7260
+Electricity grid,H2 conversion,2027,109.1400
+Electricity grid,Industry,2027,365.1650
+Electricity grid,Road transport,2027,54.7970
+Electricity grid,Agriculture,2027,82.4120
+Electricity grid,Heating and cooling - commercial,2027,49.8580
+Electricity grid,Losses,2027,71.6910
+Electricity grid,Rail transport,2027,36.8630
+Electricity grid,Lighting & appliances - commercial,2027,150.0080
+Electricity grid,Lighting & appliances - homes,2027,180.4940
+Gas imports,Ngas,2027,71.7190
+Gas reserves,Ngas,2027,140.2330
+Gas,Heating and cooling - commercial,2027,53.1290
+Gas,Losses,2027,23.4010
+Gas,Thermal generation,2027,186.8910
+Gas,Agriculture,2027,89.0960
+Gas,Industry,2027,57.5800
+Geothermal,Electricity grid,2027,77.0130
+H2 conversion,H2,2027,60.8970
+H2 conversion,Losses,2027,57.2420
+H2,Road transport,2027,53.8970
+Hydro,Electricity grid,2027,69.9950
+Liquid,Industry,2027,125.0660
+Liquid,International shipping,2027,166.6900
+Liquid,Road transport,2027,181.8350
+Liquid,Domestic aviation,2027,106.4580
+Liquid,International aviation,2027,218.2670
+Liquid,Agriculture,2027,23.6400
+Liquid,National navigation,2027,85.2180
+Liquid,Rail transport,2027,75.4130
+Marine algae,Bio-conversion,2027,6.3750
+Ngas,Gas,2027,125.9520
+Nuclear,Thermal generation,2027,900.9780
+Oil imports,Oil,2027,569.2870
+Oil reserves,Oil,2027,156.7030
+Oil,Liquid,2027,663.9900
+Other waste,Solid,2027,73.5870
+Other waste,Bio-conversion,2027,175.8100
+Pumped heat,Heating and cooling - homes,2027,207.0260
+Pumped heat,Heating and cooling - commercial,2027,149.6720
+Solar PV,Electricity grid,2027,91.9010
+Solar Thermal,Heating and cooling - homes,2027,66.2630
+Solar,Solar Thermal,2027,113.2630
+Solar,Solar PV,2027,81.9010
+Solid,Agriculture,2027,78.8820
+Solid,Thermal generation,2027,451.1200
+Solid,Industry,2027,93.4770
+Thermal generation,Electricity grid,2027,530.5310
+Thermal generation,Losses,2027,848.1290
+Thermal generation,District heating,2027,161.3290
+Tidal,Electricity grid,2027,25.4520
+UK land based bioenergy,Bio-conversion,2027,217.0100
+Wave,Electricity grid,2027,30.0130
+Wind,Electricity grid,2027,313.3660
+Agricultural 'waste',Bio-conversion,2028,214.7290
+Bio-conversion,Liquid,2028,49.5970
+Bio-conversion,Losses,2028,87.8620
+Bio-conversion,Solid,2028,286.3220
+Bio-conversion,Gas,2028,134.1440
+Biofuel imports,Liquid,2028,110.0000
+Biomass imports,Solid,2028,105.0000
+Coal imports,Coal,2028,88.6060
+Coal reserves,Coal,2028,156.9650
+Coal,Solid,2028,126.5710
+District heating,Industry,2028,71.6390
+District heating,Heating and cooling - commercial,2028,31.5050
+District heating,Heating and cooling - homes,2028,58.1840
+Electricity grid,Over generation / exports,2028,161.4530
+Electricity grid,Heating and cooling - homes,2028,171.7260
+Electricity grid,H2 conversion,2028,35.1400
+Electricity grid,Industry,2028,397.1650
+Electricity grid,Road transport,2028,43.7970
+Electricity grid,Agriculture,2028,35.4120
+Electricity grid,Heating and cooling - commercial,2028,136.8580
+Electricity grid,Losses,2028,146.6910
+Electricity grid,Rail transport,2028,100.8630
+Electricity grid,Lighting & appliances - commercial,2028,129.0080
+Electricity grid,Lighting & appliances - homes,2028,148.4940
+Gas imports,Ngas,2028,79.7190
+Gas reserves,Ngas,2028,99.2330
+Gas,Heating and cooling - commercial,2028,4.1290
+Gas,Losses,2028,98.4010
+Gas,Thermal generation,2028,197.8910
+Gas,Agriculture,2028,82.0960
+Gas,Industry,2028,65.5800
+Geothermal,Electricity grid,2028,10.0130
+H2 conversion,H2,2028,32.8970
+H2 conversion,Losses,2028,83.2420
+H2,Road transport,2028,94.8970
+Hydro,Electricity grid,2028,77.9950
+Liquid,Industry,2028,215.0660
+Liquid,International shipping,2028,171.6900
+Liquid,Road transport,2028,197.8350
+Liquid,Domestic aviation,2028,91.4580
+Liquid,International aviation,2028,260.2670
+Liquid,Agriculture,2028,59.6400
+Liquid,National navigation,2028,49.2180
+Liquid,Rail transport,2028,100.4130
+Marine algae,Bio-conversion,2028,17.3750
+Ngas,Gas,2028,135.9520
+Nuclear,Thermal generation,2028,930.9780
+Oil imports,Oil,2028,560.2870
+Oil reserves,Oil,2028,126.7030
+Oil,Liquid,2028,700.9900
+Other waste,Solid,2028,88.5870
+Other waste,Bio-conversion,2028,147.8100
+Pumped heat,Heating and cooling - homes,2028,195.0260
+Pumped heat,Heating and cooling - commercial,2028,144.6720
+Solar PV,Electricity grid,2028,83.9010
+Solar Thermal,Heating and cooling - homes,2028,69.2630
+Solar,Solar Thermal,2028,53.2630
+Solar,Solar PV,2028,111.9010
+Solid,Agriculture,2028,69.8820
+Solid,Thermal generation,2028,497.1200
+Solid,Industry,2028,144.4770
+Thermal generation,Electricity grid,2028,612.5310
+Thermal generation,Losses,2028,883.1290
+Thermal generation,District heating,2028,117.3290
+Tidal,Electricity grid,2028,23.4520
+UK land based bioenergy,Bio-conversion,2028,205.0100
+Wave,Electricity grid,2028,80.0130
+Wind,Electricity grid,2028,294.3660
+Agricultural 'waste',Bio-conversion,2029,142.7290
+Bio-conversion,Liquid,2029,53.5970
+Bio-conversion,Losses,2029,58.8620
+Bio-conversion,Solid,2029,280.3220
+Bio-conversion,Gas,2029,98.1440
+Biofuel imports,Liquid,2029,88.0000
+Biomass imports,Solid,2029,113.0000
+Coal imports,Coal,2029,26.6060
+Coal reserves,Coal,2029,98.9650
+Coal,Solid,2029,124.5710
+District heating,Industry,2029,22.6390
+District heating,Heating and cooling - commercial,2029,120.5050
+District heating,Heating and cooling - homes,2029,119.1840
+Electricity grid,Over generation / exports,2029,174.4530
+Electricity grid,Heating and cooling - homes,2029,118.7260
+Electricity grid,H2 conversion,2029,78.1400
+Electricity grid,Industry,2029,423.1650
+Electricity grid,Road transport,2029,99.7970
+Electricity grid,Agriculture,2029,22.4120
+Electricity grid,Heating and cooling - commercial,2029,60.8580
+Electricity grid,Losses,2029,91.6910
+Electricity grid,Rail transport,2029,26.8630
+Electricity grid,Lighting & appliances - commercial,2029,92.0080
+Electricity grid,Lighting & appliances - homes,2029,182.4940
+Gas imports,Ngas,2029,115.7190
+Gas reserves,Ngas,2029,135.2330
+Gas,Heating and cooling - commercial,2029,5.1290
+Gas,Losses,2029,26.4010
+Gas,Thermal generation,2029,157.8910
+Gas,Agriculture,2029,99.0960
+Gas,Industry,2029,100.5800
+Geothermal,Electricity grid,2029,95.0130
+H2 conversion,H2,2029,31.8970
+H2 conversion,Losses,2029,20.2420
+H2,Road transport,2029,59.8970
+Hydro,Electricity grid,2029,11.9950
+Liquid,Industry,2029,133.0660
+Liquid,International shipping,2029,128.6900
+Liquid,Road transport,2029,206.8350
+Liquid,Domestic aviation,2029,33.4580
+Liquid,International aviation,2029,293.2670
+Liquid,Agriculture,2029,84.6400
+Liquid,National navigation,2029,82.2180
+Liquid,Rail transport,2029,59.4130
+Marine algae,Bio-conversion,2029,68.3750
+Ngas,Gas,2029,154.9520
+Nuclear,Thermal generation,2029,938.9780
+Oil imports,Oil,2029,598.2870
+Oil reserves,Oil,2029,134.7030
+Oil,Liquid,2029,660.9900
+Other waste,Solid,2029,126.5870
+Other waste,Bio-conversion,2029,156.8100
+Pumped heat,Heating and cooling - homes,2029,272.0260
+Pumped heat,Heating and cooling - commercial,2029,160.6720
+Solar PV,Electricity grid,2029,99.9010
+Solar Thermal,Heating and cooling - homes,2029,40.2630
+Solar,Solar Thermal,2029,52.2630
+Solar,Solar PV,2029,82.9010
+Solid,Agriculture,2029,29.8820
+Solid,Thermal generation,2029,474.1200
+Solid,Industry,2029,81.4770
+Thermal generation,Electricity grid,2029,604.5310
+Thermal generation,Losses,2029,822.1290
+Thermal generation,District heating,2029,143.3290
+Tidal,Electricity grid,2029,41.4520
+UK land based bioenergy,Bio-conversion,2029,280.0100
+Wave,Electricity grid,2029,81.0130
+Wind,Electricity grid,2029,378.3660
+Agricultural 'waste',Bio-conversion,2030,144.7290
+Bio-conversion,Liquid,2030,14.5970
+Bio-conversion,Losses,2030,63.8620
+Bio-conversion,Solid,2030,304.3220
+Bio-conversion,Gas,2030,84.1440
+Biofuel imports,Liquid,2030,96.0000
+Biomass imports,Solid,2030,73.0000
+Coal imports,Coal,2030,43.6060
+Coal reserves,Coal,2030,65.9650
+Coal,Solid,2030,90.5710
+District heating,Industry,2030,55.6390
+District heating,Heating and cooling - commercial,2030,101.5050
+District heating,Heating and cooling - homes,2030,137.1840
+Electricity grid,Over generation / exports,2030,178.4530
+Electricity grid,Heating and cooling - homes,2030,151.7260
+Electricity grid,H2 conversion,2030,118.1400
+Electricity grid,Industry,2030,435.1650
+Electricity grid,Road transport,2030,125.7970
+Electricity grid,Agriculture,2030,55.4120
+Electricity grid,Heating and cooling - commercial,2030,124.8580
+Electricity grid,Losses,2030,89.6910
+Electricity grid,Rail transport,2030,104.8630
+Electricity grid,Lighting & appliances - commercial,2030,134.0080
+Electricity grid,Lighting & appliances - homes,2030,128.4940
+Gas imports,Ngas,2030,116.7190
+Gas reserves,Ngas,2030,106.2330
+Gas,Heating and cooling - commercial,2030,12.1290
+Gas,Losses,2030,54.4010
+Gas,Thermal generation,2030,160.8910
+Gas,Agriculture,2030,88.0960
+Gas,Industry,2030,95.5800
+Geothermal,Electricity grid,2030,10.0130
+H2 conversion,H2,2030,59.8970
+H2 conversion,Losses,2030,44.2420
+H2,Road transport,2030,55.8970
+Hydro,Electricity grid,2030,28.9950
+Liquid,Industry,2030,195.0660
+Liquid,International shipping,2030,160.6900
+Liquid,Road transport,2030,219.8350
+Liquid,Domestic aviation,2030,101.4580
+Liquid,International aviation,2030,228.2670
+Liquid,Agriculture,2030,102.6400
+Liquid,National navigation,2030,103.2180
+Liquid,Rail transport,2030,4.4130
+Marine algae,Bio-conversion,2030,60.3750
+Ngas,Gas,2030,153.9520
+Nuclear,Thermal generation,2030,919.9780
+Oil imports,Oil,2030,589.2870
+Oil reserves,Oil,2030,111.7030
+Oil,Liquid,2030,625.9900
+Other waste,Solid,2030,79.5870
+Other waste,Bio-conversion,2030,115.8100
+Pumped heat,Heating and cooling - homes,2030,221.0260
+Pumped heat,Heating and cooling - commercial,2030,92.6720
+Solar PV,Electricity grid,2030,108.9010
+Solar Thermal,Heating and cooling - homes,2030,80.2630
+Solar,Solar Thermal,2030,91.2630
+Solar,Solar PV,2030,69.9010
+Solid,Agriculture,2030,2.8820
+Solid,Thermal generation,2030,430.1200
+Solid,Industry,2030,134.4770
+Thermal generation,Electricity grid,2030,590.5310
+Thermal generation,Losses,2030,822.1290
+Thermal generation,District heating,2030,111.3290
+Tidal,Electricity grid,2030,20.4520
+UK land based bioenergy,Bio-conversion,2030,229.0100
+Wave,Electricity grid,2030,84.0130
+Wind,Electricity grid,2030,325.3660
+Agricultural 'waste',Bio-conversion,2031,165.7290
+Bio-conversion,Liquid,2031,58.5970
+Bio-conversion,Losses,2031,55.8620
+Bio-conversion,Solid,2031,284.3220
+Bio-conversion,Gas,2031,113.1440
+Biofuel imports,Liquid,2031,39.0000
+Biomass imports,Solid,2031,130.0000
+Coal imports,Coal,2031,32.6060
+Coal reserves,Coal,2031,129.9650
+Coal,Solid,2031,91.5710
+District heating,Industry,2031,31.6390
+District heating,Heating and cooling - commercial,2031,87.5050
+District heating,Heating and cooling - homes,2031,54.1840
+Electricity grid,Over generation / exports,2031,164.4530
+Electricity grid,Heating and cooling - homes,2031,189.7260
+Electricity grid,H2 conversion,2031,64.1400
+Electricity grid,Industry,2031,406.1650
+Electricity grid,Road transport,2031,132.7970
+Electricity grid,Agriculture,2031,15.4120
+Electricity grid,Heating and cooling - commercial,2031,103.8580
+Electricity grid,Losses,2031,58.6910
+Electricity grid,Rail transport,2031,34.8630
+Electricity grid,Lighting & appliances - commercial,2031,175.0080
+Electricity grid,Lighting & appliances - homes,2031,125.4940
+Gas imports,Ngas,2031,45.7190
+Gas reserves,Ngas,2031,105.2330
+Gas,Heating and cooling - commercial,2031,94.1290
+Gas,Losses,2031,88.4010
+Gas,Thermal generation,2031,214.8910
+Gas,Agriculture,2031,90.0960
+Gas,Industry,2031,141.5800
+Geothermal,Electricity grid,2031,55.0130
+H2 conversion,H2,2031,44.8970
+H2 conversion,Losses,2031,82.2420
+H2,Road transport,2031,30.8970
+Hydro,Electricity grid,2031,22.9950
+Liquid,Industry,2031,172.0660
+Liquid,International shipping,2031,183.6900
+Liquid,Road transport,2031,212.8350
+Liquid,Domestic aviation,2031,98.4580
+Liquid,International aviation,2031,287.2670
+Liquid,Agriculture,2031,59.6400
+Liquid,National navigation,2031,59.2180
+Liquid,Rail transport,2031,23.4130
+Marine algae,Bio-conversion,2031,98.3750
+Ngas,Gas,2031,134.9520
+Nuclear,Thermal generation,2031,882.9780
+Oil imports,Oil,2031,576.2870
+Oil reserves,Oil,2031,116.7030
+Oil,Liquid,2031,627.9900
+Other waste,Solid,2031,92.5870
+Other waste,Bio-conversion,2031,166.8100
+Pumped heat,Heating and cooling - homes,2031,247.0260
+Pumped heat,Heating and cooling - commercial,2031,106.6720
+Solar PV,Electricity grid,2031,93.9010
+Solar Thermal,Heating and cooling - homes,2031,60.2630
+Solar,Solar Thermal,2031,29.2630
+Solar,Solar PV,2031,151.9010
+Solid,Agriculture,2031,21.8820
+Solid,Thermal generation,2031,455.1200
+Solid,Industry,2031,85.4770
+Thermal generation,Electricity grid,2031,547.5310
+Thermal generation,Losses,2031,862.1290
+Thermal generation,District heating,2031,141.3290
+Tidal,Electricity grid,2031,73.4520
+UK land based bioenergy,Bio-conversion,2031,229.0100
+Wave,Electricity grid,2031,100.0130
+Wind,Electricity grid,2031,386.3660
+Agricultural 'waste',Bio-conversion,2032,199.7290
+Bio-conversion,Liquid,2032,7.5970
+Bio-conversion,Losses,2032,41.8620
+Bio-conversion,Solid,2032,285.3220
+Bio-conversion,Gas,2032,173.1440
+Biofuel imports,Liquid,2032,66.0000
+Biomass imports,Solid,2032,114.0000
+Coal imports,Coal,2032,45.6060
+Coal reserves,Coal,2032,121.9650
+Coal,Solid,2032,167.5710
+District heating,Industry,2032,85.6390
+District heating,Heating and cooling - commercial,2032,27.5050
+District heating,Heating and cooling - homes,2032,46.1840
+Electricity grid,Over generation / exports,2032,145.4530
+Electricity grid,Heating and cooling - homes,2032,166.7260
+Electricity grid,H2 conversion,2032,97.1400
+Electricity grid,Industry,2032,342.1650
+Electricity grid,Road transport,2032,82.7970
+Electricity grid,Agriculture,2032,91.4120
+Electricity grid,Heating and cooling - commercial,2032,115.8580
+Electricity grid,Losses,2032,146.6910
+Electricity grid,Rail transport,2032,90.8630
+Electricity grid,Lighting & appliances - commercial,2032,164.0080
+Electricity grid,Lighting & appliances - homes,2032,192.4940
+Gas imports,Ngas,2032,123.7190
+Gas reserves,Ngas,2032,89.2330
+Gas,Heating and cooling - commercial,2032,45.1290
+Gas,Losses,2032,50.4010
+Gas,Thermal generation,2032,172.8910
+Gas,Agriculture,2032,5.0960
+Gas,Industry,2032,102.5800
+Geothermal,Electricity grid,2032,7.0130
+H2 conversion,H2,2032,100.8970
+H2 conversion,Losses,2032,95.2420
+H2,Road transport,2032,69.8970
+Hydro,Electricity grid,2032,6.9950
+Liquid,Industry,2032,121.0660
+Liquid,International shipping,2032,192.6900
+Liquid,Road transport,2032,152.8350
+Liquid,Domestic aviation,2032,30.4580
+Liquid,International aviation,2032,276.2670
+Liquid,Agriculture,2032,9.6400
+Liquid,National navigation,2032,110.2180
+Liquid,Rail transport,2032,18.4130
+Marine algae,Bio-conversion,2032,31.3750
+Ngas,Gas,2032,170.9520
+Nuclear,Thermal generation,2032,923.9780
+Oil imports,Oil,2032,586.2870
+Oil reserves,Oil,2032,142.7030
+Oil,Liquid,2032,655.9900
+Other waste,Solid,2032,105.5870
+Other waste,Bio-conversion,2032,91.8100
+Pumped heat,Heating and cooling - homes,2032,252.0260
+Pumped heat,Heating and cooling - commercial,2032,76.6720
+Solar PV,Electricity grid,2032,152.9010
+Solar Thermal,Heating and cooling - homes,2032,22.2630
+Solar,Solar Thermal,2032,84.2630
+Solar,Solar PV,2032,146.9010
+Solid,Agriculture,2032,20.8820
+Solid,Thermal generation,2032,471.1200
+Solid,Industry,2032,59.4770
+Thermal generation,Electricity grid,2032,600.5310
+Thermal generation,Losses,2032,855.1290
+Thermal generation,District heating,2032,154.3290
+Tidal,Electricity grid,2032,105.4520
+UK land based bioenergy,Bio-conversion,2032,247.0100
+Wave,Electricity grid,2032,102.0130
+Wind,Electricity grid,2032,372.3660
+Agricultural 'waste',Bio-conversion,2033,138.7290
+Bio-conversion,Liquid,2033,13.5970
+Bio-conversion,Losses,2033,68.8620
+Bio-conversion,Solid,2033,378.3220
+Bio-conversion,Gas,2033,124.1440
+Biofuel imports,Liquid,2033,55.0000
+Biomass imports,Solid,2033,131.0000
+Coal imports,Coal,2033,67.6060
+Coal reserves,Coal,2033,127.9650
+Coal,Solid,2033,162.5710
+District heating,Industry,2033,69.6390
+District heating,Heating and cooling - commercial,2033,63.5050
+District heating,Heating and cooling - homes,2033,56.1840
+Electricity grid,Over generation / exports,2033,116.4530
+Electricity grid,Heating and cooling - homes,2033,180.7260
+Electricity grid,H2 conversion,2033,114.1400
+Electricity grid,Industry,2033,398.1650
+Electricity grid,Road transport,2033,110.7970
+Electricity grid,Agriculture,2033,96.4120
+Electricity grid,Heating and cooling - commercial,2033,120.8580
+Electricity grid,Losses,2033,99.6910
+Electricity grid,Rail transport,2033,40.8630
+Electricity grid,Lighting & appliances - commercial,2033,95.0080
+Electricity grid,Lighting & appliances - homes,2033,161.4940
+Gas imports,Ngas,2033,75.7190
+Gas reserves,Ngas,2033,107.2330
+Gas,Heating and cooling - commercial,2033,7.1290
+Gas,Losses,2033,88.4010
+Gas,Thermal generation,2033,241.8910
+Gas,Agriculture,2033,44.0960
+Gas,Industry,2033,61.5800
+Geothermal,Electricity grid,2033,86.0130
+H2 conversion,H2,2033,45.8970
+H2 conversion,Losses,2033,46.2420
+H2,Road transport,2033,34.8970
+Hydro,Electricity grid,2033,7.9950
+Liquid,Industry,2033,208.0660
+Liquid,International shipping,2033,164.6900
+Liquid,Road transport,2033,180.8350
+Liquid,Domestic aviation,2033,51.4580
+Liquid,International aviation,2033,292.2670
+Liquid,Agriculture,2033,38.6400
+Liquid,National navigation,2033,108.2180
+Liquid,Rail transport,2033,67.4130
+Marine algae,Bio-conversion,2033,22.3750
+Ngas,Gas,2033,139.9520
+Nuclear,Thermal generation,2033,926.9780
+Oil imports,Oil,2033,595.2870
+Oil reserves,Oil,2033,196.7030
+Oil,Liquid,2033,681.9900
+Other waste,Solid,2033,64.5870
+Other waste,Bio-conversion,2033,163.8100
+Pumped heat,Heating and cooling - homes,2033,225.0260
+Pumped heat,Heating and cooling - commercial,2033,93.6720
+Solar PV,Electricity grid,2033,121.9010
+Solar Thermal,Heating and cooling - homes,2033,38.2630
+Solar,Solar Thermal,2033,100.2630
+Solar,Solar PV,2033,122.9010
+Solid,Agriculture,2033,59.8820
+Solid,Thermal generation,2033,432.1200
+Solid,Industry,2033,72.4770
+Thermal generation,Electricity grid,2033,548.5310
+Thermal generation,Losses,2033,870.1290
+Thermal generation,District heating,2033,176.3290
+Tidal,Electricity grid,2033,22.4520
+UK land based bioenergy,Bio-conversion,2033,198.0100
+Wave,Electricity grid,2033,75.0130
+Wind,Electricity grid,2033,322.3660
+Agricultural 'waste',Bio-conversion,2034,166.7290
+Bio-conversion,Liquid,2034,70.5970
+Bio-conversion,Losses,2034,33.8620
+Bio-conversion,Solid,2034,373.3220
+Bio-conversion,Gas,2034,135.1440
+Biofuel imports,Liquid,2034,82.0000
+Biomass imports,Solid,2034,125.0000
+Coal imports,Coal,2034,68.6060
+Coal reserves,Coal,2034,114.9650
+Coal,Solid,2034,140.5710
+District heating,Industry,2034,109.6390
+District heating,Heating and cooling - commercial,2034,97.5050
+District heating,Heating and cooling - homes,2034,97.1840
+Electricity grid,Over generation / exports,2034,188.4530
+Electricity grid,Heating and cooling - homes,2034,175.7260
+Electricity grid,H2 conversion,2034,125.1400
+Electricity grid,Industry,2034,361.1650
+Electricity grid,Road transport,2034,100.7970
+Electricity grid,Agriculture,2034,43.4120
+Electricity grid,Heating and cooling - commercial,2034,92.8580
+Electricity grid,Losses,2034,68.6910
+Electricity grid,Rail transport,2034,24.8630
+Electricity grid,Lighting & appliances - commercial,2034,187.0080
+Electricity grid,Lighting & appliances - homes,2034,172.4940
+Gas imports,Ngas,2034,114.7190
+Gas reserves,Ngas,2034,151.2330
+Gas,Heating and cooling - commercial,2034,37.1290
+Gas,Losses,2034,19.4010
+Gas,Thermal generation,2034,249.8910
+Gas,Agriculture,2034,97.0960
+Gas,Industry,2034,121.5800
+Geothermal,Electricity grid,2034,38.0130
+H2 conversion,H2,2034,104.8970
+H2 conversion,Losses,2034,52.2420
+H2,Road transport,2034,62.8970
+Hydro,Electricity grid,2034,80.9950
+Liquid,Industry,2034,217.0660
+Liquid,International shipping,2034,215.6900
+Liquid,Road transport,2034,222.8350
+Liquid,Domestic aviation,2034,48.4580
+Liquid,International aviation,2034,239.2670
+Liquid,Agriculture,2034,25.6400
+Liquid,National navigation,2034,61.2180
+Liquid,Rail transport,2034,27.4130
+Marine algae,Bio-conversion,2034,16.3750
+Ngas,Gas,2034,210.9520
+Nuclear,Thermal generation,2034,850.9780
+Oil imports,Oil,2034,601.2870
+Oil reserves,Oil,2034,178.7030
+Oil,Liquid,2034,685.9900
+Other waste,Solid,2034,117.5870
+Other waste,Bio-conversion,2034,155.8100
+Pumped heat,Heating and cooling - homes,2034,207.0260
+Pumped heat,Heating and cooling - commercial,2034,157.6720
+Solar PV,Electricity grid,2034,118.9010
+Solar Thermal,Heating and cooling - homes,2034,108.2630
+Solar,Solar Thermal,2034,78.2630
+Solar,Solar PV,2034,125.9010
+Solid,Agriculture,2034,23.8820
+Solid,Thermal generation,2034,466.1200
+Solid,Industry,2034,108.4770
+Thermal generation,Electricity grid,2034,584.5310
+Thermal generation,Losses,2034,865.1290
+Thermal generation,District heating,2034,121.3290
+Tidal,Electricity grid,2034,32.4520
+UK land based bioenergy,Bio-conversion,2034,266.0100
+Wave,Electricity grid,2034,93.0130
+Wind,Electricity grid,2034,303.3660
+Agricultural 'waste',Bio-conversion,2035,149.7290
+Bio-conversion,Liquid,2035,79.5970
+Bio-conversion,Losses,2035,64.8620
+Bio-conversion,Solid,2035,292.3220
+Bio-conversion,Gas,2035,151.1440
+Biofuel imports,Liquid,2035,43.0000
+Biomass imports,Solid,2035,41.0000
+Coal imports,Coal,2035,86.6060
+Coal reserves,Coal,2035,88.9650
+Coal,Solid,2035,158.5710
+District heating,Industry,2035,66.6390
+District heating,Heating and cooling - commercial,2035,112.5050
+District heating,Heating and cooling - homes,2035,126.1840
+Electricity grid,Over generation / exports,2035,119.4530
+Electricity grid,Heating and cooling - homes,2035,162.7260
+Electricity grid,H2 conversion,2035,42.1400
+Electricity grid,Industry,2035,406.1650
+Electricity grid,Road transport,2035,38.7970
+Electricity grid,Agriculture,2035,7.4120
+Electricity grid,Heating and cooling - commercial,2035,56.8580
+Electricity grid,Losses,2035,123.6910
+Electricity grid,Rail transport,2035,59.8630
+Electricity grid,Lighting & appliances - commercial,2035,157.0080
+Electricity grid,Lighting & appliances - homes,2035,138.4940
+Gas imports,Ngas,2035,95.7190
+Gas reserves,Ngas,2035,153.2330
+Gas,Heating and cooling - commercial,2035,61.1290
+Gas,Losses,2035,97.4010
+Gas,Thermal generation,2035,236.8910
+Gas,Agriculture,2035,72.0960
+Gas,Industry,2035,70.5800
+Geothermal,Electricity grid,2035,18.0130
+H2 conversion,H2,2035,63.8970
+H2 conversion,Losses,2035,44.2420
+H2,Road transport,2035,24.8970
+Hydro,Electricity grid,2035,80.9950
+Liquid,Industry,2035,150.0660
+Liquid,International shipping,2035,201.6900
+Liquid,Road transport,2035,209.8350
+Liquid,Domestic aviation,2035,108.4580
+Liquid,International aviation,2035,231.2670
+Liquid,Agriculture,2035,4.6400
+Liquid,National navigation,2035,96.2180
+Liquid,Rail transport,2035,10.4130
+Marine algae,Bio-conversion,2035,33.3750
+Ngas,Gas,2035,204.9520
+Nuclear,Thermal generation,2035,895.9780
+Oil imports,Oil,2035,516.2870
+Oil reserves,Oil,2035,192.7030
+Oil,Liquid,2035,702.9900
+Other waste,Solid,2035,151.5870
+Other waste,Bio-conversion,2035,160.8100
+Pumped heat,Heating and cooling - homes,2035,262.0260
+Pumped heat,Heating and cooling - commercial,2035,160.6720
+Solar PV,Electricity grid,2035,147.9010
+Solar Thermal,Heating and cooling - homes,2035,64.2630
+Solar,Solar Thermal,2035,100.2630
+Solar,Solar PV,2035,153.9010
+Solid,Agriculture,2035,73.8820
+Solid,Thermal generation,2035,498.1200
+Solid,Industry,2035,139.4770
+Thermal generation,Electricity grid,2035,576.5310
+Thermal generation,Losses,2035,875.1290
+Thermal generation,District heating,2035,151.3290
+Tidal,Electricity grid,2035,11.4520
+UK land based bioenergy,Bio-conversion,2035,258.0100
+Wave,Electricity grid,2035,72.0130
+Wind,Electricity grid,2035,296.3660
+Agricultural 'waste',Bio-conversion,2036,215.7290
+Bio-conversion,Liquid,2036,2.5970
+Bio-conversion,Losses,2036,123.8620
+Bio-conversion,Solid,2036,307.3220
+Bio-conversion,Gas,2036,153.1440
+Biofuel imports,Liquid,2036,85.0000
+Biomass imports,Solid,2036,44.0000
+Coal imports,Coal,2036,28.6060
+Coal reserves,Coal,2036,156.9650
+Coal,Solid,2036,102.5710
+District heating,Industry,2036,93.6390
+District heating,Heating and cooling - commercial,2036,22.5050
+District heating,Heating and cooling - homes,2036,141.1840
+Electricity grid,Over generation / exports,2036,168.4530
+Electricity grid,Heating and cooling - homes,2036,169.7260
+Electricity grid,H2 conversion,2036,104.1400
+Electricity grid,Industry,2036,346.1650
+Electricity grid,Road transport,2036,136.7970
+Electricity grid,Agriculture,2036,16.4120
+Electricity grid,Heating and cooling - commercial,2036,113.8580
+Electricity grid,Losses,2036,116.6910
+Electricity grid,Rail transport,2036,69.8630
+Electricity grid,Lighting & appliances - commercial,2036,171.0080
+Electricity grid,Lighting & appliances - homes,2036,190.4940
+Gas imports,Ngas,2036,89.7190
+Gas reserves,Ngas,2036,125.2330
+Gas,Heating and cooling - commercial,2036,21.1290
+Gas,Losses,2036,77.4010
+Gas,Thermal generation,2036,222.8910
+Gas,Agriculture,2036,33.0960
+Gas,Industry,2036,118.5800
+Geothermal,Electricity grid,2036,65.0130
+H2 conversion,H2,2036,28.8970
+H2 conversion,Losses,2036,79.2420
+H2,Road transport,2036,79.8970
+Hydro,Electricity grid,2036,59.9950
+Liquid,Industry,2036,149.0660
+Liquid,International shipping,2036,169.6900
+Liquid,Road transport,2036,217.8350
+Liquid,Domestic aviation,2036,19.4580
+Liquid,International aviation,2036,213.2670
+Liquid,Agriculture,2036,49.6400
+Liquid,National navigation,2036,35.2180
+Liquid,Rail transport,2036,43.4130
+Marine algae,Bio-conversion,2036,23.3750
+Ngas,Gas,2036,130.9520
+Nuclear,Thermal generation,2036,925.9780
+Oil imports,Oil,2036,518.2870
+Oil reserves,Oil,2036,203.7030
+Oil,Liquid,2036,611.9900
+Other waste,Solid,2036,114.5870
+Other waste,Bio-conversion,2036,79.8100
+Pumped heat,Heating and cooling - homes,2036,284.0260
+Pumped heat,Heating and cooling - commercial,2036,158.6720
+Solar PV,Electricity grid,2036,70.9010
+Solar Thermal,Heating and cooling - homes,2036,117.2630
+Solar,Solar Thermal,2036,41.2630
+Solar,Solar PV,2036,94.9010
+Solid,Agriculture,2036,88.8820
+Solid,Thermal generation,2036,406.1200
+Solid,Industry,2036,92.4770
+Thermal generation,Electricity grid,2036,605.5310
+Thermal generation,Losses,2036,806.1290
+Thermal generation,District heating,2036,164.3290
+Tidal,Electricity grid,2036,27.4520
+UK land based bioenergy,Bio-conversion,2036,194.0100
+Wave,Electricity grid,2036,79.0130
+Wind,Electricity grid,2036,357.3660
+Agricultural 'waste',Bio-conversion,2037,217.7290
+Bio-conversion,Liquid,2037,32.5970
+Bio-conversion,Losses,2037,116.8620
+Bio-conversion,Solid,2037,291.3220
+Bio-conversion,Gas,2037,123.1440
+Biofuel imports,Liquid,2037,73.0000
+Biomass imports,Solid,2037,120.0000
+Coal imports,Coal,2037,75.6060
+Coal reserves,Coal,2037,158.9650
+Coal,Solid,2037,126.5710
+District heating,Industry,2037,40.6390
+District heating,Heating and cooling - commercial,2037,110.5050
+District heating,Heating and cooling - homes,2037,84.1840
+Electricity grid,Over generation / exports,2037,110.4530
+Electricity grid,Heating and cooling - homes,2037,135.7260
+Electricity grid,H2 conversion,2037,105.1400
+Electricity grid,Industry,2037,434.1650
+Electricity grid,Road transport,2037,43.7970
+Electricity grid,Agriculture,2037,62.4120
+Electricity grid,Heating and cooling - commercial,2037,118.8580
+Electricity grid,Losses,2037,120.6910
+Electricity grid,Rail transport,2037,106.8630
+Electricity grid,Lighting & appliances - commercial,2037,90.0080
+Electricity grid,Lighting & appliances - homes,2037,148.4940
+Gas imports,Ngas,2037,113.7190
+Gas reserves,Ngas,2037,92.2330
+Gas,Heating and cooling - commercial,2037,8.1290
+Gas,Losses,2037,57.4010
+Gas,Thermal generation,2037,220.8910
+Gas,Agriculture,2037,22.0960
+Gas,Industry,2037,117.5800
+Geothermal,Electricity grid,2037,11.0130
+H2 conversion,H2,2037,111.8970
+H2 conversion,Losses,2037,66.2420
+H2,Road transport,2037,72.8970
+Hydro,Electricity grid,2037,105.9950
+Liquid,Industry,2037,151.0660
+Liquid,International shipping,2037,215.6900
+Liquid,Road transport,2037,182.8350
+Liquid,Domestic aviation,2037,50.4580
+Liquid,International aviation,2037,279.2670
+Liquid,Agriculture,2037,59.6400
+Liquid,National navigation,2037,119.2180
+Liquid,Rail transport,2037,77.4130
+Marine algae,Bio-conversion,2037,88.3750
+Ngas,Gas,2037,136.9520
+Nuclear,Thermal generation,2037,849.9780
+Oil imports,Oil,2037,538.2870
+Oil reserves,Oil,2037,147.7030
+Oil,Liquid,2037,700.9900
+Other waste,Solid,2037,103.5870
+Other waste,Bio-conversion,2037,175.8100
+Pumped heat,Heating and cooling - homes,2037,264.0260
+Pumped heat,Heating and cooling - commercial,2037,80.6720
+Solar PV,Electricity grid,2037,100.9010
+Solar Thermal,Heating and cooling - homes,2037,21.2630
+Solar,Solar Thermal,2037,56.2630
+Solar,Solar PV,2037,115.9010
+Solid,Agriculture,2037,35.8820
+Solid,Thermal generation,2037,406.1200
+Solid,Industry,2037,56.4770
+Thermal generation,Electricity grid,2037,587.5310
+Thermal generation,Losses,2037,845.1290
+Thermal generation,District heating,2037,102.3290
+Tidal,Electricity grid,2037,35.4520
+UK land based bioenergy,Bio-conversion,2037,190.0100
+Wave,Electricity grid,2037,44.0130
+Wind,Electricity grid,2037,299.3660
+Agricultural 'waste',Bio-conversion,2038,165.7290
+Bio-conversion,Liquid,2038,70.5970
+Bio-conversion,Losses,2038,34.8620
+Bio-conversion,Solid,2038,327.3220
+Bio-conversion,Gas,2038,170.1440
+Biofuel imports,Liquid,2038,55.0000
+Biomass imports,Solid,2038,55.0000
+Coal imports,Coal,2038,78.6060
+Coal reserves,Coal,2038,94.9650
+Coal,Solid,2038,112.5710
+District heating,Industry,2038,105.6390
+District heating,Heating and cooling - commercial,2038,48.5050
+District heating,Heating and cooling - homes,2038,107.1840
+Electricity grid,Over generation / exports,2038,190.4530
+Electricity grid,Heating and cooling - homes,2038,169.7260
+Electricity grid,H2 conversion,2038,58.1400
+Electricity grid,Industry,2038,360.1650
+Electricity grid,Road transport,2038,131.7970
+Electricity grid,Agriculture,2038,20.4120
+Electricity grid,Heating and cooling - commercial,2038,43.8580
+Electricity grid,Losses,2038,146.6910
+Electricity grid,Rail transport,2038,82.8630
+Electricity grid,Lighting & appliances - commercial,2038,153.0080
+Electricity grid,Lighting & appliances - homes,2038,102.4940
+Gas imports,Ngas,2038,124.7190
+Gas reserves,Ngas,2038,174.2330
+Gas,Heating and cooling - commercial,2038,26.1290
+Gas,Losses,2038,47.4010
+Gas,Thermal generation,2038,225.8910
+Gas,Agriculture,2038,41.0960
+Gas,Industry,2038,61.5800
+Geothermal,Electricity grid,2038,99.0130
+H2 conversion,H2,2038,108.8970
+H2 conversion,Losses,2038,42.2420
+H2,Road transport,2038,28.8970
+Hydro,Electricity grid,2038,73.9950
+Liquid,Industry,2038,133.0660
+Liquid,International shipping,2038,170.6900
+Liquid,Road transport,2038,207.8350
+Liquid,Domestic aviation,2038,20.4580
+Liquid,International aviation,2038,277.2670
+Liquid,Agriculture,2038,46.6400
+Liquid,National navigation,2038,132.2180
+Liquid,Rail transport,2038,39.4130
+Marine algae,Bio-conversion,2038,10.3750
+Ngas,Gas,2038,129.9520
+Nuclear,Thermal generation,2038,842.9780
+Oil imports,Oil,2038,548.2870
+Oil reserves,Oil,2038,134.7030
+Oil,Liquid,2038,659.9900
+Other waste,Solid,2038,79.5870
+Other waste,Bio-conversion,2038,103.8100
+Pumped heat,Heating and cooling - homes,2038,272.0260
+Pumped heat,Heating and cooling - commercial,2038,86.6720
+Solar PV,Electricity grid,2038,87.9010
+Solar Thermal,Heating and cooling - homes,2038,82.2630
+Solar,Solar Thermal,2038,78.2630
+Solar,Solar PV,2038,128.9010
+Solid,Agriculture,2038,37.8820
+Solid,Thermal generation,2038,497.1200
+Solid,Industry,2038,93.4770
+Thermal generation,Electricity grid,2038,613.5310
+Thermal generation,Losses,2038,833.1290
+Thermal generation,District heating,2038,112.3290
+Tidal,Electricity grid,2038,99.4520
+UK land based bioenergy,Bio-conversion,2038,239.0100
+Wave,Electricity grid,2038,42.0130
+Wind,Electricity grid,2038,368.3660
+Agricultural 'waste',Bio-conversion,2039,168.7290
+Bio-conversion,Liquid,2039,77.5970
+Bio-conversion,Losses,2039,72.8620
+Bio-conversion,Solid,2039,282.3220
+Bio-conversion,Gas,2039,173.1440
+Biofuel imports,Liquid,2039,120.0000
+Biomass imports,Solid,2039,102.0000
+Coal imports,Coal,2039,17.6060
+Coal reserves,Coal,2039,70.9650
+Coal,Solid,2039,107.5710
+District heating,Industry,2039,47.6390
+District heating,Heating and cooling - commercial,2039,23.5050
+District heating,Heating and cooling - homes,2039,117.1840
+Electricity grid,Over generation / exports,2039,104.4530
+Electricity grid,Heating and cooling - homes,2039,122.7260
+Electricity grid,H2 conversion,2039,87.1400
+Electricity grid,Industry,2039,438.1650
+Electricity grid,Road transport,2039,99.7970
+Electricity grid,Agriculture,2039,63.4120
+Electricity grid,Heating and cooling - commercial,2039,100.8580
+Electricity grid,Losses,2039,96.6910
+Electricity grid,Rail transport,2039,54.8630
+Electricity grid,Lighting & appliances - commercial,2039,168.0080
+Electricity grid,Lighting & appliances - homes,2039,166.4940
+Gas imports,Ngas,2039,124.7190
+Gas reserves,Ngas,2039,167.2330
+Gas,Heating and cooling - commercial,2039,87.1290
+Gas,Losses,2039,33.4010
+Gas,Thermal generation,2039,205.8910
+Gas,Agriculture,2039,96.0960
+Gas,Industry,2039,122.5800
+Geothermal,Electricity grid,2039,98.0130
+H2 conversion,H2,2039,83.8970
+H2 conversion,Losses,2039,45.2420
+H2,Road transport,2039,112.8970
+Hydro,Electricity grid,2039,69.9950
+Liquid,Industry,2039,209.0660
+Liquid,International shipping,2039,186.6900
+Liquid,Road transport,2039,135.8350
+Liquid,Domestic aviation,2039,105.4580
+Liquid,International aviation,2039,281.2670
+Liquid,Agriculture,2039,16.6400
+Liquid,National navigation,2039,64.2180
+Liquid,Rail transport,2039,49.4130
+Marine algae,Bio-conversion,2039,101.3750
+Ngas,Gas,2039,172.9520
+Nuclear,Thermal generation,2039,908.9780
+Oil imports,Oil,2039,562.2870
+Oil reserves,Oil,2039,107.7030
+Oil,Liquid,2039,623.9900
+Other waste,Solid,2039,105.5870
+Other waste,Bio-conversion,2039,144.8100
+Pumped heat,Heating and cooling - homes,2039,205.0260
+Pumped heat,Heating and cooling - commercial,2039,133.6720
+Solar PV,Electricity grid,2039,96.9010
+Solar Thermal,Heating and cooling - homes,2039,23.2630
+Solar,Solar Thermal,2039,22.2630
+Solar,Solar PV,2039,98.9010
+Solid,Agriculture,2039,75.8820
+Solid,Thermal generation,2039,465.1200
+Solid,Industry,2039,84.4770
+Thermal generation,Electricity grid,2039,592.5310
+Thermal generation,Losses,2039,811.1290
+Thermal generation,District heating,2039,150.3290
+Tidal,Electricity grid,2039,23.4520
+UK land based bioenergy,Bio-conversion,2039,217.0100
+Wave,Electricity grid,2039,39.0130
+Wind,Electricity grid,2039,361.3660
+Agricultural 'waste',Bio-conversion,2040,218.7290
+Bio-conversion,Liquid,2040,88.5970
+Bio-conversion,Losses,2040,123.8620
+Bio-conversion,Solid,2040,349.3220
+Bio-conversion,Gas,2040,90.1440
+Biofuel imports,Liquid,2040,52.0000
+Biomass imports,Solid,2040,61.0000
+Coal imports,Coal,2040,84.6060
+Coal reserves,Coal,2040,105.9650
+Coal,Solid,2040,91.5710
+District heating,Industry,2040,29.6390
+District heating,Heating and cooling - commercial,2040,96.5050
+District heating,Heating and cooling - homes,2040,105.1840
+Electricity grid,Over generation / exports,2040,146.4530
+Electricity grid,Heating and cooling - homes,2040,199.7260
+Electricity grid,H2 conversion,2040,80.1400
+Electricity grid,Industry,2040,347.1650
+Electricity grid,Road transport,2040,44.7970
+Electricity grid,Agriculture,2040,68.4120
+Electricity grid,Heating and cooling - commercial,2040,54.8580
+Electricity grid,Losses,2040,155.6910
+Electricity grid,Rail transport,2040,99.8630
+Electricity grid,Lighting & appliances - commercial,2040,129.0080
+Electricity grid,Lighting & appliances - homes,2040,169.4940
+Gas imports,Ngas,2040,83.7190
+Gas reserves,Ngas,2040,152.2330
+Gas,Heating and cooling - commercial,2040,85.1290
+Gas,Losses,2040,77.4010
+Gas,Thermal generation,2040,225.8910
+Gas,Agriculture,2040,29.0960
+Gas,Industry,2040,115.5800
+Geothermal,Electricity grid,2040,33.0130
+H2 conversion,H2,2040,105.8970
+H2 conversion,Losses,2040,11.2420
+H2,Road transport,2040,113.8970
+Hydro,Electricity grid,2040,52.9950
+Liquid,Industry,2040,128.0660
+Liquid,International shipping,2040,199.6900
+Liquid,Road transport,2040,177.8350
+Liquid,Domestic aviation,2040,23.4580
+Liquid,International aviation,2040,288.2670
+Liquid,Agriculture,2040,57.6400
+Liquid,National navigation,2040,83.2180
+Liquid,Rail transport,2040,78.4130
+Marine algae,Bio-conversion,2040,98.3750
+Ngas,Gas,2040,158.9520
+Nuclear,Thermal generation,2040,881.9780
+Oil imports,Oil,2040,563.2870
+Oil reserves,Oil,2040,132.7030
+Oil,Liquid,2040,657.9900
+Other waste,Solid,2040,142.5870
+Other waste,Bio-conversion,2040,161.8100
+Pumped heat,Heating and cooling - homes,2040,242.0260
+Pumped heat,Heating and cooling - commercial,2040,155.6720
+Solar PV,Electricity grid,2040,150.9010
+Solar Thermal,Heating and cooling - homes,2040,29.2630
+Solar,Solar Thermal,2040,45.2630
+Solar,Solar PV,2040,139.9010
+Solid,Agriculture,2040,23.8820
+Solid,Thermal generation,2040,478.1200
+Solid,Industry,2040,73.4770
+Thermal generation,Electricity grid,2040,569.5310
+Thermal generation,Losses,2040,809.1290
+Thermal generation,District heating,2040,103.3290
+Tidal,Electricity grid,2040,42.4520
+UK land based bioenergy,Bio-conversion,2040,254.0100
+Wave,Electricity grid,2040,115.0130
+Wind,Electricity grid,2040,362.3660
+Agricultural 'waste',Bio-conversion,2041,214.7290
+Bio-conversion,Liquid,2041,72.5970
+Bio-conversion,Losses,2041,94.8620
+Bio-conversion,Solid,2041,307.3220
+Bio-conversion,Gas,2041,179.1440
+Biofuel imports,Liquid,2041,121.0000
+Biomass imports,Solid,2041,43.0000
+Coal imports,Coal,2041,77.6060
+Coal reserves,Coal,2041,150.9650
+Coal,Solid,2041,86.5710
+District heating,Industry,2041,89.6390
+District heating,Heating and cooling - commercial,2041,104.5050
+District heating,Heating and cooling - homes,2041,120.1840
+Electricity grid,Over generation / exports,2041,105.4530
+Electricity grid,Heating and cooling - homes,2041,170.7260
+Electricity grid,H2 conversion,2041,90.1400
+Electricity grid,Industry,2041,398.1650
+Electricity grid,Road transport,2041,72.7970
+Electricity grid,Agriculture,2041,49.4120
+Electricity grid,Heating and cooling - commercial,2041,110.8580
+Electricity grid,Losses,2041,133.6910
+Electricity grid,Rail transport,2041,88.8630
+Electricity grid,Lighting & appliances - commercial,2041,110.0080
+Electricity grid,Lighting & appliances - homes,2041,151.4940
+Gas imports,Ngas,2041,80.7190
+Gas reserves,Ngas,2041,167.2330
+Gas,Heating and cooling - commercial,2041,99.1290
+Gas,Losses,2041,21.4010
+Gas,Thermal generation,2041,172.8910
+Gas,Agriculture,2041,80.0960
+Gas,Industry,2041,63.5800
+Geothermal,Electricity grid,2041,78.0130
+H2 conversion,H2,2041,50.8970
+H2 conversion,Losses,2041,27.2420
+H2,Road transport,2041,108.8970
+Hydro,Electricity grid,2041,19.9950
+Liquid,Industry,2041,132.0660
+Liquid,International shipping,2041,213.6900
+Liquid,Road transport,2041,181.8350
+Liquid,Domestic aviation,2041,16.4580
+Liquid,International aviation,2041,209.2670
+Liquid,Agriculture,2041,19.6400
+Liquid,National navigation,2041,110.2180
+Liquid,Rail transport,2041,68.4130
+Marine algae,Bio-conversion,2041,81.3750
+Ngas,Gas,2041,190.9520
+Nuclear,Thermal generation,2041,868.9780
+Oil imports,Oil,2041,569.2870
+Oil reserves,Oil,2041,182.7030
+Oil,Liquid,2041,652.9900
+Other waste,Solid,2041,131.5870
+Other waste,Bio-conversion,2041,95.8100
+Pumped heat,Heating and cooling - homes,2041,276.0260
+Pumped heat,Heating and cooling - commercial,2041,157.6720
+Solar PV,Electricity grid,2041,111.9010
+Solar Thermal,Heating and cooling - homes,2041,63.2630
+Solar,Solar Thermal,2041,61.2630
+Solar,Solar PV,2041,113.9010
+Solid,Agriculture,2041,22.8820
+Solid,Thermal generation,2041,408.1200
+Solid,Industry,2041,80.4770
+Thermal generation,Electricity grid,2041,599.5310
+Thermal generation,Losses,2041,859.1290
+Thermal generation,District heating,2041,87.3290
+Tidal,Electricity grid,2041,92.4520
+UK land based bioenergy,Bio-conversion,2041,249.0100
+Wave,Electricity grid,2041,24.0130
+Wind,Electricity grid,2041,348.3660
+Agricultural 'waste',Bio-conversion,2042,193.7290
+Bio-conversion,Liquid,2042,5.5970
+Bio-conversion,Losses,2042,106.8620
+Bio-conversion,Solid,2042,280.3220
+Bio-conversion,Gas,2042,86.1440
+Biofuel imports,Liquid,2042,44.0000
+Biomass imports,Solid,2042,46.0000
+Coal imports,Coal,2042,57.6060
+Coal reserves,Coal,2042,107.9650
+Coal,Solid,2042,135.5710
+District heating,Industry,2042,85.6390
+District heating,Heating and cooling - commercial,2042,82.5050
+District heating,Heating and cooling - homes,2042,131.1840
+Electricity grid,Over generation / exports,2042,182.4530
+Electricity grid,Heating and cooling - homes,2042,194.7260
+Electricity grid,H2 conversion,2042,49.1400
+Electricity grid,Industry,2042,424.1650
+Electricity grid,Road transport,2042,49.7970
+Electricity grid,Agriculture,2042,87.4120
+Electricity grid,Heating and cooling - commercial,2042,74.8580
+Electricity grid,Losses,2042,121.6910
+Electricity grid,Rail transport,2042,88.8630
+Electricity grid,Lighting & appliances - commercial,2042,157.0080
+Electricity grid,Lighting & appliances - homes,2042,132.4940
+Gas imports,Ngas,2042,123.7190
+Gas reserves,Ngas,2042,181.2330
+Gas,Heating and cooling - commercial,2042,81.1290
+Gas,Losses,2042,70.4010
+Gas,Thermal generation,2042,179.8910
+Gas,Agriculture,2042,90.0960
+Gas,Industry,2042,128.5800
+Geothermal,Electricity grid,2042,90.0130
+H2 conversion,H2,2042,99.8970
+H2 conversion,Losses,2042,30.2420
+H2,Road transport,2042,83.8970
+Hydro,Electricity grid,2042,29.9950
+Liquid,Industry,2042,197.0660
+Liquid,International shipping,2042,212.6900
+Liquid,Road transport,2042,226.8350
+Liquid,Domestic aviation,2042,38.4580
+Liquid,International aviation,2042,277.2670
+Liquid,Agriculture,2042,44.6400
+Liquid,National navigation,2042,59.2180
+Liquid,Rail transport,2042,85.4130
+Marine algae,Bio-conversion,2042,33.3750
+Ngas,Gas,2042,148.9520
+Nuclear,Thermal generation,2042,850.9780
+Oil imports,Oil,2042,526.2870
+Oil reserves,Oil,2042,187.7030
+Oil,Liquid,2042,665.9900
+Other waste,Solid,2042,133.5870
+Other waste,Bio-conversion,2042,88.8100
+Pumped heat,Heating and cooling - homes,2042,243.0260
+Pumped heat,Heating and cooling - commercial,2042,152.6720
+Solar PV,Electricity grid,2042,114.9010
+Solar Thermal,Heating and cooling - homes,2042,78.2630
+Solar,Solar Thermal,2042,22.2630
+Solar,Solar PV,2042,141.9010
+Solid,Agriculture,2042,58.8820
+Solid,Thermal generation,2042,440.1200
+Solid,Industry,2042,140.4770
+Thermal generation,Electricity grid,2042,528.5310
+Thermal generation,Losses,2042,886.1290
+Thermal generation,District heating,2042,101.3290
+Tidal,Electricity grid,2042,100.4520
+UK land based bioenergy,Bio-conversion,2042,194.0100
+Wave,Electricity grid,2042,66.0130
+Wind,Electricity grid,2042,340.3660
+Agricultural 'waste',Bio-conversion,2043,133.7290
+Bio-conversion,Liquid,2043,66.5970
+Bio-conversion,Losses,2043,46.8620
+Bio-conversion,Solid,2043,343.3220
+Bio-conversion,Gas,2043,92.1440
+Biofuel imports,Liquid,2043,79.0000
+Biomass imports,Solid,2043,109.0000
+Coal imports,Coal,2043,54.6060
+Coal reserves,Coal,2043,101.9650
+Coal,Solid,2043,163.5710
+District heating,Industry,2043,27.6390
+District heating,Heating and cooling - commercial,2043,52.5050
+District heating,Heating and cooling - homes,2043,98.1840
+Electricity grid,Over generation / exports,2043,107.4530
+Electricity grid,Heating and cooling - homes,2043,200.7260
+Electricity grid,H2 conversion,2043,31.1400
+Electricity grid,Industry,2043,361.1650
+Electricity grid,Road transport,2043,106.7970
+Electricity grid,Agriculture,2043,87.4120
+Electricity grid,Heating and cooling - commercial,2043,79.8580
+Electricity grid,Losses,2043,112.6910
+Electricity grid,Rail transport,2043,84.8630
+Electricity grid,Lighting & appliances - commercial,2043,152.0080
+Electricity grid,Lighting & appliances - homes,2043,95.4940
+Gas imports,Ngas,2043,65.7190
+Gas reserves,Ngas,2043,101.2330
+Gas,Heating and cooling - commercial,2043,50.1290
+Gas,Losses,2043,37.4010
+Gas,Thermal generation,2043,165.8910
+Gas,Agriculture,2043,75.0960
+Gas,Industry,2043,111.5800
+Geothermal,Electricity grid,2043,95.0130
+H2 conversion,H2,2043,34.8970
+H2 conversion,Losses,2043,81.2420
+H2,Road transport,2043,57.8970
+Hydro,Electricity grid,2043,87.9950
+Liquid,Industry,2043,174.0660
+Liquid,International shipping,2043,158.6900
+Liquid,Road transport,2043,226.8350
+Liquid,Domestic aviation,2043,27.4580
+Liquid,International aviation,2043,249.2670
+Liquid,Agriculture,2043,63.6400
+Liquid,National navigation,2043,52.2180
+Liquid,Rail transport,2043,91.4130
+Marine algae,Bio-conversion,2043,6.3750
+Ngas,Gas,2043,175.9520
+Nuclear,Thermal generation,2043,857.9780
+Oil imports,Oil,2043,511.2870
+Oil reserves,Oil,2043,137.7030
+Oil,Liquid,2043,685.9900
+Other waste,Solid,2043,148.5870
+Other waste,Bio-conversion,2043,122.8100
+Pumped heat,Heating and cooling - homes,2043,256.0260
+Pumped heat,Heating and cooling - commercial,2043,150.6720
+Solar PV,Electricity grid,2043,129.9010
+Solar Thermal,Heating and cooling - homes,2043,66.2630
+Solar,Solar Thermal,2043,67.2630
+Solar,Solar PV,2043,92.9010
+Solid,Agriculture,2043,99.8820
+Solid,Thermal generation,2043,497.1200
+Solid,Industry,2043,56.4770
+Thermal generation,Electricity grid,2043,553.5310
+Thermal generation,Losses,2043,874.1290
+Thermal generation,District heating,2043,96.3290
+Tidal,Electricity grid,2043,85.4520
+UK land based bioenergy,Bio-conversion,2043,226.0100
+Wave,Electricity grid,2043,65.0130
+Wind,Electricity grid,2043,329.3660
+Agricultural 'waste',Bio-conversion,2044,190.7290
+Bio-conversion,Liquid,2044,67.5970
+Bio-conversion,Losses,2044,68.8620
+Bio-conversion,Solid,2044,322.3220
+Bio-conversion,Gas,2044,161.1440
+Biofuel imports,Liquid,2044,121.0000
+Biomass imports,Solid,2044,88.0000
+Coal imports,Coal,2044,82.6060
+Coal reserves,Coal,2044,103.9650
+Coal,Solid,2044,118.5710
+District heating,Industry,2044,20.6390
+District heating,Heating and cooling - commercial,2044,39.5050
+District heating,Heating and cooling - homes,2044,76.1840
+Electricity grid,Over generation / exports,2044,155.4530
+Electricity grid,Heating and cooling - homes,2044,184.7260
+Electricity grid,H2 conversion,2044,110.1400
+Electricity grid,Industry,2044,382.1650
+Electricity grid,Road transport,2044,37.7970
+Electricity grid,Agriculture,2044,56.4120
+Electricity grid,Heating and cooling - commercial,2044,47.8580
+Electricity grid,Losses,2044,132.6910
+Electricity grid,Rail transport,2044,47.8630
+Electricity grid,Lighting & appliances - commercial,2044,121.0080
+Electricity grid,Lighting & appliances - homes,2044,135.4940
+Gas imports,Ngas,2044,75.7190
+Gas reserves,Ngas,2044,92.2330
+Gas,Heating and cooling - commercial,2044,24.1290
+Gas,Losses,2044,84.4010
+Gas,Thermal generation,2044,190.8910
+Gas,Agriculture,2044,47.0960
+Gas,Industry,2044,86.5800
+Geothermal,Electricity grid,2044,97.0130
+H2 conversion,H2,2044,35.8970
+H2 conversion,Losses,2044,20.2420
+H2,Road transport,2044,106.8970
+Hydro,Electricity grid,2044,28.9950
+Liquid,Industry,2044,126.0660
+Liquid,International shipping,2044,172.6900
+Liquid,Road transport,2044,201.8350
+Liquid,Domestic aviation,2044,33.4580
+Liquid,International aviation,2044,301.2670
+Liquid,Agriculture,2044,5.6400
+Liquid,National navigation,2044,111.2180
+Liquid,Rail transport,2044,87.4130
+Marine algae,Bio-conversion,2044,57.3750
+Ngas,Gas,2044,217.9520
+Nuclear,Thermal generation,2044,854.9780
+Oil imports,Oil,2044,579.2870
+Oil reserves,Oil,2044,182.7030
+Oil,Liquid,2044,635.9900
+Other waste,Solid,2044,112.5870
+Other waste,Bio-conversion,2044,170.8100
+Pumped heat,Heating and cooling - homes,2044,225.0260
+Pumped heat,Heating and cooling - commercial,2044,135.6720
+Solar PV,Electricity grid,2044,110.9010
+Solar Thermal,Heating and cooling - homes,2044,35.2630
+Solar,Solar Thermal,2044,63.2630
+Solar,Solar PV,2044,146.9010
+Solid,Agriculture,2044,47.8820
+Solid,Thermal generation,2044,441.1200
+Solid,Industry,2044,75.4770
+Thermal generation,Electricity grid,2044,598.5310
+Thermal generation,Losses,2044,814.1290
+Thermal generation,District heating,2044,115.3290
+Tidal,Electricity grid,2044,75.4520
+UK land based bioenergy,Bio-conversion,2044,201.0100
+Wave,Electricity grid,2044,54.0130
+Wind,Electricity grid,2044,379.3660
+Agricultural 'waste',Bio-conversion,2045,184.7290
+Bio-conversion,Liquid,2045,99.5970
+Bio-conversion,Losses,2045,88.8620
+Bio-conversion,Solid,2045,291.3220
+Bio-conversion,Gas,2045,135.1440
+Biofuel imports,Liquid,2045,40.0000
+Biomass imports,Solid,2045,102.0000
+Coal imports,Coal,2045,38.6060
+Coal reserves,Coal,2045,98.9650
+Coal,Solid,2045,173.5710
+District heating,Industry,2045,48.6390
+District heating,Heating and cooling - commercial,2045,33.5050
+District heating,Heating and cooling - homes,2045,139.1840
+Electricity grid,Over generation / exports,2045,114.4530
+Electricity grid,Heating and cooling - homes,2045,181.7260
+Electricity grid,H2 conversion,2045,57.1400
+Electricity grid,Industry,2045,419.1650
+Electricity grid,Road transport,2045,58.7970
+Electricity grid,Agriculture,2045,91.4120
+Electricity grid,Heating and cooling - commercial,2045,97.8580
+Electricity grid,Losses,2045,101.6910
+Electricity grid,Rail transport,2045,71.8630
+Electricity grid,Lighting & appliances - commercial,2045,155.0080
+Electricity grid,Lighting & appliances - homes,2045,166.4940
+Gas imports,Ngas,2045,123.7190
+Gas reserves,Ngas,2045,160.2330
+Gas,Heating and cooling - commercial,2045,67.1290
+Gas,Losses,2045,76.4010
+Gas,Thermal generation,2045,200.8910
+Gas,Agriculture,2045,11.0960
+Gas,Industry,2045,79.5800
+Geothermal,Electricity grid,2045,45.0130
+H2 conversion,H2,2045,98.8970
+H2 conversion,Losses,2045,77.2420
+H2,Road transport,2045,110.8970
+Hydro,Electricity grid,2045,87.9950
+Liquid,Industry,2045,134.0660
+Liquid,International shipping,2045,182.6900
+Liquid,Road transport,2045,182.8350
+Liquid,Domestic aviation,2045,111.4580
+Liquid,International aviation,2045,223.2670
+Liquid,Agriculture,2045,67.6400
+Liquid,National navigation,2045,52.2180
+Liquid,Rail transport,2045,58.4130
+Marine algae,Bio-conversion,2045,20.3750
+Ngas,Gas,2045,171.9520
+Nuclear,Thermal generation,2045,920.9780
+Oil imports,Oil,2045,596.2870
+Oil reserves,Oil,2045,178.7030
+Oil,Liquid,2045,672.9900
+Other waste,Solid,2045,130.5870
+Other waste,Bio-conversion,2045,83.8100
+Pumped heat,Heating and cooling - homes,2045,252.0260
+Pumped heat,Heating and cooling - commercial,2045,137.6720
+Solar PV,Electricity grid,2045,125.9010
+Solar Thermal,Heating and cooling - homes,2045,69.2630
+Solar,Solar Thermal,2045,82.2630
+Solar,Solar PV,2045,72.9010
+Solid,Agriculture,2045,67.8820
+Solid,Thermal generation,2045,456.1200
+Solid,Industry,2045,109.4770
+Thermal generation,Electricity grid,2045,578.5310
+Thermal generation,Losses,2045,787.1290
+Thermal generation,District heating,2045,160.3290
+Tidal,Electricity grid,2045,9.4520
+UK land based bioenergy,Bio-conversion,2045,242.0100
+Wave,Electricity grid,2045,22.0130
+Wind,Electricity grid,2045,315.3660
+Agricultural 'waste',Bio-conversion,2046,195.7290
+Bio-conversion,Liquid,2046,55.5970
+Bio-conversion,Losses,2046,87.8620
+Bio-conversion,Solid,2046,343.3220
+Bio-conversion,Gas,2046,116.1440
+Biofuel imports,Liquid,2046,93.0000
+Biomass imports,Solid,2046,95.0000
+Coal imports,Coal,2046,81.6060
+Coal reserves,Coal,2046,75.9650
+Coal,Solid,2046,164.5710
+District heating,Industry,2046,87.6390
+District heating,Heating and cooling - commercial,2046,102.5050
+District heating,Heating and cooling - homes,2046,124.1840
+Electricity grid,Over generation / exports,2046,170.4530
+Electricity grid,Heating and cooling - homes,2046,115.7260
+Electricity grid,H2 conversion,2046,113.1400
+Electricity grid,Industry,2046,435.1650
+Electricity grid,Road transport,2046,122.7970
+Electricity grid,Agriculture,2046,95.4120
+Electricity grid,Heating and cooling - commercial,2046,133.8580
+Electricity grid,Losses,2046,106.6910
+Electricity grid,Rail transport,2046,95.8630
+Electricity grid,Lighting & appliances - commercial,2046,186.0080
+Electricity grid,Lighting & appliances - homes,2046,112.4940
+Gas imports,Ngas,2046,41.7190
+Gas reserves,Ngas,2046,116.2330
+Gas,Heating and cooling - commercial,2046,69.1290
+Gas,Losses,2046,28.4010
+Gas,Thermal generation,2046,202.8910
+Gas,Agriculture,2046,101.0960
+Gas,Industry,2046,116.5800
+Geothermal,Electricity grid,2046,102.0130
+H2 conversion,H2,2046,75.8970
+H2 conversion,Losses,2046,46.2420
+H2,Road transport,2046,28.8970
+Hydro,Electricity grid,2046,55.9950
+Liquid,Industry,2046,128.0660
+Liquid,International shipping,2046,154.6900
+Liquid,Road transport,2046,186.8350
+Liquid,Domestic aviation,2046,45.4580
+Liquid,International aviation,2046,248.2670
+Liquid,Agriculture,2046,25.6400
+Liquid,National navigation,2046,42.2180
+Liquid,Rail transport,2046,61.4130
+Marine algae,Bio-conversion,2046,31.3750
+Ngas,Gas,2046,193.9520
+Nuclear,Thermal generation,2046,929.9780
+Oil imports,Oil,2046,545.2870
+Oil reserves,Oil,2046,165.7030
+Oil,Liquid,2046,677.9900
+Other waste,Solid,2046,152.5870
+Other waste,Bio-conversion,2046,108.8100
+Pumped heat,Heating and cooling - homes,2046,220.0260
+Pumped heat,Heating and cooling - commercial,2046,105.6720
+Solar PV,Electricity grid,2046,59.9010
+Solar Thermal,Heating and cooling - homes,2046,74.2630
+Solar,Solar Thermal,2046,48.2630
+Solar,Solar PV,2046,153.9010
+Solid,Agriculture,2046,18.8820
+Solid,Thermal generation,2046,467.1200
+Solid,Industry,2046,114.4770
+Thermal generation,Electricity grid,2046,621.5310
+Thermal generation,Losses,2046,849.1290
+Thermal generation,District heating,2046,127.3290
+Tidal,Electricity grid,2046,67.4520
+UK land based bioenergy,Bio-conversion,2046,196.0100
+Wave,Electricity grid,2046,59.0130
+Wind,Electricity grid,2046,349.3660
+Agricultural 'waste',Bio-conversion,2047,138.7290
+Bio-conversion,Liquid,2047,50.5970
+Bio-conversion,Losses,2047,97.8620
+Bio-conversion,Solid,2047,315.3220
+Bio-conversion,Gas,2047,170.1440
+Biofuel imports,Liquid,2047,46.0000
+Biomass imports,Solid,2047,79.0000
+Coal imports,Coal,2047,58.6060
+Coal reserves,Coal,2047,102.9650
+Coal,Solid,2047,172.5710
+District heating,Industry,2047,15.6390
+District heating,Heating and cooling - commercial,2047,83.5050
+District heating,Heating and cooling - homes,2047,130.1840
+Electricity grid,Over generation / exports,2047,200.4530
+Electricity grid,Heating and cooling - homes,2047,184.7260
+Electricity grid,H2 conversion,2047,54.1400
+Electricity grid,Industry,2047,433.1650
+Electricity grid,Road transport,2047,46.7970
+Electricity grid,Agriculture,2047,88.4120
+Electricity grid,Heating and cooling - commercial,2047,111.8580
+Electricity grid,Losses,2047,118.6910
+Electricity grid,Rail transport,2047,97.8630
+Electricity grid,Lighting & appliances - commercial,2047,168.0080
+Electricity grid,Lighting & appliances - homes,2047,162.4940
+Gas imports,Ngas,2047,115.7190
+Gas reserves,Ngas,2047,140.2330
+Gas,Heating and cooling - commercial,2047,70.1290
+Gas,Losses,2047,95.4010
+Gas,Thermal generation,2047,233.8910
+Gas,Agriculture,2047,53.0960
+Gas,Industry,2047,129.5800
+Geothermal,Electricity grid,2047,87.0130
+H2 conversion,H2,2047,32.8970
+H2 conversion,Losses,2047,57.2420
+H2,Road transport,2047,100.8970
+Hydro,Electricity grid,2047,67.9950
+Liquid,Industry,2047,220.0660
+Liquid,International shipping,2047,201.6900
+Liquid,Road transport,2047,154.8350
+Liquid,Domestic aviation,2047,33.4580
+Liquid,International aviation,2047,262.2670
+Liquid,Agriculture,2047,96.6400
+Liquid,National navigation,2047,95.2180
+Liquid,Rail transport,2047,73.4130
+Marine algae,Bio-conversion,2047,21.3750
+Ngas,Gas,2047,204.9520
+Nuclear,Thermal generation,2047,930.9780
+Oil imports,Oil,2047,570.2870
+Oil reserves,Oil,2047,189.7030
+Oil,Liquid,2047,651.9900
+Other waste,Solid,2047,83.5870
+Other waste,Bio-conversion,2047,169.8100
+Pumped heat,Heating and cooling - homes,2047,229.0260
+Pumped heat,Heating and cooling - commercial,2047,73.6720
+Solar PV,Electricity grid,2047,111.9010
+Solar Thermal,Heating and cooling - homes,2047,72.2630
+Solar,Solar Thermal,2047,57.2630
+Solar,Solar PV,2047,68.9010
+Solid,Agriculture,2047,46.8820
+Solid,Thermal generation,2047,414.1200
+Solid,Industry,2047,86.4770
+Thermal generation,Electricity grid,2047,568.5310
+Thermal generation,Losses,2047,846.1290
+Thermal generation,District heating,2047,111.3290
+Tidal,Electricity grid,2047,21.4520
+UK land based bioenergy,Bio-conversion,2047,268.0100
+Wave,Electricity grid,2047,33.0130
+Wind,Electricity grid,2047,318.3660
+Agricultural 'waste',Bio-conversion,2048,220.7290
+Bio-conversion,Liquid,2048,3.5970
+Bio-conversion,Losses,2048,39.8620
+Bio-conversion,Solid,2048,280.3220
+Bio-conversion,Gas,2048,117.1440
+Biofuel imports,Liquid,2048,56.0000
+Biomass imports,Solid,2048,106.0000
+Coal imports,Coal,2048,57.6060
+Coal reserves,Coal,2048,155.9650
+Coal,Solid,2048,143.5710
+District heating,Industry,2048,40.6390
+District heating,Heating and cooling - commercial,2048,98.5050
+District heating,Heating and cooling - homes,2048,60.1840
+Electricity grid,Over generation / exports,2048,191.4530
+Electricity grid,Heating and cooling - homes,2048,169.7260
+Electricity grid,H2 conversion,2048,83.1400
+Electricity grid,Industry,2048,409.1650
+Electricity grid,Road transport,2048,96.7970
+Electricity grid,Agriculture,2048,59.4120
+Electricity grid,Heating and cooling - commercial,2048,59.8580
+Electricity grid,Losses,2048,63.6910
+Electricity grid,Rail transport,2048,72.8630
+Electricity grid,Lighting & appliances - commercial,2048,132.0080
+Electricity grid,Lighting & appliances - homes,2048,142.4940
+Gas imports,Ngas,2048,84.7190
+Gas reserves,Ngas,2048,102.2330
+Gas,Heating and cooling - commercial,2048,40.1290
+Gas,Losses,2048,37.4010
+Gas,Thermal generation,2048,232.8910
+Gas,Agriculture,2048,71.0960
+Gas,Industry,2048,131.5800
+Geothermal,Electricity grid,2048,23.0130
+H2 conversion,H2,2048,74.8970
+H2 conversion,Losses,2048,87.2420
+H2,Road transport,2048,86.8970
+Hydro,Electricity grid,2048,25.9950
+Liquid,Industry,2048,217.0660
+Liquid,International shipping,2048,161.6900
+Liquid,Road transport,2048,192.8350
+Liquid,Domestic aviation,2048,18.4580
+Liquid,International aviation,2048,279.2670
+Liquid,Agriculture,2048,32.6400
+Liquid,National navigation,2048,60.2180
+Liquid,Rail transport,2048,30.4130
+Marine algae,Bio-conversion,2048,49.3750
+Ngas,Gas,2048,217.9520
+Nuclear,Thermal generation,2048,917.9780
+Oil imports,Oil,2048,569.2870
+Oil reserves,Oil,2048,197.7030
+Oil,Liquid,2048,646.9900
+Other waste,Solid,2048,73.5870
+Other waste,Bio-conversion,2048,106.8100
+Pumped heat,Heating and cooling - homes,2048,215.0260
+Pumped heat,Heating and cooling - commercial,2048,164.6720
+Solar PV,Electricity grid,2048,83.9010
+Solar Thermal,Heating and cooling - homes,2048,32.2630
+Solar,Solar Thermal,2048,61.2630
+Solar,Solar PV,2048,62.9010
+Solid,Agriculture,2048,96.8820
+Solid,Thermal generation,2048,406.1200
+Solid,Industry,2048,118.4770
+Thermal generation,Electricity grid,2048,617.5310
+Thermal generation,Losses,2048,834.1290
+Thermal generation,District heating,2048,153.3290
+Tidal,Electricity grid,2048,54.4520
+UK land based bioenergy,Bio-conversion,2048,203.0100
+Wave,Electricity grid,2048,98.0130
+Wind,Electricity grid,2048,356.3660
+Agricultural 'waste',Bio-conversion,2049,178.7290
+Bio-conversion,Liquid,2049,27.5970
+Bio-conversion,Losses,2049,34.8620
+Bio-conversion,Solid,2049,285.3220
+Bio-conversion,Gas,2049,102.1440
+Biofuel imports,Liquid,2049,55.0000
+Biomass imports,Solid,2049,125.0000
+Coal imports,Coal,2049,15.6060
+Coal reserves,Coal,2049,155.9650
+Coal,Solid,2049,148.5710
+District heating,Industry,2049,105.6390
+District heating,Heating and cooling - commercial,2049,91.5050
+District heating,Heating and cooling - homes,2049,119.1840
+Electricity grid,Over generation / exports,2049,196.4530
+Electricity grid,Heating and cooling - homes,2049,184.7260
+Electricity grid,H2 conversion,2049,62.1400
+Electricity grid,Industry,2049,389.1650
+Electricity grid,Road transport,2049,123.7970
+Electricity grid,Agriculture,2049,92.4120
+Electricity grid,Heating and cooling - commercial,2049,134.8580
+Electricity grid,Losses,2049,113.6910
+Electricity grid,Rail transport,2049,47.8630
+Electricity grid,Lighting & appliances - commercial,2049,185.0080
+Electricity grid,Lighting & appliances - homes,2049,110.4940
+Gas imports,Ngas,2049,102.7190
+Gas reserves,Ngas,2049,129.2330
+Gas,Heating and cooling - commercial,2049,9.1290
+Gas,Losses,2049,18.4010
+Gas,Thermal generation,2049,243.8910
+Gas,Agriculture,2049,60.0960
+Gas,Industry,2049,103.5800
+Geothermal,Electricity grid,2049,18.0130
+H2 conversion,H2,2049,83.8970
+H2 conversion,Losses,2049,11.2420
+H2,Road transport,2049,117.8970
+Hydro,Electricity grid,2049,24.9950
+Liquid,Industry,2049,128.0660
+Liquid,International shipping,2049,202.6900
+Liquid,Road transport,2049,200.8350
+Liquid,Domestic aviation,2049,104.4580
+Liquid,International aviation,2049,235.2670
+Liquid,Agriculture,2049,18.6400
+Liquid,National navigation,2049,109.2180
+Liquid,Rail transport,2049,16.4130
+Marine algae,Bio-conversion,2049,50.3750
+Ngas,Gas,2049,154.9520
+Nuclear,Thermal generation,2049,874.9780
+Oil imports,Oil,2049,529.2870
+Oil reserves,Oil,2049,172.7030
+Oil,Liquid,2049,679.9900
+Other waste,Solid,2049,112.5870
+Other waste,Bio-conversion,2049,96.8100
+Pumped heat,Heating and cooling - homes,2049,216.0260
+Pumped heat,Heating and cooling - commercial,2049,164.6720
+Solar PV,Electricity grid,2049,134.9010
+Solar Thermal,Heating and cooling - homes,2049,115.2630
+Solar,Solar Thermal,2049,34.2630
+Solar,Solar PV,2049,102.9010
+Solid,Agriculture,2049,12.8820
+Solid,Thermal generation,2049,462.1200
+Solid,Industry,2049,46.4770
+Thermal generation,Electricity grid,2049,553.5310
+Thermal generation,Losses,2049,876.1290
+Thermal generation,District heating,2049,165.3290
+Tidal,Electricity grid,2049,64.4520
+UK land based bioenergy,Bio-conversion,2049,263.0100
+Wave,Electricity grid,2049,114.0130
+Wind,Electricity grid,2049,346.3660

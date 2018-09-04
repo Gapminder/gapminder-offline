@@ -4,7 +4,7 @@
             <div style = "padding: 9px;">
                 <a href style = "z-index: 1000" (click) = "$event.preventDefault(); logoAction()"
                    alt = "GAPMINDER TOOLS"><img
-                        src = "./public/logo.png" width = "167" height = "21"></a>
+                        src = "./assets/logo.gif" width = "167" height = "21"></a>
             </div>
             <div class = "scroll-control" *ngIf = "canMoveRight()">
                 <a href (click) = "$event.preventDefault()" (mousedown) = "actionScrollStart(-1)"
@@ -27,12 +27,12 @@
                             <span *ngIf = "!tab.editMode"
                                   class = "doNotEditTabInput">{{tab.title}}</span>
                             <span *ngIf = "tab.editMode">
-                                <ae-tab-title-edit (blur) = "resetEditMode()"
+                                <app-tab-title-edit (blur) = "resetEditMode()"
                                                    (enter) = "applyEditedTitle()"
                                                    (esc) = "dismissEditedTitle()"
                                                    [title] = "tab.title"
                                                    (titleChange) = "tab.title=$event">
-                                </ae-tab-title-edit>
+                                </app-tab-title-edit>
                             </span>
                             <span *ngIf = "tab.removable" (click) = "$event.preventDefault(); removeTab(tab);"
                                   class = "glyphicon glyphicon-remove-circle"></span>
@@ -59,7 +59,7 @@
             <div style = "width: 42px; height: 32px;">
                 <button type = "button"
                         (click) = "switchMenuAction($event)"
-                        class = "main-menu-btn"><img src = "./public/images/hamburger.png"/>
+                        class = "main-menu-btn"><img src = "assets/images/hamburger.png"/>
                 </button>
             </div>
         </div>

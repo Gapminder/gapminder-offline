@@ -8,6 +8,9 @@
     -moz-border-radius: 0;
     border-radius: 0px;
 }
+.btn-margin-left {
+  margin-left: 5px;
+}
 .progress-addition {
     margin-top: 8px;
 }

@@ -1,9 +1,8 @@
-declare const electron: any;
-
-import { AppComponent } from '../../app.component';
+import { HomeComponent } from '../home/home.component';
 import { TabModel } from '../tabs/tab.model';
+import { ElectronService } from '../../providers/electron.service';
 
-export const getMenuActions = (context: AppComponent) => ({
+export const getMenuActions = (context: HomeComponent, es: ElectronService) => ({
   gapminderChart: () => {
     context.isMenuOpened = false;
     context.chartService.initTab(context.tabsModel);
@@ -17,8 +16,8 @@ export const getMenuActions = (context: AppComponent) => ({
     context.isMenuOpened = false;
   },
   ddfFolderClick: (event: any, onFolderClickProcessed: Function) => {
-    const dialog = electron.remote.dialog;
-    const currentWindow = electron.remote.getCurrentWindow();
+    const dialog = es.remote.dialog;
+    const currentWindow = es.remote.getCurrentWindow();
 
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -35,7 +34,7 @@ export const getMenuActions = (context: AppComponent) => ({
   },
   open: () => {
     context.isMenuOpened = false;
-    electron.ipcRenderer.send('do-open');
+    es.ipcRenderer.send('do-open');
   },
   save: () => {
     const currentTab = context.getCurrentTab();
@@ -44,7 +43,7 @@ export const getMenuActions = (context: AppComponent) => ({
 
     context.isMenuOpened = false;
 
-    electron.ipcRenderer.send('do-save', {model, chartType: currentTab.chartType, title: currentTab.title});
+    es.ipcRenderer.send('do-save', {model, chartType: currentTab.chartType, title: currentTab.title});
   },
   saveAllTabs: () => {
     context.isMenuOpened = false;
@@ -63,7 +62,7 @@ export const getMenuActions = (context: AppComponent) => ({
       }
     });
 
-    electron.ipcRenderer.send('do-save-all-tabs', tabsDescriptors);
+    es.ipcRenderer.send('do-save-all-tabs', tabsDescriptors);
   },
   openValidationWindow: () => {
     context.validationModal.show();
@@ -77,7 +76,7 @@ export const getMenuActions = (context: AppComponent) => ({
 
     context.isMenuOpened = false;
 
-    electron.ipcRenderer.send('do-export-for-web', {model, chartType: currentTab.chartType});
+    es.ipcRenderer.send('do-export-for-web', {model, chartType: currentTab.chartType});
   },
   exportToSvg: () => {
     context.isMenuOpened = false;
@@ -90,7 +89,7 @@ export const getMenuActions = (context: AppComponent) => ({
 
     const e = document.createElement('script');
 
-    e.setAttribute('src', '../../resources/app/svg-crowbar.js');
+    e.setAttribute('src', './lib/svg-crowbar.js');
     e.setAttribute('id', 'svg-crowbar');
     e.setAttribute('class', 'svg-crowbar');
     e.setAttribute('data-svg-select', 'div[class="tab-pane"][style*="display: block"] div>svg.vzb-export');
@@ -108,7 +107,7 @@ export const getMenuActions = (context: AppComponent) => ({
 
     const e = document.createElement('script');
 
-    e.setAttribute('src', '../../resources/app/svg-crowbar.js');
+    e.setAttribute('src', './lib/svg-crowbar.js');
     e.setAttribute('id', 'svg-crowbar');
     e.setAttribute('class', 'svg-crowbar');
     e.setAttribute('transform', 'png');
@@ -122,6 +121,6 @@ export const getMenuActions = (context: AppComponent) => ({
   },
   openDevTools: () => {
     context.isMenuOpened = false;
-    electron.ipcRenderer.send('open-dev-tools');
+    es.ipcRenderer.send('open-dev-tools');
   }
 });

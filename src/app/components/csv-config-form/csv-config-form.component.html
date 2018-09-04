@@ -20,22 +20,19 @@
             <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: time values, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
             <div *ngIf="addDataMode" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: <span class="highl">{{getTime()}}</span>, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
         </div>
-        <div *ngIf="isExampleRows" class="example-container"><img src="./public/images/templates/time-as-rows-example.png" class="example-image"></div>
+        <div *ngIf="isExampleRows" class="example-container"><img src="assets/images/templates/time-as-rows-example.png" class="example-image"></div>
         <div>
             <label class="step-label"><input type="radio" name="choiceGroup" (change)="setChoice('columns')" [checked]="choice === 'columns'"> Time goes right</label>
             <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: indicators, Column 3 and on: time values (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
             <div *ngIf="addDataMode" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: indicators, Column 3 and on: time values (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
         </div>
-        <div *ngIf="isExampleColumns" class="example-container"><img src="./public/images/templates/time-as-columns-example.png" class="example-image"></div>
+        <div *ngIf="isExampleColumns" class="example-container"><img src="assets/images/templates/time-as-columns-example.png" class="example-image"></div>
     </div>
 
     <div class="step-block">
         <h4>Step {{addDataMode ? 2 : 3}}: Pick a file:</h4>
         <div>
-            <form [formGroup]="reactiveForm">
-                <smart-path-selector formControlName="result" (done) = "onCsvFileChanged($event)"></smart-path-selector>
-            </form>
-            <!--<p>form is valid: {{ reactiveForm.valid ? 'true' : 'false' }}</p>-->
+          <app-smart-path-selector [(ngModel)]="data.result" (done) = "onCsvFileChanged($event)"></app-smart-path-selector>
         </div>
     </div>
 

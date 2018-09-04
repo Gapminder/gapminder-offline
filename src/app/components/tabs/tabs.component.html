@@ -1,5 +1,5 @@
-<ae-tabs-new [syncActions]="getSyncActions()" [disabled]="disabled" style = "height: 100%;">
-    <ae-tab-new *ngFor = "let tab of tabsModel"
+<app-tabs-new [syncActions]="getSyncActions()" [disabled]="disabled" style = "height: 100%;">
+    <app-tab-new *ngFor = "let tab of tabsModel"
                 [title] = "tab.title"
                 [active] = "tab.active"
                 [removable] = "true"
@@ -11,19 +11,19 @@
             <div class = "tab-chart-choice">Choose Chart Type</div>
             <ul class = "tab-chart-list">
                 <li (click) = "selectChart('BubbleChart')">
-                    <div><img src = "./public/images/tools/bubblechart.png"><span>Bubbles</span></div>
+                    <div><img src = "assets/images/tools/bubblechart.png"><span>Bubbles</span></div>
                 </li>
                 <li (click) = "selectChart('BubbleMap')">
-                    <div><img src = "./public/images/tools/bubblemap.png"><span>Maps</span></div>
+                    <div><img src = "assets/images/tools/bubblemap.png"><span>Maps</span></div>
                 </li>
                 <li (click) = "selectChart('MountainChart')">
-                    <div><img src = "./public/images/tools/mountainchart.png"><span>Mountains</span></div>
+                    <div><img src = "assets/images/tools/mountainchart.png"><span>Mountains</span></div>
                 </li>
                 <li (click) = "selectChart('BarRankChart')">
-                    <div><img src = "./public/images/tools/barrankchart.png"><span>Rankings</span></div>
+                    <div><img src = "assets/images/tools/barrankchart.png"><span>Rankings</span></div>
                 </li>
                 <li (click) = "selectChart('LineChart')">
-                    <div><img src = "./public/images/tools/linechart.png"><span>Lines</span></div>
+                    <div><img src = "assets/images/tools/linechart.png"><span>Lines</span></div>
                 </li>
             </ul>
         </div>
@@ -39,7 +39,7 @@
                 </alert>
             </div>
 
-            <ae-tab-freshener *ngIf="tab.isDataExpired" [tab]="tab"></ae-tab-freshener>
+            <app-tab-freshener *ngIf="tab.isDataExpired" [tab]="tab"></app-tab-freshener>
 
             <vizabi *ngIf="tab.alerts.length <= 0"
                     style = "height: 100%;"
@@ -59,5 +59,5 @@
                     [restoreStateAfterReload]="true"
                     [chartType] = "tab.chartType"></vizabi>
         </div>
-    </ae-tab-new>
-</ae-tabs-new>
+    </app-tab-new>
+</app-tabs-new>

@@ -3,7 +3,7 @@ sleep 5
 yes | cp -rf ./cache-app/Gapminder\ Offline-linux/* .
 rm -rf ./cache-app
 
-\cp -r ./cache-ds/ddf--gapminder--systema_globalis-*/* ./resources/app/ddf--gapminder--systema_globalis
+\cp -r ./cache-ds/ddf--gapminder--systema_globalis-*/* ./resources/ddf--gapminder--systema_globalis
 rm -rf ./cache-ds
 
 rm ./update-required

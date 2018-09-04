@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, AfterContentInit, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
-  selector: 'ae-tab-title-edit',
+  selector: 'app-tab-title-edit',
   template: `
       <input #tabEditInput
              class = "editTabInput"
