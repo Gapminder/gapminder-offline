@@ -21,6 +21,6 @@ export class DdfFolderDescriptor {
   }
 
   public getDefaultUrl(): string {
-    return this.electronPath + '/ddf--gapminder--systema_globalis';
+    return this.electronPath.replace(/app\.asar/, '') + 'ddf--gapminder--systema_globalis';
   }
 }

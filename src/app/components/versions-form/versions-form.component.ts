@@ -1,25 +1,24 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-
-declare var electron: any;
+import { ElectronService } from '../../providers/electron.service';
 
 @Component({
-  selector: 'ae-versions-form',
-  template: require('./versions-form.component.html')
+  selector: 'app-versions-form',
+  templateUrl: './versions-form.component.html'
 })
 export class VersionsFormComponent implements OnInit {
-  @Output() public done: EventEmitter<any> = new EventEmitter();
+  @Output() done: EventEmitter<any> = new EventEmitter();
 
-  private versions: string[] = [];
-  private recommendedVersion: string;
-  private currentVersion: string;
-  private latestVersion: string;
+  versions: string[] = [];
+  recommendedVersion: string;
+  currentVersion: string;
+  latestVersion: string;
 
-  public constructor() {
-    electron.ipcRenderer.send('get-supported-versions');
+  constructor(private es: ElectronService) {
+    this.es.ipcRenderer.send('get-supported-versions');
   }
 
-  public ngOnInit(): void {
-    electron.ipcRenderer.on('got-supported-versions',
+  ngOnInit() {
+    this.es.ipcRenderer.on('got-supported-versions',
       (event: any, versions: string[], recommendedVersion: string, currentVersion: string) => {
         this.recommendedVersion = recommendedVersion;
         this.currentVersion = currentVersion;
@@ -28,15 +27,15 @@ export class VersionsFormComponent implements OnInit {
       });
   }
 
-  public update(version: string): void {
+  update(version: string) {
     this.done.emit(version);
   }
 
-  public close(): void {
+  close() {
     this.done.emit();
   }
 
-  public getVersionLabel(version: string): string {
+  getVersionLabel(version: string) {
     if (version === this.currentVersion && version === this.recommendedVersion) {
       return '(you have the recommended version)';
     }

@@ -1,18 +1,11 @@
-import * as path from 'path';
-import * as api from 'ddf-validation';
-import * as fs from 'fs';
 import { Injectable } from '@angular/core';
 import { TabModel } from './tab.model';
 import { DdfFolderDescriptor } from '../descriptors/ddf-folder.descriptor';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { MessageService } from '../../message.service';
-import { ABANDON_VALIDATION, MODEL_CHANGED } from '../../constants';
+import { MODEL_CHANGED } from '../../constants';
+import { ElectronService } from '../../providers/electron.service';
 
-const BarRankChart = require('vizabi-barrankchart');
-const BubbleChart = require('vizabi-bubblechart');
-const BubbleMap = require('vizabi-bubblemap');
-const LineChart = require('vizabi-linechart');
-const MountainChart = require('vizabi-mountainchart');
 const configSg = {
   BarRankChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BarRankChart.json'),
   BubbleChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleChart.json'),
@@ -20,32 +13,28 @@ const configSg = {
   LineChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/LineChart.json'),
   MountainChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/MountainChart.json')
 };
-const ddfCsvReaderLib = require('vizabi-ddfcsv-reader');
-const BackendFileReader = ddfCsvReaderLib.BackendFileReader;
 
 @Injectable()
 export class ChartService {
-  public isDevMode: boolean = false;
-  public ddfFolderDescriptor: DdfFolderDescriptor;
-  public currentTab: TabModel;
-  public messageService: MessageService;
+  isDevMode = false;
+  ddfFolderDescriptor: DdfFolderDescriptor;
+  currentTab: TabModel;
 
-  public static getFirst(arr: any[]): any {
+  static getFirst(arr: any[]): any {
     return arr && arr.length > 0 ? arr[0] : null;
   }
 
-  public constructor(messageService: MessageService) {
-    this.messageService = messageService;
+  constructor(private messageService: MessageService, private es: ElectronService) {
     this.ddfFolderDescriptor = new DdfFolderDescriptor();
   }
 
-  public log(message?: any, ...optionalParams: any[]): void {
+  log(message?: any, ...optionalParams: any[]) {
     if (this.isDevMode) {
       console.log(message, ...optionalParams);
     }
   }
 
-  public initTab(tabsModel: TabModel[], chartType: string = ''): void {
+  initTab(tabsModel: TabModel[], chartType: string = '') {
     const newTab = new TabModel(chartType, true);
 
     tabsModel.forEach((tab: TabModel) => tab.active = false);
@@ -54,14 +43,15 @@ export class ChartService {
     this.messageService.sendMessage(MODEL_CHANGED);
   }
 
-  public setReaderDefaults(tab: TabModel | TabDataDescriptor): void {
-    tab.readerModuleObject = ddfCsvReaderLib;
+  setReaderDefaults(tab: TabModel | TabDataDescriptor) {
+    const BackendFileReader = this.es.ddfCsvReader.BackendFileReader;
+    tab.readerModuleObject = this.es.ddfCsvReader;
     tab.readerGetMethod = 'getDDFCsvReaderObject';
     tab.readerPlugins = this.isDevMode ? [new BackendFileReader(), console] : [new BackendFileReader()];
     tab.readerName = 'ddf1-csv-ext';
   }
 
-  public newChart(tab: TabModel, tabDataDescriptor: TabDataDescriptor, isDefaults: boolean = true): string {
+  newChart(tab: TabModel, tabDataDescriptor: TabDataDescriptor, isDefaults: boolean = true): string {
     if (isDefaults) {
       this.ddfFolderDescriptor.defaults();
     }
@@ -84,13 +74,13 @@ export class ChartService {
       reader: 'ddf1-csv-ext',
       ddfPath: this.ddfFolderDescriptor.ddfUrl,
       path: this.ddfFolderDescriptor.ddfUrl,
-      assetsPath: './preview-data/',
+      assetsPath: this.ddfFolderDescriptor.electronPath + '/preview-data/',
       _lastModified: ddfFolderDescriptor.lastModified
     };
 
     config.locale = {
       id: 'en',
-      filePath: './preview-data/translation/'
+      filePath: this.ddfFolderDescriptor.electronPath  + '/preview-data/translation/'
     };
 
     config.ui.splash = false;
@@ -105,10 +95,10 @@ export class ChartService {
     return null;
   }
 
-  public newSimpleChart(tabsModel: TabModel[], properties: any, onChartReady ?: Function): void {
+  newSimpleChart(tabsModel: TabModel[], properties: any, onChartReady ?: Function) {
     const newTab = new TabModel(properties.chartType, true);
 
-    fs.stat(properties.path, (err: any, stats: any) => {
+    this.es.fs.stat(properties.path, (err: any, stats: any) => {
       newTab.chartType = properties.chartType;
       newTab.model = {
         data: {
@@ -139,17 +129,17 @@ export class ChartService {
     });
   }
 
-  public getCurrentTab(tabsModel: TabModel[]): TabModel {
+  getCurrentTab(tabsModel: TabModel[]): TabModel {
     return tabsModel.find((tab: TabModel) => tab.active);
   }
 
-  public areChartsAvailable(tabsModel: TabModel[]): boolean {
+  areChartsAvailable(tabsModel: TabModel[]): boolean {
     return tabsModel.filter((tab: TabModel) => tab.chartType).length > 0;
   }
 
-  public getLastModifiedForFile(filePath: string): number | null {
+  getLastModifiedForFile(filePath: string): number | null {
     try {
-      const stats = fs.statSync(filePath);
+      const stats = this.es.fs.statSync(filePath);
 
       return stats.mtime.valueOf();
     } catch (err) {
@@ -162,9 +152,9 @@ export class ChartService {
     let lastModified = null;
 
     try {
-      const folderStats = fs.statSync(ddfUrl);
-      const dataPackageFile = path.resolve(ddfUrl, 'datapackage.json');
-      const dataPackageStats = fs.statSync(dataPackageFile);
+      const folderStats = this.es.fs.statSync(ddfUrl);
+      const dataPackageFile = this.es.path.resolve(ddfUrl, 'datapackage.json');
+      const dataPackageStats = this.es.fs.statSync(dataPackageFile);
 
       lastModified = folderStats.isDirectory() && dataPackageStats.isFile() ? folderStats.mtime.toISOString() : null;
     } catch (_error) {

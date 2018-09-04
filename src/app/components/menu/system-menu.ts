@@ -1,9 +1,9 @@
-import { AppComponent } from '../../app.component';
+import { HomeComponent } from '../home/home.component';
+import MenuItemConstructorOptions = Electron.MenuItemConstructorOptions;
+import { ElectronService } from '../../providers/electron.service';
 
-declare const electron: any;
-
-export const initMenuComponent = (appComponent: AppComponent) => {
-  const templateMenu = [
+export const initMenuComponent = (appComponent: HomeComponent, es: ElectronService) => {
+  const templateMenu: MenuItemConstructorOptions[] = [
     {
       label: 'File',
       submenu: [
@@ -38,7 +38,8 @@ export const initMenuComponent = (appComponent: AppComponent) => {
             },
             {
               label: 'DDF folder',
-              click: () => appComponent.menuActions.ddfFolderClick(new MouseEvent('click'), appComponent.onDdfExtFolderChanged.bind(appComponent))
+              click: () => appComponent.menuActions.ddfFolderClick(
+                new MouseEvent('click'), appComponent.onDdfExtFolderChanged.bind(appComponent))
             }
           ]
         },
@@ -89,13 +90,13 @@ export const initMenuComponent = (appComponent: AppComponent) => {
     {
       label: 'Edit',
       submenu: [
-        {label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:'},
-        {label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:'},
+        {label: 'Undo', accelerator: 'CmdOrCtrl+Z'},
+        {label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z'},
         {type: 'separator'},
-        {label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:'},
-        {label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:'},
-        {label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:'},
-        {label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:'}
+        {label: 'Cut', accelerator: 'CmdOrCtrl+X'},
+        {label: 'Copy', accelerator: 'CmdOrCtrl+C'},
+        {label: 'Paste', accelerator: 'CmdOrCtrl+V'},
+        {label: 'Select All', accelerator: 'CmdOrCtrl+A'}
       ]
     },
     {
@@ -112,7 +113,7 @@ export const initMenuComponent = (appComponent: AppComponent) => {
         },
         {
           label: 'Toggle Developer Tools',
-          accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+          // accelerator: es.process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
           click(item: any, focusedWindow: any): void {
             if (focusedWindow) {
               focusedWindow.webContents.toggleDevTools();
@@ -160,13 +161,13 @@ export const initMenuComponent = (appComponent: AppComponent) => {
         {
           label: 'Learn More',
           click: () => {
-            electron.shell.openExternal('https://github.com/VS-work/gapminder-offline');
+            es.shell.openExternal('https://github.com/VS-work/gapminder-offline');
           }
         }
       ]
     }
   ];
-  const Menu = electron.remote.Menu;
+  const Menu = es.remote.Menu;
 
   appComponent.menuComponent = Menu.buildFromTemplate(templateMenu);
   Menu.setApplicationMenu(appComponent.menuComponent);

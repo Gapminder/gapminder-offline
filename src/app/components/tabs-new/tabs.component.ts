@@ -17,28 +17,27 @@ import {
   CLEAR_EDITABLE_TABS_ACTION, TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, SWITCH_MENU_ACTION,
   MODEL_CHANGED
 } from '../../constants';
-import { ChartService } from '../tabs/chart.service';
 
 const TAB_TIMEOUT = 100;
 const SCROLL_TIMEOUT = 200;
 
 @Component({
-  selector: 'ae-tabs-new',
-  template: require('./tabs.component.html'),
+  selector: 'app-tabs-new',
+  templateUrl: './tabs.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsNewComponent implements AfterViewInit, OnDestroy {
-  @ContentChildren(TabNewComponent) public tabs: QueryList<TabNewComponent>;
-  @Input() public syncActions: ITabActionsSynchronizer;
-  @Input() public disabled: boolean;
+  @ContentChildren(TabNewComponent) tabs: QueryList<TabNewComponent>;
+  @Input() syncActions: ITabActionsSynchronizer;
+  @Input() disabled: boolean;
 
-  @ViewChild('tabsContainer') public tabsContainer: ElementRef;
-  public messageService: MessageService;
-  public subscription: Subscription;
+  @ViewChild('tabsContainer') tabsContainer: ElementRef;
+  messageService: MessageService;
+  subscription: Subscription;
 
   private intervalId: any;
 
-  public constructor(messageService: MessageService) {
+  constructor(messageService: MessageService) {
     this.messageService = messageService;
     this.subscription = this.messageService.getMessage()
       .subscribe((event: any) => {
@@ -56,7 +55,7 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  public ngAfterViewInit(): void {
+  ngAfterViewInit() {
     this.tabs.changes.subscribe(() => {
       this.tabs.forEach((tab: TabNewComponent) => {
         tab.editMode = false;
@@ -64,15 +63,15 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  public ngOnDestroy(): void {
+  ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
-  public getEditableTab(): TabNewComponent {
+  getEditableTab(): TabNewComponent {
     return this.tabs.find((tab: TabNewComponent) => tab.editMode);
   }
 
-  public getTabIndex(currentTab: TabNewComponent): number {
+  getTabIndex(currentTab: TabNewComponent): number {
     let currentTabIndex = -1;
 
     this.tabs.forEach((tab: TabNewComponent, index: number) => {
@@ -84,7 +83,7 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
     return currentTabIndex;
   }
 
-  public selectTab(selectedTab: TabNewComponent): void {
+  selectTab(selectedTab: TabNewComponent) {
     if (!this.disabled) {
       let editModeFired = false;
 
@@ -111,7 +110,7 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
     this.messageService.sendMessage(MODEL_CHANGED);
   }
 
-  public removeTab(tab: TabNewComponent): void {
+  removeTab(tab: TabNewComponent) {
     if (!this.disabled) {
       const tabsAsArray: TabNewComponent[] = this.getTabsAsArray();
       const index = tabsAsArray.indexOf(tab);
@@ -135,11 +134,11 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  public getTabsAsArray(): TabNewComponent[] {
+  getTabsAsArray(): TabNewComponent[] {
     return this.tabs.toArray();
   }
 
-  public applyEditedTitle(): void {
+  applyEditedTitle() {
     if (!this.disabled) {
       const editableTab = this.getEditableTab();
 
@@ -148,13 +147,13 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  public dismissEditedTitle(): void {
+  dismissEditedTitle() {
     if (!this.disabled) {
       this.getEditableTab().dismissEditedTitle();
     }
   }
 
-  public resetEditMode(): void {
+  resetEditMode() {
     if (!this.disabled) {
       this.tabs.forEach((tab: TabNewComponent, index: number) => {
         if (tab.editMode) {
@@ -165,11 +164,11 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  public logoAction(): void {
+  logoAction() {
     this.messageService.sendMessage(TABS_LOGO_ACTION);
   }
 
-  public addTabAction(): void {
+  addTabAction() {
     this.messageService.sendMessage(TABS_ADD_TAB_ACTION);
 
     const el = this.tabsContainer.nativeElement;
@@ -179,20 +178,20 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
     }, TAB_TIMEOUT);
   }
 
-  public switchMenuAction(event: any): void {
+  switchMenuAction(event: any) {
     event.stopPropagation();
     event.preventDefault();
     this.messageService.sendMessage(SWITCH_MENU_ACTION);
   }
 
-  public actionScroll(direction: number): void {
+  actionScroll(direction: number) {
     const el = this.tabsContainer.nativeElement;
     const tabWidthWithDirection = direction * el.children[0].getBoundingClientRect().width;
 
     el.scrollLeft += tabWidthWithDirection;
   }
 
-  public actionScrollStart(direction: number): void {
+  actionScrollStart(direction: number) {
     if (!this.intervalId) {
       this.actionScroll(direction);
 
@@ -202,24 +201,24 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  public actionScrollFinish(): void {
+  actionScrollFinish() {
     clearInterval(this.intervalId);
     this.intervalId = null;
   }
 
-  public autoScroll(): void {
+  autoScroll() {
     const el = this.tabsContainer.nativeElement;
 
     el.scrollLeft = el.scrollLeft;
   }
 
-  public canMoveRight(): boolean {
+  canMoveRight(): boolean {
     const el = this.tabsContainer.nativeElement;
 
     return el.scrollLeft > 0;
   }
 
-  public canMoveLeft(): boolean {
+  canMoveLeft(): boolean {
     const el = this.tabsContainer.nativeElement;
     const width = Math.ceil(el.getBoundingClientRect().width);
     const scrollWidth = Math.ceil(el.scrollWidth);

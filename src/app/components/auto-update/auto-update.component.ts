@@ -1,8 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-
-declare var electron: any;
-
-const ipc = electron.ipcRenderer;
+import { ElectronService } from '../../providers/electron.service';
 
 export interface ProgressDescriptor {
   progress: string | number;
@@ -17,38 +14,48 @@ export interface VersionDescriptor {
 }
 
 @Component({
-  selector: 'ae-auto-update',
-  styles: [require('./auto-update.component.css')],
-  template: require('./auto-update.component.html')
+  selector: 'app-auto-update',
+  templateUrl: './auto-update.component.html',
+  styleUrls: ['./auto-update.component.css']
 })
 export class AutoUpdateComponent implements OnInit {
-  @Output() public onAutoUpdateRequested: EventEmitter<any> = new EventEmitter();
-  @Output() public onAutoUpdateProgress: EventEmitter<any> = new EventEmitter();
-  @Output() public onAutoUpdateCompleted: EventEmitter<any> = new EventEmitter();
+  @Output() onAutoUpdateRequested: EventEmitter<any> = new EventEmitter();
+  @Output() onAutoUpdateProgress: EventEmitter<any> = new EventEmitter();
+  @Output() onAutoUpdateCompleted: EventEmitter<any> = new EventEmitter();
 
-  public requestToUpdate: boolean = false;
-  public requestToDatasetUpdate: boolean = false;
-  public requestToProgress: boolean = false;
-  public requestToExitAndFinishUpdate: boolean = false;
-  public max: number = 200;
-  public progress: number = 0;
-  public error: boolean = false;
-  public versionDescriptor: VersionDescriptor;
+  requestToUpdate = false;
+  requestToDatasetUpdate = false;
+  requestToProgress = false;
+  requestToExitAndFinishUpdate = false;
+  max = 200;
+  progress = 0;
+  error = false;
+  versionDescriptor: VersionDescriptor;
   /* todo: try to use it later */
-  public downloadLinks: any = {
+  downloadLinks: any = {
     linux: 'https://s3-eu-west-1.amazonaws.com/gapminder-offline/Gapminder%20Offline-linux.zip',
     darwin: 'https://s3-eu-west-1.amazonaws.com/gapminder-offline/Install%20Gapminder%20Offline.dmg',
     win32x64: 'https://s3-eu-west-1.amazonaws.com/gapminder-offline/Install%20Gapminder%20Offline-64.exe',
     win32ia32: 'https://s3-eu-west-1.amazonaws.com/gapminder-offline/Install%20Gapminder%20Offline-32.exe'
   };
+  fullUpdateRequest = false;
 
   private progressMap: Map<string, ProgressDescriptor> = new Map<string, ProgressDescriptor>();
 
-  public ngOnInit(): void {
-    electron.ipcRenderer.send('check-version');
+  constructor(private es: ElectronService) {
+  }
 
-    ipc.on('request-and-update', (event: any, versionDescriptor: VersionDescriptor) => {
+  ngOnInit() {
+    this.es.ipcRenderer.send('check-version');
+
+    this.es.ipcRenderer.on('full-update-request', (event: any, versionDescriptor: VersionDescriptor) => {
       this.versionDescriptor = versionDescriptor;
+      this.fullUpdateRequest = true;
+    });
+
+    this.es.ipcRenderer.on('request-and-update', (event: any, versionDescriptor: VersionDescriptor) => {
+      this.versionDescriptor = versionDescriptor;
+      this.fullUpdateRequest = false;
 
       if (versionDescriptor.actualVersionGenericUpdate) {
         this.requestToUpdate = true;
@@ -56,7 +63,7 @@ export class AutoUpdateComponent implements OnInit {
       }
     });
 
-    ipc.on('request-to-update', (event: any, versionDescriptor: VersionDescriptor) => {
+    this.es.ipcRenderer.on('request-to-update', (event: any, versionDescriptor: VersionDescriptor) => {
       this.versionDescriptor = versionDescriptor;
 
       if (versionDescriptor.actualVersionDsUpdate || versionDescriptor.actualVersionGenericUpdate) {
@@ -67,14 +74,7 @@ export class AutoUpdateComponent implements OnInit {
       }
     });
 
-    /*ipc.on('request-to-ds-update', (event: any, version: string) => {
-      if (version) {
-        this.requestToDatasetUpdate = true;
-        this.onAutoUpdateRequested.emit();
-      }
-    });*/
-
-    ipc.on('download-progress', (event: any, progressDescriptor: ProgressDescriptor) => {
+    this.es.ipcRenderer.on('download-progress', (event: any, progressDescriptor: ProgressDescriptor) => {
       progressDescriptor.progress = Number(progressDescriptor.progress);
 
       this.progressMap.set(progressDescriptor.cacheDir, progressDescriptor);
@@ -82,7 +82,7 @@ export class AutoUpdateComponent implements OnInit {
       this.onAutoUpdateProgress.emit();
     });
 
-    ipc.on('unpack-progress', (event: any, progressDescriptor: ProgressDescriptor) => {
+    this.es.ipcRenderer.on('unpack-progress', (event: any, progressDescriptor: ProgressDescriptor) => {
       progressDescriptor.progress = Number(progressDescriptor.progress) + 100;
 
       this.progressMap.set(progressDescriptor.cacheDir, progressDescriptor);
@@ -90,7 +90,7 @@ export class AutoUpdateComponent implements OnInit {
       this.onAutoUpdateProgress.emit();
     });
 
-    ipc.on('unpack-complete', (event: any, error: string) => {
+    this.es.ipcRenderer.on('unpack-complete', (event: any, error: string) => {
       if (error) {
         console.log(error);
       }
@@ -100,41 +100,43 @@ export class AutoUpdateComponent implements OnInit {
       this.onAutoUpdateCompleted.emit();
     });
 
-    ipc.on('auto-update-error', () => {
+    this.es.ipcRenderer.on('auto-update-error', () => {
       this.error = true;
       this.requestToProgress = false;
       this.onAutoUpdateRequested.emit();
     });
   }
 
-  public processUpdateRequest(version?: string): void {
-    electron.ipcRenderer.send('prepare-update', version);
+  processUpdateRequest(version?: string) {
+    this.es.ipcRenderer.send('prepare-update', version);
     this.resetUpdateRequest();
-
     this.requestToProgress = true;
     this.progressMap.clear();
     this.onAutoUpdateRequested.emit();
   }
 
-  public resetUpdateRequest(): void {
+  resetUpdateRequest() {
     this.requestToUpdate = false;
+    this.requestToDatasetUpdate = false;
   }
 
-  public processExitAndFinishUpdateRequest(): void {
-    electron.ipcRenderer.send('exit-and-update');
+  exitAndUpdate() {
+    this.es.ipcRenderer.send('exit-and-update');
   }
 
-  public resetError(): void {
+  resetError() {
     this.error = false;
   }
 
-  public openURL(url: string): void {
-    electron.shell.openItem(url);
+  openURL(url: string) {
+    this.es.shell.openExternal(url);
   }
 
-  public cancel(): void {
+  cancel() {
     this.requestToUpdate = false;
     this.requestToDatasetUpdate = false;
+    this.requestToExitAndFinishUpdate = false;
+    this.fullUpdateRequest = false;
   }
 
   private getTotalProgress(): number {

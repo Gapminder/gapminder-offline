@@ -1,5 +1,5 @@
 const appdmg = require('appdmg');
-const ee = appdmg({source: 'dmg-builder/dmg-config.json', target: 'release/Install Gapminder Offline.dmg'});
+const ee = appdmg({source: 'dmg-builder/dmg-config.json', target: 'app-builds/Install Gapminder Offline.dmg'});
 
 ee.on('progress', info => {
   console.log('Build DMG: step ', info.current, ' of ', info.total);

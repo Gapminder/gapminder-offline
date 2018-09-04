@@ -2,9 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ChartService } from '../tabs/chart.service';
 import { isEmpty } from 'lodash';
 import { TabModel } from '../tabs/tab.model';
-import { FormBuilder, FormGroup } from '@angular/forms';
-
-declare const electron: any;
+import { ElectronService } from '../../providers/electron.service';
 
 const vizabiStateFacade: any = {
   getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
@@ -24,18 +22,17 @@ const vizabiStateFacade: any = {
 };
 
 @Component({
-  selector: 'ae-csv-config-form',
-  template: require('./csv-config-form.component.html'),
-  styles: [require('./csv-config-form.component.css')]
+  selector: 'app-csv-config-form',
+  templateUrl: './csv-config-form.component.html',
+  styleUrls: ['./csv-config-form.component.css']
 })
 export class CsvConfigFormComponent {
-  @Input() public addDataMode?: boolean = false;
-  @Output() public done: EventEmitter<any> = new EventEmitter();
+  @Input() addDataMode ? = false;
+  @Output() done: EventEmitter<any> = new EventEmitter();
 
-  public reactiveForm: FormGroup;
-  public timeFormats: string[] = ['year', 'month', 'day', 'week', 'quarter'];
-  public timeFormat: string = this.timeFormats[0];
-  public timeFormatDescription: any = {
+  timeFormats: string[] = ['year', 'month', 'day', 'week', 'quarter'];
+  timeFormat: string = this.timeFormats[0];
+  timeFormatDescription: any = {
     year: {
       example: '2017',
       state: {}
@@ -73,32 +70,29 @@ export class CsvConfigFormComponent {
       }
     }
   };
+  isExampleRows = false;
+  isExampleColumns = false;
+  useYourDataVisible = false;
+  delimiter = 'auto';
+  chartType = 'BubbleChart';
+  choice = '';
+  file = '';
+  lastModified = '';
+  data = {
+    result: ''
+  };
 
   private _currentTab: TabModel;
 
-  private chartService: ChartService;
-  private chartType: string = 'BubbleChart';
-  private choice: string = '';
-  private isExampleRows: boolean = false;
-  private isExampleColumns: boolean = false;
-  private useYourDataVisible: boolean = false;
-  private delimiter: string = 'auto';
-  private file: string = '';
-  private lastModified: string = '';
-
-  public constructor(chartService: ChartService, fb: FormBuilder) {
-    this.chartService = chartService;
-    this.reactiveForm = fb.group({
-      result: ['']
-    });
+  constructor(private chartService: ChartService, private es: ElectronService) {
   }
 
   @Input()
-  public get currentTab(): TabModel {
+  get currentTab(): TabModel {
     return this._currentTab;
   }
 
-  public set currentTab(currentTab: TabModel) {
+  set currentTab(currentTab: TabModel) {
     this._currentTab = currentTab;
 
     let newTimeFormat = '';
@@ -110,7 +104,7 @@ export class CsvConfigFormComponent {
     this.timeFormat = newTimeFormat || this.timeFormats[0];
   }
 
-  public ok(): void {
+  ok() {
     const config: any = {
       chartType: this.chartType,
       reader: this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
@@ -131,16 +125,16 @@ export class CsvConfigFormComponent {
     // this.reset();
   }
 
-  public close(): void {
+  close() {
     this.done.emit();
   }
 
-  public openURL(url: string): void {
-    electron.shell.openExternal(url);
+  openURL(url: string) {
+    this.es.shell.openExternal(url);
   }
 
   /*
-  private reset(): void {
+  private reset() {
     this.choice = '';
     this.isExampleRows = false;
     this.isExampleColumns = false;
@@ -148,11 +142,11 @@ export class CsvConfigFormComponent {
   }
   */
 
-  private getCurrentTabInstance(): boolean {
+  getCurrentTabInstance(): boolean {
     return this.chartService.currentTab && this.chartService.currentTab.instance ? this.chartService.currentTab.instance : null;
   }
 
-  private getDim(): string {
+  getDim(): string {
     const currentTabInstance: any = this.getCurrentTabInstance();
 
     if (currentTabInstance) {
@@ -162,7 +156,7 @@ export class CsvConfigFormComponent {
     return '';
   }
 
-  private getTime(): string {
+  getTime(): string {
     const currentTabInstance: any = this.getCurrentTabInstance();
 
     if (currentTabInstance) {
@@ -172,7 +166,7 @@ export class CsvConfigFormComponent {
     return currentTabInstance ? currentTabInstance.model.state.time.dim : null;
   }
 
-  private getCountries(): string {
+  getCountries(): string {
     const currentTabInstance: any = this.getCurrentTabInstance();
 
     if (currentTabInstance) {
@@ -182,7 +176,7 @@ export class CsvConfigFormComponent {
     return '';
   }
 
-  private getTimePoints(): string {
+  getTimePoints(): string {
     const currentTabInstance: any = this.getCurrentTabInstance();
 
     if (currentTabInstance) {
@@ -192,19 +186,19 @@ export class CsvConfigFormComponent {
     return '';
   }
 
-  private switchExampleRows(): void {
+  switchExampleRows() {
     this.isExampleRows = !this.isExampleRows;
   }
 
-  private switchExampleColumns(): void {
+  switchExampleColumns() {
     this.isExampleColumns = !this.isExampleColumns;
   }
 
-  private switchUseYourDataVisible(): void {
+  switchUseYourDataVisible() {
     this.useYourDataVisible = !this.useYourDataVisible;
   }
 
-  private onCsvFileChanged(fileDescriptor: any): void {
+  onCsvFileChanged(fileDescriptor: any) {
     if (fileDescriptor) {
       this.file = fileDescriptor.file;
       this.lastModified = fileDescriptor.lastModified;
@@ -214,11 +208,11 @@ export class CsvConfigFormComponent {
     }
   }
 
-  private setChoice(choice: string): void {
+  setChoice(choice: string) {
     this.choice = choice;
   }
 
-  private setChartType(chartType: string): void {
+  setChartType(chartType: string) {
     this.chartType = chartType;
   }
 }

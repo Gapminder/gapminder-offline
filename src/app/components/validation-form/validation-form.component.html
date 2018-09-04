@@ -1,10 +1,10 @@
 <div>
   <div class="popup-block">
     <div class="title">Validate a <a href="#" (click)="openURL('https://docs.google.com/document/d/1aynARjsrSgOKsO1dEqboTqANRD1O9u7J_xmxy8m5jW8')">DDFcsv dataset:</a></div>
-    <smart-path-selector [isDirectory]="true"
+    <app-smart-path-selector [isDirectory]="true"
                          [title]="'Choose directory'"
                          [clearValueAfterHide]="true"
-                         (done)="onDirectorySelected($event)"></smart-path-selector>
+                         (done)="onDirectorySelected($event)"></app-smart-path-selector>
     <button (click)="validate()" [disabled]="!ddfFolder">Validate</button>
     <a href="#" (click)="areOptionsVisible=!areOptionsVisible" style="margin-left: 5px;">{{areOptionsVisible ? 'Hide' : 'Show'}} Options</a>
   </div>
@@ -38,8 +38,8 @@
 
   <div *ngIf="doesValidationRunning || isResultReady" class="popup-block validating-container">
     <div *ngIf="doesValidationRunning" class="validating-container">
-      <div><img src="./public/images/hourglass.gif"></div>
-      <div><b>Dataset is validating:</b> <span>{{statusLine}}</span></div>
+      <div><img src="assets/images/hourglass.gif"></div>
+      <div><b>Dataset is validating:</b>&nbsp;<span>{{statusLine}}</span></div>
       <div><a href="#" (click)="abandon()" style="margin-left: 10px;">Stop validation</a></div>
     </div>
 

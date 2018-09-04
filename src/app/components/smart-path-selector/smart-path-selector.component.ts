@@ -1,5 +1,3 @@
-import * as path from 'path';
-import * as fs from 'fs';
 import {
   AfterContentChecked,
   Component,
@@ -12,11 +10,12 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl, Validator } from '@angular/forms';
 import { ChartService } from '../tabs/chart.service';
+import { ElectronService } from '../../providers/electron.service';
 
 @Component({
-  selector: 'smart-path-selector',
-  template: require('./smart-path-selector.component.html'),
-  styles: [require('./smart-path-selector.component.css')],
+  selector: 'app-smart-path-selector',
+  templateUrl: './smart-path-selector.component.html',
+  styleUrls: ['./smart-path-selector.component.css'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -30,22 +29,25 @@ import { ChartService } from '../tabs/chart.service';
     }]
 })
 export class SmartPathSelectorComponent implements ControlValueAccessor, Validator, AfterContentChecked {
-  @Input() public isDirectory: boolean;
-  @Input() public title: string = 'Choose CSV file';
-  @Input() public accept: string = '.csv';
-  @Input() public clearValueAfterHide: boolean;
-  @Output() public done: EventEmitter<any> = new EventEmitter();
-  @ViewChild('uploadBtn') public uploadBtn: ElementRef;
-  @ViewChild('uploadFileInput') public uploadFileInput: ElementRef;
-  public directory: string = '';
-  public file: string = '';
-  public fileDoesNotExistsError: boolean;
-  public data: any;
+  @Input() isDirectory: boolean;
+  @Input() title = 'Choose CSV file';
+  @Input() accept = '.csv';
+  @Input() clearValueAfterHide: boolean;
+  @Output() done: EventEmitter<any> = new EventEmitter();
+  @ViewChild('uploadBtn') uploadBtn: ElementRef;
+  @ViewChild('uploadFileInput') uploadFileInput: ElementRef;
+  directory = '';
+  file = '';
+  fileDoesNotExistsError: boolean;
+  data: any;
 
-  private filePath: string = '';
+  private filePath = '';
   private lastModified: number;
 
-  public ngAfterContentChecked(): void {
+  constructor(private es: ElectronService) {
+  }
+
+  ngAfterContentChecked() {
     if (!this.clearValueAfterHide) {
       return;
     }
@@ -58,17 +60,17 @@ export class SmartPathSelectorComponent implements ControlValueAccessor, Validat
     }
   }
 
-  public writeValue(obj: any): void {
+  writeValue(obj: any) {
     if (obj) {
       this.data = obj;
       this.prepareResultIfOk(this.data);
     }
   }
 
-  public registerOnChange(fn: any): void {
+  registerOnChange(fn: any) {
   }
 
-  public validate(c: FormControl): any {
+  validate(c: FormControl): any {
     return (!this.fileDoesNotExistsError) ? null : {
       fileExistsError: {
         valid: false
@@ -76,14 +78,14 @@ export class SmartPathSelectorComponent implements ControlValueAccessor, Validat
     };
   }
 
-  public registerOnTouched(): void {
+  registerOnTouched() {
   }
 
-  public onChange(event: any): void {
-    const newValue = this.filePath ? path.resolve(this.filePath, event.target.value) : event.target.value;
+  onChange(event: any) {
+    const newValue = this.filePath ? this.es.path.resolve(this.filePath, event.target.value) : event.target.value;
 
     try {
-      const stats = fs.statSync(newValue);
+      const stats = this.es.fs.statSync(newValue);
 
       this.data = newValue;
       this.lastModified = stats.mtime.valueOf();
@@ -95,7 +97,7 @@ export class SmartPathSelectorComponent implements ControlValueAccessor, Validat
     this.prepareResultIfOk(newValue);
   }
 
-  public onCsvFileChanged(event: any): void {
+  public onCsvFileChanged(event: any) {
     const selectedFile = ChartService.getFirst(event.srcElement.files);
 
     if (selectedFile) {
@@ -106,13 +108,13 @@ export class SmartPathSelectorComponent implements ControlValueAccessor, Validat
     }
   }
 
-  private prepareResultIfOk(fileOrDirectory: string): void {
+  private prepareResultIfOk(fileOrDirectory: string) {
     if (!this.fileDoesNotExistsError) {
       if (this.isDirectory) {
         this.directory = fileOrDirectory;
         this.done.emit({file: fileOrDirectory, lastModified: this.lastModified});
       } else {
-        const fileDescriptor = path.parse(fileOrDirectory);
+        const fileDescriptor = this.es.path.parse(fileOrDirectory);
         this.file = fileDescriptor.base;
         this.filePath = fileDescriptor.dir;
         this.done.emit({file: fileOrDirectory, lastModified: this.lastModified});
