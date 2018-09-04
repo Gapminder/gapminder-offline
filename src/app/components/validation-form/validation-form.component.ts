@@ -7,6 +7,11 @@ import { Subscription } from 'rxjs/Subscription';
 
 declare var electron: any;
 
+interface ChartOption {
+  label: string;
+  type: string;
+}
+
 @Component({
   selector: 'ae-validation-form',
   template: require('./validation-form.component.html'),
@@ -15,6 +20,7 @@ declare var electron: any;
 export class ValidationFormComponent implements OnInit, OnDestroy {
   @Output() public done: EventEmitter<any> = new EventEmitter();
 
+  public ERRORS_LIMIT: number = 50;
   public USE_CURRENT_DATA_PACKAGE: string = 'useCurrentDataPackage';
   public CREATE_NEW_DATA_PACKAGE: string = 'createNewDataPackage';
   public dataPackageMode: string = this.USE_CURRENT_DATA_PACKAGE;
@@ -25,6 +31,15 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
   public doesValidationRunning: boolean = false;
   public isResultReady: boolean = false;
   public preserveHeaders: boolean = false;
+  public chartsToOpen: ChartOption[] = [
+    {label: 'Bubbles', type: 'BubbleChart'},
+    {label: 'Rankings', type: 'BarRankChart'},
+    {label: 'Lines', type: 'LineChart'}
+  ];
+  public chartTypeToOpen: string = this.chartsToOpen[0].type;
+  public isChartOpenSectionVisible: boolean = false;
+  public errorCount: number = 0;
+  public issuesCount: number = 0;
 
   private ddfFolder: string;
   private ref: ChangeDetectorRef;
@@ -62,13 +77,21 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
     });
 
     electron.ipcRenderer.on('validation-issue', (event: any, issue: any) => {
-      this.issues.push({
-        desc: issue.type.replace(/\n/g, '<br>'),
-        howToFix: issue.howToFix,
-        details: JSON.stringify(issue.data, null, 2)
-          .replace(/\n/g, '<br>')
-          .replace(/ /g, '&nbsp;')
-      });
+      if (!issue.isWarning) {
+        this.errorCount++;
+      }
+
+      this.issuesCount++;
+
+      if (this.issuesCount <= this.ERRORS_LIMIT) {
+        this.issues.push({
+          desc: issue.type.replace(/\n/g, '<br>'),
+          howToFix: issue.howToFix,
+          details: JSON.stringify(issue.data, null, 2)
+            .replace(/\n/g, '<br>')
+            .replace(/ /g, '&nbsp;')
+        });
+      }
     });
 
     electron.ipcRenderer.on('validation-completed', (event: any, params: any) => {
@@ -95,8 +118,12 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
   }
 
   public openNewDdfTab(): void {
-    this.chartService.ddfPathFromValidationToOpen = this.ddfFolder;
-    this.messageService.sendMessage(OPEN_NEW_DDF_TAB_FROM_VALIDATOR);
+    this.messageService.sendMessage(
+      OPEN_NEW_DDF_TAB_FROM_VALIDATOR,
+      {
+        ddfPath: this.ddfFolder,
+        chartType: this.chartTypeToOpen
+      });
     this.reset();
     this.close();
   }
@@ -114,6 +141,9 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
     this.isResultReady = false;
     this.issues = [];
     this.error = '';
+    this.isChartOpenSectionVisible = false;
+    this.errorCount = 0;
+    this.issuesCount = 0;
 
     electron.ipcRenderer.send('start-validation', {
       createNewDataPackage: this.CREATE_NEW_DATA_PACKAGE,
@@ -155,6 +185,7 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
     this.issues = [];
     this.error = '';
     this.dataPackageMode = this.USE_CURRENT_DATA_PACKAGE;
+    this.isChartOpenSectionVisible = false;
     this.preserveHeaders = false;
     this.areOptionsVisible = false;
     this.statusLine = '';

@@ -5,24 +5,19 @@ const ipc = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 const fs = require('fs');
 const fsExtra = require('fs-extra');
-const async = require('async');
 const request = require('request');
-const semver = require('semver');
-const onlineBranchExist = require('online-branch-exist');
 const autoUpdateConfig = require('./auto-update-config.json');
-const electronEasyUpdater = require('electron-easy-updater');
 const fileManagement = require('./file-management');
-const childProcess = require('child_process');
 const dataPackage = require(app.getAppPath() + '/ddf--gapminder--systema_globalis/datapackage.json');
 const devMode = process.argv.length > 1 && process.argv.indexOf('dev') > 0;
 const autoUpdateTestMode = process.argv.length > 1 && process.argv.indexOf('au-test') > 0;
 
+const DdfValidatorWrapper = require('./validator-wrapper').DdfValidatorWrapper;
 const packageJSON = require('./package.json');
 const GoogleAnalytics = require('./google-analytics');
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 
 const currentDir = path.resolve(__dirname, '..', '..');
-const spawn = childProcess.spawn;
 const dirs = {
   linux: currentDir + path.sep,
   darwin: __dirname + path.sep,
@@ -30,28 +25,7 @@ const dirs = {
 };
 
 process.noAsar = true;
-const getTypeByOsAndArch = (os, arch) => {
-  if (os === 'win32' && arch === 'x64') {
-    return 'win64';
-  }
-
-  if (os === 'win32' && arch === 'ia32') {
-    return 'win32';
-  }
-
-  if (os === 'darwin') {
-    return 'mac';
-  }
-
-  return os;
-};
-const RELEASE_APP_ARCHIVE = 'release-app.zip';
-const RELEASE_DS_ARCHIVE = 'release-ds.zip';
 const FEED_VERSION_URL = autoUpdateTestMode ? autoUpdateConfig.FEED_VERSION_URL_TEST : autoUpdateConfig.FEED_VERSION_URL;
-const FEED_URL = autoUpdateConfig.FEED_URL.replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch));
-const PARTIAL_FEED_URL = autoUpdateConfig.PARTIAL_FEED_URL.replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch));
-const DS_FEED_VERSION_URL = autoUpdateConfig.DS_FEED_VERSION_URL;
-const DS_FEED_URL = autoUpdateConfig.DS_FEED_URL;
 const PRESETS_FILE = __dirname + '/presets.json';
 const UPDATE_FLAG_FILE = `${dirs[process.platform]}update-required`;
 const UPDATE_PROCESS_FLAG_FILE = `${dirs[process.platform]}updating`;
@@ -65,117 +39,9 @@ const rollback = () => {
   }
 };
 
-let updateProcessAppDescriptor;
-let updateProcessDsDescriptor;
-
 let mainWindow = null;
-
 let currentFile;
-
-const DdfValidatorWrapper = require('./validator-wrapper').DdfValidatorWrapper;
-const ddfValidatorWrapper = new DdfValidatorWrapper();
-
-class UpdateProcessDescriptor {
-  constructor(version, url) {
-    this.version = version;
-    this.url = url || FEED_URL;
-  }
-}
-
-function finishUpdate() {
-  fs.writeFileSync(UPDATE_PROCESS_FLAG_FILE, 'updating');
-
-  if (process.platform !== 'win32') {
-    const updateCommand = dirs[process.platform] + 'updater';
-
-    spawn(
-      updateCommand,
-      [],
-      {
-        cwd: dirs[process.platform],
-        stdio: 'ignore',
-        detached: true
-      }
-    ).unref();
-  }
-
-  if (process.platform === 'win32') {
-    spawn(
-      'wscript.exe',
-      ['"invisible.vbs"', '"updater-' + getTypeByOsAndArch(process.platform, process.arch) + '.exe"'],
-      {
-        windowsVerbatimArguments: true,
-        cwd: dirs[process.platform],
-        stdio: 'ignore',
-        detached: true
-      }
-    ).unref();
-  }
-
-  app.quit();
-}
-
-function startUpdate(event) {
-  const getLoader = (cacheDir, releaseArchive, updateProcessDescriptor) => cb => {
-    if (!updateProcessDescriptor || !updateProcessDescriptor.version) {
-      cb();
-      return;
-    }
-
-    const releaseUrl = updateProcessDescriptor.url.replace('#version#', updateProcessDescriptor.version);
-
-    ga.event('Run', `starting and trying auto update from ${app.getVersion()} to ${updateProcessDescriptor.version}`);
-
-    electronEasyUpdater.download({
-        url: releaseUrl,
-        version: app.getVersion(),
-        path: cacheDir,
-        file: releaseArchive
-      }, progress => {
-        event.sender.send('download-progress', {progress, cacheDir});
-      },
-      err => {
-        if (err) {
-          event.sender.send('auto-update-error', err);
-          ga.error('auto update -> download error: ' + err);
-
-          cb(err);
-          return;
-        }
-
-        electronEasyUpdater.unpack({
-            directory: cacheDir,
-            file: releaseArchive
-          },
-          progress => {
-            event.sender.send('unpack-progress', {progress, cacheDir});
-          },
-          err => {
-            if (err) {
-              ga.error('auto update -> unpacking error: ' + err);
-              event.sender.send('auto-update-error', err);
-            }
-
-            cb(err);
-          });
-      }
-    );
-  };
-
-  async.parallel([
-    getLoader(CACHE_APP_DIR, RELEASE_APP_ARCHIVE, updateProcessAppDescriptor),
-    getLoader(CACHE_DS_DIR, RELEASE_DS_ARCHIVE, updateProcessDsDescriptor)
-  ], err => {
-    if (err) {
-      rollback();
-      return;
-    }
-
-    fs.writeFile(UPDATE_FLAG_FILE, 'need-to-update', () => {
-      event.sender.send('unpack-complete', null);
-    });
-  });
-}
+let ddfValidatorWrapper;
 
 function startMainApplication() {
   const isFileArgumentValid = fileName => fs.existsSync(fileName) && fileName.indexOf('-psn_') === -1;
@@ -239,8 +105,8 @@ function startMainApplication() {
     });
   });
 
-  ipc.on('request-custom-update', (event, version) => {
-    event.sender.send('request-and-update', version);
+  ipc.on('request-custom-update', (event, actualVersionGenericUpdate) => {
+    event.sender.send('request-and-update', {actualVersionGenericUpdate, os: process.platform, arch: process.arch});
   });
 
   ipc.on('presets-export', (event, content) => {
@@ -263,62 +129,6 @@ function startMainApplication() {
     mainWindow.webContents.openDevTools();
   });
 
-  ipc.on('check-version', event => {
-    electronEasyUpdater.versionCheck({
-      url: FEED_VERSION_URL,
-      version: app.getVersion()
-    }, (errGenericUpdate, actualVersionGenericUpdate, versionDiffType) => {
-      if (errGenericUpdate) {
-        return;
-      }
-
-      if (actualVersionGenericUpdate) {
-        const url = versionDiffType === 'patch' ? PARTIAL_FEED_URL : FEED_URL;
-
-        updateProcessAppDescriptor = new UpdateProcessDescriptor(actualVersionGenericUpdate, url);
-      }
-
-      electronEasyUpdater.versionCheck({
-        url: DS_FEED_VERSION_URL,
-        version: dataPackage.version
-      }, (errDsUpdate, actualVersionDsUpdateParam) => {
-        if (errDsUpdate) {
-          return;
-        }
-
-        let actualVersionDsUpdate = null;
-
-        if (actualVersionDsUpdateParam || actualVersionGenericUpdate) {
-          if (actualVersionDsUpdateParam && semver.valid(actualVersionDsUpdateParam)) {
-            const tagVersion = autoUpdateConfig.DS_TAG.replace(/#version#/, actualVersionDsUpdateParam);
-
-            onlineBranchExist.tag(tagVersion, (err, res) => {
-              if (res) {
-                actualVersionDsUpdate = actualVersionDsUpdateParam;
-              }
-
-              updateProcessDsDescriptor = new UpdateProcessDescriptor(actualVersionDsUpdate, DS_FEED_URL);
-
-              event.sender.send('request-to-update', {actualVersionDsUpdate, actualVersionGenericUpdate});
-            });
-          } else {
-            event.sender.send('request-to-update', {actualVersionGenericUpdate});
-          }
-        }
-      });
-    });
-  });
-
-  ipc.on('prepare-update', (event, version) => {
-    if (version) {
-      const url = semver.diff(app.getVersion(), version) === 'patch' ? PARTIAL_FEED_URL : FEED_URL;
-
-      updateProcessAppDescriptor = new UpdateProcessDescriptor(version, url);
-    }
-
-    startUpdate(event);
-  });
-
   ipc.on('do-open', fileManagement.openFileWithDialog);
   ipc.on('do-save', fileManagement.saveFile);
   ipc.on('do-save-all-tabs', fileManagement.saveAllTabs);
@@ -336,15 +146,21 @@ function startMainApplication() {
   });
 
   ipc.on('exit-and-update', () => {
-    finishUpdate();
   });
 
   ipc.on('start-validation', (event, params) => {
+    if (ddfValidatorWrapper) {
+      ddfValidatorWrapper.abandon();
+    }
+
+    ddfValidatorWrapper = new DdfValidatorWrapper();
     ddfValidatorWrapper.start(event, params);
   });
 
   ipc.on('abandon-validation', () => {
-    ddfValidatorWrapper.abandon();
+    if (ddfValidatorWrapper) {
+      ddfValidatorWrapper.abandon();
+    }
   });
 }
 
@@ -384,8 +200,6 @@ app.on('ready', () => {
         }
 
         ga.runEvent(true);
-
-        finishUpdate();
       });
     } else {
       // don't run during update process!

@@ -49,20 +49,39 @@
             <span class="glyphicon glyphicon-ok validation-glyph green"></span>
             <span class="green">Dataset is valid :)</span>
           </div>
-          <div><span>You can now <a href="#" (click)="openNewDdfTab()">open this dataset</a> in a new tab</span></div>
+          <div><span>You can now <a href="#" (click)="isChartOpenSectionVisible = true">open this dataset</a> in a new tab</span></div>
       </div>
-      <div *ngIf="issues.length > 0 && !error" class="validation-result validating-container">
+      <div *ngIf="errorCount > 0 && issues.length > 0 && !error" class="validation-result validating-container">
         <div>
           <span class="glyphicon glyphicon-remove validation-glyph red"></span>
           <span class="red">Dataset is not valid :(</span>
         </div>
         <div><span>Please fix the following issues and <a href="#" (click)="validate()">validate again</a></span></div>
       </div>
+      <div *ngIf="errorCount === 0 && issues.length > 0 && !error" class="validation-result validating-container">
+        <div style="align-self: flex-start;">
+          <span class="glyphicon glyphicon-remove validation-glyph dark-yellow"></span>
+          <span class="dark-yellow">Dataset contains warnings :/</span>
+        </div>
+        <div><span>Please fix the following warnings and <a href="#" (click)="validate()">validate again</a>
+        <br>... or <a href="#" (click)="isChartOpenSectionVisible = true">open this dataset</a>. But in this case we can't
+          guarantee proper functioning of the application</span></div>
+      </div>
     </div>
     <div *ngIf="error" class="validation-result validating-container">
       <div>
         <span class="glyphicon glyphicon-remove validation-glyph red"></span>
         <span class="red">{{error}}</span>
+      </div>
+    </div>
+    <div *ngIf="isChartOpenSectionVisible" class="validation-result validating-container">
+      <div>
+        <select [(ngModel)]="chartTypeToOpen" class="open-chart-list">
+          <option *ngFor="let chart of chartsToOpen" [ngValue]="chart.type">{{chart.label}}</option>
+        </select>
+      </div>
+      <div>
+        <button class="open-chart-btn" (click)="openNewDdfTab()">Open chart</button>
       </div>
     </div>
   </div>
@@ -83,6 +102,7 @@
           <td width="20%" valign="top" [innerHTML]="issue.howToFix"></td>
           <td width="68%" valign="top" [innerHTML]="issue.details"></td>
         </tr>
+        <tr *ngIf="issuesCount > ERRORS_LIMIT"><td colspan="3">and {{ issuesCount - ERRORS_LIMIT }} issues more...</td></tr>
         </tbody>
       </table>
     </div>

@@ -15,8 +15,9 @@ import { MessageService } from '../../message.service';
 import { Subscription } from 'rxjs/Subscription';
 import {
   CLEAR_EDITABLE_TABS_ACTION, TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, SWITCH_MENU_ACTION,
-  MODEL_CHANGED, OPEN_NEW_DDF_TAB_FROM_VALIDATOR
+  MODEL_CHANGED
 } from '../../constants';
+import { ChartService } from '../tabs/chart.service';
 
 const TAB_TIMEOUT = 100;
 const SCROLL_TIMEOUT = 200;
@@ -51,10 +52,6 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
           if (!hasExpectedClass('editTabInput') && !hasExpectedClass('doNotEditTabInput') && isEditMode) {
             this.resetEditMode();
           }
-        }
-
-        if (event.message === OPEN_NEW_DDF_TAB_FROM_VALIDATOR) {
-          this.addTabAction();
         }
       });
   }

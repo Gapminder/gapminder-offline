@@ -84,6 +84,7 @@ tbody.scrollContent tr.alternateRow td {
   display: flex;
   flex-direction: row;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .green {
@@ -92,6 +93,10 @@ tbody.scrollContent tr.alternateRow td {
 
 .red {
   color: red;
+}
+
+.dark-yellow {
+  color: #ff9214;
 }
 
 .validation-glyph {
@@ -111,4 +116,12 @@ tbody.scrollContent tr.alternateRow td {
   font-weight: bold;
   font-size: 16px;
   margin-bottom: 7px;
+}
+
+.open-chart-btn {
+  height: 28px;
+}
+
+.open-chart-list {
+  height: 28px;
 }
