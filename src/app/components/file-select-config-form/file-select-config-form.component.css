@@ -94,3 +94,17 @@ label.step-label {
 .inactive-time-format div {
     color: #cccccc;
 }
+.row-container {
+  display: flex;
+}
+
+.row-container > div {
+  margin-right: 20px;
+}
+
+.row-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+}

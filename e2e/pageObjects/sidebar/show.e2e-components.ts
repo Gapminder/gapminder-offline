@@ -12,6 +12,7 @@ export class Show {
 
   countryList: ExtendedElementFinder = _$$('[class="vzb-show-item vzb-dialog-checkbox"]').first();
   resetBtn: ExtendedElementFinder = _$('.vzb-show-deselect');
+  applyBtn: ExtendedElementFinder = _$('.vzb-show-apply');
 
   async searchAndSelectCountry(country: string, select = true): Promise<void> {
     await this.showSearchInputField.typeText(country);
@@ -28,6 +29,7 @@ export class Show {
 
   async clickOnCountryFromList(country: string): Promise<void> {
     await this.showSearchResult.findElementByText(country).safeClick();
+    await this.applyBtn.safeClick();
 
     await waitForSpinner();
   }

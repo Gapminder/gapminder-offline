@@ -20,12 +20,19 @@ export class ChartService {
   ddfFolderDescriptor: DdfFolderDescriptor;
   currentTab: TabModel;
 
+  private readonly readersDefinitions;
+  private registeredReaders = ['csv', 'csv-time_in_columns'];
+
   static getFirst(arr: any[]): any {
     return arr && arr.length > 0 ? arr[0] : null;
   }
 
   constructor(private messageService: MessageService, private es: ElectronService) {
     this.ddfFolderDescriptor = new DdfFolderDescriptor();
+    this.readersDefinitions = {
+      'excel': this.es.ExcelReader.excelReaderObject,
+      'ext-csv': this.es.CsvReader.csvReaderObject
+    };
   }
 
   log(message?: any, ...optionalParams: any[]) {
@@ -41,6 +48,13 @@ export class ChartService {
     tabsModel.push(newTab);
 
     this.messageService.sendMessage(MODEL_CHANGED);
+  }
+
+  registerNewReader(readerName: string) {
+    if (this.registeredReaders.indexOf(readerName) < 0 && this.readersDefinitions[readerName]) {
+      this.es.vizabi.Reader.extend(readerName, this.readersDefinitions[readerName]);
+      this.registeredReaders.push(readerName);
+    }
   }
 
   setReaderDefaults(tab: TabModel | TabDataDescriptor) {
@@ -74,13 +88,13 @@ export class ChartService {
       reader: 'ddf1-csv-ext',
       ddfPath: this.ddfFolderDescriptor.ddfUrl,
       path: this.ddfFolderDescriptor.ddfUrl,
-      assetsPath: this.ddfFolderDescriptor.electronPath + '/preview-data/',
+      assetsPath: `${this.ddfFolderDescriptor.electronPath}/preview-data/`,
       _lastModified: ddfFolderDescriptor.lastModified
     };
 
     config.locale = {
       id: 'en',
-      filePath: this.ddfFolderDescriptor.electronPath  + '/preview-data/translation/'
+      filePath: `${this.ddfFolderDescriptor.electronPath}/preview-data/translation/`
     };
 
     config.ui.splash = false;
@@ -103,6 +117,9 @@ export class ChartService {
       newTab.model = {
         data: {
           reader: properties.reader,
+          timeInColumns: properties.timeInColumns,
+          sheet: properties.sheet,
+          noCache: true,
           delimiter: properties.delimiter,
           path: properties.path,
           lastModified: stats.mtime.valueOf()

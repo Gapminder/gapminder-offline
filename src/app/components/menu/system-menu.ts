@@ -22,6 +22,10 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
                   click: () => appComponent.menuActions.openCsvFile()
                 },
                 {
+                  label: 'Excel file...',
+                  click: () => appComponent.menuActions.openExcelFile()
+                },
+                {
                   label: 'DDF folder',
                   click: () => appComponent.menuActions.openDdfFolder()
                 }
@@ -35,6 +39,10 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
             {
               label: 'CSV file...',
               click: () => appComponent.menuActions.addCsvFile()
+            },
+            {
+              label: 'Excel file...',
+              click: () => appComponent.menuActions.addExcelFile()
             },
             {
               label: 'DDF folder',

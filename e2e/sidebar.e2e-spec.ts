@@ -37,7 +37,7 @@ describe('Sidebar: Advanced buttons', () => {
 
   it('Change regular opacity', async() => {
     const allBubblesCount = await bubbleChart.allBubbles.count();
-    
+
     await changeRegularOpacity();
 
     const newOpacity = await _$$('.vzb-bc-entity').first().safeGetCssValue('opacity');
@@ -48,7 +48,7 @@ describe('Sidebar: Advanced buttons', () => {
 
   it('Change opacity for non-selected', async() => {
     const allBubblesCount = await bubbleChart.allBubbles.count();
-    
+
     await changeOpacityForNonSelected();
 
     await bubbleChart.clickOnUnitedStates(); // select bubble

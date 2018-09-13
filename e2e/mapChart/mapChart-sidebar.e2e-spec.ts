@@ -1,7 +1,6 @@
-import { browser } from "protractor";
-import { MapChart } from "../pageObjects/charts/map-chart.po";
-import { Sidebar } from "../pageObjects/sidebar/sidebar.e2e-component";
-import { Slider } from "../pageObjects/components/slider.e2e-component";
+import { MapChart } from '../pageObjects/charts/map-chart.po';
+import { Sidebar } from '../pageObjects/sidebar/sidebar.e2e-component';
+import { Slider } from '../pageObjects/components/slider.e2e-component';
 import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
 
 const mapChart: MapChart = new MapChart();
@@ -9,11 +8,11 @@ const sidebar: Sidebar = new Sidebar(mapChart);
 const slider: Slider = new Slider();
 const commonChartPage: CommonChartPage = new CommonChartPage();
 
-describe('Maps chart: Sidebar', () => {
+describe('Maps chart: Sidebar', () => {2
   beforeEach(async() => {
     await mapChart.openChart();
   });
-  afterEach(async()=>{
+  afterEach(async() => {
     await commonChartPage.closeTab();
   });
 
@@ -34,8 +33,7 @@ describe('Maps chart: Sidebar', () => {
     expect(await mapChart.selectedCountries.count()).toEqual(0);
   });
 
-  // todo: strange behavior: check it!
-  xit('Click on minimap region - "Remove everything else"', async () => {
+  it('Click on minimap region - "Remove everything else"', async () => {
     await sidebar.colorSection.removeEverythingElseInMinimap();
 
     await expect(mapChart.allBubbles.count()).toEqual(mapChart.countBubblesByColor('red'));

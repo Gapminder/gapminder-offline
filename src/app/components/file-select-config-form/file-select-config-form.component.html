@@ -31,8 +31,19 @@
 
     <div class="step-block">
         <h4>Step {{addDataMode ? 2 : 3}}: Pick a file:</h4>
-        <div>
-          <app-smart-path-selector [(ngModel)]="data.result" (done) = "onCsvFileChanged($event)"></app-smart-path-selector>
+        <div class="row-container">
+          <div>
+            <app-smart-path-selector [accept]="format === 'excel' ? '.xls, .xlsx' : '.csv'"
+                                     [title]="format === 'excel' ? 'Choose Excel file' : 'Choose CSV file'"
+                                     [(ngModel)]="data.result"
+                                     (done)="onFileChanged($event)"></app-smart-path-selector>
+          </div>
+          <div *ngIf="!loadingSheetsTitle && worksheets.length > 0 && format==='excel'">
+            <select type="string" [disabled]="worksheets.length < 2" [(ngModel)]="sheet" class="form-control">
+              <option *ngFor="let worksheet of worksheets" [ngValue]="worksheet">{{worksheet}}</option>
+            </select>
+          </div>
+          <app-wait-indicator [title]="loadingSheetsTitle"></app-wait-indicator>
         </div>
     </div>
 
@@ -58,14 +69,15 @@
     <div class="btn-group" style="width: 100%">
         <div class="row bottom-row">
             <div class="col-sm-8">
-                <div><a href="#" (click)="openURL('http://vizabi.org/tutorials/2017/04/03/show-your-data/')">How to prepare and export a file from MS Excel</a></div>
+                <div><a href="#" *ngIf="format === 'csv'" (click)="openURL('http://vizabi.org/tutorials/2017/04/03/show-your-data/')">How to prepare and export a file from MS Excel</a></div>
                 <div><a href="#" (click)="openURL('https://docs.google.com/document/d/1GEgBscyLSbAkiXbrDrixGDrlTG4DekuFETD5AQaRBvs')">How to export a file from Google Docs</a></div>
-                <div><a href="#" (click)="openURL('https://csvlint.io/')">Online csv validator (a handy tool)</a></div>
+                <div><a href="#" *ngIf="format === 'csv'" (click)="openURL('https://csvlint.io/')">Online csv validator (a handy tool)</a></div>
                 <div><a href="#" (click)="switchUseYourDataVisible()">How do we use your data?</a><br><span *ngIf="useYourDataVisible">— We don't. Everything stays local on your computer. <a href="#" (click)="openURL('https://raw.githubusercontent.com/Gapminder/gapminder-offline/master/LICENSE')">Read more</a></span></div>
             </div>
             <div class="col-sm-4 bottom-controls">
                 <input type="button" class="close-btn" (click)="close()" value="Cancel" />
-                <input type="button" class="ok-btn" (click)="ok()" [disabled]="!choice || !file || !delimiter" value="OK" />
+                <input type="button" *ngIf="format === 'csv'" class="ok-btn" (click)="ok()" [disabled]="!choice || !file || !delimiter" value="OK" />
+                <input type="button" *ngIf="format === 'excel'" class="ok-btn" (click)="ok()" [disabled]="loadingSheets || !choice || !file" value="OK" />
             </div>
         </div>
     </div>
