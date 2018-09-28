@@ -62,8 +62,8 @@
     "universal-analytics": "0.4.17",
     "urlon": "3.0.1",
     "vizabi-ddfcsv-reader": "2.2.1",
-    "vizabi-excel-reader": "0.3.1",
-    "vizabi-csv-reader": "0.2.1",
+    "vizabi-excel-reader": "0.4.0",
+    "vizabi-csv-reader": "0.3.0",
     "zip-dir": "1.0.2"
   },
   "devDependencies": {
