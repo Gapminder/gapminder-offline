@@ -122,7 +122,9 @@ export class ChartService {
           noCache: true,
           delimiter: properties.delimiter,
           path: properties.path,
-          lastModified: stats.mtime.valueOf()
+          lastModified: stats.mtime.valueOf(),
+          hasNameColumn: properties.hasNameColumn,
+          nameColumnPosition: properties.nameColumnPosition
         }
       };
 

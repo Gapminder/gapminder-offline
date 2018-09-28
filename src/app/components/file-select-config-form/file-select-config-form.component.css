@@ -108,3 +108,11 @@ label.step-label {
   align-items: center;
   flex-wrap: wrap;
 }
+
+.column-name-container label {
+  margin-bottom: 0;
+}
+
+.column-name-container input[type="number"] {
+  width: 40px;
+}

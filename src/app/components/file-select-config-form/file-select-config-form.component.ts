@@ -85,6 +85,8 @@ export class FileSelectConfigFormComponent {
   worksheets: string[] = [];
   sheet = '';
   loadingSheetsTitle = '';
+  hasNameColumn = false;
+  nameColumnPosition = 0;
 
   private _currentTab: TabModel;
 
@@ -128,7 +130,9 @@ export class FileSelectConfigFormComponent {
       sheet: this.sheet,
       path: this.file,
       delimiter: this.delimiter,
-      lastModified: this.chartService.getLastModifiedForFile(this.file)
+      lastModified: this.chartService.getLastModifiedForFile(this.file),
+      hasNameColumn: this.hasNameColumn,
+      nameColumnPosition: this.nameColumnPosition
     };
 
     this.chartService.registerNewReader(reader);
@@ -248,6 +252,8 @@ export class FileSelectConfigFormComponent {
       this.lastModified = null;
       this.worksheets = [];
       this.sheet = '';
+      this.hasNameColumn = false;
+      this.nameColumnPosition = 0;
     }
   }
 

@@ -47,11 +47,17 @@
         </div>
     </div>
 
-    <div class="step-block" [ngClass]="addDataMode ? 'inactive-time-format' : ''">
+    <div class="step-block">
+    <div>
+      <div class="time-format-holder">
+        <div class="time-format-block">
+          <h4>Optional</h4>
+        </div>
+      </div>
+    </div>
+
+    <div [ngClass]="addDataMode ? 'inactive-time-format' : ''">
         <div class="time-format-holder">
-            <div class="time-format-block">
-                <h4>Optional</h4>
-            </div>
             <div class="time-format-block time-format-select">
                 Time values look like this:
                 <select type="number" [disabled]="addDataMode" [(ngModel)]="timeFormat" class="form-control">
@@ -60,6 +66,18 @@
                 {{timeFormatDescription[timeFormat].example}}
             </div>
         </div>
+    </div>
+
+    <div>
+      <div class="row-container column-name-container">
+        <label>
+          <input type="checkbox" [(ngModel)]="hasNameColumn" >&nbsp;Table has an extra column with nice looking names
+          at position
+        </label>&nbsp;
+        <input [(ngModel)]="nameColumnPosition" [attr.disabled]="hasNameColumn === false ? '' : null" type="number" min="0" maxlength="3">&nbsp;&nbsp;
+        (<a href="#" (click)="openURL('https://vizabi.org/tutorials/2017/04/05/nice-looking-names/')">see examples here</a>)
+      </div>
+    </div>
     </div>
 </div>
 
