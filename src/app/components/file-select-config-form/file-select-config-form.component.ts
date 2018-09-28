@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ChartService } from '../tabs/chart.service';
 import { isEmpty } from 'lodash';
 import { TabModel } from '../tabs/tab.model';
@@ -22,11 +22,12 @@ const vizabiStateFacade: any = {
 };
 
 @Component({
-  selector: 'app-csv-config-form',
-  templateUrl: './csv-config-form.component.html',
-  styleUrls: ['./csv-config-form.component.css']
+  selector: 'app-file-select-config-form',
+  templateUrl: './file-select-config-form.component.html',
+  styleUrls: ['./file-select-config-form.component.css']
 })
-export class CsvConfigFormComponent {
+export class FileSelectConfigFormComponent {
+  @Input() format ? = 'csv';
   @Input() addDataMode ? = false;
   @Output() done: EventEmitter<any> = new EventEmitter();
 
@@ -81,10 +82,13 @@ export class CsvConfigFormComponent {
   data = {
     result: ''
   };
+  worksheets: string[] = [];
+  sheet = '';
+  loadingSheetsTitle = '';
 
   private _currentTab: TabModel;
 
-  constructor(private chartService: ChartService, private es: ElectronService) {
+  constructor(private chartService: ChartService, private es: ElectronService, private ref: ChangeDetectorRef) {
   }
 
   @Input()
@@ -105,13 +109,29 @@ export class CsvConfigFormComponent {
   }
 
   ok() {
+    let reader = 'ext-csv';
+    let timeInColumns = false;
+
+    if (this.choice === 'columns') {
+      timeInColumns = true;
+    }
+
+    if (this.format === 'excel') {
+      reader = 'excel';
+    }
+
     const config: any = {
       chartType: this.chartType,
-      reader: this.choice === 'columns' ? 'csv-time_in_columns' : 'csv',
+      reader,
+      timeInColumns,
+      format: this.format,
+      sheet: this.sheet,
       path: this.file,
       delimiter: this.delimiter,
       lastModified: this.chartService.getLastModifiedForFile(this.file)
     };
+
+    this.chartService.registerNewReader(reader);
 
     if (this.delimiter === 'auto') {
       delete config.delimiter;
@@ -198,13 +218,36 @@ export class CsvConfigFormComponent {
     this.useYourDataVisible = !this.useYourDataVisible;
   }
 
-  onCsvFileChanged(fileDescriptor: any) {
+  onFileChanged(fileDescriptor: any) {
+    this.ref.detectChanges();
     if (fileDescriptor) {
       this.file = fileDescriptor.file;
       this.lastModified = fileDescriptor.lastModified;
+
+      if (this.format === 'excel') {
+        this.loadingSheetsTitle = 'Reading excel sheets…';
+
+        const VizabiExcelReader = this.es.vizabi.Reader.extend(this.es.ExcelReader.excelReaderObject);
+
+        setTimeout(() => {
+          const readerObject = new VizabiExcelReader({
+            path: this.file,
+            lastModified: new Date().getTime()
+          });
+
+          readerObject.getWorksheets().then(worksheets => {
+            this.worksheets = worksheets;
+            this.sheet = this.worksheets[0];
+            this.loadingSheetsTitle = '';
+            this.ref.detectChanges();
+          });
+        }, 500);
+      }
     } else {
       this.file = '';
       this.lastModified = null;
+      this.worksheets = [];
+      this.sheet = '';
     }
   }
 

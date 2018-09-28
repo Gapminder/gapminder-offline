@@ -7,6 +7,8 @@ import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ddfCsvReader from 'vizabi-ddfcsv-reader';
+import * as excelReader from 'vizabi-excel-reader';
+import * as csvReader from 'vizabi-csv-reader';
 import * as ddfValidation from 'ddf-validation';
 
 @Injectable()
@@ -21,7 +23,10 @@ export class ElectronService {
   path: typeof path;
   process: typeof process;
   ddfCsvReader: typeof ddfCsvReader;
+  ExcelReader: typeof excelReader;
+  CsvReader: typeof csvReader;
   ddfValidation: typeof ddfValidation;
+  vizabi: any;
 
   constructor() {
     // Conditional imports
@@ -36,11 +41,14 @@ export class ElectronService {
       this.path = window.require('path');
       this.process = window.process;
       this.ddfCsvReader = window.require('vizabi-ddfcsv-reader');
+      this.ExcelReader = window.require('vizabi-excel-reader');
+      this.CsvReader = window.require('vizabi-csv-reader');
       this.ddfValidation = window.require('ddf-validation');
+      this.vizabi = (window as any).Vizabi;
     }
   }
 
-  isElectron = () => {
+  isElectron() {
     return window && window.process && window.process.type;
   }
 }

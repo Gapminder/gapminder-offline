@@ -11,7 +11,10 @@
                     <li class="menu-item" (click)="execute('openCsvFile')">
                         <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
                     </li>
-                    <li class="menu-item" (click)="execute('openDdfFolder')">
+                  <li class="menu-item" (click)="execute('openExcelFile')">
+                    <button type="button" class="menu-btn"><span class="menu-text">Excel file...</span> </button>
+                  </li>
+                  <li class="menu-item" (click)="execute('openDdfFolder')">
                         <button type="button" class="menu-btn"><span class="menu-text">DDF folder</span> </button>
                     </li>
                 </ul>
@@ -24,13 +27,19 @@
             <li class="menu-item" *ngIf="getCurrentTab() && getCurrentTab().chartType" (click)="execute('addCsvFile')">
                 <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
             </li>
-            <li class="menu-item" *ngIf="getCurrentTab() && getCurrentTab().chartType" (click)="execute('addDdfFolder')">
+          <li class="menu-item" *ngIf="getCurrentTab() && getCurrentTab().chartType" (click)="execute('addExcelFile')">
+            <button type="button" class="menu-btn"><span class="menu-text">Excel file...</span> </button>
+          </li>
+          <li class="menu-item" *ngIf="getCurrentTab() && getCurrentTab().chartType" (click)="execute('addDdfFolder')">
                 <button type="button" class="menu-btn"><span class="menu-text">DDF folder</span> </button>
             </li>
             <li class="menu-item" *ngIf="!getCurrentTab() || !getCurrentTab().chartType">
                 <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">CSV file...</span> </button>
             </li>
             <li class="menu-item" *ngIf="!getCurrentTab() || !getCurrentTab().chartType">
+              <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Excel file...</span> </button>
+            </li>
+          <li class="menu-item" *ngIf="!getCurrentTab() || !getCurrentTab().chartType">
                 <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">DDF folder</span> </button>
             </li>
         </ul>

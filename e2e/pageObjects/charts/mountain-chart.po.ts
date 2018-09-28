@@ -16,10 +16,12 @@ export class MountainChart extends CommonChartPage {
   public verticalLine: ElementFinder = $$('.vzb-mc-probe-value-dl').first();
   public extremePovertyTitle: ElementFinder = $('text[class="vzb-mc-probe-extremepoverty"]');
   public allCountriesOnChart: ElementArrayFinder = $$('path[class="vzb-mc-mountain vzb-mc-aggrlevel0"]');
+  public allSelectedCountriesOnChart: ElementArrayFinder = $$('path[class="vzb-mc-mountain vzb-mc-aggrlevel0 vzb-selected"]');
   public advancedControlsShowButtons: ExtendedElementFinder = _$$('[data-btn="show"]').last();
   public showButtonSearchInputField: ExtendedElementFinder = _$('input[class="vzb-show-search"]');
   public linesChartSearchResult: ElementFinder = $$('div[class*="vzb-show-item vzb-dialog-checkbox"] label').first(); // TODO
-  public rightSidePanelCountriesList: ElementArrayFinder = $$('.vzb-find-list > div'); // TODO
+  // public rightSidePanelCountriesList: ElementArrayFinder = $$('.vzb-find-list > div'); // TODO
+  public rightSidePanelCountriesList: ElementArrayFinder = $$('.vzb-mc-mountains-labels > g');
   public showMenuSelectedCountry: ElementFinder = $$('.vzb-show-item').first();
   public yearLabel: ElementFinder = $('g[class="vzb-mc-year vzb-dynamic-background"]');
   public visualizationSelectedCountries: ElementArrayFinder = $$('.vzb-selected');
