@@ -44,7 +44,7 @@
     "changelog": "conventional-changelog -i CHANGELOG.md -s -p angular",
     "github-release": "conventional-github-releaser -p angular",
     "version": "npm run changelog && git add CHANGELOG.md",
-    "postversion": "git push origin master && git push --tags && npm run github-release"
+    "postversion": "git push origin development && git push --tags && npm run github-release"
   },
   "dependencies": {
     "async": "2.6.1",
