@@ -92,7 +92,7 @@ export class VizabiDirective implements OnDestroy, OnChanges {
 
   set additionalItems(_additionalItems: any[]) {
     try {
-      this._additionalItems = _additionalItems;
+      this._additionalItems.push(..._additionalItems);
 
       if (!this.viz || this._additionalItems.length <= 0) {
         return;
