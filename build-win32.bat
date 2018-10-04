@@ -9,6 +9,8 @@ call powershell.exe -nologo -noprofile -command "& {Copy-Item 'extra-data\*' -de
 mkdir .\app-builds\win-ia32-unpacked\resources\export-template\libs
 
 copy .\node_modules\vizabi-ddfcsv-reader\dist\vizabi-ddfcsv-reader.js .\app-builds\win-ia32-unpacked\resources\export-template\libs
+copy .\node_modules\vizabi-csv-reader\dist\vizabi-csv-reader.js .\app-builds\win-ia32-unpacked\resources\export-template\libs
+copy .\node_modules\vizabi-excel-reader\dist\vizabi-excel-reader.js .\app-builds\win-ia32-unpacked\resources\export-template\libs
 
 copy .\node_modules\vizabi\build\vizabi.js .\app-builds\win-ia32-unpacked\resources\export-template\libs
 copy .\node_modules\vizabi\build\vizabi.css .\app-builds\win-ia32-unpacked\resources\export-template\libs

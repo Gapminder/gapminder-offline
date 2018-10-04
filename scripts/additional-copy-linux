@@ -3,6 +3,8 @@ cp -a ./extra-data/* ./app-builds/linux-unpacked/resources
 mkdir -p ./app-builds/linux-unpacked/resources/export-template/libs
 
 cp ./node_modules/vizabi-ddfcsv-reader/dist/vizabi-ddfcsv-reader.js ./app-builds/linux-unpacked/resources/export-template/libs
+cp ./node_modules/vizabi-csv-reader/dist/vizabi-csv-reader.js ./app-builds/linux-unpacked/resources/export-template/libs
+cp ./node_modules/vizabi-excel-reader/dist/vizabi-excel-reader.js ./app-builds/linux-unpacked/resources/export-template/libs
 
 cp ./node_modules/vizabi/build/vizabi.js ./app-builds/linux-unpacked/resources/export-template/libs
 cp ./node_modules/vizabi/build/vizabi.css ./app-builds/linux-unpacked/resources/export-template/libs
