@@ -3,6 +3,8 @@ cp -R ./extra-data/* ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources
 mkdir -p ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
 
 cp -R ./node_modules/vizabi-ddfcsv-reader/dist/vizabi-ddfcsv-reader.js ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
+cp -R ./node_modules/vizabi-csv-reader/dist/vizabi-csv-reader.js ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
+cp -R ./node_modules/vizabi-excel-reader/dist/vizabi-excel-reader.js ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
 
 cp -R ./node_modules/vizabi/build/vizabi.js ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
 cp -R ./node_modules/vizabi/build/vizabi.css ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
