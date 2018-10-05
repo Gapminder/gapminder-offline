@@ -5,6 +5,7 @@ import * as net from 'net';
 import * as urlLib from 'url';
 import * as request from 'request';
 import * as semver from 'semver';
+import * as semverSort from 'semver-sort';
 import * as gitclient from 'git-fetch-pack';
 import * as transport from 'git-transport-protocol';
 import * as fsExtra from 'fs-extra';
@@ -63,7 +64,7 @@ function getLatestGithubTag(inputParam: string, onTagReady: Function) {
         return onTagReady(Error('Tags are missing'));
       }
 
-      onTagReady(null, tags.sort().reverse()[0]);
+      onTagReady(null, semverSort.desc(tags)[0]);
     });
 }
 
