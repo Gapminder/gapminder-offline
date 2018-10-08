@@ -1,8 +1,8 @@
 {
   "name": "gapminder-offline",
-  "version": "3.5.0",
+  "version": "4.0.0",
   "description": "Gapminder Tools Offline",
-  "author": "Vyacheslav Chub <vyacheslav.chub@valor-software.com>",
+  "author": "Gapminder <ola@gapminder.org>",
   "repository": {
     "type": "git",
     "url": "https://github.com/VS-work/gapminder-offline-new.git"
