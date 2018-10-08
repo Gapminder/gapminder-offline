@@ -1,13 +1,34 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<windows.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
+
+int dirExists(const char *path){
+  struct stat info;
+
+  if (stat(path, &info ) != 0) {
+    return 0;
+  } else if (info.st_mode & S_IFDIR) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
 
 int main() {
   Sleep(300);
 
-  system("cd cache-app & robocopy . .. /XF updater-win64.exe updater-win32.exe /E & cd .. & rmdir /s /q cache-app & del .\\release-app.zip");
+  const char *appPath = "cache-app";
+  const char *dsPath = "cache-ds";
 
-  system("cd cache-ds & powershell.exe -nologo -noprofile -command \"& {Get-ChildItem -Filter ddf--gapminder--systema_globalis* | Rename-Item -NewName ddf--gapminder--systema_globalis}\" & robocopy ddf--gapminder--systema_globalis ..\\resources\\ddf--gapminder--systema_globalis /E & cd .. & rmdir /s /q cache-ds");
+  if (dirExists(appPath)) {
+    system("cd cache-app & robocopy . .. /XF updater-win64.exe updater-win32.exe /E & cd .. & rmdir /s /q cache-app & del .\\release-app.zip");
+  }
+
+  if (dirExists(dsPath)) {
+    system("cd cache-ds & powershell.exe -nologo -noprofile -command \"& {Get-ChildItem -Filter ddf--gapminder--systema_globalis* | Rename-Item -NewName ddf--gapminder--systema_globalis}\" & robocopy ddf--gapminder--systema_globalis ..\\resources\\ddf--gapminder--systema_globalis /E & cd .. & rmdir /s /q cache-ds");
+  }
 
   system("del .\\update-required");
   system("del .\\updating");
