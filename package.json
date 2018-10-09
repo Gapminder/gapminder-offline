@@ -5,7 +5,7 @@
   "author": "Gapminder <ola@gapminder.org>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/VS-work/gapminder-offline-new.git"
+    "url": "https://github.com/Gapminder/gapminder-offline.git"
   },
   "license": "GPL-3.0",
   "keywords": [
