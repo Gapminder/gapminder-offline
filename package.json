@@ -1,6 +1,6 @@
 {
   "name": "gapminder-offline",
-  "version": "3.5.0",
+  "version": "4.0.0",
   "description": "Gapminder Tools Offline",
   "author": "Gapminder <ola@gapminder.org>",
   "repository": {
