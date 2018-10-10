@@ -13,7 +13,5 @@ if [ -d "cache-ds" ]; then
   rm -rf ./cache-ds
 fi
 
-rm ./update-required
-rm ./updating
 sleep 1
 ../../Contents/MacOS/Gapminder\ Offline &

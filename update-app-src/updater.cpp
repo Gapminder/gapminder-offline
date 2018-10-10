@@ -23,15 +23,13 @@ int main() {
   const char *dsPath = "cache-ds";
 
   if (dirExists(appPath)) {
-    system("cd cache-app & robocopy . .. /XF updater-win64.exe updater-win32.exe /E & cd .. & rmdir /s /q cache-app & del .\\release-app.zip");
+    system("cd cache-app & robocopy . .. /XF gapminder-updater-win64.exe gapminder-updater-win32.exe /E & cd .. & rmdir /s /q cache-app & del .\\release-app.zip");
   }
 
   if (dirExists(dsPath)) {
     system("cd cache-ds & powershell.exe -nologo -noprofile -command \"& {Get-ChildItem -Filter ddf--gapminder--systema_globalis* | Rename-Item -NewName ddf--gapminder--systema_globalis}\" & robocopy ddf--gapminder--systema_globalis ..\\resources\\ddf--gapminder--systema_globalis /E & cd .. & rmdir /s /q cache-ds");
   }
 
-  system("del .\\update-required");
-  system("del .\\updating");
   system("start \"\" \".\\Gapminder Offline.exe\"");
 
   return 0;

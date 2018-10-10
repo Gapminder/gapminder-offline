@@ -32,4 +32,4 @@ cp -R ./node_modules/vizabi-mountainchart/build/mountainchart.js ./app-builds/ma
 cp -R ./node_modules/vizabi-linechart/build/linechart.css ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
 cp -R ./node_modules/vizabi-linechart/build/linechart.js ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
 
-cp ./updater-darwin ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/updater
+cp ./updater-darwin ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/gapminder-updater
