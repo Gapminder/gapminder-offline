@@ -2,6 +2,7 @@
 
 # compiled output
 *.js
+!hash-maker.js
 *.map.js
 !package-dmg.js
 /dist

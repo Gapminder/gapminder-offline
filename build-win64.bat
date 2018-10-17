@@ -35,7 +35,7 @@ copy .\node_modules\vizabi-linechart\build\linechart.css .\app-builds\win-unpack
 copy .\node_modules\vizabi-linechart\build\linechart.js .\app-builds\win-unpacked\resources\export-template\libs
 copy .\src\app-icon.ico .\app-builds\win-unpacked\resources
 
-copy .\updater-win64.exe .\app-builds\win-unpacked\updater-win64.exe
+copy .\updater-win64.exe .\app-builds\win-unpacked\gapminder-updater-win64.exe
 copy .\invisible.vbs .\app-builds\win-unpacked\invisible.vbs
 
 rem ############
@@ -45,7 +45,7 @@ cd .\app-builds
 call powershell.exe -nologo -noprofile -command "& {Rename-Item 'win-unpacked' 'Gapminder Offline-win64'}"
 
 "C:\Program Files (x86)\Windows Kits\10\bin\x64\signtool.exe" sign /t http://timestamp.comodoca.com/authenticode /f ..\gapminder.pfx /p %1 ".\Gapminder Offline-win64\Gapminder Offline.exe"
-"C:\Program Files (x86)\Windows Kits\10\bin\x64\signtool.exe" sign /t http://timestamp.comodoca.com/authenticode /f ..\gapminder.pfx /p %1 ".\Gapminder Offline-win64\updater-win64.exe"
+"C:\Program Files (x86)\Windows Kits\10\bin\x64\signtool.exe" sign /t http://timestamp.comodoca.com/authenticode /f ..\gapminder.pfx /p %1 ".\Gapminder Offline-win64\gapminder-updater-win64.exe"
 
 call powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('Gapminder Offline-win64', 'Gapminder Offline-win64.zip'); }"
 mkdir "partial\Gapminder Offline-win64"
@@ -63,3 +63,8 @@ cd .\app-builds
 call powershell.exe -nologo -noprofile -command "& {Rename-Item 'Install Gapminder Offline.exe' 'Install Gapminder Offline-64.exe'}"
 
 "C:\Program Files (x86)\Windows Kits\10\bin\x64\signtool.exe" sign /t http://timestamp.comodoca.com/authenticode /f ..\gapminder.pfx /p %1 "Install Gapminder Offline-64.exe"
+
+cd ..
+
+node ./hash-maker.js "app-builds/partial/Gapminder Offline-win64" app-builds/win64-partial-hash.json win64
+node ./hash-maker.js "app-builds/Gapminder Offline-win64" app-builds/win64-hash.json win64

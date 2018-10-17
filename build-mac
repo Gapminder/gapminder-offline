@@ -13,3 +13,6 @@ cd partial/mac
 zip --symlinks -r ./Gapminder\ Offline-mac.zip ./Gapminder\ Offline.app
 cd ../../..
 npm run package-dmg
+
+node ./hash-maker.js "app-builds/partial/mac/Gapminder Offline.app" app-builds/mac-partial-hash.json mac
+node ./hash-maker.js "app-builds/mac/Gapminder Offline.app" app-builds/mac-hash.json mac

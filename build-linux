@@ -11,3 +11,5 @@ rm -r ./partial/Gapminder\ Offline-linux/resources/ddf--gapminder--systema_globa
 cd partial
 zip -r ./Gapminder\ Offline-linux.zip ./Gapminder\ Offline-linux
 cd ../..
+node ./hash-maker.js "app-builds/partial/Gapminder Offline-linux" app-builds/linux-partial-hash.json linux
+node ./hash-maker.js "app-builds/Gapminder Offline-linux" app-builds/linux-hash.json linux
