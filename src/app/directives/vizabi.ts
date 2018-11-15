@@ -1,12 +1,25 @@
+import { cloneDeep } from 'lodash';
 import {
   EventEmitter, Input, Output, OnDestroy, Directive, ElementRef, OnChanges,
   SimpleChanges
 } from '@angular/core';
-import { PlatformLocation } from '@angular/common';
-
-declare const Vizabi;
+import { ElectronService } from '../providers/electron.service';
 
 const isReaderReady = {};
+
+function clone(f) {
+  const temp = function temporary() {
+    return f.apply(this, arguments);
+  };
+
+  for (const key in f) {
+    if (f.hasOwnProperty(key)) {
+      temp[key] = f[key];
+    }
+  }
+
+  return temp;
+}
 
 @Directive({
   selector: 'vizabi'
@@ -28,6 +41,7 @@ export class VizabiDirective implements OnDestroy, OnChanges {
   @Output() onReadyOnce: EventEmitter<any> = new EventEmitter();
   @Output() onError: EventEmitter<any> = new EventEmitter();
 
+  private ownVizabi;
   private viz;
   private vizabiModel;
   private vizabiPageModel;
@@ -39,7 +53,8 @@ export class VizabiDirective implements OnDestroy, OnChanges {
   private prevStateStr;
   private poppedState = null;
 
-  constructor(private element: ElementRef, private location: PlatformLocation) {
+  constructor(private element: ElementRef, private es: ElectronService) {
+    this.ownVizabi = clone(this.es.vizabi);
     this.createPlaceholder();
   }
 
@@ -137,12 +152,21 @@ export class VizabiDirective implements OnDestroy, OnChanges {
   }
 
   ngOnDestroy() {
+    // this.deactivate();
+
     try {
-      Object.keys(Vizabi._instances).forEach((instanceKey: any) => {
-        Vizabi._instances[instanceKey] = null;
+      Object.keys(this.ownVizabi._instances).forEach((instanceKey: any) => {
+        this.ownVizabi._instances[instanceKey] = null;
       });
 
-      this.viz.clear();
+      // this.viz.clear();
+      delete this.vizabiPageModel.bind;
+      this.vizabiPageModel = null;
+      this.readerModuleObject = null;
+      this.vizabiModel = null;
+      this.viz = null;
+      this.ownVizabi = null;
+
       VizabiDirective.removeElement(this.placeholder);
     } catch (generalError) {
       this.emitError(generalError);
@@ -184,12 +208,12 @@ export class VizabiDirective implements OnDestroy, OnChanges {
 
       this.readerProcessing();
 
-      this.vizabiModel = Vizabi.utils.deepExtend({},
+      this.vizabiModel = this.ownVizabi.utils.deepExtend({},
         changes.model.currentValue, this.getAdditionalData(), this.vizabiModel);
-      this.vizabiPageModel = Vizabi.utils.deepExtend({}, this.vizabiModel);
+      this.vizabiPageModel = this.ownVizabi.utils.deepExtend({}, this.vizabiModel);
       delete this.vizabiPageModel.bind;
 
-      const fullModel = Vizabi.utils.deepExtend({}, this.vizabiModel, true);
+      const fullModel = this.ownVizabi.utils.deepExtend({}, this.vizabiModel, true);
       const lastModified = new Date().getTime();
 
       this.refreshLastModified(fullModel, lastModified);
@@ -198,7 +222,7 @@ export class VizabiDirective implements OnDestroy, OnChanges {
         delete fullModel.state;
       }
 
-      this.viz = Vizabi(this.chartType, this.placeholder, fullModel);
+      // this.viz = cloneDeep(this.ownVizabi(this.chartType, this.placeholder, fullModel));
 
       this.onCreated.emit({
         order: this.order,
@@ -236,14 +260,14 @@ export class VizabiDirective implements OnDestroy, OnChanges {
       this.readerPlugins && this.readerModuleObject[this.readerGetMethod] && !isReaderReady[this.readerName]) {
       const readerObject = this.readerModuleObject[this.readerGetMethod].apply(this, this.readerPlugins);
 
-      Vizabi.Reader.extend(this.readerName, readerObject);
+      this.ownVizabi.Reader.extend(this.readerName, readerObject);
 
       isReaderReady[this.readerName] = true;
     }
   }
 
   private onPersistentChange() {
-    if (this.poppedState && Vizabi.utils.comparePlainObjects(this.viz.getModel(), this.poppedState)) {
+    if (this.poppedState && this.ownVizabi.utils.comparePlainObjects(this.viz.getModel(), this.poppedState)) {
       return;
     }
 

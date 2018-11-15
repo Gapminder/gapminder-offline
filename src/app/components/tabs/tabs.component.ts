@@ -4,7 +4,6 @@ import { ChartService } from './chart.service';
 import { TabModel } from './tab.model';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { ITabActionsSynchronizer } from '../tabs-new/tabs.common';
-import { AlertModel } from './alert.model';
 import { TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, MODEL_CHANGED, OPEN_NEW_DDF_TAB_FROM_VALIDATOR } from '../../constants';
 import { MessageService } from '../../message.service';
 import { FreshenerService } from '../tab-freshener/freshener.service';
@@ -39,6 +38,21 @@ export class TabsComponent implements OnInit {
     private freshenerService: FreshenerService,
     private es: ElectronService
   ) {
+    setInterval(() => {
+      this.logMemDetails();
+    }, 5000);
+  }
+
+  logMemDetails() {
+    const used = this.es.process.memoryUsage();
+
+    let mem = '';
+
+    for (const key in used) {
+      mem += `${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB `;
+    }
+
+    this.es.fs.appendFileSync('mem.log', `${mem}\n`);
   }
 
   @HostListener('window:focus')
@@ -127,6 +141,18 @@ export class TabsComponent implements OnInit {
         this.onTabSetActive.emit();
       },
       onTabRemove: (index: number) => {
+        /*const foo: TabModel = this.tabsModel[index];
+
+        if (foo.chartType) {
+          if (foo.instance && foo.instance.components) {
+            foo.instance.components.find((component: any) => component.name === 'gapminder-dialogs').closeAllDialogs(true);
+          }
+
+          if (this.es.vizabi._instances[foo.instance._id]) {
+            this.es.vizabi._instances[foo.instance._id].clear();
+          }
+        }*/
+
         this.tabsModel.splice(index, 1);
         this.onTabRemoved.emit();
         this.sendCurrentPathToFreshener();
@@ -161,7 +187,7 @@ export class TabsComponent implements OnInit {
   sendCurrentPathToFreshener() {
     const currentTab = this.getCurrentTab();
 
-    if (currentTab.chartType) {
+    if (currentTab && currentTab.chartType) {
       this.freshenerService.checkCurrentTabModification(currentTab);
     }
   }
