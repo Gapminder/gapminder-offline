@@ -161,7 +161,7 @@ export class TabsComponent implements OnInit {
   sendCurrentPathToFreshener() {
     const currentTab = this.getCurrentTab();
 
-    if (currentTab.chartType) {
+    if (currentTab && currentTab.chartType) {
       this.freshenerService.checkCurrentTabModification(currentTab);
     }
   }
