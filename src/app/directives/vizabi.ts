@@ -2,9 +2,8 @@ import {
   EventEmitter, Input, Output, OnDestroy, Directive, ElementRef, OnChanges,
   SimpleChanges
 } from '@angular/core';
-import { PlatformLocation } from '@angular/common';
-
-declare const Vizabi;
+import { MessageService } from '../message.service';
+import { ElectronService } from '../providers/electron.service';
 
 const isReaderReady = {};
 
@@ -39,7 +38,7 @@ export class VizabiDirective implements OnDestroy, OnChanges {
   private prevStateStr;
   private poppedState = null;
 
-  constructor(private element: ElementRef, private location: PlatformLocation) {
+  constructor(private element: ElementRef, private ms: MessageService, private es: ElectronService) {
     this.createPlaceholder();
   }
 
@@ -138,11 +137,7 @@ export class VizabiDirective implements OnDestroy, OnChanges {
 
   ngOnDestroy() {
     try {
-      Object.keys(Vizabi._instances).forEach((instanceKey: any) => {
-        Vizabi._instances[instanceKey] = null;
-      });
-
-      this.viz.clear();
+      this.es.vizabi.clearInstances(this.viz._id);
       VizabiDirective.removeElement(this.placeholder);
     } catch (generalError) {
       this.emitError(generalError);
@@ -165,6 +160,9 @@ export class VizabiDirective implements OnDestroy, OnChanges {
       this.vizabiModel.bind = {
         ready: () => {
           this.onPersistentChange();
+          setTimeout(() => {
+            this.ms.unlock();
+          }, 300);
         },
         persistentChange: () => {
           this.onPersistentChange();
@@ -179,17 +177,18 @@ export class VizabiDirective implements OnDestroy, OnChanges {
         },
         'load_error': (event: any, error: string) => {
           this.emitError(error);
+          this.ms.unlock();
         }
       };
 
       this.readerProcessing();
 
-      this.vizabiModel = Vizabi.utils.deepExtend({},
+      this.vizabiModel = this.es.vizabi.utils.deepExtend({},
         changes.model.currentValue, this.getAdditionalData(), this.vizabiModel);
-      this.vizabiPageModel = Vizabi.utils.deepExtend({}, this.vizabiModel);
+      this.vizabiPageModel = this.es.vizabi.utils.deepExtend({}, this.vizabiModel);
       delete this.vizabiPageModel.bind;
 
-      const fullModel = Vizabi.utils.deepExtend({}, this.vizabiModel, true);
+      const fullModel = this.es.vizabi.utils.deepExtend({}, this.vizabiModel, true);
       const lastModified = new Date().getTime();
 
       this.refreshLastModified(fullModel, lastModified);
@@ -198,7 +197,9 @@ export class VizabiDirective implements OnDestroy, OnChanges {
         delete fullModel.state;
       }
 
-      this.viz = Vizabi(this.chartType, this.placeholder, fullModel);
+      this.ms.lock();
+
+      this.viz = this.es.vizabi(this.chartType, this.placeholder, fullModel);
 
       this.onCreated.emit({
         order: this.order,
@@ -236,14 +237,14 @@ export class VizabiDirective implements OnDestroy, OnChanges {
       this.readerPlugins && this.readerModuleObject[this.readerGetMethod] && !isReaderReady[this.readerName]) {
       const readerObject = this.readerModuleObject[this.readerGetMethod].apply(this, this.readerPlugins);
 
-      Vizabi.Reader.extend(this.readerName, readerObject);
+      this.es.vizabi.Reader.extend(this.readerName, readerObject);
 
       isReaderReady[this.readerName] = true;
     }
   }
 
   private onPersistentChange() {
-    if (this.poppedState && Vizabi.utils.comparePlainObjects(this.viz.getModel(), this.poppedState)) {
+    if (this.poppedState && this.es.vizabi.utils.comparePlainObjects(this.viz.getModel(), this.poppedState)) {
       return;
     }
 
