@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostListener, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ChartService } from './chart.service';
 import { TabModel } from './tab.model';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { ITabActionsSynchronizer } from '../tabs-new/tabs.common';
-import { AlertModel } from './alert.model';
 import { TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, MODEL_CHANGED, OPEN_NEW_DDF_TAB_FROM_VALIDATOR } from '../../constants';
 import { MessageService } from '../../message.service';
 import { FreshenerService } from '../tab-freshener/freshener.service';
@@ -37,7 +36,8 @@ export class TabsComponent implements OnInit {
     private chartService: ChartService,
     private messageService: MessageService,
     private freshenerService: FreshenerService,
-    private es: ElectronService
+    private es: ElectronService,
+    private ref: ChangeDetectorRef
   ) {
   }
 
@@ -122,14 +122,23 @@ export class TabsComponent implements OnInit {
   getSyncActions(): ITabActionsSynchronizer {
     return {
       onSetTabActive: (index: number) => {
-        this.tabsModel.forEach((tab: TabModel) => tab.active = false);
-        this.tabsModel[index].active = true;
+        this.tabsModel.forEach((tab: TabModel, i: number) => tab.active = i === index);
         this.onTabSetActive.emit();
       },
       onTabRemove: (index: number) => {
         this.tabsModel.splice(index, 1);
-        this.onTabRemoved.emit();
         this.sendCurrentPathToFreshener();
+
+        let newIndex = -1;
+
+        if (this.tabsModel.length > 0) {
+          newIndex = this.getClosestTabIndex(index);
+        }
+
+        if (newIndex >= 0) {
+          this.tabsModel.forEach((tab: TabModel, i: number) => tab.active = i === newIndex);
+          this.onTabRemoved.emit();
+        }
 
         this.messageService.sendMessage(MODEL_CHANGED);
       },
@@ -139,6 +148,28 @@ export class TabsComponent implements OnInit {
     };
   }
 
+  protected getClosestTabIndex(currentIndex: number): number {
+    const isIndexExpected = (index: number) => this.tabsModel[index];
+
+    if (this.tabsModel.length <= 0) {
+      return -1;
+    }
+
+    if (isIndexExpected(currentIndex)) {
+      return currentIndex;
+    }
+
+    if (isIndexExpected(currentIndex + 1)) {
+      return currentIndex + 1;
+    }
+
+    if (isIndexExpected(currentIndex - 1)) {
+      return currentIndex - 1;
+    }
+
+    return -1;
+  }
+
   getCurrentTab(): TabModel {
     return this.tabsModel.find((tab: TabModel) => tab.active);
   }
@@ -146,6 +177,7 @@ export class TabsComponent implements OnInit {
   newTab() {
     if (!this.disabled) {
       this.chartService.initTab(this.tabsModel);
+      this.ref.detectChanges();
     }
   }
 

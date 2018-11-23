@@ -34,7 +34,7 @@
                                                    (titleChange) = "tab.title=$event">
                                 </app-tab-title-edit>
                             </span>
-                            <span *ngIf = "tab.removable" (click) = "$event.preventDefault(); removeTab(tab);"
+                            <span *ngIf = "tab.removable" (click) = "$event.preventDefault(); $event.stopPropagation(); removeTab(tab);"
                                   class = "glyphicon glyphicon-remove-circle"></span>
                         </a>
                     </li>
