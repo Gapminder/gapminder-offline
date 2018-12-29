@@ -65,7 +65,7 @@
     "tslib": "1.9.3",
     "universal-analytics": "0.4.17",
     "urlon": "3.0.1",
-    "vizabi-csv-reader": "0.4.1",
+    "vizabi-csv-reader": "0.4.0",
     "vizabi-ddfcsv-reader": "2.4.3",
     "vizabi-excel-reader": "0.4.1",
     "zip-dir": "1.0.2"
