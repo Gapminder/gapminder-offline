@@ -6,7 +6,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { HttpClientModule } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
 import { ElectronService } from './providers/electron.service';
 import { WebviewDirective } from './directives/webview.directive';
 import { VizabiDirective } from './directives/vizabi';
@@ -56,7 +55,6 @@ import { FreshenerService } from './components/tab-freshener/freshener.service';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule,
     AlertModule.forRoot(),
     ModalModule.forRoot(),
     ProgressbarModule.forRoot()
