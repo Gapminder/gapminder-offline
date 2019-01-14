@@ -329,6 +329,10 @@ function createWindow(showError = false) {
     mainWindow = null;
   });
 
+  mainWindow.webContents.on('will-navigate', (event) => {
+    event.preventDefault();
+  });
+
   ipc.on('get-dev-mode', event => {
     event.sender.send('got-dev-mode', devMode);
   });
