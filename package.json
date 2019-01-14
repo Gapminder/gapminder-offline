@@ -117,9 +117,9 @@
     "vizabi-barrankchart": "2.4.1",
     "vizabi-bubblechart": "2.3.0",
     "vizabi-bubblemap": "2.3.0",
-    "vizabi-config-systema_globalis": "2.9.0",
+    "vizabi-config-systema_globalis": "2.9.1",
     "vizabi-linechart": "2.3.0",
-    "vizabi-mountainchart": "2.3.0",
+    "vizabi-mountainchart": "2.4.0",
     "wait-on": "2.1.0",
     "webdriver-manager": "12.1.0",
     "zone.js": "0.8.26"
