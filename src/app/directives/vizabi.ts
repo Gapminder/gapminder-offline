@@ -199,6 +199,8 @@ export class VizabiDirective implements OnDestroy, OnChanges {
 
       this.ms.lock();
 
+      fullModel.locale.id = this.language;
+
       this.viz = this.es.vizabi(this.chartType, this.placeholder, fullModel);
 
       this.onCreated.emit({
@@ -274,6 +276,7 @@ export class VizabiDirective implements OnDestroy, OnChanges {
 
   private createPlaceholder() {
     this.placeholder = document.createElement('div');
+    this.placeholder.className = 'vzb-placeholder';
     this.placeholder.style.width = '100%';
     this.placeholder.style.height = '100%';
     this.element.nativeElement.appendChild(this.placeholder);

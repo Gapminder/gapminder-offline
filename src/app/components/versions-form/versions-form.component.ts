@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ElectronService } from '../../providers/electron.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-versions-form',
@@ -13,7 +14,7 @@ export class VersionsFormComponent implements OnInit {
   currentVersion: string;
   latestVersion: string;
 
-  constructor(private es: ElectronService) {
+  constructor(public translate: TranslateService, private es: ElectronService) {
     this.es.ipcRenderer.send('get-supported-versions');
   }
 
@@ -37,19 +38,19 @@ export class VersionsFormComponent implements OnInit {
 
   getVersionLabel(version: string) {
     if (version === this.currentVersion && version === this.recommendedVersion) {
-      return '(you have the recommended version)';
+      return this.translate.instant('(you have the recommended version)');
     }
 
     if (version === this.currentVersion && version === this.latestVersion) {
-      return '(you have the latest version)';
+      return this.translate.instant('(you have the latest version)');
     }
 
     if (version === this.recommendedVersion) {
-      return '(recommended)';
+      return this.translate.instant('(recommended)');
     }
 
     if (version === this.latestVersion) {
-      return '(latest)';
+      return this.translate.instant('(latest)');
     }
 
     return '';

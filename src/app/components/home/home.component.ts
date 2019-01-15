@@ -8,6 +8,7 @@ import {
   ViewContainerRef,
   ChangeDetectorRef
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ModalDirective } from 'ngx-bootstrap';
 import { ChartService } from '../tabs/chart.service';
@@ -25,6 +26,8 @@ import { getMenuActions } from '../menu/menu-actions';
 import { FreshenerService } from '../tab-freshener/freshener.service';
 import { ElectronService } from '../../providers/electron.service';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
+import { ILang } from '../../../lang-config';
+import { LocalizationService } from '../../providers/localization.service';
 
 @Component({
   selector: 'app-home',
@@ -51,61 +54,76 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public chartService: ChartService,
+    public translate: TranslateService,
+    public es: ElectronService,
+    public ls: LocalizationService,
     private viewContainerRef: ViewContainerRef,
     private messageService: MessageService,
     private freshenerService: FreshenerService,
-    private ref: ChangeDetectorRef,
-    private es: ElectronService
-  ) {
+    private ref: ChangeDetectorRef) {
     this.menuActions = getMenuActions(this, es);
-
-    initMenuComponent(this, es);
   }
 
   ngOnInit() {
-    this.messageService.getMessage()
-      .subscribe((event: any) => {
-        if (event.message === OPEN_DDF_FOLDER_ACTION) {
-          this.ddfDatasetConfigModal.hide();
+    initMenuComponent(this, this.es);
+    this.dataItemsAvailability();
+    this.restoreCurrentLanguage();
 
-          if (event.options && event.options.selectedFolder && event.options.chartType) {
-            const firstFilePath = event.options.selectedFolder;
+    this.translate.onDefaultLangChange.subscribe((langEvent: { lang: string }) => {
+      this.settingsOperation(settings => {
+        settings.language = langEvent.lang;
+        this.es.writeSettings(settings);
 
-            if (firstFilePath) {
-              const tabDataDescriptor: TabDataDescriptor = {};
+      });
 
-              this.chartService.ddfFolderDescriptor.ddfUrl = firstFilePath;
-              this.chartService.setReaderDefaults(tabDataDescriptor);
+      setTimeout(() => {
+        initMenuComponent(this, this.es);
+        this.doDetectChanges();
+      });
+    });
 
-              const newTab = new TabModel(event.options.chartType, false);
-              const chartIssue = this.chartService.newChart(newTab, tabDataDescriptor, false);
+    this.messageService.getMessage().subscribe((event: any) => {
+      if (event.message === OPEN_DDF_FOLDER_ACTION) {
+        this.ddfDatasetConfigModal.hide();
 
-              this.tabsModel.forEach((tab: TabModel) => tab.active = false);
+        if (event.options && event.options.selectedFolder && event.options.chartType) {
+          const firstFilePath = event.options.selectedFolder;
 
-              newTab.active = true;
+          if (firstFilePath) {
+            const tabDataDescriptor: TabDataDescriptor = {};
 
-              this.tabsModel.push(newTab);
+            this.chartService.ddfFolderDescriptor.ddfUrl = firstFilePath;
+            this.chartService.setReaderDefaults(tabDataDescriptor);
 
-              if (chartIssue) {
-                this.es.remote.dialog.showErrorBox('Error',
-                  `Could not open DDF folder ${this.chartService.ddfFolderDescriptor.ddfUrl}, because ${chartIssue}`);
-              }
+            const newTab = new TabModel(event.options.chartType, false);
+            const chartIssue = this.chartService.newChart(newTab, tabDataDescriptor, false);
 
-              this.es.ipcRenderer.send('new-chart', this.getCurrentTab().chartType + ' by DDF folder');
-              this.doDetectChanges();
+            this.tabsModel.forEach((tab: TabModel) => tab.active = false);
+
+            newTab.active = true;
+
+            this.tabsModel.push(newTab);
+
+            if (chartIssue) {
+              this.es.remote.dialog.showErrorBox('Error',
+                `Could not open DDF folder ${this.chartService.ddfFolderDescriptor.ddfUrl}, because ${chartIssue}`);
             }
+
+            this.es.ipcRenderer.send('new-chart', this.getCurrentTab().chartType + ' by DDF folder');
+            this.doDetectChanges();
           }
         }
+      }
 
-        if (event.message === SWITCH_MENU_ACTION) {
-          this.switchMenu();
-        }
+      if (event.message === SWITCH_MENU_ACTION) {
+        this.switchMenu();
+      }
 
-        if (event.message === MODEL_CHANGED) {
-          this.dataItemsAvailability();
-          this.doDetectChanges();
-        }
-      });
+      if (event.message === MODEL_CHANGED) {
+        this.dataItemsAvailability();
+        this.doDetectChanges();
+      }
+    });
 
     this.es.ipcRenderer.on('do-open-completed', (event: any, parameters: any) => {
       this.doOpenCompleted(event, parameters);
@@ -121,12 +139,24 @@ export class HomeComponent implements OnInit {
         this.doDetectChanges();
       }
     });
-
-    this.dataItemsAvailability();
   }
 
-  onMenuItemSelected(methodName: string) {
-    this.menuActions[methodName]();
+  onMenuItemSelected(method: string) {
+    if (method.indexOf('@') > 0) {
+      const [methodName, paramsStr] = method.split('@');
+
+      try {
+        const params = JSON.parse(paramsStr);
+
+        this.menuActions[methodName](params);
+      } catch (e) {
+        this.menuActions[methodName]();
+      }
+
+      return;
+    }
+
+    this.menuActions[method]();
   }
 
   dataItemsAvailability() {
@@ -329,5 +359,36 @@ export class HomeComponent implements OnInit {
 
   onTabReady() {
     this.messageService.sendMessage(TAB_READY_ACTION);
+  }
+
+  modalHandler(eventDesc) {
+    this.messageService.sendMessage(eventDesc);
+  }
+
+  setLanguage(lang: ILang) {
+    this.ls.currentLanguage = lang;
+    this.translate.setDefaultLang(this.ls.currentLanguage.id);
+  }
+
+  restoreCurrentLanguage() {
+    this.settingsOperation(settings => {
+      if (settings.language && !this.ls.isLanguageValid(settings.language)) {
+        alert(`Wrong or unsupported language ${settings.language}! Please correct or remove "${this.es.SETTINGS_FILE}"`);
+      }
+
+      if (!settings.language || !this.ls.isLanguageValid(settings.language)) {
+        settings.language = this.ls.getDefaultLanguage().id;
+      }
+
+      this.setLanguage(this.ls.getLanguageById(settings.language));
+    });
+  }
+
+  settingsOperation(whatShouldIDo: Function) {
+    try {
+      whatShouldIDo(this.es.readSettings());
+    } catch (e) {
+      alert(`Error in settings! Please correct or remove "${this.es.SETTINGS_FILE}"`);
+    }
   }
 }

@@ -4,6 +4,7 @@ import { ChartService } from '../tabs/chart.service';
 import { MessageService } from '../../message.service';
 import { ABANDON_VALIDATION, CLEAR_VALIDATION_FORM, OPEN_NEW_DDF_TAB_FROM_VALIDATOR } from '../../constants';
 import { ElectronService } from '../../providers/electron.service';
+import { TranslateService } from '@ngx-translate/core';
 
 interface ChartOption {
   label: string;
@@ -44,6 +45,7 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
   subscription: Subscription;
 
   constructor(
+    public translate: TranslateService,
     private ref: ChangeDetectorRef,
     private chartService: ChartService,
     private messageService: MessageService,
@@ -185,7 +187,7 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
 
   abandon() {
     if (this.doesValidationRunning) {
-      this.statusLine = ' ... abandoning ...';
+      this.statusLine = this.translate.instant(' ... abandoning ...');
       if (this.validator && this.validator.abandon) {
         this.validator.abandon();
       }

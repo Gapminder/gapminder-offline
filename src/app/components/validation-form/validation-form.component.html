@@ -1,12 +1,12 @@
 <div>
   <div class="popup-block">
-    <div class="title">Validate a <a href="#" (click)="openURL('https://docs.google.com/document/d/1aynARjsrSgOKsO1dEqboTqANRD1O9u7J_xmxy8m5jW8')">DDFcsv dataset:</a></div>
+    <div class="title">{{'Validate a' | translate}} <a href="#" (click)="openURL('https://docs.google.com/document/d/1aynARjsrSgOKsO1dEqboTqANRD1O9u7J_xmxy8m5jW8')">{{'DDFcsv dataset:' | translate}}</a></div>
     <app-smart-path-selector [isDirectory]="true"
-                         [title]="'Choose directory'"
+                         [title]="'Choose directory' | translate"
                          [clearValueAfterHide]="true"
                          (done)="onDirectorySelected($event)"></app-smart-path-selector>
-    <button (click)="validate()" [disabled]="!ddfFolder">Validate</button>
-    <a href="#" (click)="areOptionsVisible=!areOptionsVisible" style="margin-left: 5px;">{{areOptionsVisible ? 'Hide' : 'Show'}} Options</a>
+    <button (click)="validate()" [disabled]="!ddfFolder">{{'Validate' | translate}}</button>
+    <a href="#" (click)="areOptionsVisible=!areOptionsVisible" style="margin-left: 5px;">{{(areOptionsVisible ? 'Hide' : 'Show') | translate}} {{'Options' | translate}}</a>
   </div>
 
   <div *ngIf="areOptionsVisible" class="popup-block" style="margin-bottom: 5px; margin-top: 5px;">
@@ -17,7 +17,7 @@
                  name="dataPackageModeGroup"
                  (change)="setDataPackageMode(USE_CURRENT_DATA_PACKAGE)"
                  [value]="USE_CURRENT_DATA_PACKAGE"
-                 [checked]="dataPackageMode === USE_CURRENT_DATA_PACKAGE"> Use current datapackage.json</label>
+                 [checked]="dataPackageMode === USE_CURRENT_DATA_PACKAGE"> {{'Use current datapackage.json' | translate}}</label>
       </div>
       <div>
         <label class="radio-label">
@@ -25,12 +25,12 @@
                  name="dataPackageModeGroup"
                  (change)="setDataPackageMode(CREATE_NEW_DATA_PACKAGE)"
                  [value]="CREATE_NEW_DATA_PACKAGE"
-                 [checked]="dataPackageMode === CREATE_NEW_DATA_PACKAGE"> Create new datapackage.json</label>
+                 [checked]="dataPackageMode === CREATE_NEW_DATA_PACKAGE"> {{'Create new datapackage.json' | translate}}</label>
         <label style="margin-left: 20px;">
           <input type="checkbox"
                  [checked]="preserveHeaders"
                  (change)="preserveHeaders = !preserveHeaders"
-                 [disabled]="dataPackageMode !== CREATE_NEW_DATA_PACKAGE"> but preserve headers
+                 [disabled]="dataPackageMode !== CREATE_NEW_DATA_PACKAGE"> {{'but preserve headers' | translate}}
         </label>
       </div>
     </div>
@@ -39,33 +39,33 @@
   <div *ngIf="doesValidationRunning || isResultReady" class="popup-block validating-container">
     <div *ngIf="doesValidationRunning" class="validating-container">
       <div><img src="assets/images/hourglass.gif"></div>
-      <div><b>Dataset is validating:</b>&nbsp;<span>{{statusLine}}</span></div>
-      <div><a href="#" (click)="abandon()" style="margin-left: 10px;">Stop validation</a></div>
+      <div><b>{{'Dataset is validating:' | translate}}</b>&nbsp;<span>{{statusLine}}</span></div>
+      <div><a href="#" (click)="abandon()" style="margin-left: 10px;">{{'Stop validation' | translate}}</a></div>
     </div>
 
     <div *ngIf="isResultReady && !error">
       <div *ngIf="issues.length === 0" class="validation-result validating-container">
           <div>
             <span class="glyphicon glyphicon-ok validation-glyph green"></span>
-            <span class="green">Dataset is valid :)</span>
+            <span class="green">{{'Dataset is valid :)' | translate}}</span>
           </div>
-          <div><span>You can now <a href="#" (click)="isChartOpenSectionVisible = true">open this dataset</a> in a new tab</span></div>
+          <div><span>{{'You can now' | translate}} <a href="#" (click)="isChartOpenSectionVisible = true">{{'open this dataset' | translate}}</a> {{'in a new tab' | translate}}</span></div>
       </div>
       <div *ngIf="errorCount > 0 && issues.length > 0 && !error" class="validation-result validating-container">
         <div>
           <span class="glyphicon glyphicon-remove validation-glyph red"></span>
-          <span class="red">Dataset is not valid :(</span>
+          <span class="red">{{'Dataset is not valid :(' | translate}}</span>
         </div>
-        <div><span>Please fix the following issues and <a href="#" (click)="validate()">validate again</a></span></div>
+        <div><span>{{'Please fix the following issues and' | translate}} <a href="#" (click)="validate()">{{'validate again' | translate}}</a></span></div>
       </div>
       <div *ngIf="errorCount === 0 && issues.length > 0 && !error" class="validation-result validating-container">
         <div style="align-self: flex-start;">
           <span class="glyphicon glyphicon-remove validation-glyph dark-yellow"></span>
-          <span class="dark-yellow">Dataset contains warnings :/</span>
+          <span class="dark-yellow">{{'Dataset contains warnings :/' | translate}}</span>
         </div>
-        <div><span>Please fix the following warnings and <a href="#" (click)="validate()">validate again</a>
-        <br>... or <a href="#" (click)="isChartOpenSectionVisible = true">open this dataset</a>. But in this case we can't
-          guarantee proper functioning of the application</span></div>
+        <div><span>{{'Please fix the following warnings and' | translate}} <a href="#" (click)="validate()">{{'validate again' | translate}}</a>
+        <br>{{'... or' | translate}} <a href="#" (click)="isChartOpenSectionVisible = true">{{'open this dataset' | translate}}</a>.
+          {{'But in this case we can\'t guarantee proper functioning of the application' | translate}}</span></div>
       </div>
     </div>
     <div *ngIf="error" class="validation-result validating-container">
@@ -77,11 +77,11 @@
     <div *ngIf="isChartOpenSectionVisible" class="validation-result validating-container">
       <div>
         <select [(ngModel)]="chartTypeToOpen" class="open-chart-list">
-          <option *ngFor="let chart of chartsToOpen" [ngValue]="chart.type">{{chart.label}}</option>
+          <option *ngFor="let chart of chartsToOpen" [ngValue]="chart.type">{{chart.label | translate}}</option>
         </select>
       </div>
       <div>
-        <button class="open-chart-btn" (click)="openNewDdfTab()">Open chart</button>
+        <button class="open-chart-btn" (click)="openNewDdfTab()">{{'Open chart' | translate}}</button>
       </div>
     </div>
   </div>
@@ -91,9 +91,9 @@
       <table border="0" cellpadding="0" cellspacing="0" width="100%" class="scrollTable">
         <thead class="fixedHeader">
         <tr>
-          <th width="20%">Description</th>
-          <th width="20%">howToFix</th>
-          <th width="70%">Details</th>
+          <th width="20%">{{'Description' | translate}}</th>
+          <th width="20%">{{'How To Fix' | translate}}</th>
+          <th width="70%">{{'Details' | translate}}</th>
         </tr>
         </thead>
         <tbody class="scrollContent">
@@ -102,7 +102,7 @@
           <td width="20%" valign="top" [innerHTML]="issue.howToFix"></td>
           <td width="68%" valign="top" [innerHTML]="issue.details"></td>
         </tr>
-        <tr *ngIf="issuesCount > ERRORS_LIMIT"><td colspan="3">and {{ issuesCount - ERRORS_LIMIT }} issues more...</td></tr>
+        <tr *ngIf="issuesCount > ERRORS_LIMIT"><td colspan="3">{{'and' | translate}} {{ issuesCount - ERRORS_LIMIT }} {{'issues more...' | translate}}</td></tr>
         </tbody>
       </table>
     </div>

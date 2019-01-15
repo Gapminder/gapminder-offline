@@ -1,4 +1,4 @@
-<app-tabs-new [syncActions]="getSyncActions()" [disabled]="disabled" style = "height: 100%;">
+<app-tabs-new [syncActions]="getSyncActions()" [disabled]="disabled" class="vizabi-content">
     <app-tab-new *ngFor = "let tab of tabsModel"
                 [title] = "tab.title"
                 [active] = "tab.active"
@@ -6,32 +6,32 @@
                 (select) = "selectTab(tab)"
                 (deselect) = "deselectTab(tab)"
                 (remove) = "removeTab($event)"
-                style = "height: 100%;">
-        <div *ngIf = "!tab.chartType">
-            <div class = "tab-chart-choice">Choose Chart Type</div>
+                class="vizabi-content">
+        <div *ngIf = "!tab.chartType" class="vizabi-content">
+            <div class = "tab-chart-choice">{{'Choose Chart Type' | translate}}</div>
             <ul class = "tab-chart-list">
                 <li (click) = "selectChart('BubbleChart')">
-                    <div><img src = "assets/images/tools/bubblechart.png"><span>Bubbles</span></div>
+                    <div><img src = "assets/images/tools/bubblechart.png"><span>{{'Bubbles' | translate}}</span></div>
                 </li>
                 <li (click) = "selectChart('BubbleMap')">
-                    <div><img src = "assets/images/tools/bubblemap.png"><span>Maps</span></div>
+                    <div><img src = "assets/images/tools/bubblemap.png"><span>{{'Maps' | translate}}</span></div>
                 </li>
                 <li (click) = "selectChart('MountainChart')">
-                    <div><img src = "assets/images/tools/mountainchart.png"><span>Mountains</span></div>
+                    <div><img src = "assets/images/tools/mountainchart.png"><span>{{'Mountains' | translate}}</span></div>
                 </li>
                 <li (click) = "selectChart('BarRankChart')">
-                    <div><img src = "assets/images/tools/barrankchart.png"><span>Rankings</span></div>
+                    <div><img src = "assets/images/tools/barrankchart.png"><span>{{'Rankings' | translate}}</span></div>
                 </li>
                 <li (click) = "selectChart('LineChart')">
-                    <div><img src = "assets/images/tools/linechart.png"><span>Lines</span></div>
+                    <div><img src = "assets/images/tools/linechart.png"><span>{{'Lines' | translate}}</span></div>
                 </li>
             </ul>
         </div>
-        <div *ngIf = "tab.chartType" style = "height: 100%">
+        <div *ngIf = "tab.chartType" class="vizabi-content">
             <div *ngFor="let alert of tab.alerts">
                 <alert type="danger">
-                    An error has occurred during chart processing.
-                    <a href="#" (click)="alert.toggle()">Details...</a>
+                    {{ 'An error has occurred during chart processing.' | translate}}
+                    <a href="#" (click)="alert.toggle()">{{'Details...' | translate}}</a>
                     <div *ngIf="!alert.collapsed">
                         <div [innerHtml]="alert.message"></div>
                         <div [innerHtml]="alert.stack"></div>
@@ -42,12 +42,13 @@
             <app-tab-freshener *ngIf="tab.isDataExpired" [tab]="tab"></app-tab-freshener>
 
             <vizabi *ngIf="tab.alerts.length <= 0"
-                    style = "height: 100%;"
+                    class="vizabi-content"
                     (onCreated) = "chartCreated($event, tab)"
                     (onChanged) = "chartChanged($event, tab)"
                     (onReadyOnce)="ready($event, tab)"
                     (onClick) = "clickHandler($event)"
                     (onError)="errorHandler($event)"
+                    [language]="ls.currentLanguage.id"
                     [order] = "tab.getOrder()"
                     [readerModuleObject] = "tab.readerModuleObject"
                     [readerGetMethod] = "tab.readerGetMethod"

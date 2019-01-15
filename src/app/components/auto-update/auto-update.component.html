@@ -1,15 +1,15 @@
 <div *ngIf="requestToUpdate && !requestToDatasetUpdate && !requestToExitAndFinishUpdate && !fullUpdateRequest" style="display: inline;">
-    <div class="label">New version <b>{{versionDescriptor.actualVersionGenericUpdate}}</b> is available!</div>
+    <div class="label" [innerHTML]="'New version is available!' | translate:versionDescriptor"></div>
     <span>
-      <input type="button" (click)="processUpdateRequest()" value="Update now" class="btn" />
-      <input type="button" (click)="cancel()" value="Cancel" class="btn btn-margin-left" />
+      <input type="button" (click)="processUpdateRequest()" value="{{'Update now' | translate}}" class="btn" />
+      <input type="button" (click)="cancel()" value="{{'Cancel' | translate}}" class="btn btn-margin-left" />
     </span>
 </div>
 <div *ngIf="requestToDatasetUpdate && !requestToExitAndFinishUpdate && !fullUpdateRequest" style="display: inline;">
-    <div class="label">New dataset (v{{versionDescriptor.actualVersionDsUpdate}}) is available!</div>
+    <div class="label" [innerHTML]="'New dataset is available!' | translate:versionDescriptor"></div>
     <span>
-      <input type="button" (click)="processUpdateRequest()" value="Update now" class="btn" />
-      <input type="button" (click)="cancel()" value="Cancel" class="btn btn-margin-left" />
+      <input type="button" (click)="processUpdateRequest()" value="{{'Update now' | translate}}" class="btn" />
+      <input type="button" (click)="cancel()" value="{{'Cancel' | translate}}" class="btn btn-margin-left" />
     </span>
 </div>
 <div *ngIf="requestToProgress" class="progress-addition">
@@ -19,25 +19,25 @@
                  [value]="progress"></progressbar>
 </div>
 <div *ngIf="!error && requestToExitAndFinishUpdate">
-    <div class="label">Press OK and wait — the app will restart automatically.</div>
+    <div class="label">{{'Press OK and wait — the app will restart automatically.' | translate}}</div>
     <span>
       <input type="button" (click)="exitAndUpdate()" value="OK" class="btn" />
     </span>
 </div>
 <div *ngIf="error">
-  <div class="label">Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version
-    <a href="#" (click)="openURL('https://www.gapminder.org/tools-offline/')">from here</a>
+  <div class="label">{{'Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version' | translate}}
+    <a href="#" (click)="openURL('https://www.gapminder.org/tools-offline/')">{{'from here' | translate}}</a>
     <span>
-      <input type="button" (click)="resetError()" value="Cancel" class="btn btn-margin-left" />
+      <input type="button" (click)="resetError()" value="{{'Cancel' | translate}}" class="btn btn-margin-left" />
     </span>
   </div>
 </div>
 <div *ngIf="!error && fullUpdateRequest">
-    <div class="label">New version <b>{{versionDescriptor.actualVersionGenericUpdate}}</b> is available!
-      Please uninstall Gapminder Offline and install the new version
-      <a href="#" (click)="openURL('https://www.gapminder.org/tools-offline/')">from here</a>
+     <div class="label"><span [innerHTML]="'New version is available!' | translate:versionDescriptor"></span>
+      {{'Please uninstall Gapminder Offline and install the new version' | translate}}
+      <a href="#" (click)="openURL('https://www.gapminder.org/tools-offline/')">{{'from here' | translate}}</a>
       <span>
-        <input type="button" (click)="cancel()" value="Cancel" class="btn btn-margin-left" />
+        <input type="button" (click)="cancel()" value="{{'Cancel' | translate}}" class="btn btn-margin-left" />
     </span>
    </div>
 </div>

@@ -47,6 +47,8 @@
     "postversion": "git push origin development && git push --tags && npm run github-release"
   },
   "dependencies": {
+    "@ngx-translate/core": "11.0.1",
+    "@ngx-translate/http-loader": "4.0.0",
     "async": "2.6.1",
     "async-waterfall": "0.1.5",
     "csv-parse": "2.5.0",
@@ -113,7 +115,7 @@
     "ts-node": "7.0.0",
     "tslint": "5.11.0",
     "typescript": "2.7.2",
-    "vizabi": "0.38.2",
+    "vizabi": "0.38.5",
     "vizabi-barrankchart": "2.4.1",
     "vizabi-bubblechart": "2.3.0",
     "vizabi-bubblemap": "2.3.0",

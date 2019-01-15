@@ -1,8 +1,11 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { filter } from 'rxjs/operators';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef, ElementRef, ViewEncapsulation } from '@angular/core';
 import { ChartService } from '../tabs/chart.service';
 import { isEmpty } from 'lodash';
 import { TabModel } from '../tabs/tab.model';
 import { ElectronService } from '../../providers/electron.service';
+import { MessageService } from '../../message.service';
+import { TranslateService } from '@ngx-translate/core';
 
 const vizabiStateFacade: any = {
   getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
@@ -24,7 +27,8 @@ const vizabiStateFacade: any = {
 @Component({
   selector: 'app-file-select-config-form',
   templateUrl: './file-select-config-form.component.html',
-  styleUrls: ['./file-select-config-form.component.css']
+  styleUrls: ['./file-select-config-form.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class FileSelectConfigFormComponent {
   @Input() format ? = 'csv';
@@ -87,10 +91,35 @@ export class FileSelectConfigFormComponent {
   loadingSheetsTitle = '';
   hasNameColumn = false;
   nameColumnPosition = 0;
+  calculatedDataView: {
+    firstStep: number,
+    secondStep: number,
+    countries: string,
+    timePoints: string,
+    dim: string,
+    time: string
+  };
 
   private _currentTab: TabModel;
 
-  constructor(private chartService: ChartService, private es: ElectronService, private ref: ChangeDetectorRef) {
+  constructor(public ts: TranslateService,
+              private chartService: ChartService,
+              private es: ElectronService,
+              private ms: MessageService,
+              private el: ElementRef,
+              private ref: ChangeDetectorRef) {
+    this.ms.getMessage().pipe(filter(() => el.nativeElement.offsetParent !== null)).subscribe((messageDesc) => {
+      if (messageDesc.message === 'chartDataConfigModalShown') {
+        this.calculatedDataView = {
+          firstStep: this.addDataMode ? 1 : 2 ,
+          secondStep: this.addDataMode ? 2 : 3,
+          countries: this.getCountries(),
+          timePoints: this.getTimePoints(),
+          dim: this.getDim(),
+          time: this.getTime()
+        };
+      }
+    });
   }
 
   @Input()
@@ -229,7 +258,7 @@ export class FileSelectConfigFormComponent {
       this.lastModified = fileDescriptor.lastModified;
 
       if (this.format === 'excel') {
-        this.loadingSheetsTitle = 'Reading excel sheets…';
+        this.loadingSheetsTitle = this.ts.instant('Reading Excel sheets');
 
         const VizabiExcelReader = this.es.vizabi.Reader.extend(this.es.ExcelReader.excelReaderObject);
 

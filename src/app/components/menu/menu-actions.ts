@@ -130,5 +130,15 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => (
   openDevTools: () => {
     context.isMenuOpened = false;
     es.ipcRenderer.send('open-dev-tools');
+  },
+  setLanguage: (langPar) => {
+    context.isMenuOpened = false;
+
+    if (!langPar || !langPar.length) {
+      return;
+    }
+
+    context.ls.currentLanguage = context.ls.getLanguageById(langPar[0]);
+    context.translate.setDefaultLang(context.ls.currentLanguage.id);
   }
 });

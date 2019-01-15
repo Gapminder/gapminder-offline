@@ -12,6 +12,7 @@ import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/take';
 import { ElectronService } from '../../providers/electron.service';
+import { LocalizationService } from '../../providers/localization.service';
 
 declare const d3: any;
 
@@ -33,7 +34,8 @@ export class TabsComponent implements OnInit {
   tabDataDescriptor: TabDataDescriptor = {};
 
   constructor(
-    private chartService: ChartService,
+    public chartService: ChartService,
+    public ls: LocalizationService,
     private messageService: MessageService,
     private freshenerService: FreshenerService,
     private es: ElectronService,
