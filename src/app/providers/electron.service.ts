@@ -28,6 +28,8 @@ export class ElectronService {
   ddfValidation: typeof ddfValidation;
   vizabi: any;
   SETTINGS_FILE: string;
+  appPath: string;
+  devMode: boolean;
 
   constructor() {
     if (this.isElectron()) {
@@ -45,7 +47,10 @@ export class ElectronService {
       this.CsvReader = window.require('vizabi-csv-reader');
       this.ddfValidation = window.require('ddf-validation');
       this.vizabi = (window as any).Vizabi;
-      this.SETTINGS_FILE = this.path.resolve('settings.json');
+      const currentWindow: any = this.remote.getCurrentWindow();
+      this.appPath = currentWindow.appPath;
+      this.devMode = currentWindow.devMode;
+      this.SETTINGS_FILE = this.path.resolve(this.appPath, 'settings.json');
     }
   }
 

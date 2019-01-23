@@ -9,23 +9,25 @@
                 class="vizabi-content">
         <div *ngIf = "!tab.chartType" class="vizabi-content">
             <div class = "tab-chart-choice">{{'Choose Chart Type' | translate}}</div>
-            <ul class = "tab-chart-list">
-                <li (click) = "selectChart('BubbleChart')">
-                    <div><img src = "assets/images/tools/bubblechart.png"><span>{{'Bubbles' | translate}}</span></div>
-                </li>
-                <li (click) = "selectChart('BubbleMap')">
-                    <div><img src = "assets/images/tools/bubblemap.png"><span>{{'Maps' | translate}}</span></div>
-                </li>
-                <li (click) = "selectChart('MountainChart')">
-                    <div><img src = "assets/images/tools/mountainchart.png"><span>{{'Mountains' | translate}}</span></div>
-                </li>
-                <li (click) = "selectChart('BarRankChart')">
-                    <div><img src = "assets/images/tools/barrankchart.png"><span>{{'Rankings' | translate}}</span></div>
-                </li>
-                <li (click) = "selectChart('LineChart')">
-                    <div><img src = "assets/images/tools/linechart.png"><span>{{'Lines' | translate}}</span></div>
-                </li>
-            </ul>
+            <div class="tab-chart-container">
+              <div class="tab-chart">
+                  <div (click)="selectChart('BubbleChart')"><img src="assets/images/tools/bubblechart.png"><span>{{'Bubbles' | translate}}</span></div>
+                  <div (click)="selectChart('MountainChart')"><img src="assets/images/tools/mountainchart.png"><span>{{'Mountains' | translate}}</span></div>
+              </div>
+              <div class="tab-chart">
+                  <div (click)="selectChart('BubbleMap')"><img src="assets/images/tools/bubblemap.png"><span>{{'Maps' | translate}}</span></div>
+                  <div (click)="selectChart('BarRankChart')"><img src="assets/images/tools/barrankchart.png"><span>{{'Rankings' | translate}}</span></div>
+              </div>
+              <div class="tab-chart">
+                  <div (click)="selectChart('LineChart')"><img src="assets/images/tools/linechart.png"><span>{{'Lines' | translate}}</span></div>
+              </div>
+            </div>
+            <div class="footer">
+                <span *ngFor="let lang of ls.langConfig">
+                     <span *ngIf="lang.id === ls.currentLanguage.id" [ngClass]="{'ru': ls.currentLanguage.id === 'ru'}">{{lang.label}}</span>
+                     <span *ngIf="lang.id !== ls.currentLanguage.id"><a href="#" [ngClass]="{'ru': ls.currentLanguage.id === 'ru'}" (click)="ls.setLanguage(lang)">{{lang.label}}</a></span>
+                </span>
+            </div>
         </div>
         <div *ngIf = "tab.chartType" class="vizabi-content">
             <div *ngFor="let alert of tab.alerts">

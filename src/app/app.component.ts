@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { ElectronService } from './providers/electron.service';
 import { AppConfig } from '../environments/environment';
 import { TranslateService } from '@ngx-translate/core';
-import { langConfigTemplate } from '../lang-config';
 import { LocalizationService } from './providers/localization.service';
 
 @Component({
@@ -16,8 +15,5 @@ export class AppComponent {
       console.log('AppConfig', AppConfig);
       console.log('Mode web');
     }
-
-    translate.addLangs(langConfigTemplate.map(lang => lang.id));
-    translate.setDefaultLang(ls.currentLanguage.id);
   }
 }

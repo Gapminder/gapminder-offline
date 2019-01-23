@@ -49,47 +49,22 @@ export class TabsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.es.ipcRenderer.send('get-app-path');
     this.es.ipcRenderer.send('get-versions-info');
-    this.es.ipcRenderer.send('get-dev-mode');
     this.es.ipcRenderer.send('get-app-arguments');
 
-    const gotAppPathStream = Observable
-      .fromEvent(this.es.ipcRenderer, 'got-app-path', (event: any, path: string) => path);
-    const devModeStream = Observable
-      .fromEvent(this.es.ipcRenderer, 'got-dev-mode', (event: any, isDevMode: boolean) => isDevMode);
-    const appArgumentsStream = Observable
-      .fromEvent(this.es.ipcRenderer, 'got-app-file-argument', (event: any, appArguments: string[]) => appArguments);
+    this.chartService.ddfFolderDescriptor.electronPath = this.es.appPath;
+    this.chartService.isDevMode = this.es.devMode;
 
-    Observable.combineLatest(
-      gotAppPathStream,
-      devModeStream,
-      appArgumentsStream
-    ).take(1).subscribe((result: any[]) => {
-      let fileName = null;
-
-      result.forEach((resultRecord: any) => {
-        if (typeof resultRecord === 'string') {
-          this.chartService.ddfFolderDescriptor.electronPath = resultRecord;
-        }
-
-        if (typeof resultRecord === 'boolean') {
-          this.chartService.isDevMode = resultRecord;
-        }
-
-        if (typeof resultRecord === 'object') {
-          fileName = resultRecord.fileName;
-        }
-      });
-
-      if (!fileName) {
+    Observable.fromEvent(this.es.ipcRenderer, 'got-app-file-argument',
+      (event: any, appArguments: string[]) => appArguments).subscribe((fileDesc: any) => {
+      if (!fileDesc || !fileDesc.fileName) {
         this.chartService.ddfFolderDescriptor.defaults();
         this.chartService.setReaderDefaults(this.tabDataDescriptor);
         this.chartService.initTab(this.tabsModel);
         this.onTabsInit.emit();
       }
 
-      if (fileName) {
+      if (fileDesc.fileName) {
         this.es.ipcRenderer.send('open-file-after-start');
       }
     });

@@ -26,8 +26,8 @@ import { getMenuActions } from '../menu/menu-actions';
 import { FreshenerService } from '../tab-freshener/freshener.service';
 import { ElectronService } from '../../providers/electron.service';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
-import { ILang } from '../../../lang-config';
 import { LocalizationService } from '../../providers/localization.service';
+import { langConfigTemplate } from '../../../lang-config';
 
 @Component({
   selector: 'app-home',
@@ -65,15 +65,15 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.translate.addLangs(langConfigTemplate.map(lang => lang.id));
     initMenuComponent(this, this.es);
     this.dataItemsAvailability();
-    this.restoreCurrentLanguage();
+    this.ls.restoreCurrentLanguage();
 
     this.translate.onDefaultLangChange.subscribe((langEvent: { lang: string }) => {
-      this.settingsOperation(settings => {
+      this.ls.settingsOperation(settings => {
         settings.language = langEvent.lang;
         this.es.writeSettings(settings);
-
       });
 
       setTimeout(() => {
@@ -279,7 +279,7 @@ export class HomeComponent implements OnInit {
     newTab.model = config;
 
     this.chartService.setReaderDefaults(newTab);
-    this.chartService.registerNewReader(newTab.model.data.reader);
+    this.registerNewReaders(newTab.model);
     this.tabsModel.forEach((tab: TabModel) => tab.active = false);
     this.tabsModel.push(newTab);
     this.doDetectChanges();
@@ -365,30 +365,11 @@ export class HomeComponent implements OnInit {
     this.messageService.sendMessage(eventDesc);
   }
 
-  setLanguage(lang: ILang) {
-    this.ls.currentLanguage = lang;
-    this.translate.setDefaultLang(this.ls.currentLanguage.id);
-  }
-
-  restoreCurrentLanguage() {
-    this.settingsOperation(settings => {
-      if (settings.language && !this.ls.isLanguageValid(settings.language)) {
-        alert(`Wrong or unsupported language ${settings.language}! Please correct or remove "${this.es.SETTINGS_FILE}"`);
+  private registerNewReaders(model) {
+    for (const key of Object.keys(model)) {
+      if (key.indexOf('data_') === 0 && model[key].reader) {
+        this.chartService.registerNewReader(model[key].reader);
       }
-
-      if (!settings.language || !this.ls.isLanguageValid(settings.language)) {
-        settings.language = this.ls.getDefaultLanguage().id;
-      }
-
-      this.setLanguage(this.ls.getLanguageById(settings.language));
-    });
-  }
-
-  settingsOperation(whatShouldIDo: Function) {
-    try {
-      whatShouldIDo(this.es.readSettings());
-    } catch (e) {
-      alert(`Error in settings! Please correct or remove "${this.es.SETTINGS_FILE}"`);
     }
   }
 }
