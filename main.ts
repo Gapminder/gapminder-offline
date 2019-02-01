@@ -64,6 +64,9 @@ const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 const args = process.argv.slice(1);
 const devMode = process.argv.length > 1 && process.argv.indexOf('dev') > 0;
 const autoUpdateTestMode = process.argv.length > 1 && process.argv.indexOf('au-test') > 0;
+const quickAutoUpdateTestMode = process.argv.length > 1 && process.argv.indexOf('au-q-test') > 0;
+const versionToQuickUpdate = quickAutoUpdateTestMode ? args[1] : '';
+const quickUpdateType = versionToQuickUpdate ? args[2] : '';
 const nonAsarAppPath = app.getAppPath().replace(/app\.asar/, '');
 const dataPackage = require(path.resolve(nonAsarAppPath, 'ddf--gapminder--systema_globalis/datapackage.json'));
 const serve = args.some(val => val === '--serve');
@@ -403,6 +406,9 @@ function createWindow(showError = false) {
       if (errGenericUpdate) {
         return;
       }
+
+      actualVersionGenericUpdate = quickAutoUpdateTestMode ? versionToQuickUpdate : actualVersionGenericUpdate;
+      versionDiffType = quickAutoUpdateTestMode ? quickUpdateType : versionDiffType;
 
       if (actualVersionGenericUpdate) {
         if (versionDiffType === 'major') {
