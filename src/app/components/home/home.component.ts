@@ -310,7 +310,7 @@ export class HomeComponent implements OnInit {
       newTab.model = tabDescriptor.model;
 
       this.chartService.setReaderDefaults(newTab);
-      this.chartService.registerNewReader(newTab.model.data.reader);
+      this.registerNewReaders(newTab.model);
       this.tabsModel.forEach((tab: TabModel) => tab.active = false);
       this.tabsModel.push(newTab);
 
