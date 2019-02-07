@@ -1,4 +1,4 @@
-<div class="popup-block main-popup" [style.htight]="addDataMode ? '300px' : '330px'" style="overflow: auto;">
+<div *ngIf="calculatedDataView" class="popup-block main-popup" [style.htight]="addDataMode ? '300px' : '330px'" style="overflow: auto;">
     <div *ngIf="!addDataMode" class="step-block">
         <h4>{{'Step 1: Pick a chart:' | translate}}</h4>
         <div class="chartType">

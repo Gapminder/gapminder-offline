@@ -1,4 +1,3 @@
-import { filter } from 'rxjs/operators';
 import { Component, Input, Output, EventEmitter, ChangeDetectorRef, ElementRef, ViewEncapsulation } from '@angular/core';
 import { ChartService } from '../tabs/chart.service';
 import { isEmpty } from 'lodash';
@@ -6,23 +5,7 @@ import { TabModel } from '../tabs/tab.model';
 import { ElectronService } from '../../providers/electron.service';
 import { MessageService } from '../../message.service';
 import { TranslateService } from '@ngx-translate/core';
-
-const vizabiStateFacade: any = {
-  getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
-  getTime: (currentTabInstance: any) => currentTabInstance.model.state.time.dim,
-  getCountries: (currentTabInstance: any, dim: any) =>
-    currentTabInstance.model.state.marker.getKeys()
-      .slice(0, 5)
-      .map((marker: any) => marker[dim]).join(', '),
-  getTimePoints: (currentTabInstance: any) => {
-    const timeModel = currentTabInstance.model.state.time;
-
-    return timeModel.getAllSteps()
-      .slice(0, 3)
-      .map((step: string) => timeModel.formatDate(step))
-      .join(', ');
-  }
-};
+import { ICalculatedDataView } from './calculated-data-view';
 
 @Component({
   selector: 'app-file-select-config-form',
@@ -33,6 +16,7 @@ const vizabiStateFacade: any = {
 export class FileSelectConfigFormComponent {
   @Input() format ? = 'csv';
   @Input() addDataMode ? = false;
+  @Input() calculatedDataView: ICalculatedDataView;
   @Output() done: EventEmitter<any> = new EventEmitter();
 
   timeFormats: string[] = ['year', 'month', 'day', 'week', 'quarter'];
@@ -91,14 +75,6 @@ export class FileSelectConfigFormComponent {
   loadingSheetsTitle = '';
   hasNameColumn = false;
   nameColumnPosition = 0;
-  calculatedDataView: {
-    firstStep: number,
-    secondStep: number,
-    countries: string,
-    timePoints: string,
-    dim: string,
-    time: string
-  };
 
   private _currentTab: TabModel;
 
@@ -108,18 +84,6 @@ export class FileSelectConfigFormComponent {
               private ms: MessageService,
               private el: ElementRef,
               private ref: ChangeDetectorRef) {
-    this.ms.getMessage().pipe(filter(() => el.nativeElement.offsetParent !== null)).subscribe((messageDesc) => {
-      if (messageDesc.message === 'chartDataConfigModalShown') {
-        this.calculatedDataView = {
-          firstStep: this.addDataMode ? 1 : 2 ,
-          secondStep: this.addDataMode ? 2 : 3,
-          countries: this.getCountries(),
-          timePoints: this.getTimePoints(),
-          dim: this.getDim(),
-          time: this.getTime()
-        };
-      }
-    });
   }
 
   @Input()
@@ -194,50 +158,6 @@ export class FileSelectConfigFormComponent {
     this.file = '';
   }
   */
-
-  getCurrentTabInstance(): boolean {
-    return this.chartService.currentTab && this.chartService.currentTab.instance ? this.chartService.currentTab.instance : null;
-  }
-
-  getDim(): string {
-    const currentTabInstance: any = this.getCurrentTabInstance();
-
-    if (currentTabInstance) {
-      return vizabiStateFacade.getDim(currentTabInstance);
-    }
-
-    return '';
-  }
-
-  getTime(): string {
-    const currentTabInstance: any = this.getCurrentTabInstance();
-
-    if (currentTabInstance) {
-      return vizabiStateFacade.getTime(currentTabInstance);
-    }
-
-    return currentTabInstance ? currentTabInstance.model.state.time.dim : null;
-  }
-
-  getCountries(): string {
-    const currentTabInstance: any = this.getCurrentTabInstance();
-
-    if (currentTabInstance) {
-      return vizabiStateFacade.getCountries(currentTabInstance, this.getDim());
-    }
-
-    return '';
-  }
-
-  getTimePoints(): string {
-    const currentTabInstance: any = this.getCurrentTabInstance();
-
-    if (currentTabInstance) {
-      return vizabiStateFacade.getTimePoints(currentTabInstance);
-    }
-
-    return '';
-  }
 
   switchExampleRows() {
     this.isExampleRows = !this.isExampleRows;

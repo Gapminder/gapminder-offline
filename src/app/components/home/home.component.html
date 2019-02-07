@@ -94,7 +94,6 @@
 
   <div bsModal
        #csvConfigModal="bs-modal"
-       (onShown)="modalHandler('chartDataConfigModalShown')"
        class="modal fade"
        tabindex="-1"
        role="dialog"
@@ -109,7 +108,10 @@
           <h4 class="modal-title">{{'New chart from your data' | translate}}</h4>
         </div>
         <div class="modal-body">
-          <app-file-select-config-form [currentTab]="getCurrentTab()" (done)="completeFileConfigForm($event)"></app-file-select-config-form>
+          <app-file-select-config-form [calculatedDataView]="calculatedDataView"
+                                       [currentTab]="getCurrentTab()"
+                                       (done)="completeFileConfigForm($event)">
+          </app-file-select-config-form>
         </div>
       </div>
     </div>
@@ -117,7 +119,6 @@
 
   <div bsModal
        #excelConfigModal="bs-modal"
-       (onShown)="modalHandler('chartDataConfigModalShown')"
        class="modal fade"
        tabindex="-1"
        role="dialog"
@@ -132,14 +133,17 @@
           <h4 class="modal-title">{{'New chart from your data' | translate}}</h4>
         </div>
         <div class="modal-body">
-          <app-file-select-config-form [format]="'excel'" [currentTab]="getCurrentTab()" (done)="completeFileConfigForm($event)"></app-file-select-config-form>
+          <app-file-select-config-form [calculatedDataView]="calculatedDataView"
+                                       [format]="'excel'"
+                                       [currentTab]="getCurrentTab()"
+                                       (done)="completeFileConfigForm($event)">
+          </app-file-select-config-form>
         </div>
       </div>
     </div>
   </div>
 
   <div bsModal
-       (onShown)="onAdditionalCsvConfigModalShown(); modalHandler('chartDataConfigModalShown')"
        #additionalCsvConfigModal="bs-modal"
        class="modal fade"
        tabindex="-1"
@@ -155,14 +159,17 @@
           <h4 class="modal-title">{{'Add data to the active chart' | translate}}</h4>
         </div>
         <div class="modal-body">
-          <app-file-select-config-form [addDataMode]="true" [currentTab]="getCurrentTab()" (done)="additionalFileConfigFormComplete($event)"></app-file-select-config-form>
+          <app-file-select-config-form [calculatedDataView]="calculatedDataView"
+                                       [addDataMode]="true"
+                                       [currentTab]="getCurrentTab()"
+                                       (done)="additionalFileConfigFormComplete($event)">
+          </app-file-select-config-form>
         </div>
       </div>
     </div>
   </div>
 
   <div bsModal
-       (onShown)="onAdditionalCsvConfigModalShown(); modalHandler('chartDataConfigModalShown')"
        #additionalExcelConfigModal="bs-modal"
        class="modal fade"
        tabindex="-1"
@@ -178,7 +185,12 @@
           <h4 class="modal-title">{{'Add data to the active chart' | translate}}</h4>
         </div>
         <div class="modal-body">
-          <app-file-select-config-form [format]="'excel'" [addDataMode]="true" [currentTab]="getCurrentTab()" (done)="additionalFileConfigFormComplete($event)"></app-file-select-config-form>
+          <app-file-select-config-form [calculatedDataView]="calculatedDataView"
+                                       [format]="'excel'"
+                                       [addDataMode]="true"
+                                       [currentTab]="getCurrentTab()"
+                                       (done)="additionalFileConfigFormComplete($event)">
+          </app-file-select-config-form>
         </div>
       </div>
     </div>

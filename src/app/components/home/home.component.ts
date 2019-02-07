@@ -28,6 +28,24 @@ import { ElectronService } from '../../providers/electron.service';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { LocalizationService } from '../../providers/localization.service';
 import { langConfigTemplate } from '../../../lang-config';
+import { ICalculatedDataView } from '../file-select-config-form/calculated-data-view';
+
+const vizabiStateFacade: any = {
+  getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
+  getTime: (currentTabInstance: any) => currentTabInstance.model.state.time.dim,
+  getCountries: (currentTabInstance: any, dim: any) =>
+    currentTabInstance.model.state.marker.getKeys()
+      .slice(0, 5)
+      .map((marker: any) => marker[dim]).join(', '),
+  getTimePoints: (currentTabInstance: any) => {
+    const timeModel = currentTabInstance.model.state.time;
+
+    return timeModel.getAllSteps()
+      .slice(0, 3)
+      .map((step: string) => timeModel.formatDate(step))
+      .join(', ');
+  }
+};
 
 @Component({
   selector: 'app-home',
@@ -38,6 +56,7 @@ export class HomeComponent implements OnInit {
   isMenuOpened = false;
   menuComponent;
   menuActions: any = {};
+  calculatedDataView: ICalculatedDataView;
 
   @ViewChild('ddfModal') ddfModal: ModalDirective;
   @ViewChild('additionalDataModal') additionalDataModal: ModalDirective;
@@ -348,10 +367,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onAdditionalCsvConfigModalShown() {
-    this.chartService.currentTab = this.getCurrentTab();
-  }
-
   doDetectChanges() {
     this.dataItemsAvailability();
     this.ref.detectChanges();
@@ -361,8 +376,59 @@ export class HomeComponent implements OnInit {
     this.messageService.sendMessage(TAB_READY_ACTION);
   }
 
-  modalHandler(eventDesc) {
-    this.messageService.sendMessage(eventDesc);
+  fillCalculatedDataView(firstStep: number, secondStep: number) {
+    this.calculatedDataView = {
+      firstStep,
+      secondStep,
+      countries: this.getCountries(),
+      timePoints: this.getTimePoints(),
+      dim: this.getDim(),
+      time: this.getTime()
+    };
+  }
+
+  private getCurrentTabInstance(): boolean {
+    return this.chartService.currentTab && this.chartService.currentTab.instance ? this.chartService.currentTab.instance : null;
+  }
+
+  private getDim(): string {
+    const currentTabInstance: any = this.getCurrentTabInstance();
+
+    if (currentTabInstance) {
+      return vizabiStateFacade.getDim(currentTabInstance);
+    }
+
+    return '';
+  }
+
+  private getTime(): string {
+    const currentTabInstance: any = this.getCurrentTabInstance();
+
+    if (currentTabInstance) {
+      return vizabiStateFacade.getTime(currentTabInstance);
+    }
+
+    return currentTabInstance ? currentTabInstance.model.state.time.dim : null;
+  }
+
+  private getCountries(): string {
+    const currentTabInstance: any = this.getCurrentTabInstance();
+
+    if (currentTabInstance) {
+      return vizabiStateFacade.getCountries(currentTabInstance, this.getDim());
+    }
+
+    return '';
+  }
+
+  private getTimePoints(): string {
+    const currentTabInstance: any = this.getCurrentTabInstance();
+
+    if (currentTabInstance) {
+      return vizabiStateFacade.getTimePoints(currentTabInstance);
+    }
+
+    return '';
   }
 
   private registerNewReaders(model) {

@@ -12,12 +12,16 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => (
     context.isMenuOpened = false;
   },
   openCsvFile: () => {
+    context.fillCalculatedDataView(2, 3);
     context.csvConfigModal.show();
     context.isMenuOpened = false;
+    context.doDetectChanges();
   },
   openExcelFile: () => {
+    context.fillCalculatedDataView(2, 3);
     context.excelConfigModal.show();
     context.isMenuOpened = false;
+    context.doDetectChanges();
   },
   ddfFolderClick: (event: any, onFolderClickProcessed: Function) => {
     const dialog = es.remote.dialog;
@@ -29,12 +33,18 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => (
     dialog.showOpenDialog(currentWindow, {properties: ['openDirectory']}, onFolderClickProcessed.bind(context));
   },
   addCsvFile: () => {
+    context.chartService.currentTab = context.getCurrentTab();
+    context.fillCalculatedDataView(1, 2);
     context.additionalCsvConfigModal.show();
     context.isMenuOpened = false;
+    context.doDetectChanges();
   },
   addExcelFile: () => {
+    context.chartService.currentTab = context.getCurrentTab();
+    context.fillCalculatedDataView(1, 2);
     context.additionalExcelConfigModal.show();
     context.isMenuOpened = false;
+    context.doDetectChanges();
   },
   addDdfFolder: () => {
     context.isMenuOpened = false;
