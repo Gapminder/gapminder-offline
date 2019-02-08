@@ -2,9 +2,9 @@
     <div *ngIf="!addDataMode" class="step-block">
         <h4>{{'Step 1: Pick a chart:' | translate}}</h4>
         <div class="chartType">
-            <label class="chart-label"><input type="radio" name="chartTypeGroup" (change)="setChartType('BubbleChart')" [value]="'BubbleChart'" [checked]="chartType === 'BubbleChart'"> {{'Bubbles' | translate}}</label>
-            <label class="chart-label"><input type="radio" name="chartTypeGroup" (change)="setChartType('LineChart')" [value]="'LineChart'" [checked]="chartType === 'LineChart'"> {{'Lines' | translate}}</label>
-            <label class="chart-label"><input type="radio" name="chartTypeGroup" (change)="setChartType('BarRankChart')" [value]="'BarRankChart'" [checked]="chartType === 'BarRankChart'"> {{'Rankings' | translate}}</label>
+            <label class="chart-label"><input type="radio" [name]="'chartTypeGroup'+format" (change)="setChartType('BubbleChart')" [value]="'BubbleChart'" [checked]="chartType === 'BubbleChart'"> {{'Bubbles' | translate}}</label>
+            <label class="chart-label"><input type="radio" [name]="'chartTypeGroup'+format" (change)="setChartType('LineChart')" [value]="'LineChart'" [checked]="chartType === 'LineChart'"> {{'Lines' | translate}}</label>
+            <label class="chart-label"><input type="radio" [name]="'chartTypeGroup'+format" (change)="setChartType('BarRankChart')" [value]="'BarRankChart'" [checked]="chartType === 'BarRankChart'"> {{'Rankings' | translate}}</label>
         </div>
     </div>
 
@@ -14,13 +14,13 @@
             {{'Follow' | translate}} <a href="#" (click)="openURL('http://vizabi.org/tutorials/2017/04/04/join-your-data-with-g/')">{{'this tutorial' | translate}}</a>
         </div>
         <div>
-            <label class="step-label"><input type="radio" name="choiceGroup" (change)="setChoice('rows')" [checked]="choice === 'rows'"> {{'Time goes down' | translate}}</label>
+            <label class="step-label"><input type="radio" [name]="'choiceGroup'+format" (change)="setChoice('rows')" [checked]="choice === 'rows'"> {{'Time goes down' | translate}}</label>
             <div *ngIf="!addDataMode" class="desc">{{'Column 1: entities, Column 2: time values, Column 3 and on: indicators' | translate}} (<a href="#" (click)="switchExampleRows()">{{'see example' | translate}}</a>)</div>
             <div *ngIf="addDataMode" class="desc"><span [innerHTML]="'columns-desc-content-indicators' | translate:calculatedDataView"></span> (<a href="#" (click)="switchExampleRows()">{{'see example' | translate}}</a>)</div>
         </div>
         <div *ngIf="isExampleRows" class="example-container"><img src="assets/images/templates/time-as-rows-example.png" class="example-image"></div>
         <div>
-            <label class="step-label"><input type="radio" name="choiceGroup" (change)="setChoice('columns')" [checked]="choice === 'columns'"> {{'Time goes right' | translate}}</label>
+            <label class="step-label"><input type="radio" [name]="'choiceGroup'+format" (change)="setChoice('columns')" [checked]="choice === 'columns'"> {{'Time goes right' | translate}}</label>
             <div *ngIf="!addDataMode" class="desc"><span [innerHTML]="'columns-desc-content-time' | translate"></span> (<a href="#" (click)="switchExampleColumns()">{{'see example' | translate}}</a>)</div>
             <div *ngIf="addDataMode" class="desc"><span [innerHTML]="'columns-desc-content-time-values' | translate:calculatedDataView"></span> (<a href="#" (click)="switchExampleColumns()">{{'see example' | translate}}</a>)</div>
         </div>
