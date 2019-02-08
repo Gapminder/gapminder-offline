@@ -1,0 +1,102 @@
+<div class="popup-block main-popup" [style.htight]="addDataMode ? '300px' : '330px'" style="overflow: auto;">
+    <div *ngIf="!addDataMode" class="step-block">
+        <h4>Step 1: Pick a chart:</h4>
+        <div class="chartType">
+            <label class="chart-label"><input type="radio" name="chartTypeGroup" (change)="setChartType('BubbleChart')" [value]="'BubbleChart'" [checked]="chartType === 'BubbleChart'"> Bubbles</label>
+            <label class="chart-label"><input type="radio" name="chartTypeGroup" (change)="setChartType('LineChart')" [value]="'LineChart'" [checked]="chartType === 'LineChart'"> Lines</label>
+            <label class="chart-label"><input type="radio" name="chartTypeGroup" (change)="setChartType('BarRankChart')" [value]="'BarRankChart'" [checked]="chartType === 'BarRankChart'"> Rankings</label>
+        </div>
+    </div>
+
+    <div class="step-block">
+        <h4>Step {{addDataMode ? 1 : 2}}: Choose how your data is arranged:</h4>
+        <div *ngIf="addDataMode" class="desc">Limitation: entities in the first column should match the ones already used in the chart:
+            <span class="highl">{{getCountries()}}</span> and so on... Time values should be expressed like <span class="highl">{{getTimePoints()}}</span>...
+            Observe the restrictions on column headers, as <span class="highl">highlighted</span> below.
+            Follow <a href="#" (click)="openURL('http://vizabi.org/tutorials/2017/04/04/join-your-data-with-g/')">this&nbsp;tutorial</a>
+        </div>
+        <div>
+            <label class="step-label"><input type="radio" name="choiceGroup" (change)="setChoice('rows')" [checked]="choice === 'rows'"> Time goes down</label>
+            <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: time values, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
+            <div *ngIf="addDataMode" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: <span class="highl">{{getTime()}}</span>, Column 3 and on: indicators (<a href="#" (click)="switchExampleRows()">see example</a>)</div>
+        </div>
+        <div *ngIf="isExampleRows" class="example-container"><img src="assets/images/templates/time-as-rows-example.png" class="example-image"></div>
+        <div>
+            <label class="step-label"><input type="radio" name="choiceGroup" (change)="setChoice('columns')" [checked]="choice === 'columns'"> Time goes right</label>
+            <div *ngIf="!addDataMode" class="desc">Column 1: entities, Column 2: indicators, Column 3 and on: time values (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
+            <div *ngIf="addDataMode" class="desc">Column 1: <span class="highl">{{getDim()}}</span>, Column 2: indicators, Column 3 and on: time values (<a href="#" (click)="switchExampleColumns()">see example</a>)</div>
+        </div>
+        <div *ngIf="isExampleColumns" class="example-container"><img src="assets/images/templates/time-as-columns-example.png" class="example-image"></div>
+    </div>
+
+    <div class="step-block">
+        <h4>Step {{addDataMode ? 2 : 3}}: Pick a file:</h4>
+        <div class="row-container">
+          <div>
+            <app-smart-path-selector [accept]="format === 'excel' ? '.xls, .xlsx' : '.csv'"
+                                     [title]="format === 'excel' ? 'Choose Excel file' : 'Choose CSV file'"
+                                     [(ngModel)]="data.result"
+                                     (done)="onFileChanged($event)"></app-smart-path-selector>
+          </div>
+          <div *ngIf="!loadingSheetsTitle && worksheets.length > 0 && format==='excel'">
+            <select type="string" [disabled]="worksheets.length < 2" [(ngModel)]="sheet" class="form-control">
+              <option *ngFor="let worksheet of worksheets" [ngValue]="worksheet">{{worksheet}}</option>
+            </select>
+          </div>
+          <app-wait-indicator [title]="loadingSheetsTitle"></app-wait-indicator>
+        </div>
+    </div>
+
+    <div class="step-block">
+    <div>
+      <div class="time-format-holder">
+        <div class="time-format-block">
+          <h4>Optional</h4>
+        </div>
+      </div>
+    </div>
+
+    <div [ngClass]="addDataMode ? 'inactive-time-format' : ''">
+        <div class="time-format-holder">
+            <div class="time-format-block time-format-select">
+                Time values look like this:
+                <select type="number" [disabled]="addDataMode" [(ngModel)]="timeFormat" class="form-control">
+                    <option *ngFor="let currentTimeFormat of timeFormats" [ngValue]="currentTimeFormat">{{currentTimeFormat}}</option>
+                </select>
+                {{timeFormatDescription[timeFormat].example}}
+            </div>
+        </div>
+    </div>
+
+    <div>
+      <div class="row-container column-name-container">
+        <label>
+          <input type="checkbox" [(ngModel)]="hasNameColumn" >&nbsp;Table has an extra column with nice looking names
+          at position
+        </label>&nbsp;
+        <input [(ngModel)]="nameColumnPosition" [attr.disabled]="hasNameColumn === false ? '' : null" type="number" min="0" maxlength="3">&nbsp;&nbsp;
+        (<a href="#" (click)="openURL('https://vizabi.org/tutorials/2017/04/10/nice-looking-names/')">see examples here</a>)
+      </div>
+    </div>
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="popup-footer">
+    <div class="btn-group" style="width: 100%">
+        <div class="row bottom-row">
+            <div class="col-sm-8">
+                <div><a href="#" *ngIf="format === 'csv'" (click)="openURL('http://vizabi.org/tutorials/2017/04/03/show-your-data/')">How to prepare and export a file from MS Excel</a></div>
+                <div><a href="#" (click)="openURL('https://docs.google.com/document/d/1GEgBscyLSbAkiXbrDrixGDrlTG4DekuFETD5AQaRBvs')">How to export a file from Google Docs</a></div>
+                <div><a href="#" *ngIf="format === 'csv'" (click)="openURL('https://csvlint.io/')">Online csv validator (a handy tool)</a></div>
+                <div><a href="#" (click)="switchUseYourDataVisible()">How do we use your data?</a><br><span *ngIf="useYourDataVisible">— We don't. Everything stays local on your computer. <a href="#" (click)="openURL('https://raw.githubusercontent.com/Gapminder/gapminder-offline/master/LICENSE')">Read more</a></span></div>
+            </div>
+            <div class="col-sm-4 bottom-controls">
+                <input type="button" class="close-btn" (click)="close()" value="Cancel" />
+                <input type="button" *ngIf="format === 'csv'" class="ok-btn" (click)="ok()" [disabled]="!choice || !file || !delimiter" value="OK" />
+                <input type="button" *ngIf="format === 'excel'" class="ok-btn" (click)="ok()" [disabled]="loadingSheets || !choice || !file" value="OK" />
+            </div>
+        </div>
+    </div>
+</div>

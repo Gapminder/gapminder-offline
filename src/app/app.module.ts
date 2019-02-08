@@ -6,12 +6,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { HttpClientModule } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
 import { ElectronService } from './providers/electron.service';
 import { WebviewDirective } from './directives/webview.directive';
+import { VizabiDirective } from './directives/vizabi';
 
 import { ModalModule, ProgressbarModule, AlertModule } from 'ngx-bootstrap';
-import { VizabiModule } from 'ng2-vizabi';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -21,12 +20,13 @@ import { HamburgerMenuComponent } from './components/menu/hamburger-menu.compone
 import { VersionsFormComponent } from './components/versions-form/versions-form.component';
 import { ValidationFormComponent } from './components/validation-form/validation-form.component';
 import { DdfDatasetConfigFormComponent } from './components/ddf-dataset-config-form/ddf-dataset-config-form.component';
-import { CsvConfigFormComponent } from './components/csv-config-form/csv-config-form.component';
+import { FileSelectConfigFormComponent } from './components/file-select-config-form/file-select-config-form.component';
 import { TabsNewComponent } from './components/tabs-new/tabs.component';
 import { TabNewComponent } from './components/tabs-new/tab.component';
 import { TabTitleEditComponent } from './components/tabs-new/tab-title-edit.component';
 import { TabsComponent } from './components/tabs/tabs.component';
 import { SmartPathSelectorComponent } from './components/smart-path-selector/smart-path-selector.component';
+import { WaitIndicatorComponent } from './components/wait-indicator/wait-indicator.component';
 import { ChartService } from './components/tabs/chart.service';
 import { MessageService } from './message.service';
 import { FreshenerService } from './components/tab-freshener/freshener.service';
@@ -41,23 +41,23 @@ import { FreshenerService } from './components/tab-freshener/freshener.service';
     VersionsFormComponent,
     ValidationFormComponent,
     DdfDatasetConfigFormComponent,
-    CsvConfigFormComponent,
+    FileSelectConfigFormComponent,
     TabsNewComponent,
     TabNewComponent,
     TabTitleEditComponent,
     TabsComponent,
     SmartPathSelectorComponent,
-    WebviewDirective
+    WaitIndicatorComponent,
+    WebviewDirective,
+    VizabiDirective
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule,
     AlertModule.forRoot(),
     ModalModule.forRoot(),
-    ProgressbarModule.forRoot(),
-    VizabiModule
+    ProgressbarModule.forRoot()
   ],
   providers: [
     ElectronService,

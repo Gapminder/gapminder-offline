@@ -3,8 +3,10 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as net from 'net';
 import * as urlLib from 'url';
+import * as ps from 'ps-node';
 import * as request from 'request';
 import * as semver from 'semver';
+import * as semverSort from 'semver-sort';
 import * as gitclient from 'git-fetch-pack';
 import * as transport from 'git-transport-protocol';
 import * as fsExtra from 'fs-extra';
@@ -13,16 +15,48 @@ import * as electronEasyUpdater from 'electron-easy-updater';
 import { parallel } from 'async';
 import { exportForWeb, openFileWhenDoubleClick, openFileWithDialog, saveAllTabs, saveFile } from './file-management';
 import { GoogleAnalytics } from './google-analytics';
+import { hashElement } from 'folder-hash';
 import {
   DS_FEED_URL_TEMP,
   DS_FEED_VERSION_URL_TEMP,
   FEED_VERSION_URL_TEMP,
   FEED_VERSION_URL_TEST_TEMP,
   FEED_FULL_URL_TEMP,
-  FEED_URL_TEMP
+  FEED_URL_TEMP,
+  FEED_HASH_URL,
+  FEED_PARTIAL_HASH_URL
 } from './auto-update-config';
 
 process.noAsar = true;
+
+const getTypeByOsAndArch = (os, arch) => {
+  if (os === 'win32' && arch === 'x64') {
+    return 'win64';
+  }
+
+  if (os === 'win32' && arch === 'ia32') {
+    return 'win32';
+  }
+
+  if (os === 'darwin') {
+    return 'mac';
+  }
+
+  return os;
+};
+
+const currentDir = path.resolve(__dirname, '..', '..');
+const dirs = {
+  linux: currentDir,
+  darwin: path.resolve(__dirname.replace(/\/app\.asar/, '')),
+  win32: path.resolve(__dirname.replace(/\/app\.asar/, ''), '..', '..')
+};
+
+const autoUpdateLog = message => {
+  const date = new Date().toISOString();
+
+  fs.appendFileSync('./auto-update-err.log', `${date}: ${message}\n`);
+};
 
 const packageJSON = require('./package.json');
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
@@ -34,10 +68,103 @@ const nonAsarAppPath = app.getAppPath().replace(/app\.asar/, '');
 const dataPackage = require(path.resolve(nonAsarAppPath, 'ddf--gapminder--systema_globalis/datapackage.json'));
 const serve = args.some(val => val === '--serve');
 
+const RELEASE_APP_ARCHIVE = 'release-app.zip';
+const RELEASE_DS_ARCHIVE = 'release-ds.zip';
+const FEED_VERSION_URL = autoUpdateTestMode ? FEED_VERSION_URL_TEST_TEMP : FEED_VERSION_URL_TEMP;
+const FEED_URL = FEED_URL_TEMP.replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch));
+const FEED_FULL_URL = FEED_FULL_URL_TEMP.replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch));
+const DS_FEED_VERSION_URL = DS_FEED_VERSION_URL_TEMP;
+const DS_FEED_URL = DS_FEED_URL_TEMP;
+const CACHE_APP_DIR = `${dirs[process.platform]}/cache-app`;
+const CACHE_DS_DIR = `${dirs[process.platform]}/cache-ds`;
+
 let mainWindow;
 let updateProcessAppDescriptor;
 let updateProcessDsDescriptor;
 let currentFile;
+
+function isRunAllowed(reason, cb) {
+  ps.lookup({}, (err, resultLists) => {
+    if (err) {
+      return cb(false);
+    }
+
+    for (const rec of resultLists) {
+      if (rec.command && rec.command.indexOf(reason) >= 0) {
+        return cb(false);
+      }
+
+      if (rec.arguments && rec.arguments.length > 0) {
+        for (const aRec of rec.arguments) {
+          if (aRec.indexOf(reason) >= 0) {
+            return cb(false);
+          }
+        }
+      }
+    }
+
+    cb(true);
+  });
+}
+
+function isChecksumAppropriate(isCacheAppExists, cb) {
+  if (!isCacheAppExists) {
+    return cb(true);
+  }
+
+  electronEasyUpdater.versionCheck({
+    url: FEED_VERSION_URL,
+    version: app.getVersion()
+  }, (versionErr, actualVersion) => {
+    if (versionErr) {
+      autoUpdateLog('can not get actualVersion during auto-update: ' + versionErr);
+    }
+
+    const feedHashUrl = FEED_HASH_URL
+      .replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch))
+      .replace(/#version#/g, actualVersion);
+    const feedPartialHashUrl = FEED_PARTIAL_HASH_URL
+      .replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch))
+      .replace(/#version#/g, actualVersion);
+
+    electronEasyUpdater.fileLoad({url: feedHashUrl, json: false}, (hashFileErr, hashFile) => {
+      if (hashFileErr) {
+        autoUpdateLog(`can not get hash during auto-update by url ${feedHashUrl}: ` + hashFileErr);
+      }
+
+      electronEasyUpdater.fileLoad({url: feedPartialHashUrl, json: false}, (partialHashFileErr, partialHashFile) => {
+        if (partialHashFileErr) {
+          autoUpdateLog(`can not get hash during auto-update by url ${feedPartialHashUrl}: ` + partialHashFileErr);
+        }
+
+        const cacheDirs = {
+          linux: CACHE_APP_DIR + '/Gapminder Offline-linux/',
+          win32: CACHE_APP_DIR,
+          darwin: CACHE_APP_DIR + '/Gapminder Offline.app/'
+        };
+
+        const exclude = process.platform.indexOf('win') >= 0 ? ['**.zip'] : ['*.zip', '**/*.zip'];
+
+        hashElement(cacheDirs[process.platform], {files: {exclude}, ignoreRootName: true}).then(hash => {
+          try {
+            const hashString = JSON.stringify(hash.children, null, 2);
+            const isPartialHashEqual = !partialHashFileErr && hashString === partialHashFile;
+            const isHashEqual = !hashFileErr && hashString === hashFile;
+
+            cb(isHashEqual || isPartialHashEqual);
+          } catch (parseErr) {
+            console.log(parseErr);
+            cb(false);
+          }
+        }).catch(localHashErr => {
+          autoUpdateLog(`can not get local hash during auto-update: ` + localHashErr);
+
+          cb(false);
+        });
+      });
+    });
+  });
+}
 
 function getLatestGithubTag(inputParam: string, onTagReady: Function) {
   const input = inputParam.replace(/^(?!(?:https|git):\/\/)/, 'https://');
@@ -63,7 +190,7 @@ function getLatestGithubTag(inputParam: string, onTagReady: Function) {
         return onTagReady(Error('Tags are missing'));
       }
 
-      onTagReady(null, tags.sort().reverse()[0]);
+      onTagReady(null, semverSort.desc(tags)[0]);
     });
 }
 
@@ -72,55 +199,18 @@ class UpdateProcessDescriptor {
   }
 }
 
-const currentDir = path.resolve(__dirname, '..', '..');
-const dirs = {
-  linux: currentDir,
-  darwin: path.resolve(__dirname.replace(/\/app\.asar/, '')),
-  win32: path.resolve(__dirname.replace(/\/app\.asar/, ''), '..', '..')
-};
-const getTypeByOsAndArch = (os, arch) => {
-  if (os === 'win32' && arch === 'x64') {
-    return 'win64';
-  }
-
-  if (os === 'win32' && arch === 'ia32') {
-    return 'win32';
-  }
-
-  if (os === 'darwin') {
-    return 'mac';
-  }
-
-  return os;
-};
-const RELEASE_APP_ARCHIVE = 'release-app.zip';
-const RELEASE_DS_ARCHIVE = 'release-ds.zip';
-const FEED_VERSION_URL = autoUpdateTestMode ? FEED_VERSION_URL_TEST_TEMP : FEED_VERSION_URL_TEMP;
-const FEED_URL = FEED_URL_TEMP.replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch));
-const FEED_FULL_URL = FEED_FULL_URL_TEMP.replace(/#type#/g, getTypeByOsAndArch(process.platform, process.arch));
-const DS_FEED_VERSION_URL = DS_FEED_VERSION_URL_TEMP;
-const DS_FEED_URL = DS_FEED_URL_TEMP;
-const CACHE_APP_DIR = `${dirs[process.platform]}/cache-app`;
-const CACHE_DS_DIR = `${dirs[process.platform]}/cache-ds`;
-const UPDATE_PROCESS_FLAG_FILE = `${dirs[process.platform]}/updating`;
-const UPDATE_FLAG_FILE = `${dirs[process.platform]}/update-required`;
-
 function rollback() {
   try {
     fsExtra.removeSync(CACHE_APP_DIR);
     fsExtra.removeSync(CACHE_DS_DIR);
-    fsExtra.removeSync(UPDATE_PROCESS_FLAG_FILE);
-    fsExtra.removeSync(UPDATE_FLAG_FILE);
   } catch (e) {
     console.log(e);
   }
 }
 
 function finishUpdate() {
-  fs.writeFileSync(UPDATE_PROCESS_FLAG_FILE, 'updating');
-
   if (process.platform !== 'win32') {
-    const updateCommand = dirs[process.platform] + '/updater';
+    const updateCommand = dirs[process.platform] + '/gapminder-updater';
 
     childProcess.spawn(
       updateCommand,
@@ -136,7 +226,7 @@ function finishUpdate() {
   if (process.platform === 'win32') {
     childProcess.spawn(
       'wscript.exe',
-      ['"invisible.vbs"', '"updater-' + getTypeByOsAndArch(process.platform, process.arch) + '.exe"'],
+      ['"invisible.vbs"', '"gapminder-updater-' + getTypeByOsAndArch(process.platform, process.arch) + '.exe"'],
       {
         windowsVerbatimArguments: true,
         cwd: dirs[process.platform],
@@ -205,13 +295,11 @@ function startUpdate(event) {
       return;
     }
 
-    fs.writeFile(UPDATE_FLAG_FILE, 'need-to-update', () => {
-      event.sender.send('unpack-complete', null);
-    });
+    event.sender.send('unpack-complete', null);
   });
 }
 
-function createWindow() {
+function createWindow(showError = false) {
   const isFileArgumentValid = fileName => fs.existsSync(fileName) && fileName.indexOf('-psn_') === -1;
 
   mainWindow = new BrowserWindow({width: 1200, height: 800});
@@ -233,8 +321,16 @@ function createWindow() {
     mainWindow.webContents.openDevTools();
   }
 
+  if (showError) {
+    mainWindow.webContents.send('auto-update-error', 'wrong checksum');
+  }
+
   mainWindow.on('closed', () => {
     mainWindow = null;
+  });
+
+  mainWindow.webContents.on('will-navigate', (event) => {
+    event.preventDefault();
   });
 
   ipc.on('get-dev-mode', event => {
@@ -389,34 +485,6 @@ function createWindow() {
   });
 }
 
-app.on('ready', () => {
-  fs.readFile(UPDATE_PROCESS_FLAG_FILE, 'utf8', updatingFileDoesNotExist => {
-    if (updatingFileDoesNotExist) {
-      fs.readFile(UPDATE_FLAG_FILE, 'utf8', updateFileDoesNotExist => {
-        if (updateFileDoesNotExist) {
-          rollback();
-
-          ga.runEvent(false);
-
-          createWindow();
-          return;
-        }
-
-        ga.runEvent(true);
-
-        finishUpdate();
-      });
-    } else {
-      // don't run during update process!
-      app.quit();
-    }
-  });
-});
-
-app.on('window-all-closed', () => {
-  app.quit();
-});
-
 const isSecondInstance = app.makeSingleInstance((commandLine) => {
   if (mainWindow) {
     if (mainWindow.isMinimized()) {
@@ -429,6 +497,44 @@ const isSecondInstance = app.makeSingleInstance((commandLine) => {
       openFileWhenDoubleClick(mainWindow, commandLine[1]);
     }
   }
+});
+
+app.on('ready', () => {
+  const isCacheAppExists = fs.existsSync(CACHE_APP_DIR);
+  const isCacheDsExists = fs.existsSync(CACHE_DS_DIR);
+
+  if ((isCacheAppExists || isCacheDsExists)) {
+    isRunAllowed('gapminder-updater', (yes) => {
+      if (yes) {
+        isChecksumAppropriate(isCacheAppExists, (isUpdateAllowed) => {
+          if (!isUpdateAllowed) {
+            rollback();
+
+            ga.runEvent(false);
+
+            autoUpdateLog('wrong checksum');
+
+            createWindow(true);
+            return;
+          }
+
+          ga.runEvent(true);
+
+          finishUpdate();
+        });
+      } else {
+        autoUpdateLog('update process is running');
+
+        app.quit();
+      }
+    });
+  } else {
+    createWindow();
+  }
+});
+
+app.on('window-all-closed', () => {
+  app.quit();
 });
 
 if (isSecondInstance) {

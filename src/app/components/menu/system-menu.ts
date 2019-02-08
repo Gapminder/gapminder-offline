@@ -22,6 +22,10 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
                   click: () => appComponent.menuActions.openCsvFile()
                 },
                 {
+                  label: 'Excel file...',
+                  click: () => appComponent.menuActions.openExcelFile()
+                },
+                {
                   label: 'DDF folder',
                   click: () => appComponent.menuActions.openDdfFolder()
                 }
@@ -35,6 +39,10 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
             {
               label: 'CSV file...',
               click: () => appComponent.menuActions.addCsvFile()
+            },
+            {
+              label: 'Excel file...',
+              click: () => appComponent.menuActions.addExcelFile()
             },
             {
               label: 'DDF folder',
@@ -90,13 +98,13 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
     {
       label: 'Edit',
       submenu: [
-        {label: 'Undo', accelerator: 'CmdOrCtrl+Z'},
-        {label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z'},
+        {label: 'Undo', accelerator: 'CmdOrCtrl+Z', role: 'undo'},
+        {label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', role: 'redo'},
         {type: 'separator'},
-        {label: 'Cut', accelerator: 'CmdOrCtrl+X'},
-        {label: 'Copy', accelerator: 'CmdOrCtrl+C'},
-        {label: 'Paste', accelerator: 'CmdOrCtrl+V'},
-        {label: 'Select All', accelerator: 'CmdOrCtrl+A'}
+        {label: 'Cut', accelerator: 'CmdOrCtrl+X', role: 'cut'},
+        {label: 'Copy', accelerator: 'CmdOrCtrl+C', role: 'copy'},
+        {label: 'Paste', accelerator: 'CmdOrCtrl+V', role: 'paste'},
+        {label: 'Select All', accelerator: 'CmdOrCtrl+A', role: 'selectall'}
       ]
     },
     {

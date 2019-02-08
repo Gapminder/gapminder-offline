@@ -43,7 +43,9 @@ export class HomeComponent implements OnInit {
   @ViewChild('validationModal') validationModal: ModalDirective;
   @ViewChild('ddfDatasetConfigModal') ddfDatasetConfigModal: ModalDirective;
   @ViewChild('csvConfigModal') csvConfigModal: ModalDirective;
+  @ViewChild('excelConfigModal') excelConfigModal: ModalDirective;
   @ViewChild('additionalCsvConfigModal') additionalCsvConfigModal: ModalDirective;
+  @ViewChild('additionalExcelConfigModal') additionalExcelConfigModal: ModalDirective;
   @ViewChild('addDdfFolder') addDdfFolderInput: ElementRef;
   tabsDisabled = false;
 
@@ -133,12 +135,14 @@ export class HomeComponent implements OnInit {
     const fileMenu = this.menuComponent.items[0].submenu;
     const menuAddYourData = fileMenu.items[1];
     const csvFileItem = menuAddYourData.submenu.items[0];
-    const ddfFolderItem = menuAddYourData.submenu.items[1];
+    const excelFileItem = menuAddYourData.submenu.items[1];
+    const ddfFolderItem = menuAddYourData.submenu.items[2];
     const saveMenu = fileMenu.items[4];
     const saveAllTabs = fileMenu.items[5];
     const exportMenu = fileMenu.items[7];
 
     csvFileItem.enabled = isItemEnabled;
+    excelFileItem.enabled = isItemEnabled;
     ddfFolderItem.enabled = isItemEnabled;
     saveMenu.enabled = isItemEnabled;
     exportMenu.enabled = isItemEnabled;
@@ -245,6 +249,7 @@ export class HomeComponent implements OnInit {
     newTab.model = config;
 
     this.chartService.setReaderDefaults(newTab);
+    this.chartService.registerNewReader(newTab.model.data.reader);
     this.tabsModel.forEach((tab: TabModel) => tab.active = false);
     this.tabsModel.push(newTab);
     this.doDetectChanges();
@@ -275,6 +280,7 @@ export class HomeComponent implements OnInit {
       newTab.model = tabDescriptor.model;
 
       this.chartService.setReaderDefaults(newTab);
+      this.chartService.registerNewReader(newTab.model.data.reader);
       this.tabsModel.forEach((tab: TabModel) => tab.active = false);
       this.tabsModel.push(newTab);
 
@@ -290,8 +296,9 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  completeCsvConfigForm(event: any) {
+  completeFileConfigForm(event: any) {
     this.csvConfigModal.hide();
+    this.excelConfigModal.hide();
 
     if (event) {
       this.chartService.newSimpleChart(this.tabsModel, event, () => {
@@ -302,8 +309,9 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  additionalCsvConfigFormComplete(data: any) {
+  additionalFileConfigFormComplete(data: any) {
     this.additionalCsvConfigModal.hide();
+    this.additionalExcelConfigModal.hide();
 
     if (data) {
       this.addData(data);

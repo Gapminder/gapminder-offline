@@ -14,8 +14,9 @@ export class Header {
   public newChart: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('.menu-btn', 'New chart')).first());
   public chartFromYourData: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('.menu-btn', 'Your data')).first());
   public csvFile: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('.menu-btn', 'CSV file...')).first());
-  public timeGoesDown: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('label', 'Time goes down')).first());
-  public timeGoesRight: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('label', 'Time goes right')).first());
+  public xlsFile: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('.menu-btn', 'Excel file...')).first());
+  public timeGoesDown: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('label', 'Time goes down')).last());
+  public timeGoesRight: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('label', 'Time goes right')).last());
   public upload: ExtendedElementFinder = _$$('.file-upload-result').get(1);
   public timeValueSelect: ExtendedElementFinder = _$('select:not(:disabled)');
   public errorMessageIntro: ExtendedElementFinder = _$('.vzb-error-message-intro');
@@ -49,43 +50,11 @@ export class Header {
   vimeoIframe: ExtendedElementFinder = this.howToModal._$$('iframe').first();
 
   public async uploadCsv(absolutePath: string, importFileName: string): Promise<void> {
-    const timeOptions = ['day', 'month', 'year', 'week', 'quarter'];
-    let timeValue;
+    await this.uploadFile(absolutePath, importFileName, this.csvFile, 'csv');
+  }
 
-    if (importFileName.match('timeformat')) {
-      timeValue = importFileName.replace('.csv', '').split('-')
-        .filter(el => timeOptions.indexOf(el) > -1)[0];
-    }
-
-    await this.mainMenuBtn.safeClick();
-    await this.newChart.safeClick();
-    await this.chartFromYourData.safeClick();
-    await this.csvFile.safeClick();
-
-    importFileName.match(/^timeright/) ? await this.timeGoesRight.safeClick() : await this.timeGoesDown.safeClick();
-
-    await this.timeValueSelect.safeClick();
-
-    if (timeValue) {
-      await _$$(`option[value*="${timeValue}"]`).first().safeClick();
-    } else {
-      await _$$(`option[value*="year"]`).first().click();
-      await _$$(`option[value*="year"]`).first().click();
-    }
-
-    const parsedPath = path.parse(absolutePath);
-    const fileValue = await this.upload.getAttribute('value');
-
-    if (fileValue) {
-      await this.upload.safeClear();
-      await this.upload.safeClear();
-      await browser.wait(EC.textToBePresentInElementValue(this.upload, ''), 15000);
-    }
-
-    await this.upload.safeSendKeys(absolutePath);
-    await browser.wait(EC.textToBePresentInElementValue(this.upload, parsedPath.base), 15000);
-    await _$$('.ok-btn').first().safeClick();
-    await waitForSpinner();
+  public async uploadXls(absolutePath: string, importFileName: string): Promise<void> {
+    await this.uploadFile(absolutePath, importFileName, this.xlsFile, 'xlsx');
   }
 
   changeLanguageToRtl(): Promise<void> {
@@ -149,5 +118,61 @@ export class Header {
     if (!this.isDesktop) {
       await this.menuBtn.safeClick();
     }
+  }
+
+  private async uploadFile(absolutePath: string,
+                           importFileName: string,
+                           menuItemSelector: ExtendedElementFinder,
+                           extension: string): Promise<void> {
+    const timeOptions = ['day', 'month', 'year', 'week', 'quarter'];
+    let timeValue;
+
+    if (importFileName.match('timeformat')) {
+      timeValue = importFileName.replace(`.${extension}`, '').split('-')
+        .filter(el => timeOptions.indexOf(el) > -1)[0];
+    }
+
+    await this.mainMenuBtn.safeClick();
+    await this.newChart.safeClick();
+    await this.chartFromYourData.safeClick();
+    await menuItemSelector.safeClick();
+
+    console.log(-3, importFileName);
+
+    importFileName.match(/^timeright/) ? await this.timeGoesRight.safeClick() : await this.timeGoesDown.safeClick();
+
+    console.log(-1, this.timeValueSelect, timeValue);
+
+    await this.timeValueSelect.safeClick();
+
+    console.log(0);
+
+    if (timeValue) {
+      await _$$(`option[value*="${timeValue}"]`).first().safeClick();
+    } else {
+      await _$$(`option[value*="year"]`).first().click();
+      await _$$(`option[value*="year"]`).first().click();
+    }
+
+    const parsedPath = path.parse(absolutePath);
+    const fileValue = await this.upload.getAttribute('value');
+
+    console.log(111, fileValue);
+
+    if (fileValue) {
+      await this.upload.safeClear();
+      await this.upload.safeClear();
+      await browser.wait(EC.textToBePresentInElementValue(this.upload, ''), 15000);
+    }
+
+    console.log(222, absolutePath);
+
+    await this.upload.safeSendKeys(absolutePath);
+
+    console.log(333, 'ok');
+
+    await browser.wait(EC.textToBePresentInElementValue(this.upload, parsedPath.base), 15000);
+    await _$$('.ok-btn').first().safeClick();
+    await waitForSpinner();
   }
 }

@@ -9,6 +9,8 @@ call powershell.exe -nologo -noprofile -command "& {Copy-Item 'extra-data\*' -de
 mkdir .\app-builds\win-ia32-unpacked\resources\export-template\libs
 
 copy .\node_modules\vizabi-ddfcsv-reader\dist\vizabi-ddfcsv-reader.js .\app-builds\win-ia32-unpacked\resources\export-template\libs
+copy .\node_modules\vizabi-csv-reader\dist\vizabi-csv-reader.js .\app-builds\win-ia32-unpacked\resources\export-template\libs
+copy .\node_modules\vizabi-excel-reader\dist\vizabi-excel-reader.js .\app-builds\win-ia32-unpacked\resources\export-template\libs
 
 copy .\node_modules\vizabi\build\vizabi.js .\app-builds\win-ia32-unpacked\resources\export-template\libs
 copy .\node_modules\vizabi\build\vizabi.css .\app-builds\win-ia32-unpacked\resources\export-template\libs
@@ -33,7 +35,7 @@ copy .\node_modules\vizabi-linechart\build\linechart.css .\app-builds\win-ia32-u
 copy .\node_modules\vizabi-linechart\build\linechart.js .\app-builds\win-ia32-unpacked\resources\export-template\libs
 copy .\src\app-icon.ico .\app-builds\win-ia32-unpacked\resources
 
-copy .\updater-win32.exe .\app-builds\win-ia32-unpacked\updater-win32.exe
+copy .\updater-win32.exe .\app-builds\win-ia32-unpacked\gapminder-updater-win32.exe
 copy .\invisible.vbs .\app-builds\win-ia32-unpacked\invisible.vbs
 
 rem ############
@@ -43,7 +45,7 @@ cd .\app-builds
 call powershell.exe -nologo -noprofile -command "& {Rename-Item 'win-ia32-unpacked' 'Gapminder Offline-win32'}"
 
 signtool.exe sign /t http://timestamp.comodoca.com/authenticode /f ..\gapminder.pfx /p %1 ".\Gapminder Offline-win32\Gapminder Offline.exe"
-signtool.exe sign /t http://timestamp.comodoca.com/authenticode /f ..\gapminder.pfx /p %1 ".\Gapminder Offline-win32\updater-win32.exe"
+signtool.exe sign /t http://timestamp.comodoca.com/authenticode /f ..\gapminder.pfx /p %1 ".\Gapminder Offline-win32\gapminder-updater-win32.exe"
 
 call powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('Gapminder Offline-win32', 'Gapminder Offline-win32.zip'); }"
 mkdir "partial\Gapminder Offline-win32"
@@ -61,3 +63,8 @@ cd .\app-builds
 call powershell.exe -nologo -noprofile -command "& {Rename-Item 'Install Gapminder Offline.exe' 'Install Gapminder Offline-32.exe'}"
 
 signtool.exe sign /t http://timestamp.comodoca.com/authenticode /f ..\gapminder.pfx /p %1 "Install Gapminder Offline-32.exe"
+
+cd ..
+
+node ./hash-maker.js "app-builds/partial/Gapminder Offline-win32" app-builds/win32-partial-hash.json win32
+node ./hash-maker.js "app-builds/Gapminder Offline-win32" app-builds/win32-hash.json win32

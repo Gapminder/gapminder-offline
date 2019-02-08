@@ -4,17 +4,38 @@ import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class MessageService {
-  private subject: Subject<any> = new Subject<any>();
+  private subject$ = new Subject();
+  private lock$: Subject<void>;
 
-  public sendMessage(message: string, options?: any): void {
-    this.subject.next({message, options});
+  sendMessage(message: string, options?: any) {
+    if (!this.lock$) {
+      this.subject$.next({message, options});
+    } else {
+      this.lock$.asObservable().subscribe(() => {
+        this.subject$.next({message, options});
+      });
+    }
   }
 
-  public clearMessage(): void {
-    this.subject.next();
+  clearMessage() {
+    this.subject$.next();
   }
 
-  public getMessage(): Observable<any> {
-    return this.subject.asObservable();
+  lock() {
+    if (!this.lock$) {
+      this.lock$ = new Subject();
+    }
+  }
+
+  unlock() {
+    if (this.lock$) {
+      this.lock$.next();
+      this.lock$.complete();
+      this.lock$ = null;
+    }
+  }
+
+  getMessage(): Observable<any> {
+    return this.subject$.asObservable();
   }
 }

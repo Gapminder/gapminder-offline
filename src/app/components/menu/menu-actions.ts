@@ -15,6 +15,10 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => (
     context.csvConfigModal.show();
     context.isMenuOpened = false;
   },
+  openExcelFile: () => {
+    context.excelConfigModal.show();
+    context.isMenuOpened = false;
+  },
   ddfFolderClick: (event: any, onFolderClickProcessed: Function) => {
     const dialog = es.remote.dialog;
     const currentWindow = es.remote.getCurrentWindow();
@@ -26,6 +30,10 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => (
   },
   addCsvFile: () => {
     context.additionalCsvConfigModal.show();
+    context.isMenuOpened = false;
+  },
+  addExcelFile: () => {
+    context.additionalExcelConfigModal.show();
     context.isMenuOpened = false;
   },
   addDdfFolder: () => {

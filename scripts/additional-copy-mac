@@ -3,6 +3,8 @@ cp -R ./extra-data/* ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources
 mkdir -p ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
 
 cp -R ./node_modules/vizabi-ddfcsv-reader/dist/vizabi-ddfcsv-reader.js ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
+cp -R ./node_modules/vizabi-csv-reader/dist/vizabi-csv-reader.js ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
+cp -R ./node_modules/vizabi-excel-reader/dist/vizabi-excel-reader.js ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
 
 cp -R ./node_modules/vizabi/build/vizabi.js ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
 cp -R ./node_modules/vizabi/build/vizabi.css ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
@@ -30,4 +32,4 @@ cp -R ./node_modules/vizabi-mountainchart/build/mountainchart.js ./app-builds/ma
 cp -R ./node_modules/vizabi-linechart/build/linechart.css ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
 cp -R ./node_modules/vizabi-linechart/build/linechart.js ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/export-template/libs
 
-cp ./updater-darwin ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/updater
+cp ./updater-darwin ./app-builds/mac/Gapminder\ Offline.app/Contents/Resources/gapminder-updater

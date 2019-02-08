@@ -108,7 +108,29 @@
           <h4 class="modal-title">New chart from your data</h4>
         </div>
         <div class="modal-body">
-          <app-csv-config-form [currentTab]="getCurrentTab()" (done)="completeCsvConfigForm($event)"></app-csv-config-form>
+          <app-file-select-config-form [currentTab]="getCurrentTab()" (done)="completeFileConfigForm($event)"></app-file-select-config-form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div bsModal
+       #excelConfigModal="bs-modal"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="New chart from your data"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" (click)="excelConfigModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">New chart from your data</h4>
+        </div>
+        <div class="modal-body">
+          <app-file-select-config-form [format]="'excel'" [currentTab]="getCurrentTab()" (done)="completeFileConfigForm($event)"></app-file-select-config-form>
         </div>
       </div>
     </div>
@@ -131,10 +153,34 @@
           <h4 class="modal-title">Add data to the active chart</h4>
         </div>
         <div class="modal-body">
-          <app-csv-config-form [addDataMode]="true" [currentTab]="getCurrentTab()" (done)="additionalCsvConfigFormComplete($event)"></app-csv-config-form>
+          <app-file-select-config-form [addDataMode]="true" [currentTab]="getCurrentTab()" (done)="additionalFileConfigFormComplete($event)"></app-file-select-config-form>
         </div>
       </div>
     </div>
   </div>
+
+  <div bsModal
+       (onShown)="onAdditionalCsvConfigModalShown()"
+       #additionalExcelConfigModal="bs-modal"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="Add data to the active chart"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" (click)="additionalExcelConfigModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Add data to the active chart</h4>
+        </div>
+        <div class="modal-body">
+          <app-file-select-config-form [format]="'excel'" [addDataMode]="true" [currentTab]="getCurrentTab()" (done)="additionalFileConfigFormComplete($event)"></app-file-select-config-form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <input id="addDdfFolder" type="file" style="display: none;" #addDdfFolder (click)="menuActions.ddfFolderClick($event, onDdfExtFolderChanged)"/>
 </div>

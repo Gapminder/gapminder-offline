@@ -45,9 +45,10 @@ export class Sidebar {
   findSelect: Find;
   size: Size;
   show: Show;
+  find: Find;
   dialogModal: DialogModal;
   treeMenuModal: TreeMenuModal;
-  
+
   /**
    * Search select
    */
@@ -79,7 +80,7 @@ export class Sidebar {
   activeOptionsMenu: ExtendedElementFinder = _$('.vzb-accordion-active');
   opacityMenu: ExtendedElementFinder = _$('[data-dlg="opacity"]');
   labelsMenu: ExtendedElementFinder = _$('[data-dlg="label"]');
-  
+
   /**
    * Zoom
    */
@@ -90,6 +91,7 @@ export class Sidebar {
     this.findSelect = new Find();
     this.size = new Size();
     this.show = new Show();
+    this.find = new Find();
     this.dialogModal = new DialogModal();
     this.treeMenuModal = new TreeMenuModal();
     this.chart = chart;

@@ -8,14 +8,14 @@ describe('Slider', () => {
   const bubbleChart: BubbleChart = new BubbleChart();
   const commonChartPage: CommonChartPage = new CommonChartPage();
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     await bubbleChart.openChart();
   });
-  afterEach(async()=>{
+  afterEach(async () => {
     await commonChartPage.closeTab();
   });
 
-  it('Change speed during playing not reset slider', async() => {
+  it('Change speed during playing not reset slider', async () => {
     await slider.dragToStart();
     await slider.playSlider();
 

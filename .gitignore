@@ -2,6 +2,7 @@
 
 # compiled output
 *.js
+!hash-maker.js
 *.map.js
 !package-dmg.js
 /dist
@@ -48,3 +49,4 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+package-lock.json

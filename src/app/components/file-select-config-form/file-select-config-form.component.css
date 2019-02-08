@@ -1,0 +1,118 @@
+.main-popup {
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.step-block {
+    margin-bottom: 20px;
+}
+.step-label {
+    font-size: large;
+}
+.example-image {
+    max-width: 100%;
+    height: auto;
+    padding-right: 10px;
+}
+.example-container {
+    width: 100%;
+    max-width: 600px
+}
+.desc {
+    font-size: small
+}
+.highl {
+    background-color: yellow;
+    color: #b81f00;
+}
+label.step-label {
+    margin-left: 1px;
+}
+.bottom-row {
+    vertical-align: bottom;
+    position: relative;
+}
+.bottom-controls {
+    vertical-align: bottom;
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    min-width: 200px;
+}
+.close-btn {
+    width: 40%;
+    height: 40px;
+}
+.ok-btn {
+    width: 50%;
+    height: 40px;
+}
+.fileUpload.btn.btn-default {
+    margin-bottom: 3px;
+    padding: 2px 12px;
+    -webkit-appearance: button;
+}
+.divider {
+    border-bottom: 1px solid #e5e5e5;
+    margin: 5px -15px 10px -15px;
+}
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+}
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+.chart-label {
+    font-size: large;
+    margin-right: 5px;
+    margin-left: 1px;
+}
+.time-format-holder {
+    overflow: auto;
+    width: 100%;
+    vertical-align: middle;
+}
+.time-format-select {
+    min-width: 150px;
+    margin-right: 5px;
+}
+.time-format-select select {
+    height: 32px;
+    display: inline-block;
+    width: auto;
+}
+.inactive-time-format div {
+    color: #cccccc;
+}
+.row-container {
+  display: flex;
+}
+
+.row-container > div {
+  margin-right: 20px;
+}
+
+.row-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.column-name-container label {
+  margin-bottom: 0;
+}
+
+.column-name-container input[type="number"] {
+  width: 40px;
+}

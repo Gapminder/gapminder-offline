@@ -8,3 +8,7 @@ export const DS_FEED_VERSION_URL_TEMP =
   'https://raw.githubusercontent.com/open-numbers/ddf--gapminder--systema_globalis/master/datapackage.json';
 export const DS_FEED_URL_TEMP =
   'https://github.com/open-numbers/ddf--gapminder--systema_globalis/archive/v#version#.zip';
+export const FEED_HASH_URL =
+  'http://s3-eu-west-1.amazonaws.com/gapminder-offline/#version#/#type#-hash.json';
+export const FEED_PARTIAL_HASH_URL =
+  'http://s3-eu-west-1.amazonaws.com/gapminder-offline/#version#/#type#-partial-hash.json';
