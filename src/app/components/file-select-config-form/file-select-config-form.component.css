@@ -40,6 +40,22 @@ label.step-label {
     right: 0;
     min-width: 200px;
 }
+.bottom-controls {
+  vertical-align: bottom;
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  min-width: 200px;
+}
+.bottom-controls-rtl {
+  vertical-align: bottom;
+  text-align: left;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  min-width: 200px;
+}
 .close-btn {
     width: 40%;
     height: 40px;

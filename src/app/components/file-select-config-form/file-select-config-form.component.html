@@ -83,16 +83,16 @@
 <div class="popup-footer">
     <div class="btn-group" style="width: 100%">
         <div class="row bottom-row">
-            <div class="col-sm-8">
+            <div class="col-sm-8" [ngClass]="{'col-sm-push-4': ls.isRtl()}">
                 <div><a href="#" *ngIf="format === 'csv'" (click)="openURL('http://vizabi.org/tutorials/2017/04/03/show-your-data/')">{{'How to prepare and export a file from MS Excel' | translate}}</a></div>
                 <div><a href="#" (click)="openURL('https://docs.google.com/document/d/1GEgBscyLSbAkiXbrDrixGDrlTG4DekuFETD5AQaRBvs')">{{'How to export a file from Google Docs' | translate}}</a></div>
                 <div><a href="#" *ngIf="format === 'csv'" (click)="openURL('https://csvlint.io/')">{{'Online csv validator (a handy tool)' | translate}}</a></div>
                 <div><a href="#" (click)="switchUseYourDataVisible()">{{'How do we use your data?' | translate}}</a><br><span *ngIf="useYourDataVisible">{{'— We don\'t. Everything stays local on your computer.' | translate}} <a href="#" (click)="openURL('https://raw.githubusercontent.com/Gapminder/gapminder-offline/master/LICENSE')">{{'Read more' | translate}}</a></span></div>
             </div>
-            <div class="col-sm-4 bottom-controls">
-                <input type="button" class="close-btn" (click)="close()" value="Cancel" />
-                <input type="button" *ngIf="format === 'csv'" class="ok-btn" (click)="ok()" [disabled]="!choice || !file || !delimiter" value="OK" />
-                <input type="button" *ngIf="format === 'excel'" class="ok-btn" (click)="ok()" [disabled]="loadingSheetsTitle || !choice || !file" value="OK" />
+            <div class="col-sm-4" [ngClass]="{'col-sm-pull-8': ls.isRtl(), 'bottom-controls-rtl': ls.isRtl(), 'bottom-controls': !ls.isRtl()}">
+                <input type="button" class="close-btn" (click)="close()" value="{{'Cancel' | translate}}" />
+                <input type="button" *ngIf="format === 'csv'" class="ok-btn" (click)="ok()" [disabled]="!choice || !file || !delimiter" value="{{'OK' | translate}}" />
+                <input type="button" *ngIf="format === 'excel'" class="ok-btn" (click)="ok()" [disabled]="loadingSheetsTitle || !choice || !file" value="{{'OK' | translate}}" />
             </div>
         </div>
     </div>

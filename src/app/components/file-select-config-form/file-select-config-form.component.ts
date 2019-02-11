@@ -6,6 +6,7 @@ import { ElectronService } from '../../providers/electron.service';
 import { MessageService } from '../../message.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ICalculatedDataView } from './calculated-data-view';
+import { LocalizationService } from '../../providers/localization.service';
 
 @Component({
   selector: 'app-file-select-config-form',
@@ -79,6 +80,7 @@ export class FileSelectConfigFormComponent {
   private _currentTab: TabModel;
 
   constructor(public ts: TranslateService,
+              public ls: LocalizationService,
               private chartService: ChartService,
               private es: ElectronService,
               private ms: MessageService,

@@ -45,6 +45,7 @@
   "An error has occurred during chart processing.": "An error has occurred during chart processing.",
   "Details...": "Details...",
   "Cancel": "Cancel",
+  "OK": "OK",
   "Update now": "Update now",
   "New version is available!": "New version <b>{{actualVersionGenericUpdate}}</b> is available!",
   "New dataset is available!": "New dataset (v{{actualVersionDsUpdate}}) is available!",

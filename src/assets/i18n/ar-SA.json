@@ -45,6 +45,7 @@
   "An error has occurred during chart processing.": "حدث خطأ أثناء معالجة المخطط",
   "Details...": "...تفاصيل",
   "Cancel": "إلغاء",
+  "OK": "حسنا",
   "Update now": "تحديث الان",
   "New version is available!": "!متاح <b>{{actualVersionGenericUpdate}}</b> الإصدار الجديد",
   "New dataset is available!": "!متاح (v{{actualVersionDsUpdate}}) مجموعة بيانات جديدة",
