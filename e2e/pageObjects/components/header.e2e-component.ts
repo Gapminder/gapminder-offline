@@ -1,13 +1,13 @@
 import * as path from 'path';
-import { ElementFinder, browser, element, By, ExpectedConditions as EC } from 'protractor';
+import { browser, By, element, ElementFinder, ExpectedConditions as EC } from 'protractor';
 import { _$, _$$, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
 import { waitForSpinner } from '../../helpers/helper';
 import { waitUntil } from '../../helpers/waitHelper';
-import { CommonChartPage } from '../charts/common-chart.po';
 
 export class Header {
   private isDesktop: boolean = browser.params.desktop;
 
+  public currentModal: ExtendedElementFinder = _$('[aria-hidden=false] ');
   public mainMenuBtn: ExtendedElementFinder = _$$('.main-menu-btn').first();
   public mainMenu: ElementFinder = _$$('.menu.show-menu').first();
   public mainMenuItem: ElementFinder = this.mainMenu.$$('.menu-item.submenu').first();
@@ -15,10 +15,12 @@ export class Header {
   public chartFromYourData: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('.menu-btn', 'Your data')).first());
   public csvFile: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('.menu-btn', 'CSV file...')).first());
   public xlsFile: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('.menu-btn', 'Excel file...')).first());
-  public timeGoesDown: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('label', 'Time goes down')).last());
-  public timeGoesRight: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('label', 'Time goes right')).last());
-  public upload: ExtendedElementFinder = _$$('.file-upload-result').get(1);
-  public timeValueSelect: ExtendedElementFinder = _$('select:not(:disabled)');
+  public timeGoesDown: ExtendedElementFinder = this.currentModal._$$('.step-label').get(0);
+  public timeGoesRight: ExtendedElementFinder = this.currentModal._$$('.step-label').get(1);
+  public chartTypeLines: ExtendedElementFinder = this.currentModal._$$('.chart-label').get(1);
+  public chartTypeRanks: ExtendedElementFinder = this.currentModal._$$('.chart-label').get(2);
+  public upload: ExtendedElementFinder = this.currentModal._$('.file-upload-result');
+  public timeValueSelect: ExtendedElementFinder = this.currentModal._$('select:not(:disabled)');
   public errorMessageIntro: ExtendedElementFinder = _$('.vzb-error-message-intro');
 
   rootSelector: ExtendedElementFinder = this.isDesktop ? _$('.header') : _$('[class="mobile"]');
@@ -136,16 +138,13 @@ export class Header {
     await this.newChart.safeClick();
     await this.chartFromYourData.safeClick();
     await menuItemSelector.safeClick();
+    browser.sleep(1000);
 
     console.log(-3, importFileName);
 
     importFileName.match(/^timeright/) ? await this.timeGoesRight.safeClick() : await this.timeGoesDown.safeClick();
 
-    console.log(-1, this.timeValueSelect, timeValue);
-
     await this.timeValueSelect.safeClick();
-
-    console.log(0);
 
     if (timeValue) {
       await _$$(`option[value*="${timeValue}"]`).first().safeClick();
@@ -164,8 +163,6 @@ export class Header {
       await this.upload.safeClear();
       await browser.wait(EC.textToBePresentInElementValue(this.upload, ''), 15000);
     }
-
-    console.log(222, absolutePath);
 
     await this.upload.safeSendKeys(absolutePath);
 
