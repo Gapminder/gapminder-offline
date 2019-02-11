@@ -36,7 +36,7 @@
     "rebuild": "electron-rebuild -f -w gapminder-offline",
     "package-dmg": "npm run rebuild && npm rebuild fs-xattr && npm rebuild macos-alias && node package-dmg.js",
     "start-webdriver": "node node_modules/electron-chromedriver/chromedriver &",
-    "e2e-test": "./node_modules/.bin/protractor ./e2e/protractor.conf.js",
+    "e2e-test": "protractor ./e2e/protractor.conf.js",
     "e2e:linux": "npm run start-webdriver && npm run e2e-test",
     "e2e:windows": "start npm run start-webdriver && npm run e2e-test",
     "update-webdriver": "webdriver-manager update",

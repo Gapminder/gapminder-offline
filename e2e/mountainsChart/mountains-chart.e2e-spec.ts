@@ -31,7 +31,7 @@ describe('Mountains chart', () => {
     await expect(Number(extremePovertyPercentage.replace('%', ''))).toBeLessThan(11.8);
 
     await mountainChart.hoverMouseOver500AxisXOnMountainsChart();
-    expect(await mountainChart.verticalLine.getText()).toEqual('7.33B');
+    expect(await mountainChart.verticalLine.getText()).toEqual('7.34B');
   });
 
   it('labels on vertical line in 2018 and in 1800 match', async () => {
@@ -41,12 +41,12 @@ describe('Mountains chart', () => {
      */
     await mountainChart.hoverMouserOverExtremePovertyTitle();
 
-    expect(await mountainChart.verticalLine.getText()).toEqual('852M');
+    expect(await mountainChart.verticalLine.getText()).toEqual('861M');
 
     await slider.dragToStart();
     await mountainChart.hoverMouserOverExtremePovertyTitle();
 
-    expect(await mountainChart.verticalLine.getText()).toEqual('812M');
+    expect(await mountainChart.verticalLine.getText()).toEqual('823M');
   });
 
   it('Population and name displayed on the top', async () => {
@@ -55,7 +55,7 @@ describe('Mountains chart', () => {
 
     await browser.wait(EC.presenceOf(mountainChart.allCountriesOnChart.first()));
 
-    expect(await mountainChart.allCountriesOnChart.count()).toEqual(165);
+    expect(await mountainChart.allCountriesOnChart.count()).toEqual(193);
     await sidebar.findSelect.searchAndSelectCountry('China');
     await browser.wait(EC.presenceOf(mountainChart.selectedCountries.first()));
 
@@ -76,6 +76,6 @@ describe('Mountains chart', () => {
     expect(await mountainChart.visualizationSelectedCountries.count()).toEqual(3);
     expect(await mountainChart.visualizationSelectedCountries.get(2).getAttribute('style')).toContain('opacity: 1;');
 
-    expect(await mountainChart.allCountriesOnChart.count()).toEqual(162);
+    expect(await mountainChart.allCountriesOnChart.count()).toEqual(190);
   });
 });
