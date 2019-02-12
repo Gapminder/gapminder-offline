@@ -1,32 +1,33 @@
 import { HomeComponent } from '../home/home.component';
 import MenuItemConstructorOptions = Electron.MenuItemConstructorOptions;
 import { ElectronService } from '../../providers/electron.service';
+import { langConfigTemplate } from '../../../lang-config';
 
 export const initMenuComponent = (appComponent: HomeComponent, es: ElectronService) => {
   const templateMenu: MenuItemConstructorOptions[] = [
     {
-      label: 'File',
+      label: appComponent.translate.instant('File'),
       submenu: [
         {
-          label: 'New chart',
+          label: appComponent.translate.instant('New chart'),
           submenu: [
             {
-              label: 'Gapminder data',
+              label: appComponent.translate.instant('Gapminder data'),
               click: () => appComponent.menuActions.gapminderChart()
             },
             {
-              label: 'Your data',
+              label: appComponent.translate.instant('Your data'),
               submenu: [
                 {
-                  label: 'CSV file...',
+                  label: appComponent.translate.instant('CSV file...'),
                   click: () => appComponent.menuActions.openCsvFile()
                 },
                 {
-                  label: 'Excel file...',
+                  label: appComponent.translate.instant('Excel file...'),
                   click: () => appComponent.menuActions.openExcelFile()
                 },
                 {
-                  label: 'DDF folder',
+                  label: appComponent.translate.instant('DDF folder'),
                   click: () => appComponent.menuActions.openDdfFolder()
                 }
               ]
@@ -34,18 +35,18 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
           ]
         },
         {
-          label: 'Add data to the active chart',
+          label: appComponent.translate.instant('Add data to the active chart'),
           submenu: [
             {
-              label: 'CSV file...',
+              label: appComponent.translate.instant('CSV file...'),
               click: () => appComponent.menuActions.addCsvFile()
             },
             {
-              label: 'Excel file...',
+              label: appComponent.translate.instant('Excel file...'),
               click: () => appComponent.menuActions.addExcelFile()
             },
             {
-              label: 'DDF folder',
+              label: appComponent.translate.instant('DDF folder'),
               click: () => appComponent.menuActions.ddfFolderClick(
                 new MouseEvent('click'), appComponent.onDdfExtFolderChanged.bind(appComponent))
             }
@@ -55,34 +56,34 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
           type: 'separator'
         },
         {
-          label: 'Open...',
+          label: appComponent.translate.instant('Open...'),
           click: () => appComponent.menuActions.open()
         },
         {
-          label: 'Save...',
+          label: appComponent.translate.instant('Save...'),
           click: () => appComponent.menuActions.save()
         },
         {
-          label: 'Save all tabs...',
+          label: appComponent.translate.instant('Save all tabs...'),
           click: () => appComponent.menuActions.saveAllTabs()
         },
         {
-          label: 'DDF tools',
+          label: appComponent.translate.instant('DDF tools'),
           click: () => appComponent.menuActions.openValidationWindow()
         },
         {
-          label: 'Export',
+          label: appComponent.translate.instant('Export'),
           submenu: [
             {
-              label: 'for Web...',
+              label: appComponent.translate.instant('for Web...'),
               click: () => appComponent.menuActions.exportForWeb()
             },
             {
-              label: 'to SVG...',
+              label: appComponent.translate.instant('to SVG...'),
               click: () => appComponent.menuActions.exportToSvg()
             },
             {
-              label: 'to PNG...',
+              label: appComponent.translate.instant('to PNG...'),
               click: () => appComponent.menuActions.exportToPng()
             }
           ]
@@ -91,27 +92,32 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
           type: 'separator'
         },
         {
+          label: appComponent.translate.instant('Quit'),
           role: 'quit'
         }
       ]
     },
     {
-      label: 'Edit',
+      label: appComponent.translate.instant('Edit'),
       submenu: [
-        {label: 'Undo', accelerator: 'CmdOrCtrl+Z', role: 'undo'},
-        {label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', role: 'redo'},
+        {label: appComponent.translate.instant('Undo'), accelerator: 'CmdOrCtrl+Z', role: 'undo'},
+        {label: appComponent.translate.instant('Redo'), accelerator: 'Shift+CmdOrCtrl+Z', role: 'redo'},
         {type: 'separator'},
-        {label: 'Cut', accelerator: 'CmdOrCtrl+X', role: 'cut'},
-        {label: 'Copy', accelerator: 'CmdOrCtrl+C', role: 'copy'},
-        {label: 'Paste', accelerator: 'CmdOrCtrl+V', role: 'paste'},
-        {label: 'Select All', accelerator: 'CmdOrCtrl+A', role: 'selectall'}
+        {label: appComponent.translate.instant('Cut'), accelerator: 'CmdOrCtrl+X', role: 'cut'},
+        {label: appComponent.translate.instant('Copy'), accelerator: 'CmdOrCtrl+C', role: 'copy'},
+        {label: appComponent.translate.instant('Paste'), accelerator: 'CmdOrCtrl+V', role: 'paste'},
+        {label: appComponent.translate.instant('Select All'), accelerator: 'CmdOrCtrl+A', role: 'selectall'}
       ]
     },
     {
-      label: 'View',
+      label: appComponent.translate.instant('Languages'),
+      submenu: []
+    },
+    {
+      label: appComponent.translate.instant('View'),
       submenu: [
         {
-          label: 'Reload',
+          label: appComponent.translate.instant('Reload'),
           accelerator: 'CmdOrCtrl+R',
           click(item: any, focusedWindow: any): void {
             if (focusedWindow) {
@@ -120,7 +126,7 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
           }
         },
         {
-          label: 'Toggle Developer Tools',
+          label: appComponent.translate.instant('Toggle Developer Tools'),
           // accelerator: es.process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
           click(item: any, focusedWindow: any): void {
             if (focusedWindow) {
@@ -132,42 +138,50 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
           type: 'separator'
         },
         {
+          label: appComponent.translate.instant('Actual Size'),
           role: 'resetzoom'
         },
         {
+          label: appComponent.translate.instant('Zoom In'),
           role: 'zoomin'
         },
         {
+          label: appComponent.translate.instant('Zoom Out'),
           role: 'zoomout'
         },
         {
           type: 'separator'
         },
         {
+          label: appComponent.translate.instant('Toggle Full Screen'),
           role: 'togglefullscreen'
         }
       ]
     },
     {
+      label: appComponent.translate.instant('Window'),
       role: 'window',
       submenu: [
         {
+          label: appComponent.translate.instant('Minimize'),
           role: 'minimize'
         },
         {
+          label: appComponent.translate.instant('Close'),
           role: 'close'
         }
       ]
     },
     {
+      label: appComponent.translate.instant('Help'),
       role: 'help',
       submenu: [
         {
-          label: 'Check for updates...',
+          label: appComponent.translate.instant('Check for updates...'),
           click: () => appComponent.menuActions.checkForUpdates()
         },
         {
-          label: 'Learn More',
+          label: appComponent.translate.instant('Learn More'),
           click: () => {
             es.shell.openExternal('https://github.com/VS-work/gapminder-offline');
           }
@@ -176,6 +190,11 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
     }
   ];
   const Menu = es.remote.Menu;
+
+  templateMenu[2].submenu = langConfigTemplate.map(langDescriptor => ({
+    label: langDescriptor.label,
+    click: () => appComponent.menuActions.setLanguage([langDescriptor.id])
+  }));
 
   appComponent.menuComponent = Menu.buildFromTemplate(templateMenu);
   Menu.setApplicationMenu(appComponent.menuComponent);

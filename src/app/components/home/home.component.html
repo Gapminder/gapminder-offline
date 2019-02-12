@@ -1,11 +1,11 @@
-<div style="height: 100%" (click)="appMainClickHandler($event)">
+<div [dir]="ls.isRtl() ? 'rtl' : 'ltr'" [ngClass]="ls.getLanguagePrefix()" style="height: 100%" (click)="appMainClickHandler($event)">
   <div class="auto-update-container">
     <app-auto-update (onAutoUpdateRequested)="doDetectChanges()"
                      (onAutoUpdateProgress)="doDetectChanges()"
                      (onAutoUpdateCompleted)="doDetectChanges()"></app-auto-update>
   </div>
 
-  <div style="position: absolute; top: 0; right: 0;">
+  <div class="menu-container" [ngClass]="{'menu-container-ltr': !ls.isRtl(), 'menu-container-rtl': ls.isRtl()}">
     <div class="ddf-menu">
       <div class="btn-group">
         <app-hamburger-menu [isMenuOpened]="isMenuOpened" [tabsModel]="tabsModel" (onMenuItemSelected)="onMenuItemSelected($event)"></app-hamburger-menu>
@@ -22,7 +22,7 @@
               (onTabSetActive)="doDetectChanges()"
               (onChartCreated)="onChartCreated()"
               (onChartClicked)="appMainClickHandler($event)"
-              style="height: 100%;"></app-tabs>
+              style="calc(height: 100%-30px)"></app-tabs>
   </div>
 
   <div bsModal
@@ -35,10 +35,10 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" (click)="versionsModal.hide()" aria-label="Close">
+          <button type="button" class="close" [ngClass]="{'close-rtl': ls.isRtl()}" (click)="versionsModal.hide()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title">Check for updates</h4>
+          <h4 class="modal-title">{{'Check for updates' | translate}}</h4>
         </div>
         <div class="modal-body">
           <app-versions-form (done)="versionsFormComplete($event)"></app-versions-form>
@@ -58,10 +58,10 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" (click)="validationModal.hide()" aria-label="Close">
+          <button type="button" class="close" [ngClass]="{'close-rtl': ls.isRtl()}" (click)="validationModal.hide()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title">DDF tools</h4>
+          <h4 class="modal-title">{{'DDF tools' | translate}}</h4>
         </div>
         <div class="modal-body">
           <app-validation-form (done)="validationFormComplete()"></app-validation-form>
@@ -80,10 +80,10 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" (click)="ddfDatasetConfigModal.hide()" aria-label="Close">
+          <button type="button" class="close" [ngClass]="{'close-rtl': ls.isRtl()}" (click)="ddfDatasetConfigModal.hide()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title">New chart from your data</h4>
+          <h4 class="modal-title">{{'New chart from your data' | translate}}</h4>
         </div>
         <div class="modal-body">
           <app-ddf-dataset-config-form></app-ddf-dataset-config-form>
@@ -102,13 +102,16 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" (click)="csvConfigModal.hide()" aria-label="Close">
+          <button type="button" class="close" [ngClass]="{'close-rtl': ls.isRtl()}" (click)="csvConfigModal.hide()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title">New chart from your data</h4>
+          <h4 class="modal-title">{{'New chart from your data' | translate}}</h4>
         </div>
         <div class="modal-body">
-          <app-file-select-config-form [currentTab]="getCurrentTab()" (done)="completeFileConfigForm($event)"></app-file-select-config-form>
+          <app-file-select-config-form [calculatedDataView]="calculatedDataView"
+                                       [currentTab]="getCurrentTab()"
+                                       (done)="completeFileConfigForm($event)">
+          </app-file-select-config-form>
         </div>
       </div>
     </div>
@@ -124,20 +127,23 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" (click)="excelConfigModal.hide()" aria-label="Close">
+          <button type="button" class="close" [ngClass]="{'close-rtl': ls.isRtl()}" (click)="excelConfigModal.hide()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title">New chart from your data</h4>
+          <h4 class="modal-title">{{'New chart from your data' | translate}}</h4>
         </div>
         <div class="modal-body">
-          <app-file-select-config-form [format]="'excel'" [currentTab]="getCurrentTab()" (done)="completeFileConfigForm($event)"></app-file-select-config-form>
+          <app-file-select-config-form [calculatedDataView]="calculatedDataView"
+                                       [format]="'excel'"
+                                       [currentTab]="getCurrentTab()"
+                                       (done)="completeFileConfigForm($event)">
+          </app-file-select-config-form>
         </div>
       </div>
     </div>
   </div>
 
   <div bsModal
-       (onShown)="onAdditionalCsvConfigModalShown()"
        #additionalCsvConfigModal="bs-modal"
        class="modal fade"
        tabindex="-1"
@@ -147,20 +153,23 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" (click)="additionalCsvConfigModal.hide()" aria-label="Close">
+          <button type="button" class="close" [ngClass]="{'close-rtl': ls.isRtl()}" (click)="additionalCsvConfigModal.hide()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title">Add data to the active chart</h4>
+          <h4 class="modal-title">{{'Add data to the active chart' | translate}}</h4>
         </div>
         <div class="modal-body">
-          <app-file-select-config-form [addDataMode]="true" [currentTab]="getCurrentTab()" (done)="additionalFileConfigFormComplete($event)"></app-file-select-config-form>
+          <app-file-select-config-form [calculatedDataView]="calculatedDataView"
+                                       [addDataMode]="true"
+                                       [currentTab]="getCurrentTab()"
+                                       (done)="additionalFileConfigFormComplete($event)">
+          </app-file-select-config-form>
         </div>
       </div>
     </div>
   </div>
 
   <div bsModal
-       (onShown)="onAdditionalCsvConfigModalShown()"
        #additionalExcelConfigModal="bs-modal"
        class="modal fade"
        tabindex="-1"
@@ -170,13 +179,18 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" (click)="additionalExcelConfigModal.hide()" aria-label="Close">
+          <button type="button" class="close" [ngClass]="{'close-rtl': ls.isRtl()}" (click)="additionalExcelConfigModal.hide()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title">Add data to the active chart</h4>
+          <h4 class="modal-title">{{'Add data to the active chart' | translate}}</h4>
         </div>
         <div class="modal-body">
-          <app-file-select-config-form [format]="'excel'" [addDataMode]="true" [currentTab]="getCurrentTab()" (done)="additionalFileConfigFormComplete($event)"></app-file-select-config-form>
+          <app-file-select-config-form [calculatedDataView]="calculatedDataView"
+                                       [format]="'excel'"
+                                       [addDataMode]="true"
+                                       [currentTab]="getCurrentTab()"
+                                       (done)="additionalFileConfigFormComplete($event)">
+          </app-file-select-config-form>
         </div>
       </div>
     </div>

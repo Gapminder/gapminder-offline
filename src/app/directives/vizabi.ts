@@ -1,6 +1,5 @@
 import {
-  EventEmitter, Input, Output, OnDestroy, Directive, ElementRef, OnChanges,
-  SimpleChanges
+  EventEmitter, Input, Output, AfterContentInit, OnDestroy, Directive, ElementRef
 } from '@angular/core';
 import { MessageService } from '../message.service';
 import { ElectronService } from '../providers/electron.service';
@@ -10,7 +9,7 @@ const isReaderReady = {};
 @Directive({
   selector: 'vizabi'
 })
-export class VizabiDirective implements OnDestroy, OnChanges {
+export class VizabiDirective implements AfterContentInit, OnDestroy {
   @Input() order: number;
   @Input() readerModuleObject;
   @Input() readerGetMethod: string;
@@ -48,10 +47,10 @@ export class VizabiDirective implements OnDestroy, OnChanges {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.model && changes.model.isFirstChange()) {
-      this.createChart(changes);
-    }
+  ngAfterContentInit(): void {
+    this.createChart({
+      model: {currentValue: this.model}
+    });
   }
 
   @Input('active')
@@ -81,6 +80,7 @@ export class VizabiDirective implements OnDestroy, OnChanges {
 
     if (this.viz && this.viz.model && this.viz.model.locale) {
       this.viz.model.locale.set('id', _language);
+      this.reloadTime = new Date().getTime();
     }
   }
 
@@ -199,6 +199,14 @@ export class VizabiDirective implements OnDestroy, OnChanges {
 
       this.ms.lock();
 
+      if (fullModel.locale) {
+        fullModel.locale.id = this.language;
+      } else {
+        fullModel.locale = {
+          id: this.language
+        };
+      }
+
       this.viz = this.es.vizabi(this.chartType, this.placeholder, fullModel);
 
       this.onCreated.emit({
@@ -274,6 +282,7 @@ export class VizabiDirective implements OnDestroy, OnChanges {
 
   private createPlaceholder() {
     this.placeholder = document.createElement('div');
+    this.placeholder.className = 'vzb-placeholder';
     this.placeholder.style.width = '100%';
     this.placeholder.style.height = '100%';
     this.element.nativeElement.appendChild(this.placeholder);

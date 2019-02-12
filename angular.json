@@ -20,8 +20,10 @@
               "src/app-icon.ico",
               "src/app-icon.png",
               "src/app-icon.icns",
-              "src/assets",
-              "src/cursors",
+              "src/assets/i18n",
+              "src/assets/images",
+              "src/assets/translation",
+              "src/assets/logo.gif",
               "src/lib/svg-crowbar.js"
             ],
             "styles": [

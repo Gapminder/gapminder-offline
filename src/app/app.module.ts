@@ -5,7 +5,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { HttpClientModule } from '@angular/common/http';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ElectronService } from './providers/electron.service';
 import { WebviewDirective } from './directives/webview.directive';
 import { VizabiDirective } from './directives/vizabi';
@@ -30,6 +31,12 @@ import { WaitIndicatorComponent } from './components/wait-indicator/wait-indicat
 import { ChartService } from './components/tabs/chart.service';
 import { MessageService } from './message.service';
 import { FreshenerService } from './components/tab-freshener/freshener.service';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { LocalizationService } from './providers/localization.service';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -57,13 +64,22 @@ import { FreshenerService } from './components/tab-freshener/freshener.service';
     HttpClientModule,
     AlertModule.forRoot(),
     ModalModule.forRoot(),
-    ProgressbarModule.forRoot()
+    ProgressbarModule.forRoot(),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [
     ElectronService,
     ChartService,
     MessageService,
-    FreshenerService
+    FreshenerService,
+    TranslateService,
+    LocalizationService
   ],
   bootstrap: [AppComponent]
 })

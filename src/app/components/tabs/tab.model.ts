@@ -30,7 +30,7 @@ export class TabModel {
   reloadTime: number;
 
   private _chartType = '';
-  private order: number;
+  private readonly order: number;
 
   constructor(chartType: string = '', active: boolean = false, title: string = '') {
     this.chartType = chartType;

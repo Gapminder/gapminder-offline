@@ -13,9 +13,7 @@ export function waitForPageLoaded() {
 }
 
 export function waitForSpinner() {
-  // return browser.wait(EC.visibilityOf(CommonChartPage.spinner), 3000, 'spinner to be visible').then(() => {
-  return browser.wait(EC.stalenessOf(CommonChartPage.spinner), MAX_TIMEOUT, 'stalenessOf of spinner');
-  // });
+  return browser.wait(EC.invisibilityOf(CommonChartPage.spinner), MAX_TIMEOUT, 'waiting for invisibility of spinner');
 }
 
 export function safeDragAndDrop(from: ElementFinder, to: any) {

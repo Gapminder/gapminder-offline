@@ -27,9 +27,11 @@ export class ElectronService {
   CsvReader: typeof csvReader;
   ddfValidation: typeof ddfValidation;
   vizabi: any;
+  SETTINGS_FILE: string;
+  appPath: string;
+  devMode: boolean;
 
   constructor() {
-    // Conditional imports
     if (this.isElectron()) {
       this.ipcRenderer = window.require('electron').ipcRenderer;
       this.webFrame = window.require('electron').webFrame;
@@ -45,6 +47,26 @@ export class ElectronService {
       this.CsvReader = window.require('vizabi-csv-reader');
       this.ddfValidation = window.require('ddf-validation');
       this.vizabi = (window as any).Vizabi;
+      const currentWindow: any = this.remote.getCurrentWindow();
+      this.appPath = currentWindow.appPath;
+      this.devMode = currentWindow.devMode;
+      this.SETTINGS_FILE = this.path.resolve(this.appPath, 'settings.json');
+    }
+  }
+
+  readSettings() {
+    if (!this.fs.existsSync(this.SETTINGS_FILE)) {
+      return {};
+    }
+
+    return JSON.parse(this.fs.readFileSync(this.SETTINGS_FILE, 'utf8'));
+  }
+
+  writeSettings(settings) {
+    try {
+      this.fs.writeFileSync(this.SETTINGS_FILE, JSON.stringify(settings), 'utf8');
+    } catch (e) {
+      alert('Can not write settings!');
     }
   }
 

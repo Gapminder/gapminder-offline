@@ -35,7 +35,7 @@
                                 </app-tab-title-edit>
                             </span>
                             <span *ngIf = "tab.removable" (click) = "$event.preventDefault(); $event.stopPropagation(); removeTab(tab);"
-                                  class = "glyphicon glyphicon-remove-circle"></span>
+                                  class = "glyphicon glyphicon-remove-circle" [ngClass]="{'glyphicon-remove-circle-rtl': ls.isRtl()}"></span>
                         </a>
                     </li>
                     <li class = "add-tab">

@@ -64,6 +64,9 @@ const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 const args = process.argv.slice(1);
 const devMode = process.argv.length > 1 && process.argv.indexOf('dev') > 0;
 const autoUpdateTestMode = process.argv.length > 1 && process.argv.indexOf('au-test') > 0;
+const quickAutoUpdateTestMode = process.argv.length > 1 && process.argv.indexOf('au-q-test') > 0;
+const versionToQuickUpdate = quickAutoUpdateTestMode ? args[1] : '';
+const quickUpdateType = versionToQuickUpdate ? args[2] : '';
 const nonAsarAppPath = app.getAppPath().replace(/app\.asar/, '');
 const dataPackage = require(path.resolve(nonAsarAppPath, 'ddf--gapminder--systema_globalis/datapackage.json'));
 const serve = args.some(val => val === '--serve');
@@ -303,6 +306,8 @@ function createWindow(showError = false) {
   const isFileArgumentValid = fileName => fs.existsSync(fileName) && fileName.indexOf('-psn_') === -1;
 
   mainWindow = new BrowserWindow({width: 1200, height: 800});
+  mainWindow.appPath = nonAsarAppPath;
+  mainWindow.devMode = devMode;
 
   if (serve) {
     require('electron-reload')(__dirname, {
@@ -402,6 +407,9 @@ function createWindow(showError = false) {
         return;
       }
 
+      actualVersionGenericUpdate = quickAutoUpdateTestMode ? versionToQuickUpdate : actualVersionGenericUpdate;
+      versionDiffType = quickAutoUpdateTestMode ? quickUpdateType : versionDiffType;
+
       if (actualVersionGenericUpdate) {
         if (versionDiffType === 'major') {
           event.sender.send('full-update-request', {
@@ -483,21 +491,31 @@ function createWindow(showError = false) {
   ipc.on('modify-chart', (event, action) => {
     ga.chartChangingEvent(action);
   });
+
+  ipc.on('write-settings', (event, settings) => {
+    console.log('save settings', settings);
+  });
 }
 
-const isSecondInstance = app.makeSingleInstance((commandLine) => {
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) {
-      mainWindow.restore();
-    }
+const gotTheLock = app.requestSingleInstanceLock();
 
-    mainWindow.focus();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (event, commandLine) => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore();
+      }
 
-    if (commandLine.length > 1) {
-      openFileWhenDoubleClick(mainWindow, commandLine[1]);
+      mainWindow.focus();
+
+      if (commandLine.length > 1) {
+        openFileWhenDoubleClick(mainWindow, commandLine[1]);
+      }
     }
-  }
-});
+  });
+}
 
 app.on('ready', () => {
   const isCacheAppExists = fs.existsSync(CACHE_APP_DIR);
@@ -537,10 +555,6 @@ app.on('window-all-closed', () => {
   app.quit();
 });
 
-if (isSecondInstance) {
-  app.exit();
-}
-
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
@@ -557,4 +571,8 @@ app.on('open-file', (event, filePath) => {
       currentFile = filePath;
     }
   }
+});
+
+process.on('uncaughtException', function (error) {
+  fs.appendFileSync('./error.log', `${new Date().toISOString()}- ${error.name}: ${error.stack}\n`);
 });

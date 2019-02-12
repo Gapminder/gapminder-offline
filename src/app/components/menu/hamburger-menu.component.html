@@ -1,101 +1,109 @@
-<ul role="menu" aria-labelledby="single-button" class="menu show-menu" *ngIf="isMenuOpened">
-    <li class="menu-item submenu">
-        <button type="button" class="menu-btn"><span class="menu-text">New chart</span></button>
+<ul role="menu" aria-labelledby="single-button" class="menu show-menu" [ngClass]="{'menu-rtl': ls.isRtl(), 'menu-ltr': !ls.isRtl()}" *ngIf="isMenuOpened">
+    <li class="menu-item submenu" [ngClass]="{'menu-item-ltr': !ls.isRtl(), 'menu-item-rtl': ls.isRtl()}">
+        <button type="button" class="menu-btn"><span class="menu-text">{{'New chart' | translate}}</span></button>
         <ul class="menu">
             <li class="menu-item" (click)="execute('gapminderChart')">
-                <button type="button" class="menu-btn"><span class="menu-text">Gapminder data</span> </button>
+                <button type="button" class="menu-btn"><span class="menu-text">{{'Gapminder data' | translate}}</span> </button>
             </li>
-            <li class="menu-item submenu">
-                <button type="button" class="menu-btn"><span class="menu-text">Your data</span> </button>
+            <li class="menu-item submenu" [ngClass]="{'menu-item-ltr': !ls.isRtl(), 'menu-item-rtl': ls.isRtl()}">
+                <button type="button" class="menu-btn"><span class="menu-text">{{'Your data' | translate}}</span> </button>
                 <ul class="menu">
                     <li class="menu-item" (click)="execute('openCsvFile')">
-                        <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
+                        <button type="button" class="menu-btn"><span class="menu-text">{{'CSV file...' | translate}}</span> </button>
                     </li>
                   <li class="menu-item" (click)="execute('openExcelFile')">
-                    <button type="button" class="menu-btn"><span class="menu-text">Excel file...</span> </button>
+                    <button type="button" class="menu-btn"><span class="menu-text">{{'Excel file...' | translate}}</span> </button>
                   </li>
                   <li class="menu-item" (click)="execute('openDdfFolder')">
-                        <button type="button" class="menu-btn"><span class="menu-text">DDF folder</span> </button>
+                        <button type="button" class="menu-btn"><span class="menu-text">{{'DDF folder' | translate}}</span> </button>
                     </li>
                 </ul>
             </li>
         </ul>
     </li>
-    <li class="menu-item submenu">
-        <button type="button" class="menu-btn"><span class="menu-text">Add data to the active chart</span></button>
+    <li class="menu-item submenu" [ngClass]="{'menu-item-ltr': !ls.isRtl(), 'menu-item-rtl': ls.isRtl()}">
+        <button type="button" class="menu-btn"><span class="menu-text">{{'Add data to the active chart' | translate}}</span></button>
         <ul class="menu">
             <li class="menu-item" *ngIf="getCurrentTab() && getCurrentTab().chartType" (click)="execute('addCsvFile')">
-                <button type="button" class="menu-btn"><span class="menu-text">CSV file...</span> </button>
+                <button type="button" class="menu-btn"><span class="menu-text">{{'CSV file...' | translate}}</span> </button>
             </li>
           <li class="menu-item" *ngIf="getCurrentTab() && getCurrentTab().chartType" (click)="execute('addExcelFile')">
-            <button type="button" class="menu-btn"><span class="menu-text">Excel file...</span> </button>
+            <button type="button" class="menu-btn"><span class="menu-text">{{'Excel file...' | translate}}</span> </button>
           </li>
           <li class="menu-item" *ngIf="getCurrentTab() && getCurrentTab().chartType" (click)="execute('addDdfFolder')">
-                <button type="button" class="menu-btn"><span class="menu-text">DDF folder</span> </button>
+                <button type="button" class="menu-btn"><span class="menu-text">{{'DDF folder' | translate}}</span> </button>
             </li>
             <li class="menu-item" *ngIf="!getCurrentTab() || !getCurrentTab().chartType">
-                <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">CSV file...</span> </button>
+                <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">{{'CSV file...' | translate}}</span> </button>
             </li>
             <li class="menu-item" *ngIf="!getCurrentTab() || !getCurrentTab().chartType">
-              <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Excel file...</span> </button>
+              <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">{{'Excel file...' | translate}}</span> </button>
             </li>
           <li class="menu-item" *ngIf="!getCurrentTab() || !getCurrentTab().chartType">
-                <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">DDF folder</span> </button>
+                <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">{{'DDF folder' | translate}}</span> </button>
             </li>
         </ul>
     </li>
     <li class="menu-separator"></li>
     <li class="menu-item" (click)="execute('open')">
-        <button type="button" class="menu-btn"><span class="menu-text">Open...</span></button>
+        <button type="button" class="menu-btn"><span class="menu-text">{{'Open...' | translate}}</span></button>
     </li>
     <li class="menu-item" *ngIf="getCurrentTab() && getCurrentTab().chartType" (click)="execute('save')">
-        <button type="button" class="menu-btn"><span class="menu-text">Save...</span></button>
+        <button type="button" class="menu-btn"><span class="menu-text">{{'Save...' | translate}}</span></button>
     </li>
     <li class="menu-item" *ngIf="!getCurrentTab() || !getCurrentTab().chartType">
-        <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Save...</span></button>
+        <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">{{'Save...' | translate}}</span></button>
     </li>
     <li class="menu-item" *ngIf="areChartsAvailable()" (click)="execute('saveAllTabs')">
-        <button type="button" class="menu-btn"><span class="menu-text">Save all tabs...</span></button>
+        <button type="button" class="menu-btn"><span class="menu-text">{{'Save all tabs...' | translate}}</span></button>
     </li>
     <li class="menu-item" *ngIf="!areChartsAvailable()">
-        <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Save all tabs...</span></button>
+        <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">{{'Save all tabs...' | translate}}</span></button>
     </li>
     <li class="menu-item" (click)="execute('openValidationWindow')">
-        <button type="button" class="menu-btn"><span class="menu-text">DDF tools</span></button>
+        <button type="button" class="menu-btn"><span class="menu-text">{{'DDF tools' | translate}}</span></button>
     </li>
-    <li class="menu-item submenu" *ngIf="getCurrentTab() && getCurrentTab().chartType">
-      <button type="button" class="menu-btn"><span class="menu-text">Export</span></button>
+    <li class="menu-item submenu" [ngClass]="{'menu-item-ltr': !ls.isRtl(), 'menu-item-rtl': ls.isRtl()}" *ngIf="getCurrentTab() && getCurrentTab().chartType">
+      <button type="button" class="menu-btn"><span class="menu-text">{{'Export' | translate}}</span></button>
       <ul class="menu">
         <li class="menu-item" (click)="execute('exportForWeb')">
-          <button type="button" class="menu-btn"><span class="menu-text">for Web...</span> </button>
+          <button type="button" class="menu-btn"><span class="menu-text">{{'for Web...' | translate}}</span> </button>
         </li>
         <li class="menu-item" (click)="execute('exportToSvg')">
-          <button type="button" class="menu-btn"><span class="menu-text">to SVG...</span> </button>
+          <button type="button" class="menu-btn"><span class="menu-text">{{'to SVG...' | translate}}</span> </button>
         </li>
         <li class="menu-item" (click)="execute('exportToPng')">
-          <button type="button" class="menu-btn"><span class="menu-text">to PNG...</span> </button>
+          <button type="button" class="menu-btn"><span class="menu-text">{{'to PNG...' | translate}}</span> </button>
         </li>
       </ul>
     </li>
-    <li class="menu-item submenu" *ngIf="getCurrentTab() && !getCurrentTab().chartType">
-      <button type="button" class="menu-btn"><span class="menu-text">Export</span></button>
+    <li class="menu-item submenu" [ngClass]="{'menu-item-ltr': !ls.isRtl(), 'menu-item-rtl': ls.isRtl()}" *ngIf="getCurrentTab() && !getCurrentTab().chartType">
+      <button type="button" class="menu-btn"><span class="menu-text">{{'Export' | translate}}</span></button>
       <ul class="menu">
         <li class="menu-item">
-          <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">for Web...</span></button>
+          <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">{{'for Web...' | translate}}</span></button>
         </li>
         <li class="menu-item">
-          <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">to SVG...</span></button>
+          <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">{{'to SVG...' | translate}}</span></button>
         </li>
         <li class="menu-item">
-          <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">to PNG...</span></button>
+          <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">{{'to PNG...' | translate}}</span></button>
         </li>
       </ul>
     </li>
-    <li class="menu-separator"></li>
-    <li class="menu-item" (click)="execute('checkForUpdates')">
-        <button type="button" class="menu-btn"><span class="menu-text">Check for updates...</span></button>
+    <li class="menu-item submenu" [ngClass]="{'menu-item-ltr': !ls.isRtl(), 'menu-item-rtl': ls.isRtl()}">
+    <button type="button" class="menu-btn"><span class="menu-text">{{'Languages' | translate}}</span></button>
+    <ul class="menu">
+      <li *ngFor="let lang of ls.langConfig" class="menu-item" (click)="execute('setLanguage', lang.id)">
+        <button type="button" class="menu-btn"><span class="menu-text">{{lang.label}}</span></button>
+      </li>
+    </ul>
+  </li>
+  <li class="menu-separator"></li>
+  <li class="menu-item" (click)="execute('checkForUpdates')">
+        <button type="button" class="menu-btn"><span class="menu-text">{{'Check for updates...' | translate}}</span></button>
     </li>
     <li class="menu-item" (click)="execute('openDevTools')">
-        <button type="button" class="menu-btn"><span class="menu-text">Open Developer Tools</span> </button>
+        <button type="button" class="menu-btn"><span class="menu-text">{{'Open Developer Tools' | translate}}</span> </button>
     </li>
 </ul>

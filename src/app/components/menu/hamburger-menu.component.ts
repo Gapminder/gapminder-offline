@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TabModel } from '../tabs/tab.model';
 import { ChartService } from '../tabs/chart.service';
+import { LocalizationService } from '../../providers/localization.service';
 
 @Component({
   selector: 'app-hamburger-menu',
@@ -11,13 +12,17 @@ export class HamburgerMenuComponent {
   @Input() tabsModel: TabModel[];
   @Output() onMenuItemSelected: EventEmitter<any> = new EventEmitter();
 
-  private chartService: ChartService;
-
-  constructor(chartService: ChartService) {
+  constructor(public chartService: ChartService, public ls: LocalizationService) {
     this.chartService = chartService;
   }
 
-  execute(methodName: string) {
+  execute(methodName: string, ...params) {
+    if (params && params.length > 0) {
+      const methodWithParams = `${methodName}@${JSON.stringify(params)}`;
+      this.onMenuItemSelected.emit(methodWithParams);
+      return;
+    }
+
     this.onMenuItemSelected.emit(methodName);
   }
 

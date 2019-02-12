@@ -17,6 +17,8 @@ import {
   CLEAR_EDITABLE_TABS_ACTION, TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, SWITCH_MENU_ACTION,
   MODEL_CHANGED, SET_ACTIVE_TAB, REMOVE_TAB
 } from '../../constants';
+import { ChartService } from '../tabs/chart.service';
+import { LocalizationService } from '../../providers/localization.service';
 
 const TAB_TIMEOUT = 100;
 const SCROLL_TIMEOUT = 200;
@@ -32,12 +34,11 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
   @Input() disabled: boolean;
 
   @ViewChild('tabsContainer') tabsContainer: ElementRef;
-  messageService: MessageService;
   subscription: Subscription;
 
   private intervalId: any;
 
-  constructor(messageService: MessageService) {
+  constructor(public ls: LocalizationService, public messageService: MessageService) {
     this.messageService = messageService;
     this.subscription = this.messageService.getMessage()
       .subscribe((event: any) => {

@@ -1,34 +1,23 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef, ElementRef, ViewEncapsulation } from '@angular/core';
 import { ChartService } from '../tabs/chart.service';
 import { isEmpty } from 'lodash';
 import { TabModel } from '../tabs/tab.model';
 import { ElectronService } from '../../providers/electron.service';
-
-const vizabiStateFacade: any = {
-  getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
-  getTime: (currentTabInstance: any) => currentTabInstance.model.state.time.dim,
-  getCountries: (currentTabInstance: any, dim: any) =>
-    currentTabInstance.model.state.marker.getKeys()
-      .slice(0, 5)
-      .map((marker: any) => marker[dim]).join(', '),
-  getTimePoints: (currentTabInstance: any) => {
-    const timeModel = currentTabInstance.model.state.time;
-
-    return timeModel.getAllSteps()
-      .slice(0, 3)
-      .map((step: string) => timeModel.formatDate(step))
-      .join(', ');
-  }
-};
+import { MessageService } from '../../message.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ICalculatedDataView } from './calculated-data-view';
+import { LocalizationService } from '../../providers/localization.service';
 
 @Component({
   selector: 'app-file-select-config-form',
   templateUrl: './file-select-config-form.component.html',
-  styleUrls: ['./file-select-config-form.component.css']
+  styleUrls: ['./file-select-config-form.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class FileSelectConfigFormComponent {
   @Input() format ? = 'csv';
   @Input() addDataMode ? = false;
+  @Input() calculatedDataView: ICalculatedDataView;
   @Output() done: EventEmitter<any> = new EventEmitter();
 
   timeFormats: string[] = ['year', 'month', 'day', 'week', 'quarter'];
@@ -90,7 +79,13 @@ export class FileSelectConfigFormComponent {
 
   private _currentTab: TabModel;
 
-  constructor(private chartService: ChartService, private es: ElectronService, private ref: ChangeDetectorRef) {
+  constructor(public ts: TranslateService,
+              public ls: LocalizationService,
+              private chartService: ChartService,
+              private es: ElectronService,
+              private ms: MessageService,
+              private el: ElementRef,
+              private ref: ChangeDetectorRef) {
   }
 
   @Input()
@@ -166,50 +161,6 @@ export class FileSelectConfigFormComponent {
   }
   */
 
-  getCurrentTabInstance(): boolean {
-    return this.chartService.currentTab && this.chartService.currentTab.instance ? this.chartService.currentTab.instance : null;
-  }
-
-  getDim(): string {
-    const currentTabInstance: any = this.getCurrentTabInstance();
-
-    if (currentTabInstance) {
-      return vizabiStateFacade.getDim(currentTabInstance);
-    }
-
-    return '';
-  }
-
-  getTime(): string {
-    const currentTabInstance: any = this.getCurrentTabInstance();
-
-    if (currentTabInstance) {
-      return vizabiStateFacade.getTime(currentTabInstance);
-    }
-
-    return currentTabInstance ? currentTabInstance.model.state.time.dim : null;
-  }
-
-  getCountries(): string {
-    const currentTabInstance: any = this.getCurrentTabInstance();
-
-    if (currentTabInstance) {
-      return vizabiStateFacade.getCountries(currentTabInstance, this.getDim());
-    }
-
-    return '';
-  }
-
-  getTimePoints(): string {
-    const currentTabInstance: any = this.getCurrentTabInstance();
-
-    if (currentTabInstance) {
-      return vizabiStateFacade.getTimePoints(currentTabInstance);
-    }
-
-    return '';
-  }
-
   switchExampleRows() {
     this.isExampleRows = !this.isExampleRows;
   }
@@ -229,7 +180,7 @@ export class FileSelectConfigFormComponent {
       this.lastModified = fileDescriptor.lastModified;
 
       if (this.format === 'excel') {
-        this.loadingSheetsTitle = 'Reading excel sheets…';
+        this.loadingSheetsTitle = this.ts.instant('Reading Excel sheets');
 
         const VizabiExcelReader = this.es.vizabi.Reader.extend(this.es.ExcelReader.excelReaderObject);
 

@@ -8,7 +8,8 @@ import { disableAnimations } from './helpers/helper';
 const header: Header = new Header();
 const commonChartPage: CommonChartPage = new CommonChartPage();
 
-fdescribe('Upload Excel: ', () => {
+// TODO: fix that test
+xdescribe('Upload Excel: ', () => {
   const positiveFilePath = './e2e/additional_files/positive-xls/';
   const negativeFilePath = './e2e/additional_files/negative-xls/';
   const positiveFilesToUpload = fs.readdirSync(positiveFilePath);

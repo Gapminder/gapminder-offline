@@ -1,5 +1,5 @@
 <div *ngIf="versions && versions.length >= 0">
-    <h4>Upgrade or downgrade manually to one of these versions:</h4>
+    <h4>{{'Upgrade or downgrade manually to one of these versions:' | translate}}</h4>
     <div class="popup-block">
         <div *ngFor="let version of versions">
             <a href="#" *ngIf="version !== currentVersion" (click)="update(version)">{{version}}</a>

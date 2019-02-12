@@ -8,6 +8,7 @@ import {
   ViewContainerRef,
   ChangeDetectorRef
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ModalDirective } from 'ngx-bootstrap';
 import { ChartService } from '../tabs/chart.service';
@@ -25,6 +26,26 @@ import { getMenuActions } from '../menu/menu-actions';
 import { FreshenerService } from '../tab-freshener/freshener.service';
 import { ElectronService } from '../../providers/electron.service';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
+import { LocalizationService } from '../../providers/localization.service';
+import { langConfigTemplate } from '../../../lang-config';
+import { ICalculatedDataView } from '../file-select-config-form/calculated-data-view';
+
+const vizabiStateFacade: any = {
+  getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
+  getTime: (currentTabInstance: any) => currentTabInstance.model.state.time.dim,
+  getCountries: (currentTabInstance: any, dim: any) =>
+    currentTabInstance.model.state.marker.getKeys()
+      .slice(0, 5)
+      .map((marker: any) => marker[dim]).join(', '),
+  getTimePoints: (currentTabInstance: any) => {
+    const timeModel = currentTabInstance.model.state.time;
+
+    return timeModel.getAllSteps()
+      .slice(0, 3)
+      .map((step: string) => timeModel.formatDate(step))
+      .join(', ');
+  }
+};
 
 @Component({
   selector: 'app-home',
@@ -35,6 +56,7 @@ export class HomeComponent implements OnInit {
   isMenuOpened = false;
   menuComponent;
   menuActions: any = {};
+  calculatedDataView: ICalculatedDataView;
 
   @ViewChild('ddfModal') ddfModal: ModalDirective;
   @ViewChild('additionalDataModal') additionalDataModal: ModalDirective;
@@ -51,61 +73,76 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public chartService: ChartService,
+    public translate: TranslateService,
+    public es: ElectronService,
+    public ls: LocalizationService,
     private viewContainerRef: ViewContainerRef,
     private messageService: MessageService,
     private freshenerService: FreshenerService,
-    private ref: ChangeDetectorRef,
-    private es: ElectronService
-  ) {
+    private ref: ChangeDetectorRef) {
     this.menuActions = getMenuActions(this, es);
-
-    initMenuComponent(this, es);
   }
 
   ngOnInit() {
-    this.messageService.getMessage()
-      .subscribe((event: any) => {
-        if (event.message === OPEN_DDF_FOLDER_ACTION) {
-          this.ddfDatasetConfigModal.hide();
+    this.translate.addLangs(langConfigTemplate.map(lang => lang.id));
+    initMenuComponent(this, this.es);
+    this.dataItemsAvailability();
+    this.ls.restoreCurrentLanguage();
 
-          if (event.options && event.options.selectedFolder && event.options.chartType) {
-            const firstFilePath = event.options.selectedFolder;
+    this.translate.onDefaultLangChange.subscribe((langEvent: { lang: string }) => {
+      this.ls.settingsOperation(settings => {
+        settings.language = langEvent.lang;
+        this.es.writeSettings(settings);
+      });
 
-            if (firstFilePath) {
-              const tabDataDescriptor: TabDataDescriptor = {};
+      setTimeout(() => {
+        initMenuComponent(this, this.es);
+        this.doDetectChanges();
+      });
+    });
 
-              this.chartService.ddfFolderDescriptor.ddfUrl = firstFilePath;
-              this.chartService.setReaderDefaults(tabDataDescriptor);
+    this.messageService.getMessage().subscribe((event: any) => {
+      if (event.message === OPEN_DDF_FOLDER_ACTION) {
+        this.ddfDatasetConfigModal.hide();
 
-              const newTab = new TabModel(event.options.chartType, false);
-              const chartIssue = this.chartService.newChart(newTab, tabDataDescriptor, false);
+        if (event.options && event.options.selectedFolder && event.options.chartType) {
+          const firstFilePath = event.options.selectedFolder;
 
-              this.tabsModel.forEach((tab: TabModel) => tab.active = false);
+          if (firstFilePath) {
+            const tabDataDescriptor: TabDataDescriptor = {};
 
-              newTab.active = true;
+            this.chartService.ddfFolderDescriptor.ddfUrl = firstFilePath;
+            this.chartService.setReaderDefaults(tabDataDescriptor);
 
-              this.tabsModel.push(newTab);
+            const newTab = new TabModel(event.options.chartType, false);
+            const chartIssue = this.chartService.newChart(newTab, tabDataDescriptor, false);
 
-              if (chartIssue) {
-                this.es.remote.dialog.showErrorBox('Error',
-                  `Could not open DDF folder ${this.chartService.ddfFolderDescriptor.ddfUrl}, because ${chartIssue}`);
-              }
+            this.tabsModel.forEach((tab: TabModel) => tab.active = false);
 
-              this.es.ipcRenderer.send('new-chart', this.getCurrentTab().chartType + ' by DDF folder');
-              this.doDetectChanges();
+            newTab.active = true;
+
+            this.tabsModel.push(newTab);
+
+            if (chartIssue) {
+              this.es.remote.dialog.showErrorBox('Error',
+                `Could not open DDF folder ${this.chartService.ddfFolderDescriptor.ddfUrl}, because ${chartIssue}`);
             }
+
+            this.es.ipcRenderer.send('new-chart', this.getCurrentTab().chartType + ' by DDF folder');
+            this.doDetectChanges();
           }
         }
+      }
 
-        if (event.message === SWITCH_MENU_ACTION) {
-          this.switchMenu();
-        }
+      if (event.message === SWITCH_MENU_ACTION) {
+        this.switchMenu();
+      }
 
-        if (event.message === MODEL_CHANGED) {
-          this.dataItemsAvailability();
-          this.doDetectChanges();
-        }
-      });
+      if (event.message === MODEL_CHANGED) {
+        this.dataItemsAvailability();
+        this.doDetectChanges();
+      }
+    });
 
     this.es.ipcRenderer.on('do-open-completed', (event: any, parameters: any) => {
       this.doOpenCompleted(event, parameters);
@@ -121,12 +158,24 @@ export class HomeComponent implements OnInit {
         this.doDetectChanges();
       }
     });
-
-    this.dataItemsAvailability();
   }
 
-  onMenuItemSelected(methodName: string) {
-    this.menuActions[methodName]();
+  onMenuItemSelected(method: string) {
+    if (method.indexOf('@') > 0) {
+      const [methodName, paramsStr] = method.split('@');
+
+      try {
+        const params = JSON.parse(paramsStr);
+
+        this.menuActions[methodName](params);
+      } catch (e) {
+        this.menuActions[methodName]();
+      }
+
+      return;
+    }
+
+    this.menuActions[method]();
   }
 
   dataItemsAvailability() {
@@ -249,7 +298,7 @@ export class HomeComponent implements OnInit {
     newTab.model = config;
 
     this.chartService.setReaderDefaults(newTab);
-    this.chartService.registerNewReader(newTab.model.data.reader);
+    this.registerNewReaders(newTab.model);
     this.tabsModel.forEach((tab: TabModel) => tab.active = false);
     this.tabsModel.push(newTab);
     this.doDetectChanges();
@@ -280,7 +329,7 @@ export class HomeComponent implements OnInit {
       newTab.model = tabDescriptor.model;
 
       this.chartService.setReaderDefaults(newTab);
-      this.chartService.registerNewReader(newTab.model.data.reader);
+      this.registerNewReaders(newTab.model);
       this.tabsModel.forEach((tab: TabModel) => tab.active = false);
       this.tabsModel.push(newTab);
 
@@ -318,10 +367,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onAdditionalCsvConfigModalShown() {
-    this.chartService.currentTab = this.getCurrentTab();
-  }
-
   doDetectChanges() {
     this.dataItemsAvailability();
     this.ref.detectChanges();
@@ -329,5 +374,68 @@ export class HomeComponent implements OnInit {
 
   onTabReady() {
     this.messageService.sendMessage(TAB_READY_ACTION);
+  }
+
+  fillCalculatedDataView(firstStep: number, secondStep: number) {
+    this.calculatedDataView = {
+      firstStep,
+      secondStep,
+      countries: this.getCountries(),
+      timePoints: this.getTimePoints(),
+      dim: this.getDim(),
+      time: this.getTime()
+    };
+  }
+
+  private getCurrentTabInstance(): boolean {
+    return this.chartService.currentTab && this.chartService.currentTab.instance ? this.chartService.currentTab.instance : null;
+  }
+
+  private getDim(): string {
+    const currentTabInstance: any = this.getCurrentTabInstance();
+
+    if (currentTabInstance) {
+      return vizabiStateFacade.getDim(currentTabInstance);
+    }
+
+    return '';
+  }
+
+  private getTime(): string {
+    const currentTabInstance: any = this.getCurrentTabInstance();
+
+    if (currentTabInstance) {
+      return vizabiStateFacade.getTime(currentTabInstance);
+    }
+
+    return currentTabInstance ? currentTabInstance.model.state.time.dim : null;
+  }
+
+  private getCountries(): string {
+    const currentTabInstance: any = this.getCurrentTabInstance();
+
+    if (currentTabInstance) {
+      return vizabiStateFacade.getCountries(currentTabInstance, this.getDim());
+    }
+
+    return '';
+  }
+
+  private getTimePoints(): string {
+    const currentTabInstance: any = this.getCurrentTabInstance();
+
+    if (currentTabInstance) {
+      return vizabiStateFacade.getTimePoints(currentTabInstance);
+    }
+
+    return '';
+  }
+
+  private registerNewReaders(model) {
+    for (const key of Object.keys(model)) {
+      if (key.indexOf('data_') === 0 && model[key].reader) {
+        this.chartService.registerNewReader(model[key].reader);
+      }
+    }
   }
 }

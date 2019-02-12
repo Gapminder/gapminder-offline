@@ -6,6 +6,10 @@
     cursor: pointer;
 }
 
+.glyphicon-remove-circle-rtl:before {
+  right: 2px;
+}
+
 .nav-tabs > li > a .glyphicon-remove-circle:hover:before {
     background-color: #ff0000;
     color: #fff;
@@ -64,11 +68,22 @@
     background-color: #ffffff;
 }
 
+.menu-container {
+  position: absolute;
+  top: 0;
+}
+
+.menu-container-ltr {
+  right: 0;
+}
+
+.menu-container-rtl {
+  left: 0;
+}
+
 .menu {
     top: 24px;
-    right: 0px;
     position: absolute;
-    width: 200px;
     padding: 2px;
     margin: 0;
     border: 1px solid #bbb;
@@ -81,6 +96,14 @@
     transform: translate(0, 15px) scale(.95);
     transition: transform 0.1s ease-out, opacity 0.1s ease-out;
     pointer-events: none;
+}
+
+.menu-ltr {
+  right: 0;
+}
+
+.menu-rtl {
+  left: 0;
 }
 
 .menu-item {
@@ -114,8 +137,12 @@
     padding: 0;
 }
 
-.menu-text {
+.menu-ltr .menu-item .menu-text {
     margin-left: 25px;
+}
+
+.menu-rtl .menu-item .menu-text {
+  margin-right: 25px;
 }
 
 .menu-item:hover > .menu-btn {
@@ -142,7 +169,7 @@
     background-color: #aaa;
 }
 
-.menu-item.submenu::after {
+.menu-item-ltr.submenu::after {
     content: "";
     position: absolute;
     left: 6px;
@@ -153,13 +180,33 @@
     border-right-color: #808080;
 }
 
-.menu-item.submenu:hover::after {
+.menu-item-ltr.submenu:hover::after {
     border-right-color: #fff;
 }
 
-.menu .menu {
-    top: 0px;
+.menu-item-rtl.submenu::before {
+    content: "";
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    border-left-color: #808080;
+}
+
+.menu-item-rtl.submenu:hover::after {
+    border-left-color: #fff;
+}
+
+.menu-ltr .menu {
+    top: 0;
     right: 99%;
+}
+
+.menu-rtl .menu {
+  top: 0;
+  left: 99%;
 }
 
 .show-menu, .menu-item:hover > .menu {
