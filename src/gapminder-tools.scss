@@ -357,17 +357,20 @@ body .vi {
 
 .footer {
   font-size: 12px;
-  margin: 0;
   padding: 0;
   width: 100%;
-  height: 30px;
-  background-color: white;
+  margin: 25px 0 0 0;
 }
 
 .footer > span {
   margin-left: 10px;
-  margin-right: 0px;
+  margin-right: 0;
   padding-bottom: 5px;
+}
+
+.footer-rtl > span {
+  margin-right: 10px !important;
+  margin-left: 0 !important;
 }
 
 .footer a {
@@ -385,6 +388,13 @@ body .vi {
 
 .close-rtl {
   float: left!important;
+}
+
+.tab-init-container {
+  max-width: 1200px;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
 }
 
 .tab-chart-container {
