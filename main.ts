@@ -346,6 +346,10 @@ function createWindow(showError = false) {
     mainWindow.setTitle(`Gapminder Tools Offline v.${app.getVersion()} (dataset v.${dataPackage.version})`);
   });
 
+  ipc.on('reload-main-window', () => {
+    mainWindow.reload();
+  });
+
   ipc.on('get-app-path', event => {
     event.sender.send('got-app-path', nonAsarAppPath);
   });
