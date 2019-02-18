@@ -5,17 +5,22 @@ import { Sidebar } from '../pageObjects/sidebar/sidebar.e2e-component';
 import { MapChart } from '../pageObjects/charts/map-chart.po';
 import { Slider } from '../pageObjects/components/slider.e2e-component';
 import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
+import { Header } from '../pageObjects/components/header.e2e-component';
 
 const mapChart: MapChart = new MapChart();
 const sidebar: Sidebar = new Sidebar(mapChart);
 const slider: Slider = new Slider();
 const commonChartPage: CommonChartPage = new CommonChartPage();
+const header: Header = new Header();
 
 describe('Maps chart', () => {
+  beforeAll(() => {
+    header.reloadPage();
+  });
   beforeEach(async () => {
     await mapChart.openChart();
   });
-  afterEach(async()=>{
+  afterEach(async() => {
     await commonChartPage.closeTab();
   });
 
