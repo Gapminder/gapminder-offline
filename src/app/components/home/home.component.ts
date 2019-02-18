@@ -81,6 +81,15 @@ export class HomeComponent implements OnInit {
     private freshenerService: FreshenerService,
     private ref: ChangeDetectorRef) {
     this.menuActions = getMenuActions(this, es);
+
+    document.addEventListener('click', (event: any) => {
+      const el = event.srcElement;
+
+      if (el && el.tagName === 'A' && el.protocol === 'http:' && el.target === '_blank') {
+        event.preventDefault();
+        this.es.shell.openExternal(el.href);
+      }
+    });
   }
 
   ngOnInit() {
