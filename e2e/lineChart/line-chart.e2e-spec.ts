@@ -1,4 +1,4 @@
-import { browser, ExpectedConditions as EC } from 'protractor';
+import { browser } from 'protractor';
 
 import { safeExpectIsDispayed, waitForSliderToBeReady } from '../helpers/helper';
 import { Sidebar } from '../pageObjects/sidebar/sidebar.e2e-component';
@@ -37,8 +37,7 @@ describe('Line chart: ', () => {
     expect(await lineChart.countDimmedLines()).toEqual(DEFAULT_COUNTRIES_NUMBER - 2);
   });
 
-  // todo: fix it!
-  xit('Hover the legend colors - will highlight specific lines', async () => {
+  it('Hover the legend colors - will highlight specific lines', async () => {
     await sidebar.show.searchAndSelectCountry('Bangladesh');
     await waitForSliderToBeReady();
     await sidebar.colorSection.hoverMinimapRegion('Asia');
