@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain as ipc } from 'electron';
+import { app, BrowserWindow, ipcMain as ipc, session } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as net from 'net';
@@ -26,6 +26,8 @@ import {
   FEED_HASH_URL,
   FEED_PARTIAL_HASH_URL
 } from './auto-update-config';
+
+require('node-fetch');
 
 process.noAsar = true;
 
@@ -319,7 +321,7 @@ function createWindow(showError = false) {
       pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file:',
       slashes: true
-    }));
+    }), {userAgent: 'Chrome'});
   }
 
   if (devMode) {
