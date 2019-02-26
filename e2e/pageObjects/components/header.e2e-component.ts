@@ -22,6 +22,7 @@ export class Header {
   public upload: ExtendedElementFinder = this.currentModal._$('.file-upload-result');
   public timeValueSelect: ExtendedElementFinder = this.currentModal._$('select:not(:disabled)');
   public errorMessageIntro: ExtendedElementFinder = _$('.vzb-error-message-intro');
+  public buttonReload: ExtendedElementFinder = new ExtendedElementFinder(element.all(By.cssContainingText('.menu-btn', 'Reload')).first());
 
   rootSelector: ExtendedElementFinder = this.isDesktop ? _$('.header') : _$('[class="mobile"]');
   /**
@@ -57,6 +58,11 @@ export class Header {
 
   public async uploadXls(absolutePath: string, importFileName: string): Promise<void> {
     await this.uploadFile(absolutePath, importFileName, this.xlsFile, 'xlsx');
+  }
+
+  public async reloadPage(): Promise<void> {
+    await this.mainMenuBtn.safeClick();
+    await this.buttonReload.safeClick();
   }
 
   changeLanguageToRtl(): Promise<void> {

@@ -1,12 +1,10 @@
 import { LineChart } from '../pageObjects/charts/line-chart.po';
 import { Sidebar } from '../pageObjects/sidebar/sidebar.e2e-component';
-import { Slider } from '../pageObjects/components/slider.e2e-component';
 import { waitUntil } from '../helpers/waitHelper';
 import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
 
 const lineChart: LineChart = new LineChart();
 const sidebar: Sidebar = new Sidebar(lineChart);
-const slider: Slider = new Slider();
 const commonChartPage: CommonChartPage = new CommonChartPage();
 
 describe('Line chart: Sidebar', () => {
@@ -25,8 +23,7 @@ describe('Line chart: Sidebar', () => {
     expect(await lineChart.countriesLines.count()).toEqual(DEFAULT_COUNTRIES_NUMBER + 1);
   });
 
-  // due to Vizabi changes
-  xit('Add country from search in sidebar', async () => {
+  it('Add country from search in sidebar', async () => {
     await sidebar.show.searchAndSelectCountry('Argentina');
     await expect(lineChart.getSelectedCountriesNames()).toMatch('Argentina');
 

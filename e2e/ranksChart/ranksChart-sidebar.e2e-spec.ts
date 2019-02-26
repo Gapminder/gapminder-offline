@@ -39,21 +39,6 @@ describe('Ranks chart: Sidebar', () => {
     expect(colorFromColorSection).toContain(await ranksChart.getBarForCountry('China').safeGetCssValue('fill'));
   });
 
-  // due to Vizabi changes
-  xit(`"SHOW" button hide all except selected`, async () => {
-    await sidebar.show.showButton.safeClick();
-
-    await sidebar.show.searchAndSelectCountry('China');
-
-    expect(await ranksChart.allBars.count()).toEqual(1);
-    expect(await sidebar.findSelect.countriesList.count()).toEqual(1);
-
-    await sidebar.show.searchAndSelectCountry('Ukraine');
-
-    expect(await ranksChart.allBars.count()).toEqual(2);
-    expect(await sidebar.findSelect.countriesList.count()).toEqual(2);
-  });
-
   it(`"DESELECT" button reset selected countries`, async () => {
     await sidebar.findSelect.clickOnCountryFromList('India');
     await sidebar.findSelect.deselectAllCountries();

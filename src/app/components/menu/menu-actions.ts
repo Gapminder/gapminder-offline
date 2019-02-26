@@ -141,6 +141,10 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => (
     context.isMenuOpened = false;
     es.ipcRenderer.send('open-dev-tools');
   },
+  reload: () => {
+    context.isMenuOpened = false;
+    es.ipcRenderer.send('reload-main-window');
+  },
   setLanguage: (langPar) => {
     context.isMenuOpened = false;
 
