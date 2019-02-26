@@ -5,8 +5,7 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
-  ViewContainerRef,
-  ChangeDetectorRef
+  ViewContainerRef
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
@@ -23,7 +22,6 @@ import {
 } from '../../constants';
 import { initMenuComponent } from '../menu/system-menu';
 import { getMenuActions } from '../menu/menu-actions';
-import { FreshenerService } from '../tab-freshener/freshener.service';
 import { ElectronService } from '../../providers/electron.service';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { LocalizationService } from '../../providers/localization.service';
@@ -77,9 +75,7 @@ export class HomeComponent implements OnInit {
     public es: ElectronService,
     public ls: LocalizationService,
     private viewContainerRef: ViewContainerRef,
-    private messageService: MessageService,
-    private freshenerService: FreshenerService,
-    private ref: ChangeDetectorRef) {
+    private messageService: MessageService) {
     this.menuActions = getMenuActions(this, es);
 
     document.addEventListener('click', (event: any) => {
@@ -378,7 +374,6 @@ export class HomeComponent implements OnInit {
 
   doDetectChanges() {
     this.dataItemsAvailability();
-    this.ref.detectChanges();
   }
 
   onTabReady() {

@@ -1,43 +1,31 @@
-<div *ngIf="requestToUpdate && !requestToDatasetUpdate && !requestToExitAndFinishUpdate && !fullUpdateRequest" style="display: inline;">
+<div class="auto-update-container" [ngClass]="{'auto-update-container-ltr': !ls.isRtl(), 'auto-update-container-rtl': ls.isRtl()}" *ngIf="isActive()">
+  <div *ngIf="!!versionDescriptor">
     <div class="label" [innerHTML]="'New version is available!' | translate:versionDescriptor"></div>
     <span>
-      <input type="button" (click)="processUpdateRequest()" value="{{'Update now' | translate}}" class="btn" />
-      <input type="button" (click)="cancel()" value="{{'Cancel' | translate}}" class="btn btn-margin-left" />
-    </span>
-</div>
-<div *ngIf="requestToDatasetUpdate && !requestToExitAndFinishUpdate && !fullUpdateRequest" style="display: inline;">
-    <div class="label" [innerHTML]="'New dataset is available!' | translate:versionDescriptor"></div>
-    <span>
-      <input type="button" (click)="processUpdateRequest()" value="{{'Update now' | translate}}" class="btn" />
-      <input type="button" (click)="cancel()" value="{{'Cancel' | translate}}" class="btn btn-margin-left" />
-    </span>
-</div>
-<div *ngIf="requestToProgress" class="progress-addition">
-    <progressbar [max]="max"
-                 type="warning"
-                 class="progress-striped"
-                 [value]="progress"></progressbar>
-</div>
-<div *ngIf="!error && requestToExitAndFinishUpdate">
-    <div class="label">{{'Press OK and wait — the app will restart automatically.' | translate}}</div>
-    <span>
-      <input type="button" (click)="exitAndUpdate()" value="OK" class="btn" />
-    </span>
-</div>
-<div *ngIf="error">
-  <div class="label">{{'Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version' | translate}}
-    <a href="#" (click)="openURL('https://www.gapminder.org/tools-offline/')">{{'from here' | translate}}</a>
-    <span>
-      <input type="button" (click)="resetError()" value="{{'Cancel' | translate}}" class="btn btn-margin-left" />
+      <input type="button" (click)="download()" value="{{'Update now' | translate}}" class="btn" />
+      <input type="button" (click)="cancel()" value="{{'Cancel' | translate}}" class="btn btn-margin" />
     </span>
   </div>
-</div>
-<div *ngIf="!error && fullUpdateRequest">
-     <div class="label"><span [innerHTML]="'New version is available!' | translate:versionDescriptor"></span>
-      {{'Please uninstall Gapminder Offline and install the new version' | translate}}
+  <div *ngIf="ready">
+    <div class="label">{{'Press OK and wait — the app will restart automatically.' | translate}}</div>
+    <span>
+      <input type="button" (click)="update()" value="OK" class="btn" />
+    </span>
+  </div>
+  <div *ngIf="updating">
+    <div *ngIf="!showProgress"><img src="assets/images/hourglass.gif">Updating...</div>
+    <div *ngIf="showProgress">
+      <div class="progress-addition">
+        <progressbar [max]="max" type="warning" class="progress-striped" [value]="progress"></progressbar>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!!error">
+    <div class="label">{{'Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version' | translate}}
       <a href="#" (click)="openURL('https://www.gapminder.org/tools-offline/')">{{'from here' | translate}}</a>
       <span>
-        <input type="button" (click)="cancel()" value="{{'Cancel' | translate}}" class="btn btn-margin-left" />
+      <input type="button" (click)="resetError()" value="{{'Cancel' | translate}}" class="btn btn-margin" />
     </span>
-   </div>
+    </div>
+  </div>
 </div>

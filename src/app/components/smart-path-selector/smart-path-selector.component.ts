@@ -1,5 +1,5 @@
 import {
-  AfterContentChecked, ChangeDetectorRef,
+  AfterContentChecked,
   Component,
   ElementRef,
   EventEmitter,
@@ -44,7 +44,7 @@ export class SmartPathSelectorComponent implements ControlValueAccessor, Validat
   private filePath = '';
   private lastModified: number;
 
-  constructor(private es: ElectronService, private ref: ChangeDetectorRef) {
+  constructor(private es: ElectronService) {
   }
 
   ngAfterContentChecked() {
@@ -119,7 +119,6 @@ export class SmartPathSelectorComponent implements ControlValueAccessor, Validat
         this.filePath = fileDescriptor.dir;
         this.done.emit({file: fileOrDirectory, lastModified: this.lastModified});
       }
-      this.ref.detectChanges();
     } else {
       this.file = fileOrDirectory;
       this.filePath = '';

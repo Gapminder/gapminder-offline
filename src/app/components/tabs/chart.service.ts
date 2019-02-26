@@ -88,13 +88,13 @@ export class ChartService {
       reader: 'ddf1-csv-ext',
       ddfPath: this.ddfFolderDescriptor.ddfUrl,
       path: this.ddfFolderDescriptor.ddfUrl,
-      assetsPath: `${this.ddfFolderDescriptor.electronPath}/preview-data/`,
+      assetsPath: this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data') + this.es.path.sep,
       _lastModified: ddfFolderDescriptor.lastModified
     };
 
     config.locale = {
       id: 'en',
-      filePath: `${this.ddfFolderDescriptor.electronPath}/preview-data/translation/`
+      filePath: this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data', 'translation') + this.es.path.sep
     };
 
     config.ui.splash = false;

@@ -1,9 +1,8 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectorRef, ElementRef, ViewEncapsulation } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { ChartService } from '../tabs/chart.service';
 import { isEmpty } from 'lodash';
 import { TabModel } from '../tabs/tab.model';
 import { ElectronService } from '../../providers/electron.service';
-import { MessageService } from '../../message.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ICalculatedDataView } from './calculated-data-view';
 import { LocalizationService } from '../../providers/localization.service';
@@ -82,10 +81,7 @@ export class FileSelectConfigFormComponent {
   constructor(public ts: TranslateService,
               public ls: LocalizationService,
               private chartService: ChartService,
-              private es: ElectronService,
-              private ms: MessageService,
-              private el: ElementRef,
-              private ref: ChangeDetectorRef) {
+              private es: ElectronService) {
   }
 
   @Input()
@@ -174,7 +170,6 @@ export class FileSelectConfigFormComponent {
   }
 
   onFileChanged(fileDescriptor: any) {
-    this.ref.detectChanges();
     if (fileDescriptor) {
       this.file = fileDescriptor.file;
       this.lastModified = fileDescriptor.lastModified;
@@ -194,7 +189,6 @@ export class FileSelectConfigFormComponent {
             this.worksheets = worksheets;
             this.sheet = this.worksheets[0];
             this.loadingSheetsTitle = '';
-            this.ref.detectChanges();
           });
         }, 500);
       }

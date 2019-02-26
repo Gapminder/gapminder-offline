@@ -47,7 +47,7 @@ export class DdfDatasetConfigFormComponent {
 
       this.es.fs.stat(this.es.path.resolve(this.parameters.selectedFolder, 'datapackage.json'), (err: any) => {
         this.isDataPackageExists = !err;
-        this.ref.detectChanges();
+        // this.ref.detectChanges();
       });
     }
   }

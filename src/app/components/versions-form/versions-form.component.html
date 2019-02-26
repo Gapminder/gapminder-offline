@@ -1,10 +1,31 @@
 <div *ngIf="versions && versions.length >= 0">
-    <h4>{{'Upgrade or downgrade manually to one of these versions:' | translate}}</h4>
-    <div class="popup-block">
-        <div *ngFor="let version of versions">
-            <a href="#" *ngIf="version !== currentVersion" (click)="update(version)">{{version}}</a>
-            <span *ngIf="version === currentVersion">{{version}}</span>
-            <span>{{getVersionLabel(version)}}</span>
-        </div>
+  <h4>{{'Upgrade or downgrade manually to one of these versions:' | translate}}</h4>
+  <div class="popup-block versions">
+    <div class="row row-striped" *ngFor="let versionDesc of versions">
+      <div class="col-md-2 col-sm-2">
+        <span><b>{{versionDesc.version}}</b></span>
+      </div>
+      <div *ngIf="versionDesc.version === currentVersion" class="col-md-8 col-sm-8">
+        <i>{{getVersionLabel(versionDesc.version)}}</i>
+      </div>
+      <div *ngIf="versionDesc.version !== currentVersion" class="col-md-1 col-sm-1">
+        <a href="#" (click)="openURL(versionDesc.win64)">Win 64</a>
+      </div>
+      <div *ngIf="versionDesc.version !== currentVersion" class="col-md-1 col-sm-1">
+        <a href="#" (click)="openURL(versionDesc.win32)">Win 32</a>
+      </div>
+      <div *ngIf="versionDesc.version !== currentVersion" class="col-md-1 col-sm-1">
+        <a href="#" (click)="openURL(versionDesc.mac)">Mac</a>
+      </div>
+      <div *ngIf="versionDesc.version !== currentVersion" class="col-md-1 col-sm-1">
+        <a href="#" (click)="openURL(versionDesc.lin)">Linux</a>
+      </div>
+      <div *ngIf="versionDesc.version !== currentVersion" class="col-md-2 col-sm-2">
+        <a href="#" (click)="openURL(versionDesc.win64Port)">Win 64 portable</a>
+      </div>
+      <div *ngIf="versionDesc.version !== currentVersion" class="col-md-2 col-sm-2">
+        <a href="#" (click)="openURL(versionDesc.win32Port)">Win 32 portable</a>
+      </div>
     </div>
+  </div>
 </div>

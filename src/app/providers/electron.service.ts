@@ -29,6 +29,7 @@ export class ElectronService {
   vizabi: any;
   SETTINGS_FILE: string;
   appPath: string;
+  userDataPath: string;
   devMode: boolean;
 
   constructor() {
@@ -49,8 +50,9 @@ export class ElectronService {
       this.vizabi = (window as any).Vizabi;
       const currentWindow: any = this.remote.getCurrentWindow();
       this.appPath = currentWindow.appPath;
+      this.userDataPath = currentWindow.userDataPath;
       this.devMode = currentWindow.devMode;
-      this.SETTINGS_FILE = this.path.resolve(this.appPath, 'settings.json');
+      this.SETTINGS_FILE = this.path.resolve(this.userDataPath, 'gapminder-offline-settings.json');
     }
   }
 
