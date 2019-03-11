@@ -6,8 +6,8 @@
 !postcss.config.js
 !postinstall.js
 !postinstall-web.js
-!exports-template
-!preview-data
+!export-template/**/*
+!preview-data/**/*
 *.map.js
 *.js.map
 /dist
