@@ -67,9 +67,6 @@ const normalizeModelToSave = (model, chartType) => {
       if (isPathInternal(model[key].path, DATA_PATH)) {
         model[key].path = `@internal`;
         model[key].assetsPath = `@internal`;
-      } else {
-        model[key].path = path.resolve(__dirname, '..', '..', model[key].path);
-        model[key].assetsPath = path.resolve(__dirname, '..', '..', model[key].assetPath);
       }
 
       model[key].ddfPath = model[key].path;
@@ -97,9 +94,6 @@ const normalizeModelToOpen = (model, currentDir, brokenFileActions) => {
         model[key].path = DATA_PATH;
         model[key].assetsPath = PREVIEW_DATA_PATH + path.sep;
       } else {
-        model[key].path = path.resolve(__dirname, '..', '..', model[key].path);
-        model[key].assetsPath = path.resolve(__dirname, '..', '..', model[key].assetsPath) + path.sep;
-
         if (!fs.existsSync(model[key].path)) {
           brokenFileActions.push(getPathCorrectFunction(model[key]));
         }
