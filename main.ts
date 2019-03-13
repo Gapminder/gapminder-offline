@@ -4,14 +4,19 @@ import * as fs from 'fs';
 import * as urlLib from 'url';
 import * as log from 'electron-log';
 import * as request from 'request';
+import { diff } from 'semver';
 import { autoUpdater } from 'electron-updater';
 import { exportForWeb, getUpdateLinks, openFileWhenDoubleClick, openFileWithDialog, saveAllTabs, saveFile } from './file-management';
 import { GoogleAnalytics } from './google-analytics';
+import { getLatestGithubTag, updateDataset } from './dataset-update';
+import * as os from 'os';
 
 require('node-fetch');
 
 export const FEED_VERSION_URL = 'http://s3-eu-west-1.amazonaws.com/gapminder-offline/auto-update.json';
 const packageJSON = require('./package.json');
+const dsGithubOwner = 'open-numbers';
+const dsGithubRepo = 'ddf--gapminder--systema_globalis';
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 
 autoUpdater.logger = log as any;
@@ -23,8 +28,10 @@ const args = process.argv.slice(1);
 const devMode = process.argv.length > 1 && process.argv.indexOf('dev') > 0;
 const nonAsarAppPath = app.getAppPath().replace(/app\.asar/, '');
 const userDataPath = (app || remote.app).getPath('userData');
-const dataPackage = require(path.resolve(nonAsarAppPath, 'ddf--gapminder--systema_globalis/datapackage.json'));
+const datasetPath = path.resolve(nonAsarAppPath, 'ddf--gapminder--systema_globalis');
 const serve = args.some(val => val === '--serve');
+
+let dataPackage = require(path.resolve(datasetPath, 'datapackage.json'));
 
 let mainWindow;
 let currentFile;
@@ -70,12 +77,43 @@ function createWindow() {
     autoUpdater.downloadUpdate();
   });
 
+  function requireUncached(module) {
+    delete require.cache[require.resolve(module)];
+
+    return require(module);
+  }
+
+  ipc.on('dataset-reload', () => {
+    dataPackage = requireUncached(path.resolve(datasetPath, 'datapackage.json'));
+    mainWindow.setTitle(`Gapminder Tools Offline v.${app.getVersion()} (dataset v.${dataPackage.version})`);
+    mainWindow.reload();
+  });
+
+  ipc.on('start-dataset-update', async (event, tagVersion) => {
+    try {
+      await updateDataset(tagVersion, datasetPath, userDataPath);
+      mainWindow.webContents.send('dataset-updated');
+    } catch (e) {
+      mainWindow.webContents.send('dataset-not-updated', e);
+    }
+  });
+
   ipc.on('start-update', () => {
     autoUpdater.quitAndInstall();
   });
 
-  autoUpdater.on('update-available', (ev) => {
+  autoUpdater.on('update-available', async (ev) => {
     mainWindow.webContents.send('update-available', ev);
+  });
+
+  autoUpdater.on('update-not-available', async () => {
+    if (os.platform() !== 'linux') {
+      const tagVersion = await getLatestGithubTag(`github.com/${dsGithubOwner}/${dsGithubRepo}`);
+
+      if (diff(tagVersion, dataPackage.version)) {
+        mainWindow.webContents.send('dataset-update-available', tagVersion);
+      }
+    }
   });
 
   autoUpdater.on('error', (err) => {
