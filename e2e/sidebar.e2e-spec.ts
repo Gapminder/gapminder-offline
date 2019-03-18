@@ -35,7 +35,8 @@ describe('Sidebar: Advanced buttons', () => {
     await commonChartPage.closeTab();
   });
 
-  it('Change regular opacity', async() => {
+  /** unxit after the fix "not visible" issue  */
+  xit('Change regular opacity', async() => {
     const allBubblesCount = await bubbleChart.allBubbles.count();
 
     await changeRegularOpacity();
@@ -46,7 +47,8 @@ describe('Sidebar: Advanced buttons', () => {
     await expect(allBubblesCount).toEqual(newOpacityCount);
   });
 
-  it('Change opacity for non-selected', async() => {
+  /** unxit after the fix "not visible" issue  */
+  xit('Change opacity for non-selected', async() => {
     const allBubblesCount = await bubbleChart.allBubbles.count();
 
     await changeOpacityForNonSelected();

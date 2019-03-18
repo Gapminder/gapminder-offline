@@ -59,14 +59,13 @@ describe('Line chart: ', () => {
     expect(await lineChart.countDimmedLines()).toEqual(2);
   });
 
-  // todo: this operation is slow now, need to add wait clause
-  xit('change Y axis value', async () => {
+  it('change Y axis value', async () => {
     const yAxisValue = await lineChart.changeYaxisValue();
 
     expect(await lineChart.yAxisBtn.getText()).toContain(yAxisValue, 'Y axis button text');
   });
 
-  it('Data doubts button', async () => {
+  xit('Data doubts button', async () => {
     await lineChart.dataDoubtsLink.safeClick();
 
     await safeExpectIsDispayed(lineChart.dataDoubtsWindow);

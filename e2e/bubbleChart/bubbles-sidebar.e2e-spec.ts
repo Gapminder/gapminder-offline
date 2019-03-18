@@ -94,7 +94,7 @@ describe('Bubbles chart: Sidebar', () => {
     // await expect(finalRadius[0]).toBeGreaterThan(initialRadius); // TODO add check like this
   });
 
-  it('change Size indicator', async () => {
+  xit('change Size indicator', async () => {
     /**
      * should check that the indicator represented by the Size can be changed(TC16)
      */
@@ -174,7 +174,7 @@ describe('Bubbles chart: Sidebar', () => {
     await expect(optionsDialogueRightNewPosition).not.toEqual(optionsDialogueRightFinalPosition);
   });
 
-  it('Change opacity for non-selected bubbles', async () => {
+  xit('Change opacity for non-selected bubbles', async () => {
     await sidebar.findSelect.searchAndSelectCountry('China');
     const nonSelectedBubbles = await bubbleChart.countBubblesByOpacity(CommonChartPage.opacity.dimmed);
 
@@ -184,7 +184,7 @@ describe('Bubbles chart: Sidebar', () => {
     expect(await bubbleChart.countBubblesByOpacity(Number(newOpacity))).toEqual(nonSelectedBubbles);
   });
 
-  it('Change regular opacity', async () => {
+  xit('Change regular opacity', async () => {
     const highlightedBubbles = await bubbleChart.countBubblesByOpacity(CommonChartPage.opacity.highlighted);
 
     await sidebar.changeRegularOpacity();
@@ -208,7 +208,7 @@ describe('Bubbles chart: Sidebar', () => {
     expect(selectedLabels).toEqual(selectedBubbles);
   });
 
-  it('remove label boxes', async () => {
+  xit('remove label boxes', async () => {
     await bubbleChart.clickOnCountryBubble('India');
 
     // open menu and click on the checkbox
@@ -219,7 +219,7 @@ describe('Bubbles chart: Sidebar', () => {
     await expect(bubbleChart.selectedBubbleLabel.isDisplayed()).toBeFalsy();
   });
 
-  it('change labels size by moving slider', async () => {
+  xit('change labels size by moving slider', async () => {
     await bubbleChart.clickOnCountryBubble('India');
     const labelSizeBefore = await _$('.vzb-bc-label-content.stroke').safeGetAttribute('font-size');
 
@@ -233,7 +233,7 @@ describe('Bubbles chart: Sidebar', () => {
     await expect(parseInt(labelSizeBefore)).toBeLessThan(parseInt(labelSizeAfter));
   });
 
-  it('change label size by choosing option from dropdown', async () => {
+  xit('change label size by choosing option from dropdown', async () => {
     await bubbleChart.clickOnCountryBubble('India');
     const labelSizeBefore = await _$('.vzb-bc-label-content.stroke').safeGetAttribute('font-size');
 

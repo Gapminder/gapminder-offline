@@ -110,8 +110,8 @@ describe('Maps chart', () => {
     const colorDropDownTextOnBlueBubbleMouseHover = await sidebar.colorSection.colorLabel.getText();
     const sizeDropDownTextOnBlueBubbleMouseHover = await sidebar.size.sizeDropDown.getText();
 
-    expect(axisYTextOnBlueBubbleMouseHover).toEqual('Size: 201M');
+    expect(axisYTextOnBlueBubbleMouseHover).toEqual('Size: 196M');
     expect(colorDropDownTextOnBlueBubbleMouseHover).toEqual('Africa');
-    expect(sizeDropDownTextOnBlueBubbleMouseHover).toEqual('201M');
+    expect(sizeDropDownTextOnBlueBubbleMouseHover).toEqual('196M');
   });
 });

@@ -62,7 +62,7 @@ describe('Ranks chart', () => {
     expect(Number(await sidebar.colorSection.minimapAsiaRegion.getCssValue('opacity'))).toEqual(CommonChartPage.opacity.highlighted);
   });
 
-  it('Data doubts button', async () => {
+  xit('Data doubts button', async () => {
     await ranksChart.dataDoubtsLink.safeClick();
 
     await safeExpectIsDispayed(ranksChart.dataDoubtsWindow);
