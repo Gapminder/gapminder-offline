@@ -71,7 +71,7 @@
     {
       "provider": "s3",
       "bucket": "gapminder-offline",
-      "path": "new-version"
+      "path": "dist"
     }
   ],
   "fileAssociations": [

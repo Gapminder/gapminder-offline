@@ -9,12 +9,15 @@ import { LocalizationService } from '../../providers/localization.service';
 })
 export class AutoUpdateComponent implements OnInit {
   ready = false;
+  datasetReady = false;
   updating = false;
   showProgress = false;
   max = 100;
   progress: number = null;
   versionDescriptor;
-  error = false;
+  error;
+  datasetError;
+  newDataset: string;
 
   constructor(public ls: LocalizationService, private es: ElectronService) {
   }
@@ -23,7 +26,12 @@ export class AutoUpdateComponent implements OnInit {
     this.es.ipcRenderer.on('update-available', (e, versionDescriptor) => {
       this.versionDescriptor = versionDescriptor;
     });
+    this.es.ipcRenderer.on('dataset-update-available', (e, datasetTag) => {
+      this.versionDescriptor = {actualVersionDsUpdate: datasetTag};
+      this.newDataset = datasetTag;
+    });
     this.es.ipcRenderer.on('update-error', (e, err) => {
+      this.updating = false;
       this.error = err;
     });
     this.es.ipcRenderer.on('download-progress', (e, progressDescriptor) => {
@@ -40,6 +48,26 @@ export class AutoUpdateComponent implements OnInit {
       this.updating = false;
       this.ready = true;
     });
+    this.es.ipcRenderer.on('dataset-updated', () => {
+      this.updating = false;
+      this.datasetReady = true;
+    });
+    this.es.ipcRenderer.on('dataset-not-updated', (e, err) => {
+      this.updating = false;
+      this.datasetError = err;
+      console.log(this.datasetError);
+    });
+  }
+
+  updateDataset() {
+    this.es.ipcRenderer.send('start-dataset-update', this.newDataset);
+    this.updating = true;
+    this.newDataset = '';
+  }
+
+  reload() {
+    this.datasetReady = false;
+    this.es.ipcRenderer.send('dataset-reload');
   }
 
   download() {
@@ -54,14 +82,17 @@ export class AutoUpdateComponent implements OnInit {
 
   cancel() {
     this.versionDescriptor = null;
+    this.newDataset = null;
   }
 
   resetError() {
     this.error = null;
+    this.datasetError = null;
   }
 
   isActive(): boolean {
-    return !!this.versionDescriptor || this.updating || this.showProgress || this.ready;
+    return !!this.versionDescriptor || this.updating || this.showProgress || this.ready || !!this.newDataset || this.datasetReady ||
+      !!this.error || !!this.datasetError;
   }
 
   openURL(url: string) {

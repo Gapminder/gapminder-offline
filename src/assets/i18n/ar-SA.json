@@ -48,6 +48,7 @@
   "OK": "حسنا",
   "Update now": "تحديث الان",
   "New version is available!": "!متاح <b>{{version}}</b> الإصدار الجديد",
+  "New dataset is available!": "!متاح (v{{actualVersionDsUpdate}}) مجموعة بيانات جديدة",
   "Press OK and wait — the app will restart automatically.": ".سيتم إعادة تشغيل التطبيق تلقائيًا — اضغط موافق وانتظر",
   "Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version": "Gapminder Offline آسف، التحديث التلقائي كسر، الرجاء إلغاء تثبيت وتثبيت الإصدار الجديد",
   "Please uninstall Gapminder Offline and install the new version": "Gapminder Offline الرجاء إلغاء تثبيت وتثبيت الإصدار الجديد",
@@ -136,5 +137,6 @@
   "week": "أسبوع",
   "quarter": "ربع",
   "Reading Excel sheets": "Excel…قراءه أوراق",
-  "Quit": "انهاء"
+  "Quit": "انهاء",
+  "Updating": "تحديث..."
 }
