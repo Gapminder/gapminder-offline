@@ -17,6 +17,7 @@ export const FEED_VERSION_URL = 'http://s3-eu-west-1.amazonaws.com/gapminder-off
 const packageJSON = require('./package.json');
 const dsGithubOwner = 'open-numbers';
 const dsGithubRepo = 'ddf--gapminder--systema_globalis';
+const isPortable = !!process.env.PORTABLE_EXECUTABLE_DIR;
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 
 autoUpdater.logger = log as any;
@@ -62,7 +63,9 @@ function createWindow() {
   }
 
   mainWindow.webContents.once('did-finish-load', () => {
-    autoUpdater.checkForUpdates();
+    if (!isPortable) {
+      autoUpdater.checkForUpdates();
+    }
   });
 
   mainWindow.on('closed', () => {
@@ -107,7 +110,7 @@ function createWindow() {
   });
 
   autoUpdater.on('update-not-available', async () => {
-    if (os.platform() !== 'linux') {
+    if (os.platform() !== 'linux' && !isPortable) {
       const tagVersion = await getLatestGithubTag(`github.com/${dsGithubOwner}/${dsGithubRepo}`);
 
       if (diff(tagVersion, dataPackage.version)) {

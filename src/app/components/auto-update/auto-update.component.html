@@ -33,7 +33,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="!!error && !!datasetError">
+  <div *ngIf="!!error || !!datasetError">
     <div class="label">{{'Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version' | translate}}
       <a href="#" (click)="openURL('https://www.gapminder.org/tools-offline/')">{{'from here' | translate}}</a>
       <span>
