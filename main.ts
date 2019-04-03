@@ -36,6 +36,7 @@ let dataPackage = require(path.resolve(datasetPath, 'datapackage.json'));
 
 let mainWindow;
 let currentFile;
+let isVersionCheckPassed = false;
 
 function createWindow() {
   const isFileArgumentValid = fileName => fs.existsSync(fileName) && fileName.indexOf('-psn_') === -1;
@@ -106,10 +107,13 @@ function createWindow() {
   });
 
   autoUpdater.on('update-available', async (ev) => {
+    isVersionCheckPassed = true;
     mainWindow.webContents.send('update-available', ev);
   });
 
   autoUpdater.on('update-not-available', async () => {
+    isVersionCheckPassed = true;
+
     if (os.platform() !== 'linux' && !isPortable) {
       const tagVersion = await getLatestGithubTag(`github.com/${dsGithubOwner}/${dsGithubRepo}`);
 
@@ -120,7 +124,9 @@ function createWindow() {
   });
 
   autoUpdater.on('error', (err) => {
-    mainWindow.webContents.send('update-error', err);
+    if (isVersionCheckPassed) {
+      mainWindow.webContents.send('update-error', err);
+    }
   });
 
   autoUpdater.on('download-progress', (ev) => {
