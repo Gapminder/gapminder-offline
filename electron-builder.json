@@ -1,44 +1,93 @@
 {
-  "productName": "Gapminder Offline",
+  "extraResources": [
+    "ddf--gapminder--systema_globalis/**/*",
+    "export-template/**/*",
+    "preview-data/**/*"
+  ],
+  "productName": "Gapminder Tools Offline",
   "directories": {
     "output": "app-builds"
   },
-    "files": [
-        "**/*",
-        "!*.ts",
-        "!*.code-workspace",
-        "!LICENSE.md",
-        "!package.json",
-        "!package-lock.json",
-        "!src/",
-        "!e2e/",
-        "!hooks/",
-        "!extra-data/",
-        "!scripts/",
-        "!update-app-src",
-        "!dmg-builder",
-        "!.angular-cli.json",
-        "!_config.yml",
-        "!karma.conf.js",
-        "!tsconfig.json",
-        "!tslint.json"
-    ],
+  "files": [
+    "**/*",
+    "!ddf--gapminder--systema_globalis/**/*",
+    "!export-template/**/*",
+    "!preview-data/**/*",
+    "!**/*.ts",
+    "!*.code-workspace",
+    "!LICENSE.md",
+    "!package.json",
+    "!package-lock.json",
+    "!src/",
+    "!e2e/",
+    "!hooks/",
+    "!angular.json",
+    "!_config.yml",
+    "!karma.conf.js",
+    "!tsconfig.json",
+    "!tslint.json",
+    "!www"
+  ],
   "win": {
     "icon": "dist/app-icon.png",
     "target": [
-      "dir"
-    ]
+      "nsis:x64",
+      "nsis:ia32",
+      "zip",
+      "portable"
+    ],
+    "verifyUpdateCodeSignature": false,
+    "publisherName": "COMODO RSA Code Signing CA",
+    "certificateSubjectName": "Stiftelsen Gapminder"
   },
   "mac": {
+    "category": "public.app-category.developer-tools",
     "icon": "dist/app-icon.icns",
     "target": [
-      "dir"
+      "zip",
+      "dmg"
     ]
   },
   "linux": {
-    "icon": "dist",
+    "icon": "dist/app-icon.png",
     "target": [
-      "dir"
+      "AppImage"
     ]
-  }
+  },
+  "nsis": {
+    "oneClick": true,
+    "perMachine": false,
+    "deleteAppDataOnUninstall": true,
+    "include": "custom-uninstall.nsh",
+    "allowElevation": false,
+    "createStartMenuShortcut": false
+  },
+  "dmg": {
+    "title": "Gapminder Tools Offline",
+    "icon": "icons/gapminder_package.icns",
+    "background": "icons/gapminder.png",
+    "window": {
+      "width": 898,
+      "height": 511
+    },
+    "contents": [
+      { "x": 635, "y": 400, "type": "link", "path": "/Applications" },
+      { "x": 253, "y": 400 }
+    ]
+  },
+  "publish": [
+    {
+      "provider": "s3",
+      "bucket": "gapminder-offline",
+      "path": "dist"
+    }
+  ],
+  "fileAssociations": [
+    {
+      "ext": "gmstat",
+      "name": "Gapminder Statistics File",
+      "description": "Gapminder Statistics File",
+      "role": "Viewer"
+    }
+  ]
 }

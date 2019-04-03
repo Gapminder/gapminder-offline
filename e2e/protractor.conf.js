@@ -2,17 +2,16 @@
 const os = require('os');
 const platform = os.platform();
 const arch = os.arch();
-const progExtension = platform === 'win32' ? '.exe' : '';
 
-let dirPostfix = 'linux';
+let binary;
 
-if (platform === 'win32') {
-  dirPostfix = arch === 'ia32' ? 'win32' : 'win64';
-}
-
-let binary = `${__dirname}/../app-builds/Gapminder Offline-${platform}/Gapminder Offline${progExtension}`;
-
-if (platform === 'darwin') {
+if (platform === 'linux') {
+  binary = `${__dirname}/../app-builds/linux-unpacked/gapminder-offline`;
+} else if (platform === 'win32' && arch === 'x64') {
+  binary = `${__dirname}\\..\\app-builds\\win-unpacked\\Gapminder Offline.exe`;
+} else if (platform === 'win32' && arch === 'ia32') {
+  binary = `${__dirname}\\..\\app-builds\\win-ia32-unpacked\\Gapminder Offline.exe`;
+} else {
   binary = `${__dirname}/../app-builds/mac/Gapminder Offline.app/Contents/MacOS/Gapminder Offline`;
 }
 

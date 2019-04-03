@@ -47,7 +47,7 @@
   "Cancel": "Cancel",
   "OK": "OK",
   "Update now": "Update now",
-  "New version is available!": "New version <b>{{actualVersionGenericUpdate}}</b> is available!",
+  "New version is available!": "New version <b>{{version}}</b> is available!",
   "New dataset is available!": "New dataset (v{{actualVersionDsUpdate}}) is available!",
   "Press OK and wait — the app will restart automatically.": "Press OK and wait — the app will restart automatically.",
   "Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version": "Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version",
@@ -137,5 +137,6 @@
   "week": "week",
   "quarter": "quarter",
   "Reading Excel sheets": "Reading Excel sheets…",
-  "Quit": "Quit"
+  "Quit": "Quit",
+  "Updating": "Updating..."
 }

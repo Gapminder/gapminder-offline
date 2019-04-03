@@ -18,7 +18,6 @@ import { HomeComponent } from './components/home/home.component';
 import { AutoUpdateComponent } from './components/auto-update/auto-update.component';
 import { TabFreshenerComponent } from './components/tab-freshener/tab-freshener.component';
 import { HamburgerMenuComponent } from './components/menu/hamburger-menu.component';
-import { VersionsFormComponent } from './components/versions-form/versions-form.component';
 import { ValidationFormComponent } from './components/validation-form/validation-form.component';
 import { DdfDatasetConfigFormComponent } from './components/ddf-dataset-config-form/ddf-dataset-config-form.component';
 import { FileSelectConfigFormComponent } from './components/file-select-config-form/file-select-config-form.component';
@@ -33,6 +32,7 @@ import { MessageService } from './message.service';
 import { FreshenerService } from './components/tab-freshener/freshener.service';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LocalizationService } from './providers/localization.service';
+import { VersionsFormComponent } from './components/versions-form/versions-form.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -45,7 +45,6 @@ export function createTranslateLoader(http: HttpClient) {
     AutoUpdateComponent,
     TabFreshenerComponent,
     HamburgerMenuComponent,
-    VersionsFormComponent,
     ValidationFormComponent,
     DdfDatasetConfigFormComponent,
     FileSelectConfigFormComponent,
@@ -55,6 +54,7 @@ export function createTranslateLoader(http: HttpClient) {
     TabsComponent,
     SmartPathSelectorComponent,
     WaitIndicatorComponent,
+    VersionsFormComponent,
     WebviewDirective,
     VizabiDirective
   ],

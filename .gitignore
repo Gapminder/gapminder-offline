@@ -2,14 +2,18 @@
 
 # compiled output
 *.js
-!hash-maker.js
+*.pfx
+!postcss.config.js
+!postinstall.js
+!postinstall-web.js
+!export-template/**/*
+!preview-data/**/*
 *.map.js
-!package-dmg.js
+*.js.map
 /dist
 /tmp
 /out-tsc
 /app-builds/**/*
-main.js
 !src/lib/**/*
 !src/export-template/
 

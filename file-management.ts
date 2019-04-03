@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as fsExtra from 'fs-extra';
 import * as zipdir from 'zip-dir';
-import { app } from 'electron';
+import { app, remote } from 'electron';
 import { GoogleAnalytics } from './google-analytics';
 
 const dialog = require('electron').dialog;
@@ -12,25 +12,11 @@ const dialog = require('electron').dialog;
 const packageJSON = require('./package.json');
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 const nonAsarAppPath = app.getAppPath().replace(/app\.asar/, '');
-
-const DATA_PATH = {
-  win32: nonAsarAppPath + '\\ddf--gapminder--systema_globalis',
-  linux: nonAsarAppPath + '/ddf--gapminder--systema_globalis',
-  darwin: nonAsarAppPath + '/ddf--gapminder--systema_globalis'
-};
-
-const WEB_RESOURCE_PATH = {
-  win32: nonAsarAppPath + '\\export-template',
-  linux: nonAsarAppPath + '/export-template',
-  darwin: nonAsarAppPath + '/export-template'
-};
-
-const WEB_PATH = {
-  win32: nonAsarAppPath + '\\web',
-  linux: nonAsarAppPath + '/web',
-  darwin: nonAsarAppPath + '/web'
-};
-
+const userDataPath = (app || remote.app).getPath('userData');
+const DATA_PATH = path.resolve(nonAsarAppPath, 'ddf--gapminder--systema_globalis');
+const PREVIEW_DATA_PATH = path.resolve(nonAsarAppPath, 'preview-data');
+const WEB_RESOURCE_PATH = path.resolve(nonAsarAppPath, 'export-template');
+const WEB_PATH = path.resolve(userDataPath, 'web');
 const previouslyOpened = {};
 
 const getPathCorrectFunction = brokenPathObject => onPathReady => {
@@ -74,20 +60,24 @@ const getPathCorrectFunction = brokenPathObject => onPathReady => {
   });
 };
 
-const isPathInternalWin = _path => _path.endsWith(DATA_PATH.win32);
-const isPathInternalLin = _path => _path.endsWith(DATA_PATH.linux);
-const isPathInternalMac = _path => _path.endsWith(DATA_PATH.darwin);
-const isPathInternal = _path => isPathInternalWin(_path) || isPathInternalLin(_path) || isPathInternalMac(_path);
+const isPathInternal = (_path: string, template: string) => _path.startsWith(template);
 const normalizeModelToSave = (model, chartType) => {
   Object.keys(model).forEach(key => {
     if ((key === 'data' || key.indexOf('data_') === 0) && typeof model[key] === 'object') {
-      if (isPathInternal(model[key].path)) {
+      if (isPathInternal(model[key].path, DATA_PATH)) {
         model[key].path = `@internal`;
-      } else {
-        model[key].path = path.resolve(__dirname, '..', '..', model[key].path);
+        model[key].assetsPath = `@internal`;
       }
 
       model[key].ddfPath = model[key].path;
+    }
+
+    if (key === 'locale' && typeof model[key] === 'object') {
+      if (isPathInternal(model[key].filePath, PREVIEW_DATA_PATH)) {
+        model[key].filePath = `@internal`;
+      } else {
+        model[key].filePath = path.resolve(__dirname, '..', '..', model[key].filePath);
+      }
     }
   });
 
@@ -101,16 +91,21 @@ const normalizeModelToOpen = (model, currentDir, brokenFileActions) => {
       }
 
       if (model[key].path.indexOf('@internal') >= 0) {
-        model[key].path = DATA_PATH[process.platform];
+        model[key].path = DATA_PATH;
+        model[key].assetsPath = PREVIEW_DATA_PATH + path.sep;
       } else {
-        model[key].path = path.resolve(__dirname, '..', '..', model[key].path);
-
         if (!fs.existsSync(model[key].path)) {
           brokenFileActions.push(getPathCorrectFunction(model[key]));
         }
       }
 
       model[key].ddfPath = model[key].path;
+    }
+
+    if (key === 'locale' && typeof model[key] === 'object') {
+      if (model[key].filePath.indexOf('@internal') >= 0) {
+        model[key].filePath = path.resolve(PREVIEW_DATA_PATH, 'translation') + path.sep;
+      }
     }
   });
 };
@@ -285,14 +280,14 @@ export const saveAllTabs = (event, tabsDescriptor) => {
 };
 
 export const exportForWeb = (event, params) => {
-  fsExtra.removeSync(`${WEB_PATH[process.platform]}`);
+  fsExtra.removeSync(WEB_PATH);
 
   Object.keys(params.model).forEach(key => {
     if ((key === 'data' || key.indexOf('data_') === 0) && typeof params.model[key] === 'object') {
       const pathKeys = params.model[key].path.split(path.sep);
       const pathKey = pathKeys[pathKeys.length - 1];
 
-      fsExtra.copySync(params.model[key].path, `${WEB_PATH[process.platform]}/data/${pathKey}`);
+      fsExtra.copySync(params.model[key].path, path.resolve(WEB_PATH, 'data', pathKey));
 
       params.model[key].path = `./data/${pathKey}`;
       params.model[key].ddfPath = `./data/${pathKey}`;
@@ -308,14 +303,14 @@ export const exportForWeb = (event, params) => {
 
   const config = `var CONFIG = ${JSON.stringify(params.model, null, ' ')};`;
 
-  fsExtra.copySync(`${WEB_RESOURCE_PATH[process.platform]}`, `${WEB_PATH[process.platform]}`);
-  fsExtra.outputFileSync(`${WEB_PATH[process.platform]}/config.js`, config);
+  fsExtra.copySync(WEB_RESOURCE_PATH, WEB_PATH);
+  fsExtra.outputFileSync(path.resolve(WEB_PATH, 'config.js'), config);
 
-  let indexContent = fs.readFileSync(`${WEB_RESOURCE_PATH[process.platform]}/index.html`).toString();
+  let indexContent = fs.readFileSync(path.resolve(WEB_RESOURCE_PATH, 'index.html')).toString();
 
   indexContent = indexContent.replace(/#chartType#/, params.chartType);
 
-  fs.writeFileSync(`${WEB_PATH[process.platform]}/index.html`, indexContent, 'utf8');
+  fs.writeFileSync(path.resolve(WEB_PATH, 'index.html'), indexContent, 'utf8');
 
   dialog.showSaveDialog({
     title: 'Export current chart as ...',
@@ -325,7 +320,7 @@ export const exportForWeb = (event, params) => {
       return;
     }
 
-    zipdir(`${WEB_PATH[process.platform]}`, {saveTo: fileName}, err => {
+    zipdir(WEB_PATH, {saveTo: fileName}, err => {
       if (err) {
         dialog.showMessageBox({message: 'This chart has NOT been exported.', buttons: ['OK']});
         ga.error('Export for Web was NOT completed: ' + err.toString());
@@ -335,4 +330,31 @@ export const exportForWeb = (event, params) => {
       dialog.showMessageBox({message: 'This chart has been exported.', buttons: ['OK']});
     });
   });
+};
+
+
+export const getUpdateLinks = (versionsConfig) => {
+  const oldVersions = versionsConfig.modern3.supported.concat(versionsConfig.modern.supported).concat(versionsConfig.supported)
+    .map(version => ({
+      win32: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Install+Gapminder+Offline-32.exe`,
+      win64: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Install+Gapminder+Offline-64.exe`,
+      win32Port: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline-win32.zip`,
+      win64Port: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline-win64.zip`,
+      lin: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline-linux.zip`,
+      mac: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Install+Gapminder+Offline.dmg`,
+      version
+    }));
+  const newVersions = versionsConfig.modern4.supported.map(version => ({
+    win32: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/new-version/Gapminder+Offline+Setup+${version}.exe`,
+    win64: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/new-version/Gapminder+Offline+Setup+${version}.exe`,
+    win32Port: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/new-version/Gapminder+Offline-${version}-ia32-win.zip`,
+    win64Port: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/new-version/Gapminder+Offline-${version}-win.zip`,
+    lin: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/new-version/Gapminder+Offline+${version}.AppImage`,
+    mac: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/new-version/Gapminder+Offline-${version}.dmg`,
+    version
+  }));
+  const supported = newVersions.concat(oldVersions);
+  const currentVersion = versionsConfig.modern4.version;
+
+  return {supported, currentVersion};
 };

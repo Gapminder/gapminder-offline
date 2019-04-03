@@ -47,7 +47,7 @@
   "Cancel": "Отмена",
   "OK": "Да",
   "Update now": "Обновить сейчас",
-  "New version is available!": "Новая версия <b>{{actualVersionGenericUpdate}}</b> вышла!",
+  "New version is available!": "Новая версия <b>{{version}}</b> вышла!",
   "New dataset is available!": "Новый набор данных (v{{actualVersionDsUpdate}}) вышел!",
   "Press OK and wait — the app will restart automatically.": "Нажмите OK и подождите — программа перезапустится автоматически.",
   "Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version": "Просим прощения, похоже, сломалось автоматическое обновление, пожалуйста деинсталлируйте Gapminder Offline и установите его новую версию",
@@ -137,5 +137,6 @@
   "week": "неделя",
   "quarter": "квартал",
   "Reading Excel sheets": "поиск доступных листов",
-  "Quit": "Выход"
+  "Quit": "Выход",
+  "Updating": "Обновляю..."
 }

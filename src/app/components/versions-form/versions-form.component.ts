@@ -2,14 +2,25 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ElectronService } from '../../providers/electron.service';
 import { TranslateService } from '@ngx-translate/core';
 
+interface IVersion {
+  win32: string;
+  win64: string;
+  win32Port: string;
+  win64Port: string;
+  lin: string;
+  mac: string;
+  version: string;
+}
+
 @Component({
   selector: 'app-versions-form',
-  templateUrl: './versions-form.component.html'
+  templateUrl: './versions-form.component.html',
+  styleUrls: ['./versions-form.component.css']
 })
 export class VersionsFormComponent implements OnInit {
   @Output() done: EventEmitter<any> = new EventEmitter();
 
-  versions: string[] = [];
+  versions: IVersion[] = [];
   recommendedVersion: string;
   currentVersion: string;
   latestVersion: string;
@@ -20,16 +31,16 @@ export class VersionsFormComponent implements OnInit {
 
   ngOnInit() {
     this.es.ipcRenderer.on('got-supported-versions',
-      (event: any, versions: string[], recommendedVersion: string, currentVersion: string) => {
+      (event: any, versions: IVersion[], recommendedVersion: string, currentVersion: string) => {
         this.recommendedVersion = recommendedVersion;
         this.currentVersion = currentVersion;
-        this.latestVersion = versions[0];
+        this.latestVersion = versions[0].version;
         this.versions = versions;
       });
   }
 
-  update(version: string) {
-    this.done.emit(version);
+  openURL(url: string) {
+    this.es.shell.openExternal(url);
   }
 
   close() {

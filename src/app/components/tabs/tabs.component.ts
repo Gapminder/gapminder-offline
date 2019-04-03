@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ChartService } from './chart.service';
 import { TabModel } from './tab.model';
@@ -38,8 +38,7 @@ export class TabsComponent implements OnInit {
     public ls: LocalizationService,
     private messageService: MessageService,
     private freshenerService: FreshenerService,
-    private es: ElectronService,
-    private ref: ChangeDetectorRef
+    private es: ElectronService
   ) {
   }
 
@@ -154,7 +153,6 @@ export class TabsComponent implements OnInit {
   newTab() {
     if (!this.disabled) {
       this.chartService.initTab(this.tabsModel);
-      this.ref.detectChanges();
     }
   }
 

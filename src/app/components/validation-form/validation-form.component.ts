@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ChartService } from '../tabs/chart.service';
 import { MessageService } from '../../message.service';
@@ -46,7 +46,6 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
 
   constructor(
     public translate: TranslateService,
-    private ref: ChangeDetectorRef,
     private chartService: ChartService,
     private messageService: MessageService,
     private es: ElectronService) {
@@ -124,13 +123,11 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
       };
       this.es.ddfValidation.createDataPackage(dataPackageCreationParameters, message => {
         this.statusLine = message;
-        this.ref.detectChanges();
       }, error => {
         if (error) {
           this.error = error;
           this.doesValidationRunning = false;
           this.isResultReady = true;
-          this.ref.detectChanges();
 
           return;
         }
@@ -147,7 +144,6 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
 
     this.validator.onMessage(message => {
       this.statusLine = message;
-      this.ref.detectChanges();
     });
 
     this.validator.on('issue', issue => {
@@ -178,8 +174,6 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
         this.doesValidationRunning = false;
         this.isResultReady = !this.validator.isAbandoned();
       }
-
-      this.ref.detectChanges();
     });
 
     this.es.ddfValidation.validate(this.validator);
