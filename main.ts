@@ -6,7 +6,15 @@ import * as log from 'electron-log';
 import * as request from 'request';
 import { diff } from 'semver';
 import { autoUpdater } from 'electron-updater';
-import { exportForWeb, getUpdateLinks, openFileWhenDoubleClick, openFileWithDialog, saveAllTabs, saveFile } from './file-management';
+import {
+  addBookmark,
+  exportForWeb,
+  getUpdateLinks,
+  openFileWhenDoubleClick,
+  openFileWithDialog,
+  saveAllTabs,
+  saveFile
+} from './file-management';
 import { GoogleAnalytics } from './google-analytics';
 import { getLatestGithubTag, updateDataset } from './dataset-update';
 import * as os from 'os';
@@ -192,12 +200,10 @@ function createWindow() {
 
   ipc.on('do-open', openFileWithDialog);
   ipc.on('do-save', saveFile);
+  ipc.on('add-bookmark', addBookmark);
   ipc.on('do-save-all-tabs', saveAllTabs);
   ipc.on('do-export-for-web', exportForWeb);
 
-  ipc.on('new-chart', (event, chartType) => {
-    ga.chartEvent(chartType);
-  });
   ipc.on('new-chart', (event, chartType) => {
     ga.chartEvent(chartType);
   });

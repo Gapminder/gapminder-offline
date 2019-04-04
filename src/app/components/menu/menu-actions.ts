@@ -154,5 +154,9 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => (
 
     context.ls.currentLanguage = context.ls.getLanguageById(langPar[0]);
     context.translate.setDefaultLang(context.ls.currentLanguage.id);
+  },
+  addToBookmarks: () => {
+    context.bookmarkModal.show();
+    context.isMenuOpened = false;
   }
 });

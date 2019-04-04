@@ -44,6 +44,17 @@
             </li>
         </ul>
     </li>
+    <li class="menu-item submenu" [ngClass]="{'menu-item-ltr': !ls.isRtl(), 'menu-item-rtl': ls.isRtl()}">
+        <button type="button" class="menu-btn"><span class="menu-text">Bookmarks</span></button>
+        <ul class="menu">
+            <li class="menu-item" *ngIf="getCurrentTab() && getCurrentTab().chartType" (click)="execute('addToBookmarks')">
+                <button type="button" class="menu-btn"><span class="menu-text">Bookmark current tab</span> </button>
+            </li>
+            <li class="menu-item" *ngIf="!getCurrentTab() || !getCurrentTab().chartType">
+                <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Bookmark current tab</span> </button>
+            </li>
+        </ul>
+    </li>
     <li class="menu-separator"></li>
     <li class="menu-item" (click)="execute('open')">
         <button type="button" class="menu-btn"><span class="menu-text">{{'Open...' | translate}}</span></button>

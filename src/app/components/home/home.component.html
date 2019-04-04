@@ -44,6 +44,29 @@
   </div>
 
   <div bsModal
+       #bookmarkModal="bs-modal"
+       (onShow)="sendCurrentTab()"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="Bookmark current tab"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" [ngClass]="{'close-rtl': ls.isRtl()}" (click)="bookmarkModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Bookmark current tab</h4>
+        </div>
+        <div class="modal-body">
+          <app-bookmark-form (done)="bookmarkFormComplete()"></app-bookmark-form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div bsModal
        #validationModal="bs-modal"
        (onHide)="onValidationModalHide()"
        class="modal fade"

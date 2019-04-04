@@ -1,0 +1,25 @@
+<div>
+  <div class="popup-block">
+    <div>
+      Bookmark name: <input [(ngModel)]="bookmark.name" class="bookmark-name" required>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="popup-footer">
+  <div class="btn-group" style="width: 100%;">
+    <div class="footer-wrapper">
+      <div class="footer-content">
+        <div class="primary-nav">
+        </div>
+        <div class="secondary-nav">
+          <input type="button" class="ok-button" [disabled]="!bookmark.name" (click)="ok()" value="{{'OK' | translate}}" />
+          <input type="button" class="close-button" (click)="close()" value="{{'Cancel' | translate}}" />
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

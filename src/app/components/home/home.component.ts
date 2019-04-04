@@ -18,7 +18,7 @@ import {
   OPEN_DDF_FOLDER_ACTION,
   TAB_READY_ACTION,
   SWITCH_MENU_ACTION,
-  MODEL_CHANGED, CLEAR_VALIDATION_FORM, ABANDON_VALIDATION
+  MODEL_CHANGED, CLEAR_VALIDATION_FORM, ABANDON_VALIDATION, SEND_ACTIVE_TAB
 } from '../../constants';
 import { initMenuComponent } from '../menu/system-menu';
 import { getMenuActions } from '../menu/menu-actions';
@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit {
   @ViewChild('additionalDataModal') additionalDataModal: ModalDirective;
   @ViewChild('presetsModal') presetsModal: ModalDirective;
   @ViewChild('versionsModal') versionsModal: ModalDirective;
+  @ViewChild('bookmarkModal') bookmarkModal: ModalDirective;
   @ViewChild('validationModal') validationModal: ModalDirective;
   @ViewChild('ddfDatasetConfigModal') ddfDatasetConfigModal: ModalDirective;
   @ViewChild('csvConfigModal') csvConfigModal: ModalDirective;
@@ -187,19 +188,22 @@ export class HomeComponent implements OnInit {
     const currentTab = this.getCurrentTab();
     const isItemEnabled = !!currentTab && !!currentTab.chartType;
     const fileMenu = this.menuComponent.items[0].submenu;
+    const bookmarksMenu = fileMenu.items[2];
     const menuAddYourData = fileMenu.items[1];
     const csvFileItem = menuAddYourData.submenu.items[0];
     const excelFileItem = menuAddYourData.submenu.items[1];
     const ddfFolderItem = menuAddYourData.submenu.items[2];
-    const saveMenu = fileMenu.items[4];
-    const saveAllTabs = fileMenu.items[5];
-    const exportMenu = fileMenu.items[7];
+    const addToBookmarksItem = bookmarksMenu.submenu.items[0];
+    const saveMenu = fileMenu.items[5];
+    const saveAllTabs = fileMenu.items[6];
+    const exportMenu = fileMenu.items[8];
 
     csvFileItem.enabled = isItemEnabled;
     excelFileItem.enabled = isItemEnabled;
     ddfFolderItem.enabled = isItemEnabled;
     saveMenu.enabled = isItemEnabled;
     exportMenu.enabled = isItemEnabled;
+    addToBookmarksItem.enabled = isItemEnabled;
 
     saveAllTabs.enabled = this.areChartsAvailable();
   }
@@ -210,6 +214,14 @@ export class HomeComponent implements OnInit {
 
   getCurrentTab(): TabModel {
     return this.chartService.getCurrentTab(this.tabsModel);
+  }
+
+  sendCurrentTab() {
+    const currentTab = this.getCurrentTab();
+    const isAdditionalDataPresent = currentTab.component && currentTab.component.getModel;
+    const model = Object.assign({}, isAdditionalDataPresent ? currentTab.component.getModel() : currentTab.instance.getModel());
+
+    this.messageService.sendMessage(SEND_ACTIVE_TAB, {chartType: currentTab.chartType, model});
   }
 
   appMainClickHandler(event: any) {
@@ -236,6 +248,10 @@ export class HomeComponent implements OnInit {
       this.es.ipcRenderer.send('request-custom-update', version);
       this.versionsModal.hide();
     }
+  }
+
+  bookmarkFormComplete() {
+    this.bookmarkModal.hide();
   }
 
   onValidationModalHide() {

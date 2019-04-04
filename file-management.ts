@@ -251,6 +251,11 @@ export const saveFile = (event, params) => {
   });
 };
 
+export const addBookmark = (event, params) => {
+  console.log(params.bookmark);
+  event.sender.send('bookmark-added');
+};
+
 export const saveAllTabs = (event, tabsDescriptor) => {
   const timeLabel = (new Date()).toISOString().replace(/[\/\\:]/g, '');
 

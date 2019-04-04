@@ -1,0 +1,46 @@
+.main-popup {
+  width: 100%;
+  height: 200px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.footer-wrapper {
+  width: 100%;
+  display: table;
+  border-collapse: collapse;
+}
+
+.footer-content {
+  display:table-row;
+}
+
+.primary-nav, .secondary-nav {
+  display:table-cell;
+}
+
+.primary-nav {
+  width: 60%;
+}
+
+.secondary-nav {
+  width: 40%;
+}
+
+.divider {
+  border-bottom: 1px solid #e5e5e5;
+  margin: 5px -15px 10px -15px;
+}
+
+.close-button {
+  width: 40%;
+  height: 40px;
+}
+
+.ok-button {
+  width: 50%;
+  height: 40px;
+}
+
+.bookmark-name {
+  width: 550px;
+}

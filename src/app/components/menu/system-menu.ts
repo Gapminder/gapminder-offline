@@ -53,6 +53,15 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
           ]
         },
         {
+          label: 'Bookmarks',
+          submenu: [
+            {
+              label: 'Bookmark current tab',
+              click: () => appComponent.menuActions.addToBookmarks()
+            }
+          ]
+        },
+        {
           type: 'separator'
         },
         {
