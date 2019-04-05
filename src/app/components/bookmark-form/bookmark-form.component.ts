@@ -1,14 +1,15 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MessageService } from '../../message.service';
 import { SEND_ACTIVE_TAB } from '../../constants';
 import { ElectronService } from '../../providers/electron.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-bookmark-form',
   templateUrl: './bookmark-form.component.html',
   styleUrls: ['./bookmark-form.component.css']
 })
-export class BookmarkFormComponent {
+export class BookmarkFormComponent implements OnDestroy {
   @Output() done: EventEmitter<any> = new EventEmitter();
   bookmark = {
     name: '',
@@ -17,10 +18,11 @@ export class BookmarkFormComponent {
       model: null
     }
   };
-  errorDesc: {error, bookmarkFile: string} = null;
+  errorDesc: { error, bookmarkFile: string } = null;
+  subscription: Subscription;
 
   constructor(private ms: MessageService, private es: ElectronService) {
-    this.ms.getMessage().subscribe((event: any) => {
+    this.subscription = this.ms.getMessage().subscribe((event: any) => {
       if (event.message === SEND_ACTIVE_TAB) {
         this.errorDesc = null;
         this.bookmark.content.model = event.options.model;
@@ -28,13 +30,16 @@ export class BookmarkFormComponent {
         this.bookmark.name = this.getInitialName(this.bookmark.content.chartType, this.bookmark.content.model);
       }
     });
-    this.es.ipcRenderer.on('bookmark-added', (event, result) => {
-      if (result && result.error) {
-        this.errorDesc = result;
-      } else {
-        this.close();
-      }
+    this.es.ipcRenderer.on('bookmark-added', () => {
+      this.close();
     });
+    this.es.ipcRenderer.on('bookmark-not-added', (event, result) => {
+      this.errorDesc = result;
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   close() {

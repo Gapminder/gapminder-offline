@@ -254,7 +254,9 @@ export const saveFile = (event, params) => {
   });
 };
 
-export const addBookmark = async (event, params) => {
+export const readBookmarks = async (bookmarkFilePar?: string) => {
+  const bookmarkFile = bookmarkFilePar || path.resolve(userDataPath, 'bookmarks.json');
+
   async function initFile(filename) {
     return new Promise((resolve, reject) => {
       fs.open(filename, 'r', (openErr) => {
@@ -273,19 +275,32 @@ export const addBookmark = async (event, params) => {
     });
   }
 
+  return new Promise<any[]>(async (resolve, reject) => {
+    try {
+      await initFile(bookmarkFile);
+      const content = JSON.parse(await readFile(bookmarkFile, 'utf-8'));
+
+      if (!_.isArray(content)) {
+        return reject('wrong bookmark file format');
+      }
+
+      resolve(content);
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+export const addBookmark = async (event, params) => {
   const bookmarkFile = path.resolve(userDataPath, 'bookmarks.json');
 
   try {
-    await initFile(bookmarkFile);
-    const content = JSON.parse(await readFile(bookmarkFile, 'utf-8'));
-    if (!_.isArray(content)) {
-      throw Error('wrong bookmark file format');
-    }
+    const content: any[] = await readBookmarks(bookmarkFile);
     content.push(params.bookmark);
     await writeFile(bookmarkFile, JSON.stringify(content, null, 2));
     event.sender.send('bookmark-added', {bookmarkFile});
   } catch (e) {
-    event.sender.send('bookmark-added', {error: e.toString(), bookmarkFile});
+    event.sender.send('bookmark-not-added', {error: e.toString(), bookmarkFile});
   }
 };
 

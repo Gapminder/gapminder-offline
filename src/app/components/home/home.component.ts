@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
-  ViewContainerRef
+  ViewContainerRef, OnDestroy
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
@@ -49,12 +49,14 @@ const vizabiStateFacade: any = {
   selector: 'app-home',
   templateUrl: './home.component.html'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   tabsModel: TabModel[] = [];
   isMenuOpened = false;
   menuComponent;
   menuActions: any = {};
   calculatedDataView: ICalculatedDataView;
+  translation$: Subscription;
+  message$: Subscription;
 
   @ViewChild('ddfModal') ddfModal: ModalDirective;
   @ViewChild('additionalDataModal') additionalDataModal: ModalDirective;
@@ -95,7 +97,7 @@ export class HomeComponent implements OnInit {
     this.dataItemsAvailability();
     this.ls.restoreCurrentLanguage();
 
-    this.translate.onDefaultLangChange.subscribe((langEvent: { lang: string }) => {
+    this.translation$ = this.translate.onDefaultLangChange.subscribe((langEvent: { lang: string }) => {
       this.ls.settingsOperation(settings => {
         settings.language = langEvent.lang;
         this.es.writeSettings(settings);
@@ -107,7 +109,7 @@ export class HomeComponent implements OnInit {
       });
     });
 
-    this.messageService.getMessage().subscribe((event: any) => {
+    this.message$ = this.messageService.getMessage().subscribe((event: any) => {
       if (event.message === OPEN_DDF_FOLDER_ACTION) {
         this.ddfDatasetConfigModal.hide();
 
@@ -164,6 +166,35 @@ export class HomeComponent implements OnInit {
         this.doDetectChanges();
       }
     });
+
+    this.es.ipcRenderer.on('got-bookmarks', (event, result) => {
+      const Menu = this.es.remote.Menu;
+      const menu: any = Menu.getApplicationMenu();
+
+      const fileMenu = menu.items[0].submenu;
+      const bookmarksMenu: any = fileMenu.items[2].submenu;
+
+      console.log(bookmarksMenu);
+
+      const MenuItem = this.es.remote.MenuItem;
+
+      bookmarksMenu.append(new MenuItem({
+        label: 'foo',
+        click() {}
+      }));
+
+      // https://www.npmjs.com/package/electron-menu-plus
+      Menu.setApplicationMenu(menu);
+
+      // console.log(result.content, bookmarksMenu);
+    });
+
+    this.es.ipcRenderer.send('get-bookmarks');
+  }
+
+  ngOnDestroy() {
+    this.translation$.unsubscribe();
+    this.message$.unsubscribe();
   }
 
   onMenuItemSelected(method: string) {

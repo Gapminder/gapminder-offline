@@ -11,7 +11,7 @@ import {
   exportForWeb,
   getUpdateLinks,
   openFileWhenDoubleClick,
-  openFileWithDialog,
+  openFileWithDialog, readBookmarks,
   saveAllTabs,
   saveFile
 } from './file-management';
@@ -201,6 +201,10 @@ function createWindow() {
   ipc.on('do-open', openFileWithDialog);
   ipc.on('do-save', saveFile);
   ipc.on('add-bookmark', addBookmark);
+  ipc.on('get-bookmarks', async (event) => {
+    const content = await readBookmarks();
+    event.sender.send('got-bookmarks', {content});
+  });
   ipc.on('do-save-all-tabs', saveAllTabs);
   ipc.on('do-export-for-web', exportForWeb);
 

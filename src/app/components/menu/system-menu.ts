@@ -53,6 +53,7 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
           ]
         },
         {
+          id: 'bookmarks',
           label: 'Bookmarks',
           submenu: [
             {
