@@ -4,10 +4,13 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as fsExtra from 'fs-extra';
 import * as zipdir from 'zip-dir';
+import { promisify } from 'util';
 import { app, remote } from 'electron';
 import { GoogleAnalytics } from './google-analytics';
 
 const dialog = require('electron').dialog;
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
 
 const packageJSON = require('./package.json');
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
@@ -251,9 +254,39 @@ export const saveFile = (event, params) => {
   });
 };
 
-export const addBookmark = (event, params) => {
-  console.log(params.bookmark);
-  event.sender.send('bookmark-added');
+export const addBookmark = async (event, params) => {
+  async function initFile(filename) {
+    return new Promise((resolve, reject) => {
+      fs.open(filename, 'r', (openErr) => {
+        if (openErr) {
+          fs.writeFile(filename, '[]', (writeErr) => {
+            if (writeErr) {
+              return reject(writeErr);
+            }
+
+            return resolve();
+          });
+        }
+
+        resolve();
+      });
+    });
+  }
+
+  const bookmarkFile = path.resolve(userDataPath, 'bookmarks.json');
+
+  try {
+    await initFile(bookmarkFile);
+    const content = JSON.parse(await readFile(bookmarkFile, 'utf-8'));
+    if (!_.isArray(content)) {
+      throw Error('wrong bookmark file format');
+    }
+    content.push(params.bookmark);
+    await writeFile(bookmarkFile, JSON.stringify(content, null, 2));
+    event.sender.send('bookmark-added', {bookmarkFile});
+  } catch (e) {
+    event.sender.send('bookmark-added', {error: e.toString(), bookmarkFile});
+  }
 };
 
 export const saveAllTabs = (event, tabsDescriptor) => {

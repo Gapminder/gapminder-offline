@@ -44,9 +44,7 @@
     "category": "public.app-category.developer-tools",
     "icon": "dist/app-icon.icns",
     "target": [
-      "zip",
-      "dmg"
-    ]
+      "zip"    ]
   },
   "linux": {
     "icon": "dist/app-icon.png",

@@ -17,18 +17,23 @@ export class BookmarkFormComponent {
       model: null
     }
   };
+  errorDesc: {error, bookmarkFile: string} = null;
 
   constructor(private ms: MessageService, private es: ElectronService) {
     this.ms.getMessage().subscribe((event: any) => {
       if (event.message === SEND_ACTIVE_TAB) {
+        this.errorDesc = null;
         this.bookmark.content.model = event.options.model;
         this.bookmark.content.chartType = event.options.chartType;
         this.bookmark.name = this.getInitialName(this.bookmark.content.chartType, this.bookmark.content.model);
       }
     });
-    this.es.ipcRenderer.on('bookmark-added', () => {
-      console.log(1111);
-      this.close();
+    this.es.ipcRenderer.on('bookmark-added', (event, result) => {
+      if (result && result.error) {
+        this.errorDesc = result;
+      } else {
+        this.close();
+      }
     });
   }
 

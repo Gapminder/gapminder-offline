@@ -42,5 +42,9 @@
 }
 
 .bookmark-name {
-  width: 550px;
+  width: calc(100% - 100px);
+}
+
+.error-message {
+  color: red;
 }

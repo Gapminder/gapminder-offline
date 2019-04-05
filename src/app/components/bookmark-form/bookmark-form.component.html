@@ -3,6 +3,12 @@
     <div>
       Bookmark name: <input [(ngModel)]="bookmark.name" class="bookmark-name" required>
     </div>
+    <div *ngIf="!!this.errorDesc">
+      <h2 class="error-message">An error occurred while bookmark adding.</h2>
+      <div>
+        Please, correct or remove following file: <b>{{this.errorDesc.bookmarkFile}}</b>
+      </div>
+    </div>
   </div>
 </div>
 
