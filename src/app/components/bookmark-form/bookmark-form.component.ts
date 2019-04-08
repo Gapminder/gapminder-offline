@@ -51,13 +51,17 @@ export class BookmarkFormComponent implements OnDestroy {
   }
 
   private getInitialName(chartType: string, model): string {
-    let name = `${chartType}-x_${model.state.marker.axis_x.which}-y_${model.state.marker.axis_y.which}`;
+    try {
+      let name = `${chartType}-x_${model.state.marker.axis_x.which}-y_${model.state.marker.axis_y.which}`;
 
 
-    if (model.state.marker.select && model.state.marker.select.length > 0) {
-      name = name + '-' + model.state.marker.select.map(item => `${Object.values(item).join('_')}`).join('-');
+      if (model.state.marker.select && model.state.marker.select.length > 0) {
+        name = name + '-' + model.state.marker.select.map(item => `${Object.values(item).join('_')}`).join('-');
+      }
+
+      return name;
+    } catch (e) {
+      return `${chartType}-${new Date().toISOString()}`;
     }
-
-    return name;
   }
 }

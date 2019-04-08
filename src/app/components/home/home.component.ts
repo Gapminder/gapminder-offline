@@ -55,8 +55,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   menuComponent;
   menuActions: any = {};
   calculatedDataView: ICalculatedDataView;
-  translation$: Subscription;
-  message$: Subscription;
+  subscriptions: Subscription[] = [];
 
   @ViewChild('ddfModal') ddfModal: ModalDirective;
   @ViewChild('additionalDataModal') additionalDataModal: ModalDirective;
@@ -93,23 +92,25 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.translate.addLangs(langConfigTemplate.map(lang => lang.id));
-    initMenuComponent(this, this.es);
+    initMenuComponent(this);
     this.dataItemsAvailability();
     this.ls.restoreCurrentLanguage();
 
-    this.translation$ = this.translate.onDefaultLangChange.subscribe((langEvent: { lang: string }) => {
+    const translation$ = this.translate.onDefaultLangChange.subscribe((langEvent: { lang: string }) => {
       this.ls.settingsOperation(settings => {
         settings.language = langEvent.lang;
         this.es.writeSettings(settings);
       });
 
       setTimeout(() => {
-        initMenuComponent(this, this.es);
+        initMenuComponent(this);
         this.doDetectChanges();
       });
     });
 
-    this.message$ = this.messageService.getMessage().subscribe((event: any) => {
+    this.subscriptions.push(translation$);
+
+    const message$ = this.messageService.getMessage().subscribe((event: any) => {
       if (event.message === OPEN_DDF_FOLDER_ACTION) {
         this.ddfDatasetConfigModal.hide();
 
@@ -152,7 +153,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.subscriptions.push(message$);
+
     this.es.ipcRenderer.on('do-open-completed', (event: any, parameters: any) => {
+      this.doOpenCompleted(event, parameters);
+    });
+
+    this.es.ipcRenderer.on('do-bookmark-open-completed', (event: any, parameters: any) => {
       this.doOpenCompleted(event, parameters);
     });
 
@@ -168,33 +175,21 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
 
     this.es.ipcRenderer.on('got-bookmarks', (event, result) => {
-      const Menu = this.es.remote.Menu;
-      const menu: any = Menu.getApplicationMenu();
+      this.chartService.bookmarks = result.content;
+      initMenuComponent(this);
+    });
 
-      const fileMenu = menu.items[0].submenu;
-      const bookmarksMenu: any = fileMenu.items[2].submenu;
-
-      console.log(bookmarksMenu);
-
-      const MenuItem = this.es.remote.MenuItem;
-
-      bookmarksMenu.append(new MenuItem({
-        label: 'foo',
-        click() {}
-      }));
-
-      // https://www.npmjs.com/package/electron-menu-plus
-      Menu.setApplicationMenu(menu);
-
-      // console.log(result.content, bookmarksMenu);
+    this.es.ipcRenderer.on('bookmark-added', () => {
+      this.es.ipcRenderer.send('get-bookmarks');
     });
 
     this.es.ipcRenderer.send('get-bookmarks');
   }
 
   ngOnDestroy() {
-    this.translation$.unsubscribe();
-    this.message$.unsubscribe();
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onMenuItemSelected(method: string) {
@@ -225,6 +220,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const excelFileItem = menuAddYourData.submenu.items[1];
     const ddfFolderItem = menuAddYourData.submenu.items[2];
     const addToBookmarksItem = bookmarksMenu.submenu.items[0];
+    const manageToBookmarksItem = bookmarksMenu.submenu.items[1];
     const saveMenu = fileMenu.items[5];
     const saveAllTabs = fileMenu.items[6];
     const exportMenu = fileMenu.items[8];
@@ -235,6 +231,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     saveMenu.enabled = isItemEnabled;
     exportMenu.enabled = isItemEnabled;
     addToBookmarksItem.enabled = isItemEnabled;
+    manageToBookmarksItem.enabled = this.chartService.bookmarks && this.chartService.bookmarks.length > 0;
 
     saveAllTabs.enabled = this.areChartsAvailable();
   }
@@ -297,6 +294,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onChartCreated() {
     this.dataItemsAvailability();
+  }
+
+  onBookmarkOpen(bookmark) {
+    this.es.ipcRenderer.send('open-bookmark', bookmark);
+    this.isMenuOpened = false;
   }
 
   addData(data: any) {

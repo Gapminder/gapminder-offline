@@ -4,7 +4,10 @@
   <div class="menu-container" [ngClass]="{'menu-container-ltr': !ls.isRtl(), 'menu-container-rtl': ls.isRtl()}">
     <div class="ddf-menu">
       <div class="btn-group">
-        <app-hamburger-menu [isMenuOpened]="isMenuOpened" [tabsModel]="tabsModel" (onMenuItemSelected)="onMenuItemSelected($event)"></app-hamburger-menu>
+        <app-hamburger-menu [isMenuOpened]="isMenuOpened"
+                            [tabsModel]="tabsModel"
+                            (onMenuItemSelected)="onMenuItemSelected($event)"
+                            (onBookmarkOpen)="onBookmarkOpen($event)"></app-hamburger-menu>
       </div>
     </div>
   </div>

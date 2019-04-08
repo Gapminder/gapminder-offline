@@ -16,6 +16,7 @@ const packageJSON = require('./package.json');
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 const nonAsarAppPath = app.getAppPath().replace(/app\.asar/, '');
 const userDataPath = (app || remote.app).getPath('userData');
+const bookmarkFile = path.resolve(userDataPath, 'bookmarks.json');
 const DATA_PATH = path.resolve(nonAsarAppPath, 'ddf--gapminder--systema_globalis');
 const PREVIEW_DATA_PATH = path.resolve(nonAsarAppPath, 'preview-data');
 const WEB_RESOURCE_PATH = path.resolve(nonAsarAppPath, 'export-template');
@@ -86,7 +87,7 @@ const normalizeModelToSave = (model, chartType) => {
 
   model.chartType = chartType;
 };
-const normalizeModelToOpen = (model, currentDir, brokenFileActions) => {
+const normalizeModelToOpen = (model, brokenFileActions) => {
   Object.keys(model).forEach(key => {
     if ((key === 'data' || key.indexOf('data_') === 0) && typeof model[key] === 'object') {
       if (model[key].__abandoned) {
@@ -148,7 +149,7 @@ const getConfigWithoutAbandonedData = config => {
 
   return newConfig;
 };
-const openFile = (event, fileName, currentDir, fileNameOnly) => {
+const openFile = (event, fileName, fileNameOnly) => {
   const sender = event.sender || event.webContents;
 
   fs.readFile(fileName, 'utf-8', (err, data) => {
@@ -162,7 +163,7 @@ const openFile = (event, fileName, currentDir, fileNameOnly) => {
 
     if (config.length) {
       config.forEach(configItem => {
-        normalizeModelToOpen(configItem.model, currentDir, brokenFileActions);
+        normalizeModelToOpen(configItem.model, brokenFileActions);
       });
 
       async.waterfall(brokenFileActions, () => {
@@ -179,7 +180,7 @@ const openFile = (event, fileName, currentDir, fileNameOnly) => {
     }
 
     if (!config.length) {
-      normalizeModelToOpen(config, currentDir, brokenFileActions);
+      normalizeModelToOpen(config, brokenFileActions);
 
       async.waterfall(brokenFileActions, () => {
         const newConfigAsArray = getConfigWithoutAbandonedData(config);
@@ -200,6 +201,25 @@ const openFile = (event, fileName, currentDir, fileNameOnly) => {
   });
 };
 
+export const openBookmark = (event, bookmark) => {
+  const sender = event.sender || event.webContents;
+  const brokenFileActions = [];
+
+  normalizeModelToOpen(bookmark.content.model, brokenFileActions);
+
+  async.waterfall(brokenFileActions, () => {
+    const newConfigAsArray = getConfigWithoutAbandonedData(bookmark.content.model);
+
+    if (!_.isEmpty(newConfigAsArray)) {
+      const newConfig = _.head(newConfigAsArray);
+
+      if (!_.isEmpty(newConfig)) {
+        sender.send('do-bookmark-open-completed', {tab: newConfig, file: bookmark.name});
+      }
+    }
+  });
+};
+
 export const openFileWithDialog = event => {
   dialog.showOpenDialog({
     title: 'Open chart state ...',
@@ -213,20 +233,18 @@ export const openFileWithDialog = event => {
 
     const fileName = fileNames[0];
     const parseFileData = path.parse(fileName);
-    const currentDir = parseFileData.dir;
     const fileNameOnly = parseFileData.name;
 
-    openFile(event, fileName, currentDir, fileNameOnly);
+    openFile(event, fileName, fileNameOnly);
   });
 };
 
 export const openFileWhenDoubleClick = (event, fileName) => {
   const parseFileData = path.parse(fileName);
-  const currentDir = parseFileData.dir;
   const fileNameOnly = parseFileData.name;
 
   if (fs.existsSync(fileName) && fileName.indexOf('-psn_') === -1) {
-    openFile(event, fileName, currentDir, fileNameOnly);
+    openFile(event, fileName, fileNameOnly);
   }
 };
 
@@ -255,7 +273,7 @@ export const saveFile = (event, params) => {
 };
 
 export const readBookmarks = async (bookmarkFilePar?: string) => {
-  const bookmarkFile = bookmarkFilePar || path.resolve(userDataPath, 'bookmarks.json');
+  const _bookmarkFile = bookmarkFilePar || bookmarkFile;
 
   async function initFile(filename) {
     return new Promise((resolve, reject) => {
@@ -277,8 +295,8 @@ export const readBookmarks = async (bookmarkFilePar?: string) => {
 
   return new Promise<any[]>(async (resolve, reject) => {
     try {
-      await initFile(bookmarkFile);
-      const content = JSON.parse(await readFile(bookmarkFile, 'utf-8'));
+      await initFile(_bookmarkFile);
+      const content = JSON.parse(await readFile(_bookmarkFile, 'utf-8'));
 
       if (!_.isArray(content)) {
         return reject('wrong bookmark file format');
@@ -292,10 +310,11 @@ export const readBookmarks = async (bookmarkFilePar?: string) => {
 };
 
 export const addBookmark = async (event, params) => {
-  const bookmarkFile = path.resolve(userDataPath, 'bookmarks.json');
 
   try {
     const content: any[] = await readBookmarks(bookmarkFile);
+
+    normalizeModelToSave(params.bookmark.content.model, params.bookmark.content.chartType);
     content.push(params.bookmark);
     await writeFile(bookmarkFile, JSON.stringify(content, null, 2));
     event.sender.send('bookmark-added', {bookmarkFile});

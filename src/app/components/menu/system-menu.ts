@@ -1,9 +1,8 @@
 import { HomeComponent } from '../home/home.component';
 import MenuItemConstructorOptions = Electron.MenuItemConstructorOptions;
-import { ElectronService } from '../../providers/electron.service';
 import { langConfigTemplate } from '../../../lang-config';
 
-export const initMenuComponent = (appComponent: HomeComponent, es: ElectronService) => {
+export const initMenuComponent = (appComponent: HomeComponent) => {
   const templateMenu: MenuItemConstructorOptions[] = [
     {
       label: appComponent.translate.instant('File'),
@@ -59,6 +58,24 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
             {
               label: 'Bookmark current tab',
               click: () => appComponent.menuActions.addToBookmarks()
+            },
+            {
+              label: 'Manage Bookmarks...',
+              click: () => {
+              }
+            },
+            {
+              label: '...Import Bookmarks',
+              click: () => {
+              }
+            },
+            {
+              label: 'Export Bookmarks...',
+              click: () => {
+              }
+            },
+            {
+              type: 'separator'
             }
           ]
         },
@@ -193,18 +210,30 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
         {
           label: appComponent.translate.instant('Learn More'),
           click: () => {
-            es.shell.openExternal('https://github.com/VS-work/gapminder-offline');
+            appComponent.es.shell.openExternal('https://github.com/VS-work/gapminder-offline');
           }
         }
       ]
     }
   ];
-  const Menu = es.remote.Menu;
+  const Menu = appComponent.es.remote.Menu;
 
   templateMenu[2].submenu = langConfigTemplate.map(langDescriptor => ({
     label: langDescriptor.label,
     click: () => appComponent.menuActions.setLanguage([langDescriptor.id])
   }));
+
+
+  if (appComponent.chartService.bookmarks) {
+    for (const bookmark of appComponent.chartService.bookmarks) {
+      templateMenu[0].submenu[2].submenu.push({
+        label: bookmark.name,
+        click: () => {
+          appComponent.menuActions.openBookmark(bookmark);
+        }
+      });
+    }
+  }
 
   appComponent.menuComponent = Menu.buildFromTemplate(templateMenu);
   Menu.setApplicationMenu(appComponent.menuComponent);

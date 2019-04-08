@@ -9,7 +9,7 @@ import { autoUpdater } from 'electron-updater';
 import {
   addBookmark,
   exportForWeb,
-  getUpdateLinks,
+  getUpdateLinks, openBookmark,
   openFileWhenDoubleClick,
   openFileWithDialog, readBookmarks,
   saveAllTabs,
@@ -201,6 +201,7 @@ function createWindow() {
   ipc.on('do-open', openFileWithDialog);
   ipc.on('do-save', saveFile);
   ipc.on('add-bookmark', addBookmark);
+  ipc.on('open-bookmark', openBookmark);
   ipc.on('get-bookmarks', async (event) => {
     const content = await readBookmarks();
     event.sender.send('got-bookmarks', {content});

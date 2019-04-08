@@ -19,6 +19,7 @@ export class ChartService {
   isDevMode = false;
   ddfFolderDescriptor: DdfFolderDescriptor;
   currentTab: TabModel;
+  bookmarks;
 
   private readonly readersDefinitions;
   private registeredReaders = ['csv', 'csv-time_in_columns'];

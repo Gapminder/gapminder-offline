@@ -158,5 +158,9 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => (
   addToBookmarks: () => {
     context.bookmarkModal.show();
     context.isMenuOpened = false;
+  },
+  openBookmark: (bookmark) => {
+    context.isMenuOpened = false;
+    es.ipcRenderer.send('open-bookmark', bookmark);
   }
 });

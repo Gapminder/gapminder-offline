@@ -11,6 +11,7 @@ export class HamburgerMenuComponent {
   @Input() isMenuOpened = false;
   @Input() tabsModel: TabModel[];
   @Output() onMenuItemSelected: EventEmitter<any> = new EventEmitter();
+  @Output() onBookmarkOpen: EventEmitter<any> = new EventEmitter();
 
   constructor(public chartService: ChartService, public ls: LocalizationService) {
     this.chartService = chartService;
@@ -24,6 +25,10 @@ export class HamburgerMenuComponent {
     }
 
     this.onMenuItemSelected.emit(methodName);
+  }
+
+  openBookmark(bookmark) {
+    this.onBookmarkOpen.emit(bookmark);
   }
 
   getCurrentTab(): TabModel {

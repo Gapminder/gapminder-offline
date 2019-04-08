@@ -53,6 +53,25 @@
             <li class="menu-item" *ngIf="!getCurrentTab() || !getCurrentTab().chartType">
                 <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Bookmark current tab</span> </button>
             </li>
+            <li class="menu-item" *ngIf="chartService.bookmarks && chartService.bookmarks.length > 0">
+                <button type="button" class="menu-btn"><span class="menu-text">Manage Bookmarks...</span> </button>
+            </li>
+            <li class="menu-item" *ngIf="!chartService.bookmarks || chartService.bookmarks.length <= 0">
+                <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Manage Bookmarks...</span> </button>
+            </li>
+            <li class="menu-item">
+                <button type="button" class="menu-btn"><span class="menu-text">...Import Bookmarks</span> </button>
+            </li>
+            <li class="menu-item" *ngIf="chartService.bookmarks && chartService.bookmarks.length > 0">
+                <button type="button" class="menu-btn"><span class="menu-text">Export Bookmarks...</span> </button>
+            </li>
+            <li class="menu-item" *ngIf="!chartService.bookmarks || chartService.bookmarks.length <= 0">
+                <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Export Bookmarks...</span> </button>
+            </li>
+            <li class="menu-separator"></li>
+            <li class="menu-item" *ngFor="let bookmark of chartService.bookmarks" (click)="openBookmark(bookmark)">
+                <button type="button" class="menu-btn"><span class="menu-text">{{bookmark.name}}</span> </button>
+            </li>
         </ul>
     </li>
     <li class="menu-separator"></li>
