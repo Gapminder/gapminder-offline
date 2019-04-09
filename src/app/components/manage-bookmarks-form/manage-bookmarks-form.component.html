@@ -1,0 +1,14 @@
+<div class="tableContainer">
+  <div *ngIf="!!this.errorDesc">
+    <h2 class="error-message">An error occurred during bookmark updating.</h2>
+    <div>
+      Please, correct or remove following file: <b>{{this.errorDesc.bookmarkFile}}</b>
+    </div>
+  </div>
+  <ng2-smart-table #manageBookmarksComponent
+                 class="manage-bookmarks"
+                 [settings]="settings"
+                 [source]="data"
+                 (editConfirm)="onEditConfirm($event)"
+                 (deleteConfirm)="onDeleteConfirm($event)"></ng2-smart-table>
+</div>

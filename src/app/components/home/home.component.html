@@ -218,5 +218,29 @@
     </div>
   </div>
 
+  <div bsModal
+       #manageBookmarksModal="bs-modal"
+       (onShow)="sendBookmarks()"
+       (onHide)="onManageBookmarksModalHide()"
+       class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="Manage Bookmarks"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" [ngClass]="{'close-rtl': ls.isRtl()}" (click)="manageBookmarksModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Manage Bookmarks</h4>
+        </div>
+        <div class="modal-body">
+          <app-manage-bookmarks-form></app-manage-bookmarks-form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <input id="addDdfFolder" type="file" style="display: none;" #addDdfFolder (click)="menuActions.ddfFolderClick($event, onDdfExtFolderChanged)"/>
 </div>

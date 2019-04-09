@@ -1,6 +1,7 @@
 import 'zone.js/dist/zone-mix';
 import 'reflect-metadata';
 import '../polyfills';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -34,6 +35,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LocalizationService } from './providers/localization.service';
 import { VersionsFormComponent } from './components/versions-form/versions-form.component';
 import { BookmarkFormComponent } from './components/bookmark-form/bookmark-form.component';
+import { ManageBookmarksFormComponent } from './components/manage-bookmarks-form/manage-bookmarks-form.component';
+import { BookmarkLinkRendererComponent } from './components/manage-bookmarks-form/bookmark-link-renderer.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -57,9 +60,12 @@ export function createTranslateLoader(http: HttpClient) {
     WaitIndicatorComponent,
     VersionsFormComponent,
     BookmarkFormComponent,
+    ManageBookmarksFormComponent,
     WebviewDirective,
-    VizabiDirective
+    VizabiDirective,
+    BookmarkLinkRendererComponent
   ],
+  entryComponents: [BookmarkLinkRendererComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -73,7 +79,11 @@ export function createTranslateLoader(http: HttpClient) {
         useFactory: (createTranslateLoader),
         deps: [HttpClient]
       }
-    })
+    }),
+    Ng2SmartTableModule
+  ],
+  exports: [
+    BookmarkLinkRendererComponent
   ],
   providers: [
     ElectronService,

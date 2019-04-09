@@ -1,0 +1,17 @@
+.manage-bookmarks {
+  font-size: medium;
+}
+
+div.tableContainer {
+  clear: both;
+  height: 485px;
+  overflow: auto;
+}
+
+html>body div.tableContainer {
+  overflow: hidden;
+}
+
+div.tableContainer table {
+  float: left;
+}

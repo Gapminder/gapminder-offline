@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
-  ViewContainerRef, OnDestroy
+  ViewContainerRef, OnDestroy, ErrorHandler
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
@@ -18,7 +18,7 @@ import {
   OPEN_DDF_FOLDER_ACTION,
   TAB_READY_ACTION,
   SWITCH_MENU_ACTION,
-  MODEL_CHANGED, CLEAR_VALIDATION_FORM, ABANDON_VALIDATION, SEND_ACTIVE_TAB
+  MODEL_CHANGED, CLEAR_VALIDATION_FORM, ABANDON_VALIDATION, SEND_ACTIVE_TAB, SEND_BOOKMARKS
 } from '../../constants';
 import { initMenuComponent } from '../menu/system-menu';
 import { getMenuActions } from '../menu/menu-actions';
@@ -68,6 +68,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('excelConfigModal') excelConfigModal: ModalDirective;
   @ViewChild('additionalCsvConfigModal') additionalCsvConfigModal: ModalDirective;
   @ViewChild('additionalExcelConfigModal') additionalExcelConfigModal: ModalDirective;
+  @ViewChild('manageBookmarksModal') manageBookmarksModal: ModalDirective;
   @ViewChild('addDdfFolder') addDdfFolderInput: ElementRef;
   tabsDisabled = false;
 
@@ -150,6 +151,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (event.message === MODEL_CHANGED) {
         this.dataItemsAvailability();
         this.doDetectChanges();
+      }
+
+      if (event.message === 'close-manage-bookmarks') {
+        this.onManageBookmarksModalHide();
       }
     });
 
@@ -252,6 +257,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.messageService.sendMessage(SEND_ACTIVE_TAB, {chartType: currentTab.chartType, model});
   }
 
+  sendBookmarks() {
+    this.messageService.sendMessage(SEND_BOOKMARKS, {bookmarks: this.chartService.bookmarks});
+  }
+
   appMainClickHandler(event: any) {
     if (this.isMenuOpened) {
       const elementTarget = event.target;
@@ -285,6 +294,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   onValidationModalHide() {
     this.messageService.sendMessage(ABANDON_VALIDATION);
     this.messageService.sendMessage(CLEAR_VALIDATION_FORM);
+  }
+
+  onManageBookmarksModalHide() {
+    this.manageBookmarksModal.hide();
   }
 
   validationFormComplete() {

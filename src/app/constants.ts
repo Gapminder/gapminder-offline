@@ -11,3 +11,4 @@ export const ABANDON_VALIDATION = 'abandon-validation';
 export const SET_ACTIVE_TAB = 'set active tab';
 export const REMOVE_TAB = 'remove tab';
 export const SEND_ACTIVE_TAB = 'send active tab';
+export const SEND_BOOKMARKS = 'send bookmarks';

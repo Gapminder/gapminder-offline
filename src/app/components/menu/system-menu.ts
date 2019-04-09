@@ -61,8 +61,7 @@ export const initMenuComponent = (appComponent: HomeComponent) => {
             },
             {
               label: 'Manage Bookmarks...',
-              click: () => {
-              }
+              click: () => appComponent.menuActions.openManageBookmarks()
             },
             {
               label: '...Import Bookmarks',

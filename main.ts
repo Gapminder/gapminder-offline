@@ -12,7 +12,7 @@ import {
   getUpdateLinks, openBookmark,
   openFileWhenDoubleClick,
   openFileWithDialog, readBookmarks,
-  saveAllTabs,
+  saveAllTabs, saveBookmarks,
   saveFile
 } from './file-management';
 import { GoogleAnalytics } from './google-analytics';
@@ -201,6 +201,7 @@ function createWindow() {
   ipc.on('do-open', openFileWithDialog);
   ipc.on('do-save', saveFile);
   ipc.on('add-bookmark', addBookmark);
+  ipc.on('save-bookmarks', saveBookmarks);
   ipc.on('open-bookmark', openBookmark);
   ipc.on('get-bookmarks', async (event) => {
     const content = await readBookmarks();

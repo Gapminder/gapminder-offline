@@ -323,6 +323,15 @@ export const addBookmark = async (event, params) => {
   }
 };
 
+export const saveBookmarks = async (event, params) => {
+  try {
+    await writeFile(bookmarkFile, JSON.stringify(params.bookmarks, null, 2));
+    event.sender.send('bookmarks-saves', {bookmarkFile});
+  } catch (e) {
+    event.sender.send('bookmarks-not-saved', {error: e.toString(), bookmarkFile});
+  }
+};
+
 export const saveAllTabs = (event, tabsDescriptor) => {
   const timeLabel = (new Date()).toISOString().replace(/[\/\\:]/g, '');
 

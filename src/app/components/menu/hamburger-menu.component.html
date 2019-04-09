@@ -53,7 +53,7 @@
             <li class="menu-item" *ngIf="!getCurrentTab() || !getCurrentTab().chartType">
                 <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">Bookmark current tab</span> </button>
             </li>
-            <li class="menu-item" *ngIf="chartService.bookmarks && chartService.bookmarks.length > 0">
+            <li class="menu-item" *ngIf="chartService.bookmarks && chartService.bookmarks.length > 0" (click)="execute('openManageBookmarks')">
                 <button type="button" class="menu-btn"><span class="menu-text">Manage Bookmarks...</span> </button>
             </li>
             <li class="menu-item" *ngIf="!chartService.bookmarks || chartService.bookmarks.length <= 0">
