@@ -1,65 +1,79 @@
-# Setup instruction for Gapminder Tools Offline  
+1. [Setup guide for Gapminder Tools Offline](#setup-guide-for-gapminder-tools-offline)
+   1. [How to build an app](#how-to-build-an-app)
+      1. [Tools necessary to build Gapminder Tools Offline](#tools-necessary-to-build-gapminder-tools-offline)
+   1. [Building for Windows](#building-for-windows)
+      1. [Clarifications for Windows build](#clarifications-for-windows-build)
+      1. [Application structure on Windows](#application-structure-on-windows)
+         1. ["win"](#win)
+         1. ["nsis"](#nsis)
+   1. [Building for Linux](#building-for-linux)
+      1. [Application structure on Linux](#application-structure-on-linux)
+   1. [Building for MacOS](#building-for-macos)
+      1. [Application structure on MacOS](#application-structure-on-macos)
+         1. [mac](#mac)
+         1. [dmg](#dmg)
+      1. [Parameters common for all platforms](#parameters-common-for-all-platforms)
+   1. [Deploy process](#deploy-process)
+      1. [Windows](#windows)
+      1. [Mac](#mac)
+      1. [Linux](#linux)
 
-## How to build the app
+# Setup guide for Gapminder Tools Offline
 
-### Expected software for build process provides
+## How to build an app
+
+### Tools necessary to build Gapminder Tools Offline
 
 * `git`
-* `nodejs` >= 10.15.0 with related `npm` for all platforms
-* `A valid and appropriate identity from your keychain` [for MacOS](https://github.com/electron-userland/electron-builder/issues/1046)
+* `nodejs` >= 10.15.0 with bundled `npm` for all platforms
+* A valid identity from your keychain in MacOS. You can find more information on MacOS keychain identity & certificates in this [GitHub Electron Builder issue](https://github.com/electron-userland/electron-builder/issues/1046)
 * `signtool` from Microsoft Windows SDK for Windows - [SignTool](https://docs.microsoft.com/en-us/windows/desktop/seccrypto/signtool)
 
-### For Windows platform 
-* setup  `.pfx` certificate (more details below)  - [Code Signing](https://www.electron.build/code-signing.html)
-* `git clone https://github.com/Gapminder/gapminder-offline.git`  
+## Building for Windows
+
+* setup  `.pfx` certificate (more details below) - [Code Signing](https://www.electron.build/code-signing.html)
+* `git clone https://github.com/Gapminder/gapminder-offline.git`
 * `npm i`
 * `npm run electron:windows`
 
-***Steps to import `.pfx` certificate:***
+**Steps to import `.pfx` certificate:**
 
-1.  After you double-clicked on the .pfx file, "Certificate import wizard" opens:
+1. Double-click on the .pfx file, "Certificate Import Wizard" will open:
+![Certificate Import Wizard](https://github.com/Gapminder/gapminder-offline/blob/feat-docs-setup-the-project/docs/screenshots%20for%20instruction%20for%20.pfx%20file/Instruction%20for%20.pfx%20file%20Step%201.jpg?raw=true)
+1. Fill in the password and click the "Next" button
+1. In the opened window choose "Automatically select..." option and click on the "Next" button
+![Certificate Import Wizard step 3](https://github.com/Gapminder/gapminder-offline/blob/feat-docs-setup-the-project/docs/screenshots%20for%20instruction%20for%20.pfx%20file/Instruction%20for%20.pfx%20file%20Step%202.jpg?raw=true)
+1. After that, window with "Completing the Certificate Import Wizard" will appear:
+![Completing the Certificate Import Wizard](https://github.com/Gapminder/gapminder-offline/blob/feat-docs-setup-the-project/docs/screenshots%20for%20instruction%20for%20.pfx%20file/Instruction%20for%20.pfx%20file%20Step%203.jpg?raw=true)
+1. Click on the "Finish" button
 
-![Image](https://github.com/Gapminder/gapminder-offline/blob/feat-docs-setup-the-project/docs/screenshots%20for%20instruction%20for%20.pfx%20file/Instruction%20for%20.pfx%20file%20Step%201.jpg?raw=true)
+After successful Windows build, there should be following files and directories in build directory:
 
-2\. Input the password and click the "Next" button
+* `"app-build"` - Project folder containing all setup and update files.
+* `Gapminder Tools Offline Setup X.X.X.exe` - Installation executable for Gapminder Tools Offline.
+* `Gapminder Tools Offline-X.X.X-win.zip` - Update file for Gapminder Tools Offline for x64 architecture systems.
+* `Gapminder Tools Offline-X.X.X-ia32-win.zip` - Update file for Gapminder Tools Offline for x32 architecture systems.
+* `Gapminder Tools Offline x.x.x.exe` - Gapminder Tools Offline portable version executable.
 
-3\. In the following window choose "Automatically select..." option and click the "Next" button
+### Clarifications for Windows build
 
-![Image](https://github.com/Gapminder/gapminder-offline/blob/feat-docs-setup-the-project/docs/screenshots%20for%20instruction%20for%20.pfx%20file/Instruction%20for%20.pfx%20file%20Step%202.jpg?raw=true)
+1. There are 2 versions of an app for Windows: for x64 architecture and for x32 architecture.
+1. Despite having 2 versions for different architectures, we have one Installation file.
+1. Portable version of the application doesn't have auto-update functionality, each new version has to be distributed separately.
+1. **add-builds** folder contains `latest.yml` file which contains information about the build.
+1. It's recommended to save *.yml files with application version in their name (i.e latest.v-X.X.X.yml) so it will be possible roll back to the previous version in the future.
 
-4\. After that next window with "Completing the Certificate Import Wizard" appears:
+### Application structure on Windows
 
-![Image](https://github.com/Gapminder/gapminder-offline/blob/feat-docs-setup-the-project/docs/screenshots%20for%20instruction%20for%20.pfx%20file/Instruction%20for%20.pfx%20file%20Step%203.jpg?raw=true)
+`electron-builder.json` - configuration file with "build rules"
 
-5\. Click the "Finish" button
+Important parts of the *"electron-builder.json"* for Windows:
 
-Expected result for the successful installation should be :
-* `"app-build"` - after the application build, this folder will appear in the project folder
-* `Gapminder Tools Offline Setup X.X.X.exe` - this file appears in the "app-build" folder after the app was build
-* `Gapminder Tools Offline-X.X.X-win.zip` -  file which needed for update on x64
-* `Gapminder Tools Offline-X.X.X-ia32-win.zip` - file which needed for update on x32
-* `Gapminder Tools Offline x.x.x.exe` - this is a file for launch the portable version, it appears in the "app-build" folder after app was build
- 
-### Clarifications for Win build
+#### "win"
 
-1) We have 2 version of the Windows app: x64 & x32
-2) For x64 and x32 application has one Installation file
-3) We have a Portable version of the application (only .exe file, auto-update functionality turned of)
-4) **add-builds** folder contains - latest.yml file which contains information about the build
-5) Recommended to save *.yml files with version of app in the name (latest.v-X.X.X.yml)to be able to can roll back to the previous version for the future
+`win` block describes the rules for building an application for Windows:
 
-> Name of the portable version of the app "Gapminder+Tools+Offline+X.X.X.exe"
-
-### Details of the application structure on the Windows platform
-
-`electron-builder.json` - file  with "rules for build"
-
-Important parts of the *"electron-builder.json"* :
-
-**"win"** 
-
-Win block describes the rules for building an application for Windows platform:
-```
+```json
     "win": {
       "icon": "dist/app-icon.png",
       "target": [
@@ -69,15 +83,15 @@ Win block describes the rules for building an application for Windows platform:
         "portable"
       ],
 ```
- * `"icon": "dist/app-icon.png"` - path where the picture is stored
- * `"target": ["nsis:x64", "nsis:ia32", "zip", "portable"]` -  task list for electron builder to prepare "nsis" for x64 and x32 versions, "zip" file for update and "portable' version of the app
 
-**"nsis"** 
+* `"icon": "dist/app-icon.png"` - path to application logo;
+* `"target": ["nsis:x64", "nsis:ia32", "zip", "portable"]` - task list for Electron Builder to prepare "nsis" (Nullsoft Scriptable Install System, [nsis Wiki](https://nsis.sourceforge.io/)) for x64 and x32 versions, "zip" file for update and "portable' for portable version of an app.
 
-[nsis Wiki](https://nsis.sourceforge.io/)
-This block describes how to create an installer of the application on Windows platform: 
+#### "nsis"
 
-```
+`nsis` block describes how to create an installer for Windows:
+
+```json
   "nsis": {
     "oneClick": true,
     "perMachine": false,
@@ -87,32 +101,29 @@ This block describes how to create an installer of the application on Windows pl
     "createStartMenuShortcut": false
   },
 ```
-  * `"oneClick": true` - installation method (without custom setup way)
-  * `"perMachine": false` - installation for user. Not globally on the machine (all users)
-  * `"deleteAppDataOnUninstall": true` - delete all data of the app
-  * `"include": "custom-uninstall.nsh"` - the script including additional rules cleaning of the cache and defined install directory
 
+* `"oneClick": true` - defines installation method;
+* `"perMachine": false` - specifies whether app should installs globally (for all users) or locally (for current user);
+* `"deleteAppDataOnUninstall": true` - specifies whether all application data should be deleted after its uninstall;
+* `"include": "custom-uninstall.nsh"` - script that includes rules for cleaning of the cache and defined install directory.
+* `verifyUpdateCodeSignature` - needed for an update. Status 'false' because application will crash if the verifyUpdateCodeSignature will be 'true'. It is bug of the electron-updater.
 
-* `verifyUpdateCodeSignature` - needed for update. Status 'false' because application will crash if the 
-  verifyUpdateCodeSignature will be 'true'. It is bug of the electron-updater. 
-  
+## Building for Linux
 
-### For Linux platform
-
-* `git clone https://github.com/Gapminder/gapminder-offline.git`  
+* `git clone https://github.com/Gapminder/gapminder-offline.git`
 * `npm i`
 * `npm run electron:linux`
 
-*Expected result for the successful installation should be:*
-* `"app-build"` folder appears in the project folder
-* `Gapminder Tools Offline X.X.X.AppImage` file in the "app-build" folder
-* `Gapminder Tools Offline-X.X.X-win.zip` file which needed for update
+After successful Linux build, there should be following files and directories in build directory:
 
-### Details of the application structure on the Linux platform
+* `"app-build"` - Project folder containing AppImage and update file.
+* `Gapminder Tools Offline X.X.X.AppImage` - Universal [AppImage](https://appimage.org) container.
 
-`electron-builder.json` - file  with "rules for build"
+### Application structure on Linux
 
-```$xslt
+`electron-builder.json` - configuration file with "build rules"
+
+```json
   "linux": {
     "icon": "dist/app-icon.png",
     "target": [
@@ -121,35 +132,35 @@ This block describes how to create an installer of the application on Windows pl
   },
 ```
 
-Important parts of the *"electron-builder.json"* for linux platform:
-* "linux": target: "AppImage" 
+Important parts of the *"electron-builder.json"* for Linux:
 
+* "linux": target: "AppImage"
 
-add-builds folder contains - latest-linux.yml file
+`add-builds` folder contains - latest-linux.yml file
 
-Recommended to save *.yml files with version of app in the name (latest-linux.v-X.X.X.yml)to be able to can roll back to the previous version for the future
+It's recommended to save *.yml files with application version in their name (i.e latest-linux.v-X.X.X.yml) so it will be possible roll back to the previous version in the future.
 
+## Building for MacOS
 
-### For Mac platform
-
-* `git clone https://github.com/Gapminder/gapminder-offline.git`  
+* `git clone https://github.com/Gapminder/gapminder-offline.git`
 * `npm i`
 * `npm run electron:mac`
 
-Expected result for the successful installation should be :
-* `"app-build"` - folder appears in the project folder
-* `*.dmg` - file in the "app-build" folder
-* `Gapminder Tools Offline-X.X.X-mac.zip` - file which needed for update
+After successful MacOS build, there should be following files and directories in build directory:
 
-### Details of the application structure on the Mac platform
+* `"app-build"` - Project folder containing .dmg mountable disk image and update file;
+* `*.dmg` - Mountable disk image containing MacOS version of Gapminder Tools Offline;
+* `Gapminder Tools Offline-X.X.X-mac.zip` - Update file for MacOS Gapminder Tools Offline.
 
-add-builds folder contains - latest-mac.yml file
+### Application structure on MacOS
+
+`add-builds` directory contains - latest-mac.yml file
 
 Important parts of the "electron-builder.json" for Mac platform:
 
-**mac**
+#### mac
 
-```
+```json
   "mac": {
        "category": "public.app-category.developer-tools",
        "icon": "dist/app-icon.icns",
@@ -160,14 +171,15 @@ Important parts of the "electron-builder.json" for Mac platform:
      },
 ```
 
- "mac" block describes the rules for building an application for Mac platform:
+"mac" block describes the rules for building an application for Mac platform:
+
 * `"category": "public.app-category.developer-tools"` - [Clarification about Apple categorize of applications](https://developer.apple.com/library/archive/releasenotes/General/SubmittingToMacAppStore/index.html)
-* `"icon": "dist/app-icon.icns"` - path where the picture is stored
-* `"target": ["zip", "dmg"]` - task list for electron builder to prepare "dmg" and "zip" files for setup the app
+* `"icon": "dist/app-icon.icns"` - path to application logo;
+* `"target": ["zip", "dmg"]` - task list for Electron Builder to prepare ".dmg" and ".zip" files for application setup.
 
-**dmg**
+#### dmg
 
-```
+```json
    "dmg": {
         "title": "Gapminder Tools Offline",
          "icon": "icons/gapminder_package.icns",
@@ -183,27 +195,24 @@ Important parts of the "electron-builder.json" for Mac platform:
        },
 ```
 
-The most important part of the dmg block is `"path": "/Applications"` - this is the rule for the installation way to Applications folder
+The most important part of the `dmg` block is `"path": "/Applications"` - this parameter points to installation directory in MacOS.
 
+It's recommended to save *.yml files with application version in their name (i.e latest-mac.v-X.X.X.yml) so it will be possible roll back to the previous version in the future.
 
-Recommended to save *.yml files with version of app in the name (latest-mac.v-X.X.X.yml)to be able to can roll back to the previous version for the future
+### Parameters common for all platforms
 
-### For all platforms
+* publish - auto-update parameter (when new version releases):
+  * `"provider": "s3"` - specifies where app is stored;
+  * `"bucket": "gapminder-offline"` - bucket on Amazon "S3";
+  * `"path": "dist"` - directory which holds app files;
+  * `fileAssociations` - status of an application, defines how to application acts after double-clicking on it;
+  * `"publisherName": "COMODO RSA Code Signing CA"` - company which provided an opportunity to publish application;
 
-* publish - for auto-update (where is released versions). Include:
-  * `"provider": "s3"` - where is the app hold
-  * `"bucket": "gapminder-offline"` - bucket on "s3"
-  * `"path": "dist"` - the folder which holds the app files
-  
-* `fileAssociations` - status of the app, how to start the app from double-click 
-* `"publisherName": "COMODO RSA Code Signing CA"` - company which provided the opportunity to publish the application
+## Deploy process
 
+You need to copy application files to appropriate "S3" storage (bucket: "gapminder-offline" ; folder: "dist").
 
-## Deploying process
-
-You need to copy the app files to appropriate storage "S3" (bucket: "gapminder-offline" ; folder: "dist").
-
-Files list by the platform is the following:
+Files listed by platform are following:
 
 ### Windows
 
@@ -213,9 +222,6 @@ Files list by the platform is the following:
 * `Gapminder Tools Offline Setup X.X.X.exe.blockmap` files
 * `Gapminder Tools Offline-X.X.X-win.zip ; Gapminder Tools Offline-X.X.X-ia32-win.zip` files for x32 and x64 versions
 
->Note: `.exe` file is an installer and you can install freely via it on win64 and win32 architectures.
-
-
 ### Mac
 
 * `latest-mac.yml`
@@ -223,10 +229,7 @@ Files list by the platform is the following:
 * `Gapminder Tools Offline-X.X.X.dmg.blockmap` file
 * `Gapminder Tools Offline-X.X.X-mac.zip` file
 
-
 ### Linux
 
 * `latest-linux.yml`
 * `Gapminder Tools Offline X.X.X.AppImage` file
-
-
