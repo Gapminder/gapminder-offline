@@ -14,6 +14,8 @@ const configSg = {
   MountainChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/MountainChart.json')
 };
 
+export const BOOKMARKS_IN_MENU_LIMIT = 10;
+
 @Injectable()
 export class ChartService {
   isDevMode = false;
@@ -165,6 +167,22 @@ export class ChartService {
     } catch (err) {
       return null;
     }
+  }
+
+  getBookmarksForMenu(): any[] {
+    if (!this.bookmarks) {
+      return [];
+    }
+
+    return this.bookmarks.slice(0, BOOKMARKS_IN_MENU_LIMIT);
+  }
+
+  getRestBookmarksQuantity(): number {
+    if (!this.bookmarks) {
+      return 0;
+    }
+
+    return this.bookmarks.length - BOOKMARKS_IN_MENU_LIMIT;
   }
 
   private getDdfFolderDescriptor(ddfUrl: string): { error: string; lastModified: string } {

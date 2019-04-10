@@ -1,14 +1,35 @@
-<div class="tableContainer">
-  <div *ngIf="!!this.errorDesc">
-    <h2 class="error-message">An error occurred during bookmark updating.</h2>
-    <div>
-      Please, correct or remove following file: <b>{{this.errorDesc.bookmarkFile}}</b>
+<div class="popup-block">
+
+  <div class="tableContainer">
+    <div *ngIf="!!this.errorDesc">
+      <h2 class="error-message">An error occurred during bookmark updating.</h2>
+      <div>
+        Please, correct or remove following file: <b>{{this.errorDesc.bookmarkFile}}</b>
+      </div>
+    </div>
+    <ng2-smart-table #manageBookmarksComponent
+                     class="manage-bookmarks"
+                     [settings]="settings"
+                     [source]="data"
+                     (editConfirm)="onEditConfirm($event)"
+                     (deleteConfirm)="onDeleteConfirm($event)"></ng2-smart-table>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="popup-footer">
+  <div class="btn-group" style="width: 100%;">
+    <div class="footer-wrapper">
+      <div class="footer-content">
+        <div class="primary-nav">
+        </div>
+        <div class="secondary-nav">
+          <input type="button" class="act-button" (click)="close()" value="Import"/>
+          <input type="button" class="act-button" (click)="close()" [disabled]="!data || data.length <= 0" value="Export"/>
+          <input type="button" class="act-button" (click)="close()" value="{{'Cancel' | translate}}"/>
+        </div>
+      </div>
     </div>
   </div>
-  <ng2-smart-table #manageBookmarksComponent
-                 class="manage-bookmarks"
-                 [settings]="settings"
-                 [source]="data"
-                 (editConfirm)="onEditConfirm($event)"
-                 (deleteConfirm)="onDeleteConfirm($event)"></ng2-smart-table>
 </div>

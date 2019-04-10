@@ -83,28 +83,19 @@ export class ManageBookmarksFormComponent implements OnInit, OnDestroy {
 
   onEditConfirm(event) {
     event.confirm.resolve(event.newData);
-    setImmediate(() => {
-      this.es.ipcRenderer.send('save-bookmarks', {bookmarks: this.getBookmarksByData()});
-    });
+    this.es.ipcRenderer.send('save-bookmarks', {bookmarks: this.getBookmarksByData(event.source.data)});
   }
 
   onDeleteConfirm(event) {
     event.confirm.resolve();
-
-    // !!!!!!!
-    // check state and redraw menu after that
-    console.log(event.source.data);
-
-    setImmediate(() => {
-      this.es.ipcRenderer.send('save-bookmarks', {bookmarks: this.getBookmarksByData()});
-    });
+    this.es.ipcRenderer.send('save-bookmarks', {bookmarks: this.getBookmarksByData(event.source.data)});
   }
 
   close() {
     this.done.emit();
   }
 
-  private getBookmarksByData(): any[] {
-    return this.data.map(r => pick(r, ['name', 'content']));
+  private getBookmarksByData(data: any): any[] {
+    return data.map(r => pick(r, ['name', 'content']));
   }
 }

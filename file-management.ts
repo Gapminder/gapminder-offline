@@ -326,7 +326,7 @@ export const addBookmark = async (event, params) => {
 export const saveBookmarks = async (event, params) => {
   try {
     await writeFile(bookmarkFile, JSON.stringify(params.bookmarks, null, 2));
-    event.sender.send('bookmarks-saves', {bookmarkFile});
+    event.sender.send('bookmarks-saved', {bookmarkFile});
   } catch (e) {
     event.sender.send('bookmarks-not-saved', {error: e.toString(), bookmarkFile});
   }

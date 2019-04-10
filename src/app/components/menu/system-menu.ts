@@ -64,16 +64,6 @@ export const initMenuComponent = (appComponent: HomeComponent) => {
               click: () => appComponent.menuActions.openManageBookmarks()
             },
             {
-              label: '...Import Bookmarks',
-              click: () => {
-              }
-            },
-            {
-              label: 'Export Bookmarks...',
-              click: () => {
-              }
-            },
-            {
               type: 'separator'
             }
           ]
@@ -224,11 +214,23 @@ export const initMenuComponent = (appComponent: HomeComponent) => {
 
 
   if (appComponent.chartService.bookmarks) {
-    for (const bookmark of appComponent.chartService.bookmarks) {
+    for (const bookmark of appComponent.chartService.getBookmarksForMenu()) {
       templateMenu[0].submenu[2].submenu.push({
         label: bookmark.name,
         click: () => {
           appComponent.menuActions.openBookmark(bookmark);
+        }
+      });
+    }
+
+    const restBookmarksQuantity = appComponent.chartService.getRestBookmarksQuantity();
+
+    if (restBookmarksQuantity) {
+      templateMenu[0].submenu[2].submenu.push({type: 'separator'});
+      templateMenu[0].submenu[2].submenu.push({
+        label: `${restBookmarksQuantity} more bookmarks...`,
+        click: () => {
+          appComponent.menuActions.openManageBookmarks();
         }
       });
     }

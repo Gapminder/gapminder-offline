@@ -184,6 +184,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       initMenuComponent(this);
     });
 
+    this.es.ipcRenderer.on('bookmarks-saved', () => {
+      this.es.ipcRenderer.send('get-bookmarks');
+    });
+
     this.es.ipcRenderer.on('bookmark-added', () => {
       this.es.ipcRenderer.send('get-bookmarks');
     });
@@ -289,6 +293,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   bookmarkFormComplete() {
     this.bookmarkModal.hide();
+  }
+
+  manageBookmarksFormComplete() {
+    this.manageBookmarksModal.hide();
   }
 
   onValidationModalHide() {

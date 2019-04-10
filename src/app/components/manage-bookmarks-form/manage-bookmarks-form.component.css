@@ -15,3 +15,8 @@ html>body div.tableContainer {
 div.tableContainer table {
   float: left;
 }
+
+.act-button {
+  width: 20%;
+  height: 30px;
+}
