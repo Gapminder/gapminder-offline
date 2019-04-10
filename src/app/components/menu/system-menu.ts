@@ -225,7 +225,7 @@ export const initMenuComponent = (appComponent: HomeComponent) => {
 
     const restBookmarksQuantity = appComponent.chartService.getRestBookmarksQuantity();
 
-    if (restBookmarksQuantity) {
+    if (restBookmarksQuantity > 0) {
       templateMenu[0].submenu[2].submenu.push({type: 'separator'});
       templateMenu[0].submenu[2].submenu.push({
         label: `${restBookmarksQuantity} more bookmarks...`,
