@@ -1,9 +1,11 @@
+'use strict'
 import { Sidebar } from '../pageObjects/sidebar/sidebar.e2e-component';
 import { BubbleChart } from '../pageObjects/charts/bubble-chart.po';
 import { safeDragAndDrop, waitForSpinner } from '../helpers/helper';
 import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
 import { Slider } from '../pageObjects/components/slider.e2e-component';
 import { _$ } from '../helpers/ExtendedElementFinder';
+import { element, browser } from 'protractor';
 
 const commonChartPage: CommonChartPage = new CommonChartPage();
 const bubbleChart: BubbleChart = new BubbleChart();
@@ -94,11 +96,17 @@ describe('Bubbles chart: Sidebar', () => {
     // await expect(finalRadius[0]).toBeGreaterThan(initialRadius); // TODO add check like this
   });
 
-  xit('change Size indicator', async () => {
+  fit('change Size indicator', async () => {
     /**
      * should check that the indicator represented by the Size can be changed(TC16)
      */
     await sidebar.optionsButton.safeClick();
+
+    const sizeValue = sidebar.dialogModal.size.locator().value;
+    const rootSelectorValue =  sidebar.dialogModal.rootSelector.locator().value;
+
+    browser.executeScript(`document.querySelector(\'${rootSelectorValue} ${sizeValue}\').style.visibility = "visible"`);
+
     await sidebar.dialogModal.size.safeClick();
 
     const initialBubblesCount = await bubbleChart.allBubbles.count();
