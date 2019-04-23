@@ -6,10 +6,20 @@ import * as log from 'electron-log';
 import * as request from 'request';
 import { diff } from 'semver';
 import { autoUpdater } from 'electron-updater';
-import { exportForWeb, getUpdateLinks, openFileWhenDoubleClick, openFileWithDialog, saveAllTabs, saveFile } from './file-management';
+import {
+  addBookmark,
+  exportForWeb,
+  getUpdateLinks, openBookmark,
+  openFileWhenDoubleClick,
+  openFileWithDialog, getBookmarksObject, removeBookmark,
+  saveAllTabs,
+  saveFile, updateBookmark,
+  QueueProcessor, createNewBookmarksFolder, updateBookmarksFolder, removeBookmarksFolder
+} from './file-management';
 import { GoogleAnalytics } from './google-analytics';
 import { getLatestGithubTag, updateDataset } from './dataset-update';
 import * as os from 'os';
+import './glob-const';
 
 require('node-fetch');
 
@@ -29,14 +39,17 @@ const args = process.argv.slice(1);
 const devMode = process.argv.length > 1 && process.argv.indexOf('dev') > 0;
 const nonAsarAppPath = app.getAppPath().replace(/app\.asar/, '');
 const userDataPath = (app || remote.app).getPath('userData');
+const bookmarkFile = path.resolve(userDataPath, 'bookmarks.json');
 const datasetPath = path.resolve(nonAsarAppPath, 'ddf--gapminder--systema_globalis');
 const serve = args.some(val => val === '--serve');
+const queueProcessor = new QueueProcessor();
+const globConst = (global as any).globConst;
 
 let dataPackage = require(path.resolve(datasetPath, 'datapackage.json'));
-
 let mainWindow;
 let currentFile;
 let isVersionCheckPassed = false;
+
 
 function createWindow() {
   const isFileArgumentValid = fileName => fs.existsSync(fileName) && fileName.indexOf('-psn_') === -1;
@@ -77,7 +90,7 @@ function createWindow() {
     event.preventDefault();
   });
 
-  ipc.on('start-download', () => {
+  ipc.on(globConst.START_DOWNLOAD, () => {
     autoUpdater.downloadUpdate();
   });
 
@@ -87,22 +100,22 @@ function createWindow() {
     return require(module);
   }
 
-  ipc.on('dataset-reload', () => {
+  ipc.on(globConst.DATASET_RELOAD, () => {
     dataPackage = requireUncached(path.resolve(datasetPath, 'datapackage.json'));
     mainWindow.setTitle(`Gapminder Tools Offline v.${app.getVersion()} (dataset v.${dataPackage.version})`);
     mainWindow.reload();
   });
 
-  ipc.on('start-dataset-update', async (event, tagVersion) => {
+  ipc.on(globConst.START_DATASET_UPDATE, async (event, tagVersion) => {
     try {
       await updateDataset(tagVersion, datasetPath, userDataPath);
-      mainWindow.webContents.send('dataset-updated');
+      mainWindow.webContents.send(globConst.DATASET_UPDATED);
     } catch (e) {
-      mainWindow.webContents.send('dataset-not-updated', e);
+      mainWindow.webContents.send(globConst.DATASET_NOT_UPDATED, e);
     }
   });
 
-  ipc.on('start-update', () => {
+  ipc.on(globConst.START_UPDATE, () => {
     autoUpdater.quitAndInstall();
   });
 
@@ -137,28 +150,28 @@ function createWindow() {
     mainWindow.webContents.send('update-downloaded', ev);
   });
 
-  ipc.on('get-versions-info', () => {
+  ipc.on(globConst.GET_VERSIONS_INFO, () => {
     mainWindow.setTitle(`Gapminder Tools Offline v.${app.getVersion()} (dataset v.${dataPackage.version})`);
   });
 
-  ipc.on('reload-main-window', () => {
+  ipc.on(globConst.RELOAD_MAIN_WINDOW, () => {
     mainWindow.reload();
   });
 
-  ipc.on('get-app-arguments', event => {
+  ipc.on(globConst.GET_APP_ARGUMENTS, event => {
     if (!devMode && (process.argv.length > 1 || currentFile)) {
       const fileName = currentFile || process.argv[1];
 
       if (isFileArgumentValid(fileName)) {
-        event.sender.send('got-app-file-argument', {fileName});
+        event.sender.send(globConst.GOT_APP_FILE_ARGUMENT, {fileName});
         return;
       }
     }
 
-    event.sender.send('got-app-file-argument', {});
+    event.sender.send(globConst.GOT_APP_FILE_ARGUMENT, {});
   });
 
-  ipc.on('open-file-after-start', event => {
+  ipc.on(globConst.OPEN_FILE_AFTER_START, event => {
     if (!devMode && (process.argv.length > 1 || currentFile)) {
       const fileName = currentFile || process.argv[1];
 
@@ -168,46 +181,61 @@ function createWindow() {
     }
   });
 
-  ipc.on('get-supported-versions', event => {
+  ipc.on(globConst.GET_SUPPORTED_VERSIONS, event => {
     request.get(FEED_VERSION_URL, (error, response, body) => {
       if (!error && response.statusCode === 200) {
         try {
           const config = JSON.parse(body);
           const links = getUpdateLinks(config);
 
-          event.sender.send('got-supported-versions', links.supported, links.currentVersion, app.getVersion());
+          event.sender.send(globConst.GOT_SUPPORTED_VERSIONS, links.supported, links.currentVersion, app.getVersion());
         } catch (e) {
         }
       }
     });
   });
 
-  ipc.on('do-open-validation-window', event => {
-    event.sender.send('open-validation-window', 'open-validation-window');
-  });
-
-  ipc.on('open-dev-tools', () => {
+  ipc.on(globConst.OPEN_DEV_TOOLS, () => {
     mainWindow.webContents.openDevTools();
   });
 
-  ipc.on('do-open', openFileWithDialog);
-  ipc.on('do-save', saveFile);
-  ipc.on('do-save-all-tabs', saveAllTabs);
-  ipc.on('do-export-for-web', exportForWeb);
-
-  ipc.on('new-chart', (event, chartType) => {
+  ipc.on(globConst.DO_OPEN, openFileWithDialog);
+  ipc.on(globConst.DO_SAVE, saveFile);
+  ipc.on(globConst.ADD_BOOKMARK, async (event, params) => {
+    queueProcessor.executeRequest(addBookmark, event, params);
+  });
+  ipc.on(globConst.UPDATE_BOOKMARK, async (event, params) => {
+    queueProcessor.executeRequest(updateBookmark, event, params);
+  });
+  ipc.on(globConst.UPDATE_BOOKMARKS_FOLDER, async (event, params) => {
+    queueProcessor.executeRequest(updateBookmarksFolder, event, params);
+  });
+  ipc.on(globConst.REMOVE_BOOKMARKS_FOLDER, async (event, params) => {
+    queueProcessor.executeRequest(removeBookmarksFolder, event, params);
+  });
+  ipc.on(globConst.REMOVE_BOOKMARK, async (event, params) => {
+    queueProcessor.executeRequest(removeBookmark, event, params);
+  });
+  ipc.on(globConst.OPEN_BOOKMARK, openBookmark);
+  ipc.on(globConst.GET_BOOKMARKS, async (event) => {
+    try {
+      const data = await getBookmarksObject(bookmarkFile);
+      event.sender.send(globConst.GOT_BOOKMARKS, {data});
+    } catch (e) {
+      event.sender.send(globConst.GOT_BOOKMARKS, {error: e.toString()});
+    }
+  });
+  ipc.on(globConst.CREATE_NEW_BOOKMARKS_FOLDER, async (event, params) => {
+    queueProcessor.executeRequest(createNewBookmarksFolder, event, params);
+  });
+  ipc.on(globConst.DO_SAVE_ALL_TABS, saveAllTabs);
+  ipc.on(globConst.DO_EXPORT_FOR_WEB, exportForWeb);
+  ipc.on(globConst.NEW_CHART, (event, chartType) => {
     ga.chartEvent(chartType);
   });
-  ipc.on('new-chart', (event, chartType) => {
-    ga.chartEvent(chartType);
-  });
 
-  ipc.on('modify-chart', (event, action) => {
+  ipc.on(globConst.MODIFY_CHART, (event, action) => {
     ga.chartChangingEvent(action);
-  });
-
-  ipc.on('write-settings', (event, settings) => {
-    console.log('save settings', settings);
   });
 }
 

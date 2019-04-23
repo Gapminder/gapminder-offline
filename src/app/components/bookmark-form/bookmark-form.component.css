@@ -1,0 +1,22 @@
+.bookmark-popover {
+  width: 300px;
+  padding: 10px;
+}
+
+.bookmark-popover input {
+  width: 100%;
+}
+
+.bookmark-popover img {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.bookmark-controls {
+  margin-top: 10px;
+}
+
+.bookmark-popover button {
+  margin-right: 5px;
+}

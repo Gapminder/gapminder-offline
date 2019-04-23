@@ -4,7 +4,14 @@ import { ChartService } from './chart.service';
 import { TabModel } from './tab.model';
 import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { ITabActionsSynchronizer } from '../tabs-new/tabs.common';
-import { TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, MODEL_CHANGED, OPEN_NEW_DDF_TAB_FROM_VALIDATOR } from '../../constants';
+import {
+  TABS_LOGO_ACTION,
+  TABS_ADD_TAB_ACTION,
+  MODEL_CHANGED,
+  OPEN_NEW_DDF_TAB_FROM_VALIDATOR,
+  SWITCH_BOOKMARKS_PANE,
+  BOOKMARKS_PANE_OFF_OUTSIDE, ALERT
+} from '../../constants';
 import { MessageService } from '../../message.service';
 import { FreshenerService } from '../tab-freshener/freshener.service';
 
@@ -32,6 +39,10 @@ export class TabsComponent implements OnInit {
   @Output() onChartClicked: EventEmitter<any> = new EventEmitter();
 
   tabDataDescriptor: TabDataDescriptor = {};
+  savedActiveTab;
+  bookmarksVisible = false;
+
+  private globConst;
 
   constructor(
     public chartService: ChartService,
@@ -40,6 +51,7 @@ export class TabsComponent implements OnInit {
     private freshenerService: FreshenerService,
     private es: ElectronService
   ) {
+    this.globConst = this.es.remote.getGlobal('globConst');
   }
 
   @HostListener('window:focus')
@@ -48,13 +60,13 @@ export class TabsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.es.ipcRenderer.send('get-versions-info');
-    this.es.ipcRenderer.send('get-app-arguments');
+    this.es.ipcRenderer.send(this.globConst.GET_VERSIONS_INFO);
+    this.es.ipcRenderer.send(this.globConst.GET_APP_ARGUMENTS);
 
     this.chartService.ddfFolderDescriptor.electronPath = this.es.appPath;
     this.chartService.isDevMode = this.es.devMode;
 
-    Observable.fromEvent(this.es.ipcRenderer, 'got-app-file-argument',
+    Observable.fromEvent(this.es.ipcRenderer, this.globConst.GOT_APP_FILE_ARGUMENT,
       (event: any, appArguments: string[]) => appArguments).subscribe((fileDesc: any) => {
       if (!fileDesc || !fileDesc.fileName) {
         this.chartService.ddfFolderDescriptor.defaults();
@@ -64,7 +76,7 @@ export class TabsComponent implements OnInit {
       }
 
       if (fileDesc.fileName) {
-        this.es.ipcRenderer.send('open-file-after-start');
+        this.es.ipcRenderer.send(this.globConst.OPEN_FILE_AFTER_START);
       }
     });
 
@@ -87,10 +99,22 @@ export class TabsComponent implements OnInit {
 
         this.chartService.newChart(newTab, tabDataDescriptor, false);
         this.tabsModel.forEach((tab: TabModel) => tab.active = false);
-
-        newTab.active = true;
-
+        this.setTabToActive(newTab);
         this.tabsModel.push(newTab);
+      }
+
+      if (event.message === SWITCH_BOOKMARKS_PANE) {
+        if (!this.messageService.isLocked()) {
+          this.bookmarksVisible = event.options.isBookmarkPaneVisible;
+
+          if (this.bookmarksVisible) {
+            this.savedActiveTab = this.getCurrentTab();
+            this.tabsModel.forEach((tab: TabModel) => tab.active = false);
+          } else if (this.savedActiveTab && event.options.dontRestoreTab !== undefined) {
+            this.selectTab(this.savedActiveTab);
+            this.savedActiveTab = null;
+          }
+        }
       }
     });
   }
@@ -98,7 +122,14 @@ export class TabsComponent implements OnInit {
   getSyncActions(): ITabActionsSynchronizer {
     return {
       onSetTabActive: (index: number) => {
-        this.tabsModel.forEach((tab: TabModel, i: number) => tab.active = i === index);
+        this.tabsModel.forEach((tab: TabModel, i: number) => {
+          const val = i === index;
+          if (val) {
+            this.setTabToActive(tab);
+          } else {
+            tab.active = false;
+          }
+        });
         this.onTabSetActive.emit();
       },
       onTabRemove: (index: number) => {
@@ -112,7 +143,15 @@ export class TabsComponent implements OnInit {
         }
 
         if (newIndex >= 0) {
-          this.tabsModel.forEach((tab: TabModel, i: number) => tab.active = i === newIndex);
+          this.tabsModel.forEach((tab: TabModel, i: number) => {
+            const val = i === newIndex;
+            if (val) {
+              this.setTabToActive(tab);
+            } else {
+              tab.active = false;
+            }
+
+          });
           this.onTabRemoved.emit();
         }
 
@@ -152,17 +191,30 @@ export class TabsComponent implements OnInit {
 
   newTab() {
     if (!this.disabled) {
+      if (this.bookmarksVisible) {
+        this.messageService.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: false});
+        this.messageService.sendMessage(BOOKMARKS_PANE_OFF_OUTSIDE);
+      }
+      this.savedActiveTab = null;
       this.chartService.initTab(this.tabsModel);
     }
   }
 
   selectTab(tab: TabModel) {
     if (!this.disabled) {
-      tab.active = true;
-
+      this.setTabToActive(tab);
       this.freshenerService.checkCurrentTabModification(tab);
       this.forceResize();
     }
+  }
+
+  setTabToActive(tab: TabModel) {
+    tab.active = true;
+    if (this.bookmarksVisible) {
+      this.messageService.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: false});
+      this.messageService.sendMessage(BOOKMARKS_PANE_OFF_OUTSIDE);
+    }
+    this.savedActiveTab = null;
   }
 
   sendCurrentPathToFreshener() {
@@ -185,6 +237,11 @@ export class TabsComponent implements OnInit {
 
       setTimeout(() => {
         if (this.tabsModel.length <= 0) {
+          if (this.bookmarksVisible) {
+            this.messageService.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: false});
+            this.messageService.sendMessage(BOOKMARKS_PANE_OFF_OUTSIDE);
+          }
+          this.savedActiveTab = null;
           this.chartService.initTab(this.tabsModel);
           this.onTabsInit.emit();
         }
@@ -207,7 +264,7 @@ export class TabsComponent implements OnInit {
 
   private defaultChart() {
     this.chartService.newChart(this.getCurrentTab(), this.tabDataDescriptor);
-    this.es.ipcRenderer.send('new-chart', this.getCurrentTab().chartType);
+    this.es.ipcRenderer.send(this.globConst.NEW_CHART, this.getCurrentTab().chartType);
   }
 
   private forceResize() {
@@ -262,5 +319,6 @@ export class TabsComponent implements OnInit {
 
   private errorHandler(error: Error) {
     console.log(error);
+    this.messageService.sendMessage(ALERT, {message: error, type: 'danger'});
   }
 }

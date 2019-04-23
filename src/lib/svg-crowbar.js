@@ -179,6 +179,8 @@
 
     if (transform === 'png') {
       downloadPng(source, filename);
+    } else if (transform === 'export') {
+      doExport(source);
     } else {
       downloadDefault(source, filename);
     }
@@ -256,6 +258,44 @@
 
     loader.width = canvas.width = width;
     loader.height = canvas.height = height;
+    loader.onload = go;
+    loader.src = imgSrc;
+  };
+
+  const doExport = (source) => {
+    const loader = new Image();
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    const go = () => {
+      context.drawImage(loader, 0, 0, loader.width, actualHeight, 0, 0, canvas.width, actualHeight);
+      canvas.toBlob(blob => {
+        const reader = new FileReader();
+
+        reader.addEventListener('loadend', () => {
+          window.__tmpImage = window.btoa(reader.result);
+        });
+
+        reader.readAsBinaryString(blob);
+      });
+    };
+
+    const svgContent = source.source.join();
+
+    setFontForContainer('Bariol Regular');
+    cleanup();
+
+    const svgPos = svgContent.indexOf('<svg');
+    const justSvg = svgContent.substr(svgPos);
+    const headerRegexp = /<svg\s+width="(\d+)"\s+height="(\d+)"/;
+    const match = headerRegexp.exec(justSvg);
+    const width = match[1];
+    const height = match[2];
+    const normalizedSvg = justSvg.replace(/<svg/, '<svg xmlns="' + prefix.svg + '" ');
+    const imgSrc = 'data:image/svg+xml;base64,' + Buffer.from(normalizedSvg).toString('base64');
+    const actualHeight = width / height < 1.3 ? width / 1.3 : height;
+
+    loader.width = canvas.width = width;
+    loader.height = canvas.height = actualHeight;
     loader.onload = go;
     loader.src = imgSrc;
   };

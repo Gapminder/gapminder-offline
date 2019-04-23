@@ -1,8 +1,12 @@
 <app-tabs-new [syncActions]="getSyncActions()" [disabled]="disabled" class="vizabi-content">
-    <app-tab-new *ngFor = "let tab of tabsModel"
+  <div *ngIf="bookmarksVisible">
+    <app-bookmarks-pane></app-bookmarks-pane>
+  </div>
+  <app-tab-new *ngFor = "let tab of tabsModel"
                 [title] = "tab.title"
                 [active] = "tab.active"
                 [removable] = "true"
+                [bookmarkAllowed]="!!tab.chartType"
                 (select) = "selectTab(tab)"
                 (deselect) = "deselectTab(tab)"
                 (remove) = "removeTab($event)"

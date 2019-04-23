@@ -24,13 +24,15 @@ export class VersionsFormComponent implements OnInit {
   recommendedVersion: string;
   currentVersion: string;
   latestVersion: string;
+  private globConst;
 
   constructor(public translate: TranslateService, private es: ElectronService) {
-    this.es.ipcRenderer.send('get-supported-versions');
+    this.globConst = this.es.remote.getGlobal('globConst');
+    this.es.ipcRenderer.send(this.globConst.GET_SUPPORTED_VERSIONS);
   }
 
   ngOnInit() {
-    this.es.ipcRenderer.on('got-supported-versions',
+    this.es.ipcRenderer.on(this.globConst.GOT_SUPPORTED_VERSIONS,
       (event: any, versions: IVersion[], recommendedVersion: string, currentVersion: string) => {
         this.recommendedVersion = recommendedVersion;
         this.currentVersion = currentVersion;

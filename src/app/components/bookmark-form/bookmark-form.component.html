@@ -1,0 +1,16 @@
+<div *ngIf="bookmark.content.chartType && bookmark.id" class="bookmark-popover">
+  <div *ngIf="!isBookmarkConstructed || isLocked()"><img src="assets/images/hourglass.gif"></div>
+  <div *ngIf="isBookmarkConstructed && !isLocked()">
+    <div>Name: <input [(ngModel)]="bookmark.name"></div>
+    <div style="margin-top: 5px;">Folder:
+      <select [disabled]="!bookmarkFolders" (change)="onFolderChange($event)" class="form-control">
+        <option value="">---</option>
+        <option *ngFor="let folder of bookmarkFolders">{{folder}}</option>
+      </select>
+    </div>
+    <div class="bookmark-controls">
+      <button (click)="remove()">Remove</button>
+      <button (click)="done()">Done</button>
+    </div>
+  </div>
+</div>

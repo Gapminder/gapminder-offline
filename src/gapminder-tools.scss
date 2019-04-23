@@ -185,6 +185,7 @@ body {
   background-color: #fff;
   font-family: 'Bariol Regular', Arial, sans-serif;
   min-width: 250px;
+  height: 100%;
   padding: 0;
   margin: 0;
 }
@@ -201,7 +202,8 @@ body .vi {
   display: block;
   position: relative;
   height: 100%;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
 

@@ -1,0 +1,82 @@
+.wrapper {
+}
+
+.all-bookmarks {
+  height: calc(100vh - 100px);
+}
+
+.bookmarks-content {
+  margin: 0 20px 20px 0;
+}
+
+.bookmarks-container {
+  display: flex;
+  align-items: baseline;
+  justify-content: left;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-flow: row wrap;
+}
+
+.bookmark-title {
+  margin: 20px 10px 10px 10px;
+ }
+
+.bookmark-title-label {
+  font-size: large;
+  margin-right: 20px;
+}
+
+.bookmark-new {
+  margin: 10px;
+}
+
+.bookmark-item {
+  position: relative;
+  width: 20%;
+  min-width: 50px;
+  margin: 10px;
+  border: #aaaaaa solid 1px;
+  box-shadow: 2px 2px 2px 2px #eeeeee;
+}
+
+.bookmark-item div:nth-child(2) {
+  background-color: #eeeeee;
+  border-top: #aaaaaa solid 1px;
+  padding: 10px 10px 10px 20px;
+}
+
+.bookmark-item div:nth-child(3) {
+  font-size: small;
+  font-style: italic;
+  background-color: #999999;
+  color: #ffffff;
+  border-top: #aaaaaa solid 1px;
+  padding: 5px 5px 5px 20px;
+}
+
+.bookmark-item div img {
+  max-width: 100%;
+  height: auto;
+}
+
+.edit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  visibility: hidden;
+}
+
+.wait {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.bookmark-item > .edit {
+  visibility: hidden;
+}
+
+.bookmark-item:hover > .edit {
+  visibility: visible;
+}

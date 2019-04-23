@@ -18,7 +18,7 @@ import {
   OPEN_DDF_FOLDER_ACTION,
   TAB_READY_ACTION,
   SWITCH_MENU_ACTION,
-  MODEL_CHANGED, CLEAR_VALIDATION_FORM, ABANDON_VALIDATION
+  MODEL_CHANGED, CLEAR_VALIDATION_FORM, ABANDON_VALIDATION, BOOKMARK_TAB, SEND_TAB_TO_BOOKMARK, ALERT
 } from '../../constants';
 import { initMenuComponent } from '../menu/system-menu';
 import { getMenuActions } from '../menu/menu-actions';
@@ -45,9 +45,26 @@ const vizabiStateFacade: any = {
   }
 };
 
+function isDescendant(parent, child) {
+  let node = child.parentNode;
+  while (node !== null) {
+    if (node === parent) {
+      return true;
+    }
+    node = node.parentNode;
+  }
+  return false;
+}
+
+interface IAlert {
+  type: string;
+  message: string;
+}
+
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html'
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
   tabsModel: TabModel[] = [];
@@ -68,6 +85,8 @@ export class HomeComponent implements OnInit {
   @ViewChild('additionalExcelConfigModal') additionalExcelConfigModal: ModalDirective;
   @ViewChild('addDdfFolder') addDdfFolderInput: ElementRef;
   tabsDisabled = false;
+  alerts: IAlert[] = [];
+  private globConst;
 
   constructor(
     public chartService: ChartService,
@@ -76,10 +95,19 @@ export class HomeComponent implements OnInit {
     public ls: LocalizationService,
     private viewContainerRef: ViewContainerRef,
     private messageService: MessageService) {
+    this.globConst = this.es.remote.getGlobal('globConst');
     this.menuActions = getMenuActions(this, es);
 
     document.addEventListener('click', (event: any) => {
       const el = event.srcElement;
+
+      if (!this.messageService.isLocked()) {
+        const popover: any = document.querySelector('.popover');
+
+        if (el.className !== 'glyphicon glyphicon-star' && popover.style.display === 'block' && !isDescendant(popover, el)) {
+          popover.style.display = 'none';
+        }
+      }
 
       if (el && el.tagName === 'A' && el.protocol === 'http:' && el.target === '_blank') {
         event.preventDefault();
@@ -133,7 +161,7 @@ export class HomeComponent implements OnInit {
                 `Could not open DDF folder ${this.chartService.ddfFolderDescriptor.ddfUrl}, because ${chartIssue}`);
             }
 
-            this.es.ipcRenderer.send('new-chart', this.getCurrentTab().chartType + ' by DDF folder');
+            this.es.ipcRenderer.send(this.globConst.NEW_CHART, this.getCurrentTab().chartType + ' by DDF folder');
             this.doDetectChanges();
           }
         }
@@ -146,6 +174,24 @@ export class HomeComponent implements OnInit {
       if (event.message === MODEL_CHANGED) {
         this.dataItemsAvailability();
         this.doDetectChanges();
+      }
+
+      if (event.message === BOOKMARK_TAB) {
+        const tab = this.tabsModel[event.options.index];
+        const isAdditionalDataPresent = tab.component && tab.component.getModel;
+        const isModel = tab.instance && tab.instance.getModel();
+
+        if (!isModel && isAdditionalDataPresent) {
+          return;
+        }
+
+        const model = Object.assign({}, isAdditionalDataPresent ? tab.component.getModel() : tab.instance.getModel());
+        this.messageService.sendMessage(SEND_TAB_TO_BOOKMARK, {chartType: tab.chartType, model, name: event.options.name});
+      }
+
+      if (event.message === ALERT) {
+        const {message, type} = event.options;
+        this.alerts.push({message, type});
       }
     });
 
@@ -162,6 +208,10 @@ export class HomeComponent implements OnInit {
         this.chartService.initTab(this.tabsModel);
         this.doDetectChanges();
       }
+    });
+
+    this.es.ipcRenderer.on('do-bookmark-open-completed', (event: any, parameters: any) => {
+      this.doOpenCompleted(event, parameters);
     });
   }
 
@@ -268,7 +318,7 @@ export class HomeComponent implements OnInit {
 
     this.chartService.log('add data', data, currentTab.additionalData);
 
-    this.es.ipcRenderer.send('modify-chart', `user data was added to ${currentTab.chartType}`);
+    this.es.ipcRenderer.send(this.globConst.MODIFY_CHART, `user data was added to ${currentTab.chartType}`);
   }
 
   onDdfExtFolderChanged(filePaths: string[]) {
@@ -359,7 +409,7 @@ export class HomeComponent implements OnInit {
         this.doDetectChanges();
       });
 
-      this.es.ipcRenderer.send('new-chart', 'Simple chart: json based');
+      this.es.ipcRenderer.send(this.globConst.NEW_CHART, 'Simple chart: json based');
     }
   }
 
@@ -390,6 +440,15 @@ export class HomeComponent implements OnInit {
       time: this.getTime()
     };
   }
+
+  /*sendTabToBookmark(tabIndex: number) {
+    const tab = this.tabsModel[tabIndex];
+
+    const isAdditionalDataPresent = tab.component && tab.component.getModel;
+    const model = Object.assign({}, isAdditionalDataPresent ? tab.component.getModel() : tab.instance.getModel());
+
+    this.messageService.sendMessage(SEND_TAB_TO_BOOKMARK, {chartType: tab.chartType, model});
+  }*/
 
   private getCurrentTabInstance(): boolean {
     return this.chartService.currentTab && this.chartService.currentTab.instance ? this.chartService.currentTab.instance : null;

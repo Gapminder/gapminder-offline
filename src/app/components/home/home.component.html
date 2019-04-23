@@ -1,4 +1,7 @@
 <div [dir]="ls.isRtl() ? 'rtl' : 'ltr'" [ngClass]="ls.getLanguagePrefix()" style="height: 100%" (click)="appMainClickHandler($event)">
+  <div class="alert-container">
+    <alert *ngFor="let alert of alerts" [type]="alert.type" [dismissible]="true"><span [innerHtml]="alert.message"></span></alert>
+  </div>
   <app-auto-update></app-auto-update>
 
   <div class="menu-container" [ngClass]="{'menu-container-ltr': !ls.isRtl(), 'menu-container-rtl': ls.isRtl()}">
