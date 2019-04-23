@@ -7,6 +7,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { ICalculatedDataView } from './calculated-data-view';
 import { LocalizationService } from '../../providers/localization.service';
 
+interface IBadFormatHeader {
+  expectedHeaderKey: string;
+  existingHeaderKey: string;
+  expectedHeaderTime: string;
+  existingHeaderTime: string;
+}
+
 @Component({
   selector: 'app-file-select-config-form',
   templateUrl: './file-select-config-form.component.html',
@@ -74,8 +81,11 @@ export class FileSelectConfigFormComponent {
   sheet = '';
   loadingSheetsTitle = '';
   hasNameColumn = false;
-  nameColumnPosition = 0;
+  badFormatHeader: IBadFormatHeader;
+  header: string[];
+  dataError = false;
 
+  private _nameColumnPosition = 0;
   private _currentTab: TabModel;
 
   constructor(public ts: TranslateService,
@@ -99,6 +109,15 @@ export class FileSelectConfigFormComponent {
     }
 
     this.timeFormat = newTimeFormat || this.timeFormats[0];
+  }
+
+  get nameColumnPosition() {
+    return this._nameColumnPosition;
+  }
+
+  set nameColumnPosition(value: number) {
+    this._nameColumnPosition = value;
+    this.nameColumnPositionChanged();
   }
 
   ok() {
@@ -169,28 +188,40 @@ export class FileSelectConfigFormComponent {
     this.useYourDataVisible = !this.useYourDataVisible;
   }
 
-  onFileChanged(fileDescriptor: any) {
+  async onFileChanged(fileDescriptor: any) {
     if (fileDescriptor) {
       this.file = fileDescriptor.file;
       this.lastModified = fileDescriptor.lastModified;
-
-      if (this.format === 'excel') {
-        this.loadingSheetsTitle = this.ts.instant('Reading Excel sheets');
-
-        const VizabiExcelReader = this.es.vizabi.Reader.extend(this.es.ExcelReader.excelReaderObject);
-
-        setTimeout(() => {
+      this.dataError = false;
+      try {
+        if (this.format === 'excel') {
+          this.loadingSheetsTitle = this.ts.instant('Reading Excel sheets');
+          const VizabiExcelReader = this.es.vizabi.Reader.extend(this.es.ExcelReader.excelReaderObject);
           const readerObject = new VizabiExcelReader({
             path: this.file,
             lastModified: new Date().getTime()
           });
 
-          readerObject.getWorksheets().then(worksheets => {
-            this.worksheets = worksheets;
-            this.sheet = this.worksheets[0];
-            this.loadingSheetsTitle = '';
+          this.worksheets = await readerObject.getWorksheets();
+
+          this.sheet = this.worksheets[0];
+          this.loadingSheetsTitle = '';
+          await this.checkExcelHeader();
+        } else {
+          const VizabiCsvReader = this.es.vizabi.Reader.extend(this.es.CsvReader.csvReaderObject);
+          const readerObject = new VizabiCsvReader({
+            path: this.file,
+            lastModified: new Date().getTime()
           });
-        }, 500);
+          const data = await readerObject.load();
+          this.header = data.columns;
+          this.badFormatHeader = this.getBadFormatHeader();
+        }
+      } catch (e) {
+        console.log(e);
+        this.header = null;
+        this.badFormatHeader = null;
+        this.dataError = true;
       }
     } else {
       this.file = '';
@@ -202,11 +233,78 @@ export class FileSelectConfigFormComponent {
     }
   }
 
+  async checkExcelHeader() {
+    try {
+      this.dataError = false;
+      const VizabiExcelReader = this.es.vizabi.Reader.extend(this.es.ExcelReader.excelReaderObject);
+      const readerObject = new VizabiExcelReader({
+        path: this.file,
+        sheet: this.sheet,
+        lastModified: new Date().getTime()
+      });
+      this.loadingSheetsTitle = this.ts.instant('Reading Excel sheets');
+      const data = await readerObject.load();
+      this.header = data.columns;
+      this.loadingSheetsTitle = '';
+      this.badFormatHeader = this.getBadFormatHeader();
+    } catch (e) {
+      console.log(e);
+      this.header = null;
+      this.badFormatHeader = null;
+      this.dataError = true;
+    }
+  }
+
   setChoice(choice: string) {
     this.choice = choice;
   }
 
   setChartType(chartType: string) {
     this.chartType = chartType;
+  }
+
+  getTranslationKeyForBadFormatHeader(): string {
+    if (this.badFormatHeader.expectedHeaderKey && this.badFormatHeader.existingHeaderKey &&
+      this.badFormatHeader.expectedHeaderTime && this.badFormatHeader.existingHeaderTime) {
+      return 'bad-header-format-all';
+    } else if (this.badFormatHeader.expectedHeaderKey && this.badFormatHeader.existingHeaderKey) {
+      return 'bad-header-format-key';
+    } else if (this.badFormatHeader.expectedHeaderTime && this.badFormatHeader.existingHeaderTime) {
+      return 'bad-header-format-time';
+    }
+
+    return null;
+  }
+
+  nameColumnPositionChanged() {
+    this.badFormatHeader = this.getBadFormatHeader();
+  }
+
+  private getBadFormatHeader(): IBadFormatHeader {
+    if (this.header) {
+      let keyOffset = 0;
+      let timeOffset = 1;
+
+      if (this.hasNameColumn) {
+        if (this.nameColumnPosition === 0) {
+          keyOffset = 1;
+          timeOffset = 2;
+        } else if (this.nameColumnPosition === 1) {
+          timeOffset = 2;
+        }
+      }
+
+      if (this.addDataMode && (this.header[keyOffset] !== this.calculatedDataView.dim ||
+        this.header[timeOffset] !== this.calculatedDataView.time)) {
+        return {
+          expectedHeaderKey: this.header[keyOffset] !== this.calculatedDataView.dim ? this.calculatedDataView.dim : null,
+          existingHeaderKey: this.header[keyOffset] !== this.calculatedDataView.dim ? this.header[keyOffset] || ' ' : null,
+          expectedHeaderTime: this.header[timeOffset] !== this.calculatedDataView.time ? this.calculatedDataView.time : null,
+          existingHeaderTime: this.header[timeOffset] !== this.calculatedDataView.time ? this.header[timeOffset] || ' ' : null
+        };
+      }
+    }
+
+    return null;
   }
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../../providers/electron.service';
 import { LocalizationService } from '../../providers/localization.service';
+import { ALERT } from '../../constants';
+import { MessageService } from '../../message.service';
 
 @Component({
   selector: 'app-auto-update',
@@ -18,8 +20,10 @@ export class AutoUpdateComponent implements OnInit {
   error;
   datasetError;
   newDataset: string;
+  private globConst;
 
-  constructor(public ls: LocalizationService, private es: ElectronService) {
+  constructor(public ls: LocalizationService, private es: ElectronService, private ms: MessageService) {
+    this.globConst = this.es.remote.getGlobal('globConst');
   }
 
   ngOnInit() {
@@ -48,36 +52,37 @@ export class AutoUpdateComponent implements OnInit {
       this.updating = false;
       this.ready = true;
     });
-    this.es.ipcRenderer.on('dataset-updated', () => {
+    this.es.ipcRenderer.on(this.globConst.DATASET_UPDATED, () => {
       this.updating = false;
       this.datasetReady = true;
     });
-    this.es.ipcRenderer.on('dataset-not-updated', (e, err) => {
+    this.es.ipcRenderer.on(this.globConst.DATASET_NOT_UPDATED, (e, err) => {
       this.updating = false;
       this.datasetError = err;
       console.log(this.datasetError);
+      this.ms.sendMessage(ALERT, {message: this.datasetError, type: 'danger'});
     });
   }
 
   updateDataset() {
-    this.es.ipcRenderer.send('start-dataset-update', this.newDataset);
+    this.es.ipcRenderer.send(this.globConst.START_DATASET_UPDATE, this.newDataset);
     this.updating = true;
     this.newDataset = '';
   }
 
   reload() {
     this.datasetReady = false;
-    this.es.ipcRenderer.send('dataset-reload');
+    this.es.ipcRenderer.send(this.globConst.DATASET_RELOAD);
   }
 
   download() {
-    this.es.ipcRenderer.send('start-download');
+    this.es.ipcRenderer.send(this.globConst.START_DOWNLOAD);
     this.updating = true;
     this.versionDescriptor = null;
   }
 
   update() {
-    this.es.ipcRenderer.send('start-update');
+    this.es.ipcRenderer.send(this.globConst.START_UPDATE);
   }
 
   cancel() {

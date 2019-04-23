@@ -1,0 +1,170 @@
+.wrapper {
+}
+
+.all-bookmarks {
+  height: calc(100vh - 100px);
+}
+
+.bookmarks-content {
+  margin: 0 20px 20px 0;
+}
+
+.bookmarks-container {
+  display: flex;
+  align-items: baseline;
+  justify-content: left;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-flow: row wrap;
+  padding: 5px;
+}
+
+.bookmark-title {
+  margin: 20px 10px 10px 10px;
+}
+
+.bookmark-title-label {
+  /* font-size: large; */
+  margin-right: 20px;
+}
+
+.bookmark-title-label-rtl {
+  margin-right: unset;
+  margin-left: 20px;
+}
+
+.bookmark-new {
+  margin: 10px;
+  font-size: large;
+}
+
+.bookmark-item {
+  position: relative;
+  width: 20%;
+  min-width: 50px;
+  margin: 10px;
+  border: #aaaaaa solid 1px;
+  box-shadow: 2px 2px 2px 2px #eeeeee;
+}
+
+.bookmark-item div:nth-child(2) {
+  background-color: #eeeeee;
+  border-top: #aaaaaa solid 1px;
+  padding: 10px 10px 10px 20px;
+}
+
+.bookmark-item div:nth-child(3) {
+  font-size: small;
+  font-style: italic;
+  background-color: #999999;
+  color: #ffffff;
+  border-top: #aaaaaa solid 1px;
+  padding: 5px 5px 5px 20px;
+}
+
+.bookmark-item div img {
+  max-width: 100%;
+  height: auto;
+}
+
+.edit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  visibility: hidden;
+}
+
+.wait {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.bookmark-item > .edit {
+  visibility: hidden;
+}
+
+.bookmark-item:hover > .edit {
+  visibility: visible;
+}
+
+.hellip-block {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.card-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+.card-content {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: auto;
+  height: 100%;
+  text-align: center;
+  /* font-size: larger; */
+  vertical-align: middle;
+}
+
+.empty-desc {
+  color: #555555;
+  font-size: larger;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.drop-landing {
+  color: #555555;
+  margin: 20px;
+  width: 70%;
+  border: 2px dashed #555555;
+  min-height: 15vh;
+  position: relative;
+}
+
+.drop-landing::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+}
+
+.drop-landing::after {
+  content: var(--drop-here);
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 3;
+  overflow: hidden;
+  text-align: center;
+  padding: 5px;
+}
+
+.folder-control .folder-edit-control, .folder-control .folder-remove-control {
+  visibility: hidden;
+}
+
+.folder-control:hover .folder-edit-control, .folder-control:hover .folder-remove-control {
+  visibility: visible;
+}
+
+.alert-folder {
+  background-color: #fcf8e3;
+  border-color: #faebcc
+}
+
+.alert-folder hr {
+  border-top-color: #f7e1b5
+}

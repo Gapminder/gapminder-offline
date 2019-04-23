@@ -1,0 +1,147 @@
+<div class="wrapper">
+  <div class="all-bookmarks">
+    <div class="bookmarks-content">
+      <div class="bookmark-title alert alert-folder"><span
+        class="bookmark-title-label">{{'Bookmarks' | translate}}</span></div>
+      <div class="card-container">
+        <div *ngIf="!areUncategorizedBookmarksPresent()"
+             class="empty-desc">{{'Bookmarks will appear here' | translate}}</div>
+        <div [dragula]="'bm'"
+             [ngClass]="{'drop-landing': !areUncategorizedBookmarksPresent() && areBookmarksPresent()}"
+             [attr.style]="sanitizer.bypassSecurityTrustStyle('--drop-here: \''+this.ts.instant('Drag and drop bookmarks here')+'\'')"
+             [(dragulaModel)]="unCategorizedBookmarks"
+             class="bookmarks-container card-content">
+          <div *ngFor="let bookmark of unCategorizedBookmarks" [attr.id]="'bm_'+bookmark.id"
+               class="bookmark-item">
+            <div><img src="{{bookmark.image}}"></div>
+            <div>
+              <div *ngIf="!bookmark.editMode" class="hellip-block" [title]="bookmark.name">{{bookmark.name}}</div>
+              <div *ngIf="bookmark.editMode">
+                <input [(ngModel)]="bookmark.tmpName" (keyup.enter)="save(bookmark)" (keyup.escape)="cancel(bookmark)">
+                <button (click)="save(bookmark)"><span class="glyphicon glyphicon-ok"></span></button>
+                <button (click)="cancel(bookmark)"><span class="glyphicon glyphicon-remove"></span></button>
+                <div *ngIf="!areBookmarksFoldersEmpty()">
+                  <select (change)="onBookmarkFolderChange($event, bookmark)" class="form-control">
+                    <option value="">---</option>
+                    <option *ngFor="let folder of bookmarksFolders"
+                            [selected]="bookmark.folder === folder.name">{{folder.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+            <div><span>{{bookmark.date}}</span></div>
+            <div class="wait" *ngIf="bookmark.removeRequest"><img src="assets/images/hourglass.gif"></div>
+            <div class="edit">
+              <button (click)="open(bookmark)">
+                <span class="glyphicon glyphicon-eye-open"></span>
+              </button>
+              <button (click)="edit(unCategorizedBookmarks, bookmark)" [disabled]="bookmark.editMode">
+                <span class="glyphicon glyphicon-edit"></span>
+              </button>
+              <button (click)="remove(bookmark)" *ngIf="!bookmark.removeRequest">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bookmark-new">
+      <a href="#" (click)="switchNewFolderControl()">{{'New folder' | translate}}</a>
+      <div *ngIf="isNewBookmarksFolderFormVisible">
+        <div>
+          <input #inputNewFolder
+                 [disabled]="isLocked()"
+                 (keyup.enter)="createNewBookmarksFolder()"
+                 (keyup.escape)="resetFolderForm()"
+                 [(ngModel)]="newBookmarksFolder" maxlength="50" style="width: 300px;">
+          <button [disabled]="isLocked() || newBookmarksFolder === ''" (click)="createNewBookmarksFolder()"><span
+            class="glyphicon glyphicon-ok"></span></button>
+          <button [disabled]="isLocked()" (click)="resetFolderForm()"><span class="glyphicon glyphicon-remove"></span>
+          </button>
+          <span *ngIf="isLocked()"><img src="assets/images/hourglass.gif"></span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngFor="let folder of bookmarksFolders">
+      <div class="bookmark-title folder-control alert alert-folder">
+        <span *ngIf="!folder.editMode" class="bookmark-title-label"
+              [ngClass]="{'bookmark-title-label-rtl': ls.isRtl()}">{{folder.name}}</span>
+        <input *ngIf="folder.editMode"
+               [disabled]="isLocked()"
+               (keyup.enter)="saveFolder(folder)"
+               (keyup.escape)="cancelFolder(folder)"
+               maxlength="50"
+               [(ngModel)]="folder.tmpName">
+        <span>
+           <button
+             *ngIf="!folder.editMode && areBookmarksPresentInFolder(folder.name)"
+             [disabled]="isLocked()"
+             (click)="switchFolderContentVisibility(folder)">
+             <span *ngIf="folder.collapsed" class="glyphicon glyphicon-chevron-down"></span>
+             <span *ngIf="!folder.collapsed" class="glyphicon glyphicon-chevron-up"></span>
+           </button>
+           <button *ngIf="!folder.editMode"
+                   [disabled]="isLocked()"
+                   (click)="switchFolderEditMode(bookmarksFolders, folder)" class="folder-edit-control"><span
+             class="glyphicon glyphicon-edit"></span></button>
+           <button *ngIf="!folder.editMode" [disabled]="isLocked()" (click)="removeFolder(folder)"
+                   class="folder-remove-control"><span
+             class="glyphicon glyphicon-trash"></span></button>
+           <button *ngIf="folder.editMode" [disabled]="isLocked()" (click)="saveFolder(folder)"><span
+             class="glyphicon glyphicon-ok"></span></button>
+           <button *ngIf="folder.editMode" [disabled]="isLocked()" (click)="cancelFolder(folder)"><span
+             class="glyphicon glyphicon-remove"></span></button>
+        </span>
+      </div>
+      <div class="card-container">
+        <div *ngIf="!areBookmarksPresentInFolder(folder.name)"
+             class="empty-desc">{{'Empty folder' | translate}}</div>
+        <div *ngIf="!folder.collapsed"
+             [dragula]="'bm'"
+             [attr.id]="folder.name"
+             [ngClass]="{'drop-landing': !areBookmarksPresentInFolder(folder.name) && areBookmarksPresent()}"
+             [attr.style]="sanitizer.bypassSecurityTrustStyle('--drop-here: \''+this.ts.instant('Drag and drop bookmarks here')+'\'')"
+             [(dragulaModel)]="bookmarksByFolder[folder.name]"
+             class="bookmarks-container card-content">
+          <div *ngFor="let bookmark of bookmarksByFolder[folder.name]" [attr.id]="'bm_'+bookmark.id"
+               class="bookmark-item">
+            <div><img src="{{bookmark.image}}"></div>
+            <div>
+              <div *ngIf="!bookmark.editMode" class="hellip-block" [title]="bookmark.name">{{bookmark.name}}</div>
+              <div *ngIf="bookmark.editMode">
+                <input [(ngModel)]="bookmark.tmpName" (keyup.enter)="save(bookmark)" (keyup.escape)="cancel(bookmark)">
+                <button (click)="save(bookmark)"><span class="glyphicon glyphicon-ok"></span></button>
+                <button (click)="cancel(bookmark)"><span class="glyphicon glyphicon-remove"></span></button>
+                <div *ngIf="!areBookmarksFoldersEmpty()">
+                  <select (change)="onBookmarkFolderChange($event, bookmark)" class="form-control">
+                    <option value="">---</option>
+                    <option *ngFor="let folder of bookmarksFolders"
+                            [selected]="bookmark.folder === folder.name">{{folder.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+            <div><span>{{bookmark.date}}</span></div>
+            <div class="wait" *ngIf="bookmark.removeRequest"><img src="assets/images/hourglass.gif"></div>
+            <div class="edit">
+              <button (click)="open(bookmark)">
+                <span class="glyphicon glyphicon-eye-open"></span>
+              </button>
+              <button (click)="edit(bookmarksByFolder[folder.name], bookmark)" [disabled]="bookmark.editMode">
+                <span class="glyphicon glyphicon-edit"></span>
+              </button>
+              <button (click)="remove(bookmark)" *ngIf="!bookmark.removeRequest">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

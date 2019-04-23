@@ -68,3 +68,8 @@ label.step-label {
     width: 50%;
     height: 40px;
 }
+.ok-button:disabled, .ok-button[disabled], .close-button:disabled, .close-button[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}

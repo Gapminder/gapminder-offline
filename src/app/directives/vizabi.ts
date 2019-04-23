@@ -97,12 +97,13 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         return;
       }
 
+      const currentModel = JSON.parse(JSON.stringify(this.viz.getModel()));
       this.viz.clear();
       VizabiDirective.removeElement(this.placeholder);
 
       this.createPlaceholder();
       this.createChart({
-        model: {currentValue: this.model}
+        model: {currentValue: currentModel}
       });
     } catch (additionalItemsError) {
       this.emitError(additionalItemsError);
@@ -119,7 +120,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
       if (!this.viz || !_reloadTime) {
         return;
       }
-      const currentModel = Object.assign({}, this.model);
+      const currentModel = JSON.parse(JSON.stringify(this.viz.getModel()));
 
       this._reloadTime = _reloadTime;
       this.viz.clear();

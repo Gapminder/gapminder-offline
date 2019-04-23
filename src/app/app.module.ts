@@ -11,7 +11,8 @@ import { ElectronService } from './providers/electron.service';
 import { WebviewDirective } from './directives/webview.directive';
 import { VizabiDirective } from './directives/vizabi';
 
-import { ModalModule, ProgressbarModule, AlertModule } from 'ngx-bootstrap';
+import { ModalModule, ProgressbarModule, AlertModule, PopoverModule } from 'ngx-bootstrap';
+import { DragulaModule } from 'ng2-dragula';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -33,6 +34,8 @@ import { FreshenerService } from './components/tab-freshener/freshener.service';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LocalizationService } from './providers/localization.service';
 import { VersionsFormComponent } from './components/versions-form/versions-form.component';
+import { BookmarksPaneComponent } from './components/bookmarks-pane/bookmarks-pane.component';
+import { BookmarkFormComponent } from './components/bookmark-form/bookmark-form.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -42,6 +45,8 @@ export function createTranslateLoader(http: HttpClient) {
   declarations: [
     AppComponent,
     HomeComponent,
+    BookmarksPaneComponent,
+    BookmarkFormComponent,
     AutoUpdateComponent,
     TabFreshenerComponent,
     HamburgerMenuComponent,
@@ -62,8 +67,10 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    DragulaModule.forRoot(),
     AlertModule.forRoot(),
     ModalModule.forRoot(),
+    PopoverModule.forRoot(),
     ProgressbarModule.forRoot(),
     TranslateModule.forRoot({
       loader: {

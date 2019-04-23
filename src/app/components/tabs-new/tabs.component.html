@@ -1,31 +1,40 @@
-<div class = "tab-container" style = "height: 100%;">
+<div class="popover bs-popover-bottom"
+     style="position: absolute; top: 0; left: 0; display: none;"
+     x-placement="bottom">
+  <div class="popover-body">
+    <app-bookmark-form (onPopoverClose)="hidePopover()"></app-bookmark-form>
+  </div>
+</div>
+
+<div class = "tab-container" style = "height: 100%;" [ngClass]="{'locked': isLocked()}">
     <div class = "pre-nav-tabs yellow-border" style = "height: auto;">
         <div class = "tabs-wrapper">
             <div style = "padding: 9px;">
-                <a href style = "z-index: 1000" (click) = "$event.preventDefault(); logoAction()"
+                <a href style = "z-index: 1000" tabindex="-1" (click) = "$event.preventDefault(); hidePopover(); logoAction()"
                    alt = "GAPMINDER TOOLS"><img
                         src = "./assets/logo.gif" width = "167" height = "21"></a>
             </div>
             <div class = "scroll-control" *ngIf = "canMoveRight()">
                 <a href (click) = "$event.preventDefault()" (mousedown) = "actionScrollStart(-1)"
-                   (mouseup) = "actionScrollFinish()">
+                   (mouseup) = "actionScrollFinish()" tabindex="-1">
                     <span class = "glyphicon glyphicon-triangle-left"></span>
                 </a>
             </div>
             <div class = "scroll-control-inactive" *ngIf = "!canMoveRight()">
-                <a href (click) = "$event.preventDefault();" (mouseup) = "actionScrollFinish()">
+                <a href (click) = "$event.preventDefault();" (mouseup) = "actionScrollFinish()" tabindex="-1">
                     <span class = "glyphicon glyphicon-triangle-left"></span>
                 </a>
             </div>
-            <div style = "flex-grow: 1; max-width: calc(100% - 270px)">
+            <div style = "flex-grow: 1; max-width: calc(100% - 300px)">
                 <ul #tabsContainer (window:resize) = "autoScroll()" class = "nav nav-tabs noscrollbar"
                     (click) = "$event.preventDefault()">
-                    <li *ngFor = "let tab of tabs" class = "nav-item" [class.active] = "tab.active">
+                    <li *ngFor = "let tab of tabs; index as i" class = "nav-item" [class.active] = "tab.active">
                         <a href = "javascript:void(0);" class = "nav-link"
                            [class.active] = "tab.active"
-                           (click) = "selectTab(tab)">
+                           (click) = "hidePopover($event); selectTab(tab);" tabindex="-1">
                             <span *ngIf = "!tab.editMode"
-                                  class = "doNotEditTabInput">{{tab.title}}</span>
+                                  class = "doNotEditTabInput"
+                                  [ngClass]="{'blured-tab-ltr': overedTabIndex===i && !ls.isRtl(), 'blured-tab-rtl': overedTabIndex===i && ls.isRtl()}">{{tab.title}}</span>
                             <span *ngIf = "tab.editMode">
                                 <app-tab-title-edit (blur) = "resetEditMode()"
                                                    (enter) = "applyEditedTitle()"
@@ -34,31 +43,43 @@
                                                    (titleChange) = "tab.title=$event">
                                 </app-tab-title-edit>
                             </span>
-                            <span *ngIf = "tab.removable" (click) = "$event.preventDefault(); $event.stopPropagation(); removeTab(tab);"
-                                  class = "glyphicon glyphicon-remove-circle" [ngClass]="{'glyphicon-remove-circle-rtl': ls.isRtl()}"></span>
+                            <span [style.visibility]="tab.bookmarkAllowed && tab.active && !tab.editMode && !isLocked() ? 'visible' : 'hidden'"
+                                  (click)="switchPopover($event)"
+                                  (mouseover)="overedTabIndex=i" (mouseout)="overedTabIndex=null"
+                                  class="glyphicon glyphicon-star"
+                                  [ngClass]="{'glyphicon-star-rtl': ls.isRtl(), 'bm-star-container-ltr': !ls.isRtl(), 'bm-star-container-rtl': ls.isRtl()}"></span>
+                            <span [style.visibility]="tab.removable && tab.active ? 'visible' : 'hidden'"
+                                  (click)="$event.preventDefault(); $event.stopPropagation(); hidePopover(); removeTab(tab);"
+                                  class="glyphicon glyphicon-remove-circle"
+                                  [ngClass]="{'glyphicon-remove-circle-rtl': ls.isRtl()}"></span>
                         </a>
                     </li>
                     <li class = "add-tab">
-                        <a href (click) = "$event.preventDefault(); addTabAction();">
+                        <a href (click) = "$event.preventDefault(); hidePopover(); addTabAction();" tabindex="-1">
                             <span class = "glyphicon glyphicon-plus"></span>
                         </a>
                     </li>
                 </ul>
             </div>
             <div class = "scroll-control" *ngIf = "canMoveLeft()">
-                <a href (click) = "$event.preventDefault()" (mousedown) = "actionScrollStart(1)"
-                   (mouseup) = "actionScrollFinish()">
+                <a href (click) = "$event.preventDefault()" (mousedown) = "hidePopover(); actionScrollStart(1)"
+                   (mouseup) = "actionScrollFinish()" tabindex="-1">
                     <span class = "glyphicon glyphicon-triangle-right"></span>
                 </a>
             </div>
             <div class = "scroll-control-inactive" *ngIf = "!canMoveLeft()">
-                <a href (click) = "$event.preventDefault();" (mouseup) = "actionScrollFinish()">
+                <a href (click) = "$event.preventDefault();" (mousedown) = "hidePopover(); actionScrollFinish()" tabindex="-1">
                     <span class = "glyphicon glyphicon-triangle-right"></span>
+                </a>
+            </div>
+            <div [ngClass]="{'bookmarks-tab': true, 'bookmarks-tab-active': isBookmarkPaneVisible}">
+                <a href (click) = "switchBookmark($event)" tabindex="-1">
+                    <span class = "glyphicon glyphicon-star"></span>
                 </a>
             </div>
             <div style = "width: 42px; height: 32px;">
                 <button type = "button"
-                        (click) = "switchMenuAction($event)"
+                        (click) = "hidePopover(); switchMenuAction($event)"
                         class = "main-menu-btn"><img src = "assets/images/hamburger.png"/>
                 </button>
             </div>
