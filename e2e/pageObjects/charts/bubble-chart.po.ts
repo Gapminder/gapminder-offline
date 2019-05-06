@@ -24,6 +24,7 @@ export class BubbleChart extends CommonChartPage {
   public indiaTrails: ElementArrayFinder = $$('.trail-ind [class="vzb-bc-trailsegment"]');
   public usaTrails: ElementArrayFinder = $$('.trail-usa [class="vzb-bc-trailsegment"]');
   public selectedCountries: ExtendedArrayFinder = _$$('[class*="vzb-bc-entity label"]');
+  public noDataLabelArr: ExtendedArrayFinder = _$$('label[class="vzb-find-item-brokendata"]');
 
   public lockButton: ExtendedElementFinder = _$$('[data-btn="lock"]').last();
   public trailsButton: ExtendedElementFinder = _$$('button[data-btn="trails"]').last();
@@ -143,7 +144,7 @@ export class BubbleChart extends CommonChartPage {
 
   countBubblesByColor(color: string) {
     return $$(`circle[style*='fill: ${this.colors[color.toLocaleLowerCase()]}']`).count();
-  }  
+  }
 
   dragAndDropSelectedCountryLabelBubblesChart(x: number, y: number) {
     return browser.actions().dragAndDrop(this.selectedCountryLabel, {x: x, y: y}).perform();
@@ -187,6 +188,4 @@ export class BubbleChart extends CommonChartPage {
         return obj.sort((obj1: any, obj2: any) => obj1.cx - obj2.cx);
       });
   }
-
-
 }

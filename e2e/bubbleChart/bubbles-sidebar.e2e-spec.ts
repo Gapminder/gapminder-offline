@@ -1,9 +1,13 @@
 import { Sidebar } from '../pageObjects/sidebar/sidebar.e2e-component';
 import { BubbleChart } from '../pageObjects/charts/bubble-chart.po';
-import { safeDragAndDrop, waitForSpinner } from '../helpers/helper';
+import { makeElementVisible, safeDragAndDrop, waitForSpinner } from '../helpers/helper';
 import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
 import { Slider } from '../pageObjects/components/slider.e2e-component';
+<<<<<<< HEAD
 import { _$ } from '../helpers/ExtendedElementFinder';
+=======
+import { _$ , _$$} from '../helpers/ExtendedElementFinder';
+>>>>>>> eca001b... feat(tests): added fixes for the e2e tests "bubbles-sidebar"
 
 const commonChartPage: CommonChartPage = new CommonChartPage();
 const bubbleChart: BubbleChart = new BubbleChart();
@@ -94,11 +98,23 @@ describe('Bubbles chart: Sidebar', () => {
     // await expect(finalRadius[0]).toBeGreaterThan(initialRadius); // TODO add check like this
   });
 
+<<<<<<< HEAD
   xit('change Size indicator', async () => {
+=======
+  it('change Size indicator', async () => {
+>>>>>>> eca001b... feat(tests): added fixes for the e2e tests "bubbles-sidebar"
     /**
      * should check that the indicator represented by the Size can be changed(TC16)
      */
     await sidebar.optionsButton.safeClick();
+<<<<<<< HEAD
+=======
+
+    const size = sidebar.dialogModal.size.locator().value;
+    const rootSelector = sidebar.dialogModal.rootSelector.locator().value;
+    makeElementVisible(`${rootSelector} ${size}`);
+
+>>>>>>> eca001b... feat(tests): added fixes for the e2e tests "bubbles-sidebar"
     await sidebar.dialogModal.size.safeClick();
 
     const initialBubblesCount = await bubbleChart.allBubbles.count();
@@ -147,7 +163,7 @@ describe('Bubbles chart: Sidebar', () => {
     await expect(chinaBubbleInitialColor).not.toEqual(chinaBubbleFinalColor);
   });
 
-  xit(`drag'n'drop panel using the hand icon`, async () => {
+  it(`drag'n'drop panel using the hand icon`, async () => {
     /**
      * should check that on large screen resolutions panel can be dragged using the hand icon(TC18)
      */
@@ -174,7 +190,7 @@ describe('Bubbles chart: Sidebar', () => {
     await expect(optionsDialogueRightNewPosition).not.toEqual(optionsDialogueRightFinalPosition);
   });
 
-  xit('Change opacity for non-selected bubbles', async () => {
+  it('Change opacity for non-selected bubbles', async () => {
     await sidebar.findSelect.searchAndSelectCountry('China');
     const nonSelectedBubbles = await bubbleChart.countBubblesByOpacity(CommonChartPage.opacity.dimmed);
 
@@ -184,7 +200,7 @@ describe('Bubbles chart: Sidebar', () => {
     expect(await bubbleChart.countBubblesByOpacity(Number(newOpacity))).toEqual(nonSelectedBubbles);
   });
 
-  xit('Change regular opacity', async () => {
+  it('Change regular opacity', async () => {
     const highlightedBubbles = await bubbleChart.countBubblesByOpacity(CommonChartPage.opacity.highlighted);
 
     await sidebar.changeRegularOpacity();
@@ -194,10 +210,10 @@ describe('Bubbles chart: Sidebar', () => {
   });
 
   // todo: incorrect behavior: fit it!
-  xit('Click on minimap region - "Remove everything else"', async () => {
+  it('Click on minimap region - "Remove everything else"', async () => {
     await sidebar.colorSection.removeEverythingElseInMinimap();
-
-    await expect(bubbleChart.allBubbles.count()).toEqual(bubbleChart.countBubblesByColor('red'));
+    await expect(await bubbleChart.allBubbles.count() - await bubbleChart.noDataLabelArr.count())
+      .toEqual(await bubbleChart.countBubblesByColor('red'));
   });
 
   it('Click on minimap region - "Select all in this group"', async () => {
@@ -208,23 +224,32 @@ describe('Bubbles chart: Sidebar', () => {
     expect(selectedLabels).toEqual(selectedBubbles);
   });
 
-  xit('remove label boxes', async () => {
+  it('remove label boxes', async () => {
     await bubbleChart.clickOnCountryBubble('India');
 
     // open menu and click on the checkbox
     await sidebar.optionsButton.safeClick();
+
+    const label = sidebar.dialogModal.labels.locator().value;
+    const rootSelector = sidebar.dialogModal.rootSelector.locator().value;
+    makeElementVisible(`${rootSelector} ${label}`);
+
     await sidebar.labelsMenu.safeClick();
     await sidebar.activeOptionsMenu._$$('.vzb-removelabelbox-switch').first().safeClick();
-
     await expect(bubbleChart.selectedBubbleLabel.isDisplayed()).toBeFalsy();
   });
 
-  xit('change labels size by moving slider', async () => {
+  it('change labels size by moving slider', async () => {
     await bubbleChart.clickOnCountryBubble('India');
     const labelSizeBefore = await _$('.vzb-bc-label-content.stroke').safeGetAttribute('font-size');
 
     // open menu and move the slider
     await sidebar.optionsButton.safeClick();
+
+    const label = sidebar.dialogModal.labels.locator().value;
+    const rootSelector = sidebar.dialogModal.rootSelector.locator().value;
+    makeElementVisible(`${rootSelector} ${label}`);
+
     await sidebar.labelsMenu.safeClick();
     await safeDragAndDrop(sidebar.activeOptionsMenu._$$('.handle--e').first(), {x: 100, y: 0});
 
@@ -233,16 +258,20 @@ describe('Bubbles chart: Sidebar', () => {
     await expect(parseInt(labelSizeBefore)).toBeLessThan(parseInt(labelSizeAfter));
   });
 
-  xit('change label size by choosing option from dropdown', async () => {
+  it('change label size by choosing option from dropdown', async () => {
     await bubbleChart.clickOnCountryBubble('India');
     const labelSizeBefore = await _$('.vzb-bc-label-content.stroke').safeGetAttribute('font-size');
 
     // open menu and move the slider
     await sidebar.optionsButton.safeClick();
+
+    const label = sidebar.dialogModal.labels.locator().value;
+    const rootSelector = sidebar.dialogModal.rootSelector.locator().value;
+    makeElementVisible(`${rootSelector} ${label}`);
+
     await sidebar.labelsMenu.safeClick();
     await sidebar.activeOptionsMenu._$$('.vzb-ip-holder').first().safeClick();
-
-    await _$('.vzb-treemenu-list-item-label').safeClick();
+    await _$$('.vzb-treemenu-list-item-label').first().safeClick();
     await waitForSpinner();
 
     const labelSizeAfter = await _$('.vzb-bc-label-content.stroke').safeGetAttribute('font-size');
@@ -250,3 +279,4 @@ describe('Bubbles chart: Sidebar', () => {
     await expect(parseInt(labelSizeBefore)).not.toEqual(parseInt(labelSizeAfter));
   });
 });
+
