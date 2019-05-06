@@ -20,7 +20,7 @@ export class DialogModal {
   // Size
   size: ExtendedElementFinder = this.rootSelector._$('[data-dlg="size"]');
   sizeDropdown: ExtendedElementFinder = this.size._$('.vzb-ip-select');
-  
+
   // Color
   color: ExtendedElementFinder = this.rootSelector._$('[data-dlg="colors"]');
   labels: ExtendedElementFinder = this.rootSelector._$('[data-dlg="label"]');
