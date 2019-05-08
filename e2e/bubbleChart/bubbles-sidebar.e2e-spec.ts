@@ -94,7 +94,6 @@ describe('Bubbles chart: Sidebar', () => {
     // await expect(finalRadius[0]).toBeGreaterThan(initialRadius); // TODO add check like this
   });
 
-
   it('change Size indicator', async () => {
     /**
      * should check that the indicator represented by the Size can be changed(TC16)

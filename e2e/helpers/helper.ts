@@ -16,6 +16,10 @@ export function waitForSpinner() {
   return browser.wait(EC.invisibilityOf(CommonChartPage.spinner), MAX_TIMEOUT, 'waiting for invisibility of spinner');
 }
 
+export function waitForErrorMessage() {
+  return browser.wait(EC.visibilityOf(CommonChartPage.errorWindow), MAX_TIMEOUT, 'waiting for visibility of Error window');
+}
+
 export function safeDragAndDrop(from: ElementFinder, to: any) {
   return browser.wait(EC.visibilityOf(from), TIMEOUT, `element ${from.locator().value} not visible`)
     .then(() => disableAnimations())

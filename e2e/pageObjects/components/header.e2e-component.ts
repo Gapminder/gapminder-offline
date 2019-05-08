@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { browser, By, element, ElementFinder, ExpectedConditions as EC } from 'protractor';
 import { _$, _$$, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
-import { waitForSpinner } from '../../helpers/helper';
+import {waitForErrorMessage, waitForSpinner} from '../../helpers/helper';
 import { waitUntil } from '../../helpers/waitHelper';
 
 export class Header {
@@ -53,7 +53,10 @@ export class Header {
   vimeoIframe: ExtendedElementFinder = this.howToModal._$$('iframe').first();
 
   public async uploadCsv(absolutePath: string, importFileName: string): Promise<void> {
-    await this.uploadFile(absolutePath, importFileName, this.csvFile, 'csv');
+   await this.uploadFile(absolutePath, importFileName, this.csvFile, 'csv');
+  }
+  public async uploadNegativeCsv(absolutePath: string, importFileName: string): Promise<void> {
+   await this.uploadNegativeFile(absolutePath, importFileName, this.csvFile, 'csv');
   }
 
   public async uploadXls(absolutePath: string, importFileName: string): Promise<void> {
@@ -169,5 +172,48 @@ export class Header {
     await browser.wait(EC.textToBePresentInElementValue(this.upload, parsedPath.base), 15000);
     await _$$('.ok-btn').first().safeClick();
     await waitForSpinner();
+  }
+
+  private async uploadNegativeFile(absolutePath: string,
+                           importFileName: string,
+                           menuItemSelector: ExtendedElementFinder,
+                           extension: string): Promise<void> {
+    const timeOptions = ['day', 'month', 'year', 'week', 'quarter'];
+    let timeValue;
+
+    if (importFileName.match('timeformat')) {
+      timeValue = importFileName.replace(`.${extension}`, '').split('-')
+        .filter(el => timeOptions.indexOf(el) > -1)[0];
+    }
+
+    await this.mainMenuBtn.safeClick();
+    await this.newChart.safeClick();
+    await this.chartFromYourData.safeClick();
+    await menuItemSelector.safeClick();
+
+    importFileName.match(/^timeright/) ? await this.timeGoesRight.safeClick() : await this.timeGoesDown.safeClick();
+
+    await this.timeValueSelect.safeClick();
+
+    if (timeValue) {
+      await _$$(`option[value*="${timeValue}"]`).first().safeClick();
+    } else {
+      await _$$(`option[value*="year"]`).first().click();
+      await _$$(`option[value*="year"]`).first().click();
+    }
+
+    const parsedPath = path.parse(absolutePath);
+    const fileValue = await this.upload.getAttribute('value');
+
+    if (fileValue) {
+      await this.upload.safeClear();
+      await this.upload.safeClear();
+      await browser.wait(EC.textToBePresentInElementValue(this.upload, ''), 15000);
+    }
+
+    await this.upload.safeSendKeys(absolutePath);
+    await browser.wait(EC.textToBePresentInElementValue(this.upload, parsedPath.base), 15000);
+    await _$$('.ok-btn').first().safeClick();
+    await waitForErrorMessage();
   }
 }
