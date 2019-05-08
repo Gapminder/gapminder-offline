@@ -1,6 +1,6 @@
-import { browser } from 'protractor';
+import {$, browser} from 'protractor';
 
-import { safeExpectIsDispayed, waitForSliderToBeReady } from '../helpers/helper';
+import {safeExpectIsDispayed, waitForSliderToBeReady} from '../helpers/helper';
 import { Sidebar } from '../pageObjects/sidebar/sidebar.e2e-component';
 import { LineChart } from '../pageObjects/charts/line-chart.po';
 import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
@@ -22,7 +22,6 @@ describe('Line chart: ', () => {
 
   it('Select line by click on label', async () => {
     await lineChart.selectLine('China');
-
     expect(await lineChart.getLineOpacity('China')).toEqual(CommonChartPage.opacity.highlighted);
     expect(await lineChart.countHighlightedLines()).toEqual(1);
     expect(await lineChart.countDimmedLines()).toEqual(DEFAULT_COUNTRIES_NUMBER - 1);
@@ -41,6 +40,7 @@ describe('Line chart: ', () => {
     await sidebar.show.searchAndSelectCountry('Bangladesh');
     await waitForSliderToBeReady();
     await sidebar.colorSection.hoverMinimapRegion('Asia');
+    browser.sleep(10000);
 
     expect(await lineChart.getLineOpacity('China')).toEqual(CommonChartPage.opacity.highlighted);
     expect(await lineChart.getLineOpacity('Bangladesh')).toEqual(CommonChartPage.opacity.highlighted);
@@ -65,9 +65,9 @@ describe('Line chart: ', () => {
     expect(await lineChart.yAxisBtn.getText()).toContain(yAxisValue, 'Y axis button text');
   });
 
-  xit('Data doubts button', async () => {
+  it('Data doubts button', async () => {
     await lineChart.dataDoubtsLink.safeClick();
-
+    await lineChart.dataDoubtsLink.safeClick();
     await safeExpectIsDispayed(lineChart.dataDoubtsWindow);
   });
 
