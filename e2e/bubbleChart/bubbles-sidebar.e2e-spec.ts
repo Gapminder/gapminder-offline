@@ -3,11 +3,7 @@ import { BubbleChart } from '../pageObjects/charts/bubble-chart.po';
 import { makeElementVisible, safeDragAndDrop, waitForSpinner } from '../helpers/helper';
 import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
 import { Slider } from '../pageObjects/components/slider.e2e-component';
-<<<<<<< HEAD
-import { _$ } from '../helpers/ExtendedElementFinder';
-=======
 import { _$ , _$$} from '../helpers/ExtendedElementFinder';
->>>>>>> eca001b... feat(tests): added fixes for the e2e tests "bubbles-sidebar"
 
 const commonChartPage: CommonChartPage = new CommonChartPage();
 const bubbleChart: BubbleChart = new BubbleChart();
@@ -98,23 +94,17 @@ describe('Bubbles chart: Sidebar', () => {
     // await expect(finalRadius[0]).toBeGreaterThan(initialRadius); // TODO add check like this
   });
 
-<<<<<<< HEAD
-  xit('change Size indicator', async () => {
-=======
+
   it('change Size indicator', async () => {
->>>>>>> eca001b... feat(tests): added fixes for the e2e tests "bubbles-sidebar"
     /**
      * should check that the indicator represented by the Size can be changed(TC16)
      */
     await sidebar.optionsButton.safeClick();
-<<<<<<< HEAD
-=======
 
     const size = sidebar.dialogModal.size.locator().value;
     const rootSelector = sidebar.dialogModal.rootSelector.locator().value;
     makeElementVisible(`${rootSelector} ${size}`);
 
->>>>>>> eca001b... feat(tests): added fixes for the e2e tests "bubbles-sidebar"
     await sidebar.dialogModal.size.safeClick();
 
     const initialBubblesCount = await bubbleChart.allBubbles.count();
