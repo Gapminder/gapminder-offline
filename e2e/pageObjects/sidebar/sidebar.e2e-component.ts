@@ -4,7 +4,8 @@ import {
   disableAnimations,
   safeDragAndDrop,
   waitForSpinner,
-  waitForSliderToBeReady
+  waitForSliderToBeReady,
+  makeElementVisible
 } from '../../helpers/helper';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
 import { waitUntil } from '../../helpers/waitHelper';
@@ -114,7 +115,11 @@ export class Sidebar {
   }
 
   async changeOpacity(sliderType: ExtendedElementFinder): Promise<void> {
+    const opacity = this.dialogModal.opacity.locator().value;
+    const rootSelector = this.dialogModal.rootSelector.locator().value;
+
     await this.optionsButton.safeClick();
+    makeElementVisible(`${rootSelector} ${opacity}`);
     await this.opacityMenu.safeClick();
     await safeDragAndDrop(sliderType, { x: -50, y: 0 });
   }

@@ -144,9 +144,6 @@ export class Header {
     await this.newChart.safeClick();
     await this.chartFromYourData.safeClick();
     await menuItemSelector.safeClick();
-    browser.sleep(1000);
-
-    console.log(-3, importFileName);
 
     importFileName.match(/^timeright/) ? await this.timeGoesRight.safeClick() : await this.timeGoesDown.safeClick();
 
@@ -162,8 +159,6 @@ export class Header {
     const parsedPath = path.parse(absolutePath);
     const fileValue = await this.upload.getAttribute('value');
 
-    console.log(111, fileValue);
-
     if (fileValue) {
       await this.upload.safeClear();
       await this.upload.safeClear();
@@ -171,9 +166,6 @@ export class Header {
     }
 
     await this.upload.safeSendKeys(absolutePath);
-
-    console.log(333, 'ok');
-
     await browser.wait(EC.textToBePresentInElementValue(this.upload, parsedPath.base), 15000);
     await _$$('.ok-btn').first().safeClick();
     await waitForSpinner();

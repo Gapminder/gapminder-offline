@@ -53,3 +53,7 @@ export function disableAnimations() {
     '}';
   document.getElementsByTagName('head')[0].appendChild(style);`)
 }
+
+export function makeElementVisible(elementFinder) {
+  browser.executeScript(`document.querySelector(\'${elementFinder}\').style.visibility = "visible"`);
+}
