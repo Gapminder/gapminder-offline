@@ -459,8 +459,7 @@ export const createNewBookmarksFolder = async (event, params) => {
     if (allBookmarksData.folders.indexOf(params.folder) < 0) {
       allBookmarksData.folders.unshift(params.folder);
     } else {
-      event.sender.send(globConst.BOOKMARKS_FOLDER_CREATED, {error: `folder ${params.folder} already exists`, bookmarkFile});
-      return;
+      throw Error(`folder ${params.folder} already exists`);
     }
     await writeFile(bookmarkFile, JSON.stringify(allBookmarksData, null, 2));
     event.sender.send(globConst.BOOKMARKS_FOLDER_CREATED, {bookmarkFile, allBookmarksData});

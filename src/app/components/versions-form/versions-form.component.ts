@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ElectronService } from '../../providers/electron.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -17,7 +17,7 @@ interface IVersion {
   templateUrl: './versions-form.component.html',
   styleUrls: ['./versions-form.component.css']
 })
-export class VersionsFormComponent implements OnInit {
+export class VersionsFormComponent implements OnInit, OnDestroy {
   @Output() done: EventEmitter<any> = new EventEmitter();
 
   versions: IVersion[] = [];
@@ -25,6 +25,7 @@ export class VersionsFormComponent implements OnInit {
   currentVersion: string;
   latestVersion: string;
   private globConst;
+  private gotSupportedVersions;
 
   constructor(public translate: TranslateService, private es: ElectronService) {
     this.globConst = this.es.remote.getGlobal('globConst');
@@ -32,13 +33,12 @@ export class VersionsFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.es.ipcRenderer.on(this.globConst.GOT_SUPPORTED_VERSIONS,
-      (event: any, versions: IVersion[], recommendedVersion: string, currentVersion: string) => {
-        this.recommendedVersion = recommendedVersion;
-        this.currentVersion = currentVersion;
-        this.latestVersion = versions[0].version;
-        this.versions = versions;
-      });
+    this.gotSupportedVersions = this.onGotSupportedVersions();
+    this.es.ipcRenderer.on(this.globConst.GOT_SUPPORTED_VERSIONS, this.gotSupportedVersions);
+  }
+
+  ngOnDestroy() {
+    this.es.ipcRenderer.removeListener(this.globConst.GOT_SUPPORTED_VERSIONS, this.gotSupportedVersions);
   }
 
   openURL(url: string) {
@@ -67,5 +67,14 @@ export class VersionsFormComponent implements OnInit {
     }
 
     return '';
+  }
+
+  private onGotSupportedVersions() {
+    return (event: any, versions: IVersion[], recommendedVersion: string, currentVersion: string) => {
+      this.recommendedVersion = recommendedVersion;
+      this.currentVersion = currentVersion;
+      this.latestVersion = versions[0].version;
+      this.versions = versions;
+    };
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ElectronService } from '../../providers/electron.service';
 import { LocalizationService } from '../../providers/localization.service';
 import { ALERT, BOOKMARKS_PANE_OFF_OUTSIDE, SWITCH_BOOKMARKS_PANE } from '../../constants';
@@ -11,7 +11,7 @@ const BOOKMARKS_THUMBNAILS_FOLDER = 'bookmarks-thumbnails';
   templateUrl: './bookmarks-pane.component.html',
   styleUrls: ['./bookmarks-pane.component.css']
 })
-export class BookmarksPaneComponent implements OnInit {
+export class BookmarksPaneComponent implements OnInit, OnDestroy {
   bookmarksByFolder;
   unCategorizedBookmarks;
   bookmarksFolders;
@@ -22,6 +22,13 @@ export class BookmarksPaneComponent implements OnInit {
   folderEditRequest = false;
   private globConst;
   private needToFullnessCheck = false;
+  private gotBookmarks;
+  private bookmarkRemoved;
+  private bookmarkAdded;
+  private bookmarksFolderCreated;
+  private bookmarkFolderUpdated;
+  private bookmarkFolderRemoved;
+  private bookmarkUpdated;
 
   constructor(public ls: LocalizationService, public es: ElectronService, private ms: MessageService) {
     this.globConst = this.es.remote.getGlobal('globConst');
@@ -29,114 +36,30 @@ export class BookmarksPaneComponent implements OnInit {
 
   ngOnInit() {
     this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
+    this.gotBookmarks = this.onGotBookmarks();
+    this.bookmarkRemoved = this.onBookmarkRemoved();
+    this.bookmarkAdded = this.onBookmarkAdded();
+    this.bookmarksFolderCreated = this.onBookmarksFolderCreated();
+    this.bookmarkFolderUpdated = this.onBookmarkFolderUpdated();
+    this.bookmarkFolderRemoved = this.onBookmarkFolderRemoved();
+    this.bookmarkUpdated = this.onBookmarkUpdated();
+    this.es.ipcRenderer.on(this.globConst.GOT_BOOKMARKS, this.gotBookmarks);
+    this.es.ipcRenderer.on(this.globConst.BOOKMARK_REMOVED, this.bookmarkRemoved);
+    this.es.ipcRenderer.on(this.globConst.BOOKMARK_ADDED, this.bookmarkAdded);
+    this.es.ipcRenderer.on(this.globConst.BOOKMARKS_FOLDER_CREATED, this.bookmarksFolderCreated);
+    this.es.ipcRenderer.on(this.globConst.BOOKMARK_FOLDER_UPDATED, this.bookmarkFolderUpdated);
+    this.es.ipcRenderer.on(this.globConst.BOOKMARK_FOLDER_REMOVED, this.bookmarkFolderRemoved);
+    this.es.ipcRenderer.on(this.globConst.BOOKMARK_UPDATED, this.bookmarkUpdated);
+  }
 
-    this.es.ipcRenderer.on(this.globConst.GOT_BOOKMARKS, (event, result) => {
-      if (result.error) {
-        console.log(result.error);
-        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
-      }
-      this.bookmarksByFolder = {};
-      this.unCategorizedBookmarks = [];
-
-      for (const bookmark of result.data.content) {
-        bookmark.image = this.es.path.resolve(this.es.userDataPath, BOOKMARKS_THUMBNAILS_FOLDER, `${bookmark.id}.png`);
-        bookmark.editMode = false;
-        bookmark.removeRequest = false;
-
-        if (bookmark.folder) {
-          if (!this.bookmarksByFolder[bookmark.folder]) {
-            this.bookmarksByFolder[bookmark.folder] = [];
-          }
-
-          this.bookmarksByFolder[bookmark.folder].push(bookmark);
-        } else {
-          this.unCategorizedBookmarks.push(bookmark);
-        }
-      }
-
-      this.bookmarksFolders = result.data.folders.map(folderName => ({
-        name: folderName,
-        editMode: false,
-        collapsed: false
-      }));
-
-      if (this.needToFullnessCheck && !this.areBookmarksPresent()) {
-        this.ms.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: false, dontRestoreTab: true});
-        this.ms.sendMessage(BOOKMARKS_PANE_OFF_OUTSIDE);
-      }
-
-      this.needToFullnessCheck = false;
-    });
-
-    this.es.ipcRenderer.on(this.globConst.BOOKMARK_REMOVED, (event, result) => {
-      if (result.error) {
-        console.log(result.error);
-        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
-        return;
-      }
-
-      let found = this.removeBookmarkIn(this.unCategorizedBookmarks, result.bookmark.id);
-
-      if (!found) {
-        for (const folder of this.bookmarksFolders) {
-          found = this.removeBookmarkIn(this.bookmarksByFolder[folder], result.bookmark.id);
-          if (found) {
-            break;
-          }
-        }
-      }
-
-      this.needToFullnessCheck = true;
-      this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
-    });
-
-    this.es.ipcRenderer.on(this.globConst.BOOKMARK_ADDED, (event, result) => {
-      if (result.error) {
-        console.log(result.error);
-        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
-      }
-    });
-
-    this.es.ipcRenderer.on(this.globConst.BOOKMARKS_FOLDER_CREATED, (event, result) => {
-      this.folderCreationInProgress = false;
-
-      if (result.error) {
-        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
-        return;
-      }
-
-      this.newBookmarksFolder = '';
-      this.isNewBookmarksFolderFormVisible = false;
-      this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
-    });
-
-    this.es.ipcRenderer.on(this.globConst.BOOKMARK_FOLDER_UPDATED, (event, result) => {
-      this.folderEditRequest = false;
-
-      if (result.error) {
-        console.log(result.error);
-        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
-        return;
-      }
-
-      this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
-    });
-
-    this.es.ipcRenderer.on(this.globConst.BOOKMARK_FOLDER_REMOVED, (event, result) => {
-      this.folderEditRequest = false;
-
-      if (result.error) {
-        console.log(result.error);
-        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
-        return;
-      }
-
-      this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
-    });
-
-    this.es.ipcRenderer.on(this.globConst.BOOKMARK_UPDATED, () => {
-      this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
-    });
+  ngOnDestroy() {
+    this.es.ipcRenderer.removeListener(this.globConst.GOT_BOOKMARKS, this.gotBookmarks);
+    this.es.ipcRenderer.removeListener(this.globConst.BOOKMARK_REMOVED, this.bookmarkRemoved);
+    this.es.ipcRenderer.removeListener(this.globConst.BOOKMARK_ADDED, this.bookmarkAdded);
+    this.es.ipcRenderer.removeListener(this.globConst.BOOKMARKS_FOLDER_CREATED, this.bookmarksFolderCreated);
+    this.es.ipcRenderer.removeListener(this.globConst.BOOKMARK_FOLDER_UPDATED, this.bookmarkFolderUpdated);
+    this.es.ipcRenderer.removeListener(this.globConst.BOOKMARK_FOLDER_REMOVED, this.bookmarkFolderRemoved);
+    this.es.ipcRenderer.removeListener(this.globConst.BOOKMARK_UPDATED, this.bookmarkUpdated);
   }
 
   open(event, bookmark) {
@@ -239,5 +162,127 @@ export class BookmarksPaneComponent implements OnInit {
     }
 
     return unCategorizedBookmarksPresent || bookmarksByFolderPresent;
+  }
+
+  private onGotBookmarks() {
+    return (event, result) => {
+      if (result.error) {
+        console.log(result.error);
+        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+      }
+      this.bookmarksByFolder = {};
+      this.unCategorizedBookmarks = [];
+
+      for (const bookmark of result.data.content) {
+        bookmark.image = this.es.path.resolve(this.es.userDataPath, BOOKMARKS_THUMBNAILS_FOLDER, `${bookmark.id}.png`);
+        bookmark.editMode = false;
+        bookmark.removeRequest = false;
+
+        if (bookmark.folder) {
+          if (!this.bookmarksByFolder[bookmark.folder]) {
+            this.bookmarksByFolder[bookmark.folder] = [];
+          }
+
+          this.bookmarksByFolder[bookmark.folder].push(bookmark);
+        } else {
+          this.unCategorizedBookmarks.push(bookmark);
+        }
+      }
+
+      this.bookmarksFolders = result.data.folders.map(folderName => ({
+        name: folderName,
+        editMode: false,
+        collapsed: false
+      }));
+
+      if (this.needToFullnessCheck && !this.areBookmarksPresent()) {
+        this.ms.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: false, dontRestoreTab: true});
+        this.ms.sendMessage(BOOKMARKS_PANE_OFF_OUTSIDE);
+      }
+
+      this.needToFullnessCheck = false;
+    };
+  }
+
+  private onBookmarkRemoved() {
+    return (event, result) => {
+      if (result.error) {
+        console.log(result.error);
+        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+        return;
+      }
+
+      let found = this.removeBookmarkIn(this.unCategorizedBookmarks, result.bookmark.id);
+
+      if (!found) {
+        for (const folder of this.bookmarksFolders) {
+          found = this.removeBookmarkIn(this.bookmarksByFolder[folder], result.bookmark.id);
+          if (found) {
+            break;
+          }
+        }
+      }
+
+      this.needToFullnessCheck = true;
+      this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
+    };
+  }
+
+  private onBookmarkAdded() {
+    return (event, result) => {
+      if (result.error) {
+        console.log(result.error);
+        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+      }
+    };
+  }
+
+  private onBookmarksFolderCreated() {
+    return (event, result) => {
+      this.folderCreationInProgress = false;
+
+      if (result.error) {
+        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+        return;
+      }
+
+      this.newBookmarksFolder = '';
+      this.isNewBookmarksFolderFormVisible = false;
+      this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
+    };
+  }
+
+  private onBookmarkFolderUpdated() {
+    return (event, result) => {
+      this.folderEditRequest = false;
+
+      if (result.error) {
+        console.log(result.error);
+        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+        return;
+      }
+
+      this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
+    };
+  }
+
+  private onBookmarkFolderRemoved() {
+    return (event, result) => {
+      this.folderEditRequest = false;
+
+      if (result.error) {
+        console.log(result.error);
+        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+        return;
+      }
+
+      this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
+    };
+  }
+
+  private onBookmarkUpdated() {
+    return () => {
+      this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
+    };
   }
 }
