@@ -17,7 +17,6 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
   bookmarksFolders;
   isNewBookmarksFolderFormVisible = false;
   newBookmarksFolder = '';
-  newFolderName = '';
   folderCreationInProgress = false;
   folderEditRequest = false;
   private globConst;
@@ -62,45 +61,38 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
     this.es.ipcRenderer.removeListener(this.globConst.BOOKMARK_UPDATED, this.bookmarkUpdated);
   }
 
-  open(event, bookmark) {
-    event.preventDefault();
-    event.stopPropagation();
+  open(bookmark) {
     this.ms.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: false, dontRestoreTab: true});
     this.ms.sendMessage(BOOKMARKS_PANE_OFF_OUTSIDE);
     this.es.ipcRenderer.send(this.globConst.OPEN_BOOKMARK, bookmark);
   }
 
-  remove(event, bookmark) {
-    event.preventDefault();
-    event.stopPropagation();
+  remove(bookmark) {
     this.es.ipcRenderer.send(this.globConst.REMOVE_BOOKMARK, {bookmark});
     this.ms.lock();
     bookmark.removeRequest = true;
   }
 
-  edit(event, bookmark) {
-    event.preventDefault();
-    event.stopPropagation();
+  edit(bookmarks, bookmark) {
+    for (const bm of bookmarks) {
+      bm.editMode = false;
+    }
     bookmark.editMode = !bookmark.editMode;
   }
 
-  save(event, bookmark) {
-    event.preventDefault();
-    event.stopPropagation();
+  save(bookmark) {
+    bookmark.name = bookmark.tmpName;
     this.es.ipcRenderer.send(this.globConst.UPDATE_BOOKMARK, {bookmark});
     this.ms.lock();
     bookmark.editMode = false;
   }
 
-  cancel(event, bookmark) {
-    event.preventDefault();
-    event.stopPropagation();
+  cancel(bookmark) {
     bookmark.editMode = false;
+    bookmark.tmpName = bookmark.name;
   }
 
-  removeFolder(event, folder) {
-    event.preventDefault();
-    event.stopPropagation();
+  removeFolder(folder) {
     this.folderEditRequest = true;
     this.es.ipcRenderer.send(this.globConst.REMOVE_BOOKMARKS_FOLDER, {folderName: folder.name});
     this.ms.lock();
@@ -117,20 +109,26 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
     this.newBookmarksFolder = '';
   }
 
-  switchFolderEditMode(folder) {
+  switchFolderEditMode(folders, folder) {
+    for (const f of folders) {
+      f.editMode = false;
+    }
     folder.editMode = !folder.editMode;
 
     if (folder.editMode) {
-      this.newFolderName = folder.name;
+      folder.tmpName = folder.name;
     }
   }
 
-  saveFolder(event, folder) {
-    event.preventDefault();
-    event.stopPropagation();
+  saveFolder(folder) {
     this.folderEditRequest = true;
-    this.es.ipcRenderer.send(this.globConst.UPDATE_BOOKMARKS_FOLDER, {oldFolderName: folder.name, newFolderName: this.newFolderName});
+    this.es.ipcRenderer.send(this.globConst.UPDATE_BOOKMARKS_FOLDER, {oldFolderName: folder.name, newFolderName: folder.tmpName});
     this.ms.lock();
+  }
+
+  cancelFolder(folder) {
+    folder.editMode = false;
+    folder.tmpName = folder.name;
   }
 
   onBookmarkFolderChange(event, bookmark) {
@@ -174,6 +172,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
       this.unCategorizedBookmarks = [];
 
       for (const bookmark of result.data.content) {
+        bookmark.tmpName = bookmark.name;
         bookmark.image = this.es.path.resolve(this.es.userDataPath, BOOKMARKS_THUMBNAILS_FOLDER, `${bookmark.id}.png`);
         bookmark.editMode = false;
         bookmark.removeRequest = false;
@@ -191,6 +190,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
       this.bookmarksFolders = result.data.folders.map(folderName => ({
         name: folderName,
+        tmpName: folderName,
         editMode: false,
         collapsed: false
       }));

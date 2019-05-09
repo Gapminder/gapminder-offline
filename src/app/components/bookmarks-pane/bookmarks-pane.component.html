@@ -9,9 +9,9 @@
           <div>
             <span *ngIf="!bookmark.editMode">{{bookmark.name}}</span>
             <div *ngIf="bookmark.editMode">
-              <input [(ngModel)]="bookmark.name">
-              <button (click)="save($event, bookmark)"><span class="glyphicon glyphicon-ok"></span></button>
-              <button (click)="cancel($event, bookmark)"><span class="glyphicon glyphicon-remove"></span></button>
+              <input [(ngModel)]="bookmark.tmpName">
+              <button (click)="save(bookmark)"><span class="glyphicon glyphicon-ok"></span></button>
+              <button (click)="cancel(bookmark)"><span class="glyphicon glyphicon-remove"></span></button>
               <div>
                 <select (change)="onBookmarkFolderChange($event, bookmark)" class="form-control">
                   <option value="" selected>---</option>
@@ -24,13 +24,13 @@
           <div><span>{{bookmark.date}}</span></div>
           <div class="wait" *ngIf="bookmark.removeRequest"><img src="assets/images/hourglass.gif"></div>
           <div class="edit">
-            <button (click)="open($event, bookmark)">
+            <button (click)="open(bookmark)">
               <span class="glyphicon glyphicon-eye-open"></span>
             </button>
-            <button (click)="edit($event, bookmark)" [disabled]="bookmark.editMode">
+            <button (click)="edit(unCategorizedBookmarks, bookmark)" [disabled]="bookmark.editMode">
               <span class="glyphicon glyphicon-edit"></span>
             </button>
-            <button (click)="remove($event, bookmark)" *ngIf="!bookmark.removeRequest">
+            <button (click)="remove(bookmark)" *ngIf="!bookmark.removeRequest">
               <span class="glyphicon glyphicon-trash"></span>
             </button>
           </div>
@@ -53,17 +53,17 @@
     <div *ngFor="let folder of bookmarksFolders">
       <div class="bookmark-title">
         <span *ngIf="!folder.editMode" class="bookmark-title-label">{{folder.name}}</span>
-        <input *ngIf="folder.editMode" [disabled]="folderEditRequest" [(ngModel)]="newFolderName">
+        <input *ngIf="folder.editMode" [disabled]="folderEditRequest" [(ngModel)]="folder.tmpName">
         <span>
            <button *ngIf="!folder.editMode"
                    [disabled]="folderEditRequest && !(bookmarksByFolder[folder.name] && bookmarksByFolder[folder.name].length > 0)"
                    (click)="folder.collapsed=!folder.collapsed"><span class="glyphicon glyphicon-chevron-down"></span></button>
            <button *ngIf="!folder.editMode"
                    [disabled]="folderEditRequest"
-                   (click)="switchFolderEditMode(folder)"><span class="glyphicon glyphicon-edit"></span></button>
-           <button *ngIf="!folder.editMode" [disabled]="folderEditRequest" (click)="removeFolder($event, folder)"><span class="glyphicon glyphicon-trash"></span></button>
-           <button *ngIf="folder.editMode" [disabled]="folderEditRequest" (click)="saveFolder($event, folder)"><span class="glyphicon glyphicon-ok"></span></button>
-           <button *ngIf="folder.editMode" [disabled]="folderEditRequest" (click)="folder.editMode=false"><span class="glyphicon glyphicon-remove"></span></button>
+                   (click)="switchFolderEditMode(bookmarksFolders, folder)"><span class="glyphicon glyphicon-edit"></span></button>
+           <button *ngIf="!folder.editMode" [disabled]="folderEditRequest" (click)="removeFolder(folder)"><span class="glyphicon glyphicon-trash"></span></button>
+           <button *ngIf="folder.editMode" [disabled]="folderEditRequest" (click)="saveFolder(folder)"><span class="glyphicon glyphicon-ok"></span></button>
+           <button *ngIf="folder.editMode" [disabled]="folderEditRequest" (click)="cancelFolder(folder)"><span class="glyphicon glyphicon-remove"></span></button>
         </span>
       </div>
       <div *ngIf="!folder.collapsed && bookmarksByFolder[folder.name] && bookmarksByFolder[folder.name].length > 0" class="bookmarks-container">
@@ -72,9 +72,9 @@
           <div>
             <span *ngIf="!bookmark.editMode">{{bookmark.name}}</span>
             <div *ngIf="bookmark.editMode">
-              <input [(ngModel)]="bookmark.name">
-              <button (click)="save($event, bookmark)"><span class="glyphicon glyphicon-ok"></span></button>
-              <button (click)="cancel($event, bookmark)"><span class="glyphicon glyphicon-remove"></span></button>
+              <input [(ngModel)]="bookmark.tmpName">
+              <button (click)="save(bookmark)"><span class="glyphicon glyphicon-ok"></span></button>
+              <button (click)="cancel(bookmark)"><span class="glyphicon glyphicon-remove"></span></button>
               <div>
                 <select (change)="onBookmarkFolderChange($event, bookmark)" [selectedIndex]="bookmark.folder === folder.name" class="form-control">
                   <option value="">---</option>
@@ -87,13 +87,13 @@
           <div><span>{{bookmark.date}}</span></div>
           <div class="wait" *ngIf="bookmark.removeRequest"><img src="assets/images/hourglass.gif"></div>
           <div class="edit">
-            <button (click)="open($event, bookmark)">
+            <button (click)="open(bookmark)">
               <span class="glyphicon glyphicon-eye-open"></span>
             </button>
-            <button (click)="edit($event, bookmark)" [disabled]="bookmark.editMode">
+            <button (click)="edit(bookmarksByFolder[folder.name], bookmark)" [disabled]="bookmark.editMode">
               <span class="glyphicon glyphicon-edit"></span>
             </button>
-            <button (click)="remove($event, bookmark)" *ngIf="!bookmark.removeRequest">
+            <button (click)="remove(bookmark)" *ngIf="!bookmark.removeRequest">
               <span class="glyphicon glyphicon-trash"></span>
             </button>
           </div>
