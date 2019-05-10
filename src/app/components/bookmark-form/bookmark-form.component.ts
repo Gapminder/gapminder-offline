@@ -23,6 +23,7 @@ export class BookmarkFormComponent implements OnDestroy {
     this.initBookmark();
     this.subscription = this.ms.getMessage().subscribe((event: any) => {
       if (event.message === SEND_TAB_TO_BOOKMARK) {
+        this.initBookmark();
         this.isBookmarkConstructed = false;
         this.bookmark.content.model = event.options.model;
         this.bookmark.content.chartType = event.options.chartType;
@@ -122,6 +123,7 @@ export class BookmarkFormComponent implements OnDestroy {
       id: 0,
       name: '',
       date: '',
+      folder: '',
       content: {
         chartType: '',
         model: null

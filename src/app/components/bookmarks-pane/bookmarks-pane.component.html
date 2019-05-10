@@ -86,10 +86,9 @@
               <button (click)="save(bookmark)"><span class="glyphicon glyphicon-ok"></span></button>
               <button (click)="cancel(bookmark)"><span class="glyphicon glyphicon-remove"></span></button>
               <div>
-                <select (change)="onBookmarkFolderChange($event, bookmark)"
-                        [selectedIndex]="bookmark.folder === folder.name" class="form-control">
+                <select (change)="onBookmarkFolderChange($event, bookmark)" class="form-control">
                   <option value="">---</option>
-                  <option *ngFor="let folder of bookmarksFolders">{{folder.name}}</option>
+                  <option *ngFor="let folder of bookmarksFolders" [selected]="bookmark.folder === folder.name">{{folder.name}}</option>
                 </select>
               </div>
             </div>
