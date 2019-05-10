@@ -20,7 +20,7 @@
 
 .bookmark-title {
   margin: 20px 10px 10px 10px;
- }
+}
 
 .bookmark-title-label {
   font-size: large;
@@ -79,4 +79,10 @@
 
 .bookmark-item:hover > .edit {
   visibility: visible;
+}
+
+.hellip-block {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

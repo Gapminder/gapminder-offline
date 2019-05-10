@@ -42,10 +42,12 @@
       <a href="#" (click)="isNewBookmarksFolderFormVisible = !isNewBookmarksFolderFormVisible">New folder</a>
       <div *ngIf="isNewBookmarksFolderFormVisible">
         <div>
-          <input [disabled]="folderCreationInProgress" [(ngModel)]="newBookmarksFolder" style="width: 300px;">
-          <button [disabled]="folderCreationInProgress" (click)="createNewBookmarksFolder()"><span class="glyphicon glyphicon-ok"></span></button>
-          <button [disabled]="folderCreationInProgress" (click)="resetFolderForm()"><span class="glyphicon glyphicon-remove"></span></button>
-          <span *ngIf="folderCreationInProgress"><img src="assets/images/hourglass.gif"></span>
+          <input [disabled]="isLocked()" [(ngModel)]="newBookmarksFolder" maxlength="50" style="width: 300px;">
+          <button [disabled]="isLocked()" (click)="createNewBookmarksFolder()"><span
+            class="glyphicon glyphicon-ok"></span></button>
+          <button [disabled]="isLocked()" (click)="resetFolderForm()"><span class="glyphicon glyphicon-remove"></span>
+          </button>
+          <span *ngIf="isLocked()"><img src="assets/images/hourglass.gif"></span>
         </div>
       </div>
     </div>
@@ -53,30 +55,39 @@
     <div *ngFor="let folder of bookmarksFolders">
       <div class="bookmark-title">
         <span *ngIf="!folder.editMode" class="bookmark-title-label">{{folder.name}}</span>
-        <input *ngIf="folder.editMode" [disabled]="folderEditRequest" [(ngModel)]="folder.tmpName">
+        <input *ngIf="folder.editMode" [disabled]="isLocked()" maxlength="50" [(ngModel)]="folder.tmpName">
         <span>
+           <button
+             *ngIf="!folder.editMode && !isLocked() && (bookmarksByFolder[folder.name] && bookmarksByFolder[folder.name].length > 0)"
+             (click)="folder.collapsed=!folder.collapsed">
+             <span *ngIf="folder.collapsed" class="glyphicon glyphicon-chevron-down"></span>
+             <span *ngIf="!folder.collapsed" class="glyphicon glyphicon-chevron-up"></span>
+           </button>
            <button *ngIf="!folder.editMode"
-                   [disabled]="folderEditRequest && !(bookmarksByFolder[folder.name] && bookmarksByFolder[folder.name].length > 0)"
-                   (click)="folder.collapsed=!folder.collapsed"><span class="glyphicon glyphicon-chevron-down"></span></button>
-           <button *ngIf="!folder.editMode"
-                   [disabled]="folderEditRequest"
-                   (click)="switchFolderEditMode(bookmarksFolders, folder)"><span class="glyphicon glyphicon-edit"></span></button>
-           <button *ngIf="!folder.editMode" [disabled]="folderEditRequest" (click)="removeFolder(folder)"><span class="glyphicon glyphicon-trash"></span></button>
-           <button *ngIf="folder.editMode" [disabled]="folderEditRequest" (click)="saveFolder(folder)"><span class="glyphicon glyphicon-ok"></span></button>
-           <button *ngIf="folder.editMode" [disabled]="folderEditRequest" (click)="cancelFolder(folder)"><span class="glyphicon glyphicon-remove"></span></button>
+                   [disabled]="isLocked()"
+                   (click)="switchFolderEditMode(bookmarksFolders, folder)"><span
+             class="glyphicon glyphicon-edit"></span></button>
+           <button *ngIf="!folder.editMode" [disabled]="isLocked()" (click)="removeFolder(folder)"><span
+             class="glyphicon glyphicon-trash"></span></button>
+           <button *ngIf="folder.editMode" [disabled]="isLocked()" (click)="saveFolder(folder)"><span
+             class="glyphicon glyphicon-ok"></span></button>
+           <button *ngIf="folder.editMode" [disabled]="isLocked()" (click)="cancelFolder(folder)"><span
+             class="glyphicon glyphicon-remove"></span></button>
         </span>
       </div>
-      <div *ngIf="!folder.collapsed && bookmarksByFolder[folder.name] && bookmarksByFolder[folder.name].length > 0" class="bookmarks-container">
+      <div *ngIf="!folder.collapsed && bookmarksByFolder[folder.name] && bookmarksByFolder[folder.name].length > 0"
+           class="bookmarks-container">
         <div *ngFor="let bookmark of bookmarksByFolder[folder.name]" class="bookmark-item">
           <div><img src="{{bookmark.image}}"></div>
           <div>
-            <span *ngIf="!bookmark.editMode">{{bookmark.name}}</span>
+            <div *ngIf="!bookmark.editMode" class="hellip-block" [title]="bookmark.name">{{bookmark.name}}</div>
             <div *ngIf="bookmark.editMode">
               <input [(ngModel)]="bookmark.tmpName">
               <button (click)="save(bookmark)"><span class="glyphicon glyphicon-ok"></span></button>
               <button (click)="cancel(bookmark)"><span class="glyphicon glyphicon-remove"></span></button>
               <div>
-                <select (change)="onBookmarkFolderChange($event, bookmark)" [selectedIndex]="bookmark.folder === folder.name" class="form-control">
+                <select (change)="onBookmarkFolderChange($event, bookmark)"
+                        [selectedIndex]="bookmark.folder === folder.name" class="form-control">
                   <option value="">---</option>
                   <option *ngFor="let folder of bookmarksFolders">{{folder.name}}</option>
                 </select>

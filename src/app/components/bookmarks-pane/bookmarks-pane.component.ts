@@ -17,8 +17,6 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
   bookmarksFolders;
   isNewBookmarksFolderFormVisible = false;
   newBookmarksFolder = '';
-  folderCreationInProgress = false;
-  folderEditRequest = false;
   private globConst;
   private needToFullnessCheck = false;
   private gotBookmarks;
@@ -93,7 +91,6 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
   }
 
   removeFolder(folder) {
-    this.folderEditRequest = true;
     this.es.ipcRenderer.send(this.globConst.REMOVE_BOOKMARKS_FOLDER, {folderName: folder.name});
     this.ms.lock();
   }
@@ -101,7 +98,6 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
   createNewBookmarksFolder() {
     this.es.ipcRenderer.send(this.globConst.CREATE_NEW_BOOKMARKS_FOLDER, {folder: this.newBookmarksFolder});
     this.ms.lock();
-    this.folderCreationInProgress = true;
   }
 
   resetFolderForm() {
@@ -121,7 +117,6 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
   }
 
   saveFolder(folder) {
-    this.folderEditRequest = true;
     this.es.ipcRenderer.send(this.globConst.UPDATE_BOOKMARKS_FOLDER, {oldFolderName: folder.name, newFolderName: folder.tmpName});
     this.ms.lock();
   }
@@ -133,6 +128,10 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
   onBookmarkFolderChange(event, bookmark) {
     bookmark.folder = event.target.value;
+  }
+
+  isLocked(): boolean {
+    return this.ms.isLocked();
   }
 
   private removeBookmarkIn(bookmarks, bookmarkId: string): boolean {
@@ -239,8 +238,6 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
   private onBookmarksFolderCreated() {
     return (event, result) => {
-      this.folderCreationInProgress = false;
-
       if (result.error) {
         this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
         return;
@@ -254,8 +251,6 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
   private onBookmarkFolderUpdated() {
     return (event, result) => {
-      this.folderEditRequest = false;
-
       if (result.error) {
         console.log(result.error);
         this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
@@ -268,8 +263,6 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
   private onBookmarkFolderRemoved() {
     return (event, result) => {
-      this.folderEditRequest = false;
-
       if (result.error) {
         console.log(result.error);
         this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
