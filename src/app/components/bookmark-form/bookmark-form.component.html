@@ -1,4 +1,4 @@
-<div *ngIf="bookmark.content.chartType && bookmark.id" class="bookmark-popover">
+<div class="bookmark-popover">
   <div *ngIf="!isBookmarkConstructed || isLocked()"><img src="assets/images/hourglass.gif"></div>
   <div *ngIf="isBookmarkConstructed && !isLocked()">
     <div>Name: <input [(ngModel)]="bookmark.name"></div>

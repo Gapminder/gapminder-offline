@@ -269,6 +269,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
         return;
       }
 
+      this.needToFullnessCheck = true;
       this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
     };
   }
