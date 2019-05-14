@@ -1,5 +1,5 @@
-import { ExtendedElementFinder, _$, _$$ } from "../../helpers/ExtendedElementFinder";
-import { safeDragAndDrop, waitForSpinner } from "../../helpers/helper";
+import { ExtendedElementFinder, _$, _$$ } from '../../helpers/ExtendedElementFinder';
+import { safeDragAndDrop, waitForSpinner } from '../../helpers/helper';
 import { browser } from "protractor";
 
 export class DialogModal {
@@ -28,7 +28,7 @@ export class DialogModal {
   presentation: ExtendedElementFinder = this.rootSelector._$('[data-dlg="presentation"]');
   about: ExtendedElementFinder = this.rootSelector._$('[data-dlg="about"]');
 
-  okButton: ExtendedElementFinder = this.rootSelector._$$('[data-click="closeDialog"]').last() // TODO it might not works, maybe add some hint to vizabi
+  okButton: ExtendedElementFinder = this.rootSelector._$$('[data-click="closeDialog"]').last();// TODO it might not works, maybe add some hint to vizabi
 
   close() {
     this.okButton.safeClick();
