@@ -31,6 +31,7 @@ export class CommonChartPage {
   public static buttonPause: ExtendedElementFinder = _$('.vzb-ts-btn-pause.vzb-ts-btn');
   public static mainChart: ElementFinder = $('.vzb-tool');
   public static spinner: ElementFinder = _$$('.vzb-loading-data').first();
+  public static errorWindow: ElementFinder = _$$('.vzb-error-message-box').last();
   public static sliderReady: ElementFinder = $('.domain.rounded');
   public movingSliderProgress: ElementArrayFinder = $$('.domain.rounded');
   public mapsChart: ElementFinder = $('a[href*="map"]');

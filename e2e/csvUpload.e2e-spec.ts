@@ -36,10 +36,9 @@ describe('Upload CSV: ', () => {
   /** unxit after the issue will be fixed: https://github.com/Gapminder/gapminder-offline/issues/310*/
 
   for (const fileToUpload of negativeFilesToUpload) {
-    xit(`Negative: ${fileToUpload}`, async () => {
+    it(`Negative: ${fileToUpload}`, async () => {
       const absolutePath = fs.realpathSync(negativeFilePath + fileToUpload);
-
-      await header.uploadCsv(absolutePath, fileToUpload);
+      await header.uploadNegativeCsv(absolutePath, fileToUpload);
 
       await expect($('.vzb-placeholder.vzb-error').isDisplayed()).toBeTruthy();
     });
