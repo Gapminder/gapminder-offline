@@ -39,6 +39,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    const container: any = document.querySelector('.wrapper');
     this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
     this.gotBookmarks = this.onGotBookmarks();
     this.bookmarkRemoved = this.onBookmarkRemoved();
@@ -56,6 +57,27 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
     this.es.ipcRenderer.on(this.globConst.BOOKMARK_FOLDER_REMOVED, this.bookmarkFolderRemoved);
     this.es.ipcRenderer.on(this.globConst.BOOKMARK_UPDATED, this.bookmarkUpdated);
     this.es.ipcRenderer.on(this.globConst.BOOKMARK_MOVED, this.bookmarkMoved);
+
+    this.dragulaService.drag('bm').subscribe(value => {
+      document.onmousemove = e => {
+        const event = e || window.event;
+        const mouseY = event['pageY'] - container.offsetTop;
+        const scrollTop = container.scrollTop;
+        const scrollBottom = container.offsetHeight - scrollTop;
+        const elementHeight = value.el.getBoundingClientRect().height;
+
+        if (mouseY - elementHeight / 2 < scrollTop) {
+          container.scrollBy(0, -15);
+        } else if (mouseY + elementHeight > scrollBottom) {
+          container.scrollBy(0, 15);
+        }
+      };
+    });
+
+    this.dragulaService.dragend('bm').subscribe(() => {
+      document.onmousemove = null;
+    });
+
     this.dragulaSubs = this.dragulaService.dropModel('bm').subscribe(args => {
       if (!args.item || !args.target) {
         return;
