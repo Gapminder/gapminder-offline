@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DragulaService } from 'ng2-dragula';
 import { ElectronService } from '../../providers/electron.service';
 import { LocalizationService } from '../../providers/localization.service';
 import { ALERT, BOOKMARKS_PANE_OFF_OUTSIDE, SWITCH_BOOKMARKS_PANE } from '../../constants';
 import { MessageService } from '../../message.service';
+import { Subscription } from 'rxjs';
 
 const BOOKMARKS_THUMBNAILS_FOLDER = 'bookmarks-thumbnails';
 
@@ -26,8 +28,13 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
   private bookmarkFolderUpdated;
   private bookmarkFolderRemoved;
   private bookmarkUpdated;
+  private bookmarkMoved;
+  private dragulaSubs: Subscription;
 
-  constructor(public ls: LocalizationService, public es: ElectronService, private ms: MessageService) {
+  constructor(public ls: LocalizationService,
+              public es: ElectronService,
+              private ms: MessageService,
+              private dragulaService: DragulaService) {
     this.globConst = this.es.remote.getGlobal('globConst');
   }
 
@@ -40,6 +47,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
     this.bookmarkFolderUpdated = this.onBookmarkFolderUpdated();
     this.bookmarkFolderRemoved = this.onBookmarkFolderRemoved();
     this.bookmarkUpdated = this.onBookmarkUpdated();
+    this.bookmarkMoved = this.onBookmarkMoved();
     this.es.ipcRenderer.on(this.globConst.GOT_BOOKMARKS, this.gotBookmarks);
     this.es.ipcRenderer.on(this.globConst.BOOKMARK_REMOVED, this.bookmarkRemoved);
     this.es.ipcRenderer.on(this.globConst.BOOKMARK_ADDED, this.bookmarkAdded);
@@ -47,9 +55,36 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
     this.es.ipcRenderer.on(this.globConst.BOOKMARK_FOLDER_UPDATED, this.bookmarkFolderUpdated);
     this.es.ipcRenderer.on(this.globConst.BOOKMARK_FOLDER_REMOVED, this.bookmarkFolderRemoved);
     this.es.ipcRenderer.on(this.globConst.BOOKMARK_UPDATED, this.bookmarkUpdated);
+    this.es.ipcRenderer.on(this.globConst.BOOKMARK_MOVED, this.bookmarkMoved);
+    this.dragulaSubs = this.dragulaService.dropModel('bm').subscribe(args => {
+      if (!args.item || !args.target) {
+        return;
+      }
+
+      const elId = args.item.id;
+      const targetFolder = args.target.id;
+      let leftId = null;
+      let rightId = null;
+
+      for (let i = 0; i < args.targetModel.length; i++) {
+        if (args.targetModel[i].id === elId) {
+          if (i > 0) {
+            leftId = args.targetModel[i - 1].id;
+          }
+          if (i < args.targetModel.length - 1) {
+            rightId = args.targetModel[i + 1].id;
+          }
+          break;
+        }
+      }
+
+      this.es.ipcRenderer.send(this.globConst.MOVE_BOOKMARK, {elId, leftId, rightId, targetFolder});
+      this.ms.lock();
+    });
   }
 
   ngOnDestroy() {
+    this.dragulaSubs.unsubscribe();
     this.es.ipcRenderer.removeListener(this.globConst.GOT_BOOKMARKS, this.gotBookmarks);
     this.es.ipcRenderer.removeListener(this.globConst.BOOKMARK_REMOVED, this.bookmarkRemoved);
     this.es.ipcRenderer.removeListener(this.globConst.BOOKMARK_ADDED, this.bookmarkAdded);
@@ -57,6 +92,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
     this.es.ipcRenderer.removeListener(this.globConst.BOOKMARK_FOLDER_UPDATED, this.bookmarkFolderUpdated);
     this.es.ipcRenderer.removeListener(this.globConst.BOOKMARK_FOLDER_REMOVED, this.bookmarkFolderRemoved);
     this.es.ipcRenderer.removeListener(this.globConst.BOOKMARK_UPDATED, this.bookmarkUpdated);
+    this.es.ipcRenderer.removeListener(this.globConst.BOOKMARK_MOVED, this.bookmarkMoved);
   }
 
   open(bookmark) {
@@ -187,6 +223,12 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
         }
       }
 
+      for (const folder of result.data.folders) {
+        if (!this.bookmarksByFolder[folder]) {
+          this.bookmarksByFolder[folder] = [];
+        }
+      }
+
       this.bookmarksFolders = result.data.folders.map(folderName => ({
         name: folderName,
         tmpName: folderName,
@@ -277,6 +319,20 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
   private onBookmarkUpdated() {
     return () => {
       this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
+    };
+  }
+
+  private onBookmarkMoved() {
+    return (event, result) => {
+      this.ms.unlock();
+
+      if (result.error) {
+        console.log(result.error);
+        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+        return;
+      }
+
+      // this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
     };
   }
 }

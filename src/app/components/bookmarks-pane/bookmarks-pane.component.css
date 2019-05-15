@@ -16,6 +16,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   flex-flow: row wrap;
+  padding: 5px;
 }
 
 .bookmark-title {

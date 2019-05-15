@@ -34,5 +34,7 @@
   BOOKMARKS_FOLDER_CREATED: 'bookmarks-folder-created',
   BOOKMARK_FOLDER_UPDATED: 'bookmark-folder-updated',
   BOOKMARK_FOLDER_REMOVED: 'bookmark-folder-removed',
-  BOOKMARK_UPDATED: 'bookmark-updated'
+  BOOKMARK_UPDATED: 'bookmark-updated',
+  MOVE_BOOKMARK: 'move-bookmark',
+  BOOKMARK_MOVED: 'bookmark-moved'
 };

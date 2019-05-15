@@ -12,6 +12,7 @@ import { WebviewDirective } from './directives/webview.directive';
 import { VizabiDirective } from './directives/vizabi';
 
 import { ModalModule, ProgressbarModule, AlertModule, PopoverModule } from 'ngx-bootstrap';
+import { DragulaModule } from 'ng2-dragula';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -66,6 +67,7 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    DragulaModule.forRoot(),
     AlertModule.forRoot(),
     ModalModule.forRoot(),
     PopoverModule.forRoot(),

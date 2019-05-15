@@ -423,6 +423,59 @@ export const removeBookmark = async (event, params) => {
   }
 };
 
+export const moveBookmark = async (event, params) => {
+  try {
+    const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
+    const elIdPos = allBookmarksData.content.map(bm => bm.id).indexOf(params.elId);
+    const el = Object.assign({}, allBookmarksData.content[elIdPos]);
+    const todo: { action: string, position?: number } = {action: 'nop'};
+    allBookmarksData.content[elIdPos].old = true;
+
+    for (let i = 0; i < allBookmarksData.content.length; i++) {
+      if (params.leftId === allBookmarksData.content[i].id) {
+        if (i + 1 < allBookmarksData.content.length - 2) {
+          todo.action = 'insert';
+          todo.position = i + 1;
+        } else {
+          todo.action = 'push';
+        }
+        break;
+      } else if (params.rightId === allBookmarksData.content[i].id) {
+        if (i - 1 > 0) {
+          todo.action = 'insert';
+          todo.position = i - 1;
+        } else {
+          todo.action = 'unshift';
+        }
+        break;
+      }
+    }
+
+    el.folder = params.targetFolder || '';
+
+    if (todo.action === 'insert') {
+      allBookmarksData.content.splice(todo.position, 0, el);
+    } else if (todo.action === 'push') {
+      allBookmarksData.content.push(el);
+    } else if (todo.action === 'unshift') {
+      allBookmarksData.content.unshift(el);
+    }
+
+    if (todo.action !== 'nop') {
+      const elIdPosToDelete = allBookmarksData.content.map(bm => bm.old).indexOf(true);
+      allBookmarksData.content.splice(elIdPosToDelete, 1);
+    } else {
+      delete allBookmarksData.content[elIdPos].old;
+      allBookmarksData.content[elIdPos].folder = params.targetFolder || '';
+    }
+
+    await writeFile(bookmarkFile, JSON.stringify({content: allBookmarksData.content, folders: allBookmarksData.folders}, null, 2));
+    event.sender.send(globConst.BOOKMARK_MOVED, {bookmarkFile});
+  } catch (e) {
+    event.sender.send(globConst.BOOKMARK_MOVED, {error: e.toString(), bookmarkFile});
+  }
+};
+
 export const removeBookmarksFolder = async (event, params) => {
   try {
     const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
