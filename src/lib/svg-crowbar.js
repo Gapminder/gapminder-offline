@@ -272,7 +272,11 @@
         const reader = new FileReader();
 
         reader.addEventListener('loadend', () => {
-          window.__tmpImage = window.btoa(reader.result);
+          document.dispatchEvent(new CustomEvent('cross-frontend-event', {
+            detail: {content: window.btoa(reader.result)},
+            bubbles: false,
+            cancelable: true
+          }));
         });
 
         reader.readAsBinaryString(blob);

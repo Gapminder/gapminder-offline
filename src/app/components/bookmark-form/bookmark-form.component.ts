@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { ALERT, SEND_TAB_TO_BOOKMARK } from '../../constants';
 import { MessageService } from '../../message.service';
 import { Subscription } from 'rxjs';
@@ -9,7 +9,7 @@ import { ElectronService } from '../../providers/electron.service';
   templateUrl: './bookmark-form.component.html',
   styleUrls: ['./bookmark-form.component.css']
 })
-export class BookmarkFormComponent implements OnDestroy {
+export class BookmarkFormComponent implements OnInit, OnDestroy {
   @Output() onPopoverClose = new EventEmitter();
   subscription: Subscription;
   bookmark;
@@ -17,6 +17,7 @@ export class BookmarkFormComponent implements OnDestroy {
   waitForId = false;
   isBookmarkConstructed = false;
   private globConst;
+  private screenShotListener;
 
   constructor(private ms: MessageService, private es: ElectronService) {
     this.globConst = this.es.remote.getGlobal('globConst');
@@ -63,16 +64,6 @@ export class BookmarkFormComponent implements OnDestroy {
       scriptEl.setAttribute('data-svg-select', 'div[class="tab-pane"][style*="display: block"] div>svg.vzb-export');
       scriptEl.setAttribute('data-exclude-element-select', '.vzb-noexport');
       document.body.appendChild(scriptEl);
-
-      const int = setInterval(() => {
-        if (!!(window as any).__tmpImage) {
-          this.es.ipcRenderer.send(this.globConst.ADD_BOOKMARK, {bookmark: this.bookmark, image: (window as any).__tmpImage});
-          this.ms.lock();
-          (window as any).__tmpImage = null;
-          clearInterval(int);
-          this.isBookmarkConstructed = true;
-        }
-      }, 500);
     });
 
     this.es.ipcRenderer.on(this.globConst.BOOKMARK_UPDATED, () => {
@@ -80,8 +71,15 @@ export class BookmarkFormComponent implements OnDestroy {
     });
   }
 
+  ngOnInit() {
+    this.screenShotListener = this.prepareScreenShotListener();
+    document.addEventListener('cross-frontend-event', this.screenShotListener);
+  }
+
+
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    document.removeEventListener('cross-frontend-event', this.screenShotListener);
   }
 
   remove() {
@@ -128,6 +126,14 @@ export class BookmarkFormComponent implements OnDestroy {
         chartType: '',
         model: null
       }
+    };
+  }
+
+  private prepareScreenShotListener(): Function {
+    return (e: any) => {
+      this.es.ipcRenderer.send(this.globConst.ADD_BOOKMARK, {bookmark: this.bookmark, image: e.detail.content});
+      this.ms.lock();
+      this.isBookmarkConstructed = true;
     };
   }
 }
