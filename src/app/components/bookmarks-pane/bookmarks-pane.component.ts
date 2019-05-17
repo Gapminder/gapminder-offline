@@ -8,6 +8,10 @@ import { Subscription } from 'rxjs';
 
 const BOOKMARKS_THUMBNAILS_FOLDER = 'bookmarks-thumbnails';
 
+enum ScrollMove {
+  SCROLL_UP, SCROLL_DN, NO_SCROLL
+}
+
 @Component({
   selector: 'app-bookmarks-pane',
   templateUrl: './bookmarks-pane.component.html',
@@ -30,6 +34,8 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
   private bookmarkUpdated;
   private bookmarkMoved;
   private dragulaSubs: Subscription;
+  private scrollTimer;
+  private scrollDirection = ScrollMove.NO_SCROLL;
 
   constructor(public ls: LocalizationService,
               public es: ElectronService,
@@ -62,19 +68,48 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
       document.onmousemove = e => {
         const event = e || window.event;
         const mouseY = event['pageY'] - container.offsetTop;
-        const scrollTop = container.scrollTop;
-        const scrollBottom = container.offsetHeight - scrollTop;
         const elementHeight = value.el.getBoundingClientRect().height;
+        const midPoint = container.offsetHeight / 2;
+        const luft = elementHeight / 5;
 
-        if (mouseY - elementHeight / 2 < scrollTop) {
-          container.scrollBy(0, -15);
-        } else if (mouseY + elementHeight > scrollBottom) {
-          container.scrollBy(0, 15);
+        if (mouseY < midPoint - luft && !this.scrollTimer) {
+          this.scrollTimer = setInterval(() => {
+            container.scrollBy(0, -15);
+          }, 30);
+          this.scrollDirection = ScrollMove.SCROLL_UP;
+        } else if (mouseY < midPoint - luft && this.scrollTimer) {
+          if (this.scrollDirection !== ScrollMove.SCROLL_UP) {
+            clearInterval(this.scrollTimer);
+            this.scrollTimer = setInterval(() => {
+              container.scrollBy(0, -15);
+            }, 30);
+            this.scrollDirection = ScrollMove.SCROLL_UP;
+          }
+        } else if (mouseY > midPoint + luft && !this.scrollTimer) {
+          this.scrollTimer = setInterval(() => {
+            container.scrollBy(0, 15);
+          }, 30);
+          this.scrollDirection = ScrollMove.SCROLL_DN;
+        } else if (mouseY > midPoint + luft && this.scrollTimer) {
+          if (this.scrollDirection !== ScrollMove.SCROLL_DN) {
+            clearInterval(this.scrollTimer);
+            this.scrollTimer = setInterval(() => {
+              container.scrollBy(0, 15);
+            }, 30);
+            this.scrollDirection = ScrollMove.SCROLL_DN;
+          }
+        } else if (this.scrollTimer) {
+          clearInterval(this.scrollTimer);
+          this.scrollTimer = null;
         }
       };
     });
 
     this.dragulaService.dragend('bm').subscribe(() => {
+      if (this.scrollTimer) {
+        clearInterval(this.scrollTimer);
+        this.scrollTimer = null;
+      }
       document.onmousemove = null;
     });
 
@@ -106,6 +141,10 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.scrollTimer) {
+      clearInterval(this.scrollTimer);
+      this.scrollTimer = null;
+    }
     this.dragulaSubs.unsubscribe();
     this.es.ipcRenderer.removeListener(this.globConst.GOT_BOOKMARKS, this.gotBookmarks);
     this.es.ipcRenderer.removeListener(this.globConst.BOOKMARK_REMOVED, this.bookmarkRemoved);

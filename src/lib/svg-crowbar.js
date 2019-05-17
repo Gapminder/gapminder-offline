@@ -203,11 +203,15 @@
       defaultPath: path.resolve(require('os').homedir(), filename + '.svg'),
       filters: [{name: 'SVG image', extensions: ['svg']}]
     }, fullPath => {
-      if (!fullPath) {
-        return;
+      if (fullPath) {
+        fs.writeFileSync(fullPath, normalizedSvg);
       }
 
-      fs.writeFileSync(fullPath, normalizedSvg);
+      document.dispatchEvent(new CustomEvent('cross-frontend-event', {
+        detail: {fullPath},
+        bubbles: false,
+        cancelable: true
+      }));
     });
   };
 
@@ -230,11 +234,16 @@
             defaultPath: path.resolve(require('os').homedir(), filename + '.png'),
             filters: [{name: 'PNG image', extensions: ['png']}]
           }, fullPath => {
-            if (!fullPath) {
-              return;
+            console.log('pre-end', fullPath);
+            if (fullPath) {
+              fs.writeFileSync(fullPath, new Buffer(reader.result));
             }
 
-            fs.writeFileSync(fullPath, new Buffer(reader.result));
+            document.dispatchEvent(new CustomEvent('cross-frontend-event', {
+              detail: {fullPath},
+              bubbles: false,
+              cancelable: true
+            }));
           });
         });
 

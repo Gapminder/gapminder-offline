@@ -5,6 +5,8 @@ import { ElectronService } from '../../providers/electron.service';
 export const getMenuActions = (context: HomeComponent, es: ElectronService) => {
   const globConst = es.remote.getGlobal('globConst');
 
+  // document.addEventListener('cross-frontend-event', this.screenShotListener);
+
   return {
     gapminderChart: () => {
       context.isMenuOpened = false;
