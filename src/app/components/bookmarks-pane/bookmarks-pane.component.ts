@@ -71,32 +71,32 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
         const elementHeight = value.el.getBoundingClientRect().height;
         const midPoint = container.offsetHeight / 2;
         const luft = elementHeight / 5;
-
-        if (mouseY < midPoint - luft && !this.scrollTimer) {
+        const initUp = () => {
           this.scrollTimer = setInterval(() => {
             container.scrollBy(0, -15);
           }, 30);
           this.scrollDirection = ScrollMove.SCROLL_UP;
-        } else if (mouseY < midPoint - luft && this.scrollTimer) {
-          if (this.scrollDirection !== ScrollMove.SCROLL_UP) {
-            clearInterval(this.scrollTimer);
-            this.scrollTimer = setInterval(() => {
-              container.scrollBy(0, -15);
-            }, 30);
-            this.scrollDirection = ScrollMove.SCROLL_UP;
-          }
-        } else if (mouseY > midPoint + luft && !this.scrollTimer) {
+        };
+        const initDn = () => {
           this.scrollTimer = setInterval(() => {
             container.scrollBy(0, 15);
           }, 30);
           this.scrollDirection = ScrollMove.SCROLL_DN;
+        };
+
+        if (mouseY < midPoint - luft && !this.scrollTimer) {
+          initUp();
+        } else if (mouseY < midPoint - luft && this.scrollTimer) {
+          if (this.scrollDirection !== ScrollMove.SCROLL_UP) {
+            clearInterval(this.scrollTimer);
+            initUp();
+          }
+        } else if (mouseY > midPoint + luft && !this.scrollTimer) {
+          initDn();
         } else if (mouseY > midPoint + luft && this.scrollTimer) {
           if (this.scrollDirection !== ScrollMove.SCROLL_DN) {
             clearInterval(this.scrollTimer);
-            this.scrollTimer = setInterval(() => {
-              container.scrollBy(0, 15);
-            }, 30);
-            this.scrollDirection = ScrollMove.SCROLL_DN;
+            initDn();
           }
         } else if (this.scrollTimer) {
           clearInterval(this.scrollTimer);
