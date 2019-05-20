@@ -18,7 +18,7 @@ import {
   OPEN_DDF_FOLDER_ACTION,
   TAB_READY_ACTION,
   SWITCH_MENU_ACTION,
-  MODEL_CHANGED, CLEAR_VALIDATION_FORM, ABANDON_VALIDATION, BOOKMARK_TAB, SEND_TAB_TO_BOOKMARK, ALERT
+  MODEL_CHANGED, CLEAR_VALIDATION_FORM, ABANDON_VALIDATION, BOOKMARK_TAB, SEND_TAB_TO_BOOKMARK, ALERT, CLEAR_ALERTS
 } from '../../constants';
 import { initMenuComponent } from '../menu/system-menu';
 import { getMenuActions } from '../menu/menu-actions';
@@ -56,9 +56,17 @@ function isDescendant(parent, child) {
   return false;
 }
 
+interface IAlertActivity {
+  label: string;
+  event: string;
+}
+
 interface IAlert {
   type: string;
   message: string;
+  activities: IAlertActivity[];
+  timeout?: number;
+  data?;
 }
 
 @Component({
@@ -190,8 +198,12 @@ export class HomeComponent implements OnInit {
       }
 
       if (event.message === ALERT) {
-        const {message, type} = event.options;
-        this.alerts.push({message, type});
+        const {message, type, timeout, data, activities} = event.options;
+        this.alerts.push({message, type, timeout, data, activities});
+      }
+
+      if (event.message === CLEAR_ALERTS) {
+        this.alerts = [];
       }
     });
 
@@ -212,6 +224,10 @@ export class HomeComponent implements OnInit {
 
     this.es.ipcRenderer.on('do-bookmark-open-completed', (event: any, parameters: any) => {
       this.doOpenCompleted(event, parameters);
+    });
+
+    this.es.ipcRenderer.on(this.globConst.BOOKMARKS_REMOVE_RESTORED, (event: any, parameters: any) => {
+      this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
     });
   }
 
@@ -441,14 +457,25 @@ export class HomeComponent implements OnInit {
     };
   }
 
-  /*sendTabToBookmark(tabIndex: number) {
-    const tab = this.tabsModel[tabIndex];
+  removeAlert(alert: IAlert) {
+    const pos = this.alerts.indexOf(alert);
+    if (pos >= 0) {
+      this.alerts.splice(pos, 1);
+    }
+  }
 
-    const isAdditionalDataPresent = tab.component && tab.component.getModel;
-    const model = Object.assign({}, isAdditionalDataPresent ? tab.component.getModel() : tab.instance.getModel());
+  getPersistentAlerts(): IAlert[] {
+    return this.alerts.filter(alert => !alert.timeout);
+  }
 
-    this.messageService.sendMessage(SEND_TAB_TO_BOOKMARK, {chartType: tab.chartType, model});
-  }*/
+  getDismissableAlerts(): IAlert[] {
+    return this.alerts.filter(alert => alert.timeout > 0);
+  }
+
+  doAlertActivity(alert: IAlert, activity: IAlertActivity) {
+    this.es.ipcRenderer.send(activity.event);
+    this.removeAlert(alert);
+  }
 
   private getCurrentTabInstance(): boolean {
     return this.chartService.currentTab && this.chartService.currentTab.instance ? this.chartService.currentTab.instance : null;

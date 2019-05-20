@@ -1,6 +1,17 @@
 <div [dir]="ls.isRtl() ? 'rtl' : 'ltr'" [ngClass]="ls.getLanguagePrefix()" style="height: 100%" (click)="appMainClickHandler($event)">
   <div class="alert-container">
-    <alert *ngFor="let alert of alerts" [type]="alert.type" [dismissible]="true"><span [innerHtml]="alert.message"></span></alert>
+    <alert *ngFor="let alert of getPersistentAlerts()" [type]="alert.type" [dismissible]="true">
+      <span [innerHtml]="alert.message"></span>
+    </alert>
+    <alert *ngFor="let alert of getDismissableAlerts()"
+           [type]="alert.type"
+           [dismissible]="true"
+           [dismissOnTimeout]="alert.timeout">
+      <span [innerHtml]="alert.message"></span>&nbsp;|&nbsp;
+      <span *ngFor="let activity of alert.activities">
+        <a href="#" (click)="doAlertActivity(alert, activity)">{{activity.label}}</a>
+      </span>
+    </alert>
   </div>
   <app-auto-update></app-auto-update>
 

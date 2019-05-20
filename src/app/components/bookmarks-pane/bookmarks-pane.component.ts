@@ -325,6 +325,12 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
         }
       }
 
+      this.ms.sendMessage(ALERT, {
+        message: `Bookmark "${result.bookmark.name}" just removed...`,
+        type: 'info',
+        timeout: 5000,
+        activities: [{label: 'Undo', event: this.globConst.BOOKMARKS_REMOVE_RESTORE}]
+      });
       this.needToFullnessCheck = true;
       this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
     };
@@ -372,6 +378,12 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
         return;
       }
 
+      this.ms.sendMessage(ALERT, {
+        message: `Folder "${result.params.folderName}" just removed...`,
+        type: 'info',
+        timeout: 5000,
+        activities: [{label: 'Undo', event: this.globConst.BOOKMARKS_REMOVE_RESTORE}]
+      });
       this.needToFullnessCheck = true;
       this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
     };

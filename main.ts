@@ -14,7 +14,7 @@ import {
   openFileWithDialog, getBookmarksObject, removeBookmark,
   saveAllTabs,
   saveFile, updateBookmark,
-  QueueProcessor, createNewBookmarksFolder, updateBookmarksFolder, removeBookmarksFolder, moveBookmark
+  QueueProcessor, createNewBookmarksFolder, updateBookmarksFolder, removeBookmarksFolder, moveBookmark, restoreBookmarks
 } from './file-management';
 import { GoogleAnalytics } from './google-analytics';
 import { getLatestGithubTag, updateDataset } from './dataset-update';
@@ -227,6 +227,9 @@ function createWindow() {
     } catch (e) {
       event.sender.send(globConst.GOT_BOOKMARKS, {error: e.toString()});
     }
+  });
+  ipc.on(globConst.BOOKMARKS_REMOVE_RESTORE, async (event, params) => {
+    queueProcessor.executeRequest(restoreBookmarks, event, params);
   });
   ipc.on(globConst.CREATE_NEW_BOOKMARKS_FOLDER, async (event, params) => {
     queueProcessor.executeRequest(createNewBookmarksFolder, event, params);

@@ -15,7 +15,7 @@ import { MessageService } from '../../message.service';
 import { Subscription } from 'rxjs/Subscription';
 import {
   CLEAR_EDITABLE_TABS_ACTION, TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, SWITCH_MENU_ACTION,
-  MODEL_CHANGED, SET_ACTIVE_TAB, REMOVE_TAB, SWITCH_BOOKMARKS_PANE, BOOKMARK_TAB, BOOKMARKS_PANE_OFF_OUTSIDE
+  MODEL_CHANGED, SET_ACTIVE_TAB, REMOVE_TAB, SWITCH_BOOKMARKS_PANE, BOOKMARK_TAB, BOOKMARKS_PANE_OFF_OUTSIDE, CLEAR_ALERTS
 } from '../../constants';
 import { LocalizationService } from '../../providers/localization.service';
 
@@ -137,6 +137,7 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
     if (!this.messageService.isLocked()) {
       this.messageService.sendMessage(SET_ACTIVE_TAB, selectedTab);
     }
+    this.messageService.sendMessage(CLEAR_ALERTS);
   }
 
   removeTab(tab: TabNewComponent) {

@@ -12,6 +12,8 @@ import './glob-const';
 const dialog = require('electron').dialog;
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
+const copyFile = promisify(fsExtra.copy);
+const removeFileOrDir = promisify(fsExtra.remove);
 const unlink = promisify(fs.unlink);
 
 const packageJSON = require('./package.json');
@@ -19,13 +21,55 @@ const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 const nonAsarAppPath = app.getAppPath().replace(/app\.asar/, '');
 const userDataPath = (app || remote.app).getPath('userData');
 const bookmarkFile = path.resolve(userDataPath, 'bookmarks.json');
+const bookmarkUndoFile = path.resolve(userDataPath, 'bookmarks-undo.json');
 const bookmarksThumbnailsPath = path.resolve(userDataPath, 'bookmarks-thumbnails');
+const bookmarksThumbnailsUndoPath = path.resolve(userDataPath, 'bookmarks-thumbnails-undo');
 const DATA_PATH = path.resolve(nonAsarAppPath, 'ddf--gapminder--systema_globalis');
 const PREVIEW_DATA_PATH = path.resolve(nonAsarAppPath, 'preview-data');
 const WEB_RESOURCE_PATH = path.resolve(nonAsarAppPath, 'export-template');
 const WEB_PATH = path.resolve(userDataPath, 'web');
 const previouslyOpened = {};
 const globConst = (global as any).globConst;
+
+const initBookmarksThumbnailsCache = async () => {
+  return fsExtra.ensureDir(bookmarksThumbnailsUndoPath);
+};
+
+const clearBookmarksThumbnailsCache = async () => new Promise((resolve, reject) => {
+  fs.readdir(bookmarksThumbnailsUndoPath, (readErr, files) => {
+    if (readErr) {
+      return reject(readErr);
+    }
+
+    for (const file of files) {
+      fs.unlink(path.join(bookmarksThumbnailsUndoPath, file), err => {
+        if (err) {
+          return reject(err);
+        }
+      });
+    }
+
+    resolve();
+  });
+});
+
+const restoreBookmarksThumbnails = async () => new Promise((resolve, reject) => {
+  fs.readdir(bookmarksThumbnailsUndoPath, (readErr, files) => {
+    if (readErr) {
+      return reject(readErr);
+    }
+
+    for (const file of files) {
+      fs.copyFile(path.resolve(bookmarksThumbnailsUndoPath, file), path.resolve(bookmarksThumbnailsPath, file), err => {
+        if (err) {
+          return reject(err);
+        }
+      });
+    }
+
+    resolve();
+  });
+});
 
 const getPathCorrectFunction = brokenPathObject => onPathReady => {
   const parsed = path.parse(brokenPathObject.path);
@@ -412,10 +456,15 @@ export const updateBookmarksFolder = async (event, params) => {
 
 export const removeBookmark = async (event, params) => {
   try {
+    await initBookmarksThumbnailsCache();
+    await clearBookmarksThumbnailsCache();
     const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
+    await writeFile(bookmarkUndoFile, JSON.stringify(allBookmarksData, null, 2));
+    const thumbnailPath = path.resolve(bookmarksThumbnailsPath, `${params.bookmark.id}.png`);
+    const thumbnailUndoPath = path.resolve(bookmarksThumbnailsUndoPath, `${params.bookmark.id}.png`);
+    await copyFile(thumbnailPath, thumbnailUndoPath);
     const newBookmarks = allBookmarksData.content.filter(bookmark => params.bookmark.id !== bookmark.id);
     await writeFile(bookmarkFile, JSON.stringify({content: newBookmarks, folders: allBookmarksData.folders}, null, 2));
-    const thumbnailPath = path.resolve(bookmarksThumbnailsPath, `${params.bookmark.id}.png`);
     unlink(thumbnailPath);
     event.sender.send(globConst.BOOKMARK_REMOVED, {bookmarkFile, bookmark: params.bookmark});
   } catch (e) {
@@ -423,11 +472,28 @@ export const removeBookmark = async (event, params) => {
   }
 };
 
+const commitBookmarks = async () => {
+  await removeFileOrDir(bookmarkUndoFile);
+  await clearBookmarksThumbnailsCache();
+};
+
+export const restoreBookmarks = async (event) => {
+  try {
+    await restoreBookmarksThumbnails();
+    await copyFile(bookmarkUndoFile, bookmarkFile);
+    event.sender.send(globConst.BOOKMARKS_REMOVE_RESTORED, {bookmarkFile});
+  } catch (e) {
+    event.sender.send(globConst.BOOKMARKS_REMOVE_RESTORED, {error: e.toString(), bookmarkFile});
+  } finally {
+    await commitBookmarks();
+  }
+};
+
 export const moveBookmark = async (event, params) => {
   try {
     const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
     const elIdPos = allBookmarksData.content.map(bm => bm.id).indexOf(params.elId);
-    const el = Object.assign({}, allBookmarksData.content[elIdPos]);
+    const el = _.cloneDeep(allBookmarksData.content[elIdPos]);
     const todo: { action: string, position?: number } = {action: 'nop'};
     allBookmarksData.content[elIdPos].old = true;
 
@@ -478,7 +544,10 @@ export const moveBookmark = async (event, params) => {
 
 export const removeBookmarksFolder = async (event, params) => {
   try {
+    await initBookmarksThumbnailsCache();
+    await clearBookmarksThumbnailsCache();
     const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
+    await writeFile(bookmarkUndoFile, JSON.stringify(allBookmarksData, null, 2));
     const index = allBookmarksData.folders.indexOf(params.folderName);
 
     if (index < 0) {
@@ -493,6 +562,8 @@ export const removeBookmarksFolder = async (event, params) => {
       const bookmark = allBookmarksData.content[i];
       if (bookmark.folder === params.folderName) {
         const thumbnailPath = path.resolve(bookmarksThumbnailsPath, `${bookmark.id}.png`);
+        const thumbnailUndoPath = path.resolve(bookmarksThumbnailsUndoPath, `${bookmark.id}.png`);
+        await copyFile(thumbnailPath, thumbnailUndoPath);
         unlink(thumbnailPath);
       } else {
         newContent.push(bookmark);

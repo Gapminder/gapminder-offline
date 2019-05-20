@@ -15,3 +15,4 @@ export const SET_ACTIVE_TAB = 'set active tab';
 export const REMOVE_TAB = 'remove tab';
 export const BOOKMARK_TAB = 'bookmark tab';
 export const ALERT = 'alert';
+export const CLEAR_ALERTS = 'clear-alerts';

@@ -30,6 +30,8 @@
   START_DOWNLOAD: 'start-download',
   REMOVE_BOOKMARKS_FOLDER: 'remove-bookmarks-folder',
   BOOKMARK_REMOVED: 'bookmark-removed',
+  BOOKMARKS_REMOVE_RESTORE: 'bookmarks-remove-restore',
+  BOOKMARKS_REMOVE_RESTORED: 'bookmarks-remove-restored',
   BOOKMARK_ADDED: 'bookmark-added',
   BOOKMARKS_FOLDER_CREATED: 'bookmarks-folder-created',
   BOOKMARK_FOLDER_UPDATED: 'bookmark-folder-updated',
