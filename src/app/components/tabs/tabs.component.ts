@@ -319,6 +319,6 @@ export class TabsComponent implements OnInit {
 
   private errorHandler(error: Error) {
     console.log(error);
-    this.messageService.sendMessage(ALERT, {message: error, type: 'danger'});
+    // this.messageService.sendMessage(ALERT, {message: error, type: 'danger'});
   }
 }
