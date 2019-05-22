@@ -13,10 +13,31 @@
   display: block;
 }
 
-.bookmark-controls {
-  margin-top: 10px;
-}
-
 .bookmark-popover button {
   margin-right: 5px;
+}
+
+.remove-link {
+  color: red;
+}
+
+.bm-footer-container {
+  width: 100%;
+  padding-top: 15px;
+  padding-bottom: 25px;
+}
+
+.bm-footer-container div {
+  display: inline-block;
+  width: 50%;
+}
+
+.left {
+  float: left;
+  text-align: left;
+}
+
+.right {
+  float: right;
+  text-align: right;
 }

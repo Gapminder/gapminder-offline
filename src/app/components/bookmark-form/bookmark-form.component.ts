@@ -3,6 +3,7 @@ import { ALERT, SEND_TAB_TO_BOOKMARK } from '../../constants';
 import { MessageService } from '../../message.service';
 import { Subscription } from 'rxjs';
 import { ElectronService } from '../../providers/electron.service';
+import { LocalizationService } from '../../providers/localization.service';
 
 @Component({
   selector: 'app-bookmark-form',
@@ -19,7 +20,7 @@ export class BookmarkFormComponent implements OnInit, OnDestroy {
   private globConst;
   private screenShotListener;
 
-  constructor(private ms: MessageService, private es: ElectronService) {
+  constructor(public ls: LocalizationService, private ms: MessageService, private es: ElectronService) {
     this.globConst = this.es.remote.getGlobal('globConst');
     this.initBookmark();
     this.subscription = this.ms.getMessage().subscribe((event: any) => {

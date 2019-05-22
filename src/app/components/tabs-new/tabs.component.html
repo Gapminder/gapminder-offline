@@ -1,7 +1,6 @@
 <div class="popover bs-popover-bottom"
      style="position: absolute; top: 0; left: 0; display: none;"
      x-placement="bottom">
-  <h3 class="popover-header"></h3>
   <div class="popover-body">
     <app-bookmark-form (onPopoverClose)="hidePopover()"></app-bookmark-form>
   </div>
@@ -47,7 +46,7 @@
                                   (click)="switchPopover($event)"
                                   (mouseover)="overedTabIndex=i" (mouseout)="overedTabIndex=null"
                                   class="glyphicon glyphicon-star"
-                                  style="margin-left: -12px;"
+                                  style="margin-left: -12px; padding-right: 5px;"
                                   [ngClass]="{'glyphicon-star-rtl': ls.isRtl()}"></span>
                             <span [style.visibility]="tab.removable && tab.active ? 'visible' : 'hidden'"
                                   (click)="$event.preventDefault(); $event.stopPropagation(); hidePopover(); removeTab(tab);"
