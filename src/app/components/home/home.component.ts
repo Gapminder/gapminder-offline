@@ -199,7 +199,10 @@ export class HomeComponent implements OnInit {
 
       if (event.message === ALERT) {
         const {message, type, timeout, data, activities} = event.options;
-        this.alerts.push({message, type, timeout, data, activities});
+        for (const alert of this.alerts) {
+          alert.activities = [];
+        }
+        this.alerts.unshift({message, type, timeout, data, activities});
       }
 
       if (event.message === CLEAR_ALERTS) {

@@ -7,7 +7,7 @@
            [type]="alert.type"
            [dismissible]="true"
            [dismissOnTimeout]="alert.timeout">
-      <span [innerHtml]="alert.message"></span><span *ngIf="alert.activities && alert.activities">&nbsp;|&nbsp;</span>
+      <span [innerHtml]="alert.message"></span><span *ngIf="alert.activities && alert.activities.length>0">&nbsp;|&nbsp;</span>
       <span *ngFor="let activity of alert.activities">
         <a href="#" (click)="doAlertActivity(alert, activity)">{{activity.label}}</a>
       </span>
