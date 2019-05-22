@@ -33,7 +33,8 @@
                            [class.active] = "tab.active"
                            (click) = "hidePopover($event); selectTab(tab);">
                             <span *ngIf = "!tab.editMode"
-                                  class = "doNotEditTabInput" [ngClass]="{'blured-tab': overedTabIndex===i}">{{tab.title}}</span>
+                                  class = "doNotEditTabInput"
+                                  [ngClass]="{'blured-tab-ltr': overedTabIndex===i && !ls.isRtl(), 'blured-tab-rtl': overedTabIndex===i && ls.isRtl()}">{{tab.title}}</span>
                             <span *ngIf = "tab.editMode">
                                 <app-tab-title-edit (blur) = "resetEditMode()"
                                                    (enter) = "applyEditedTitle()"
@@ -42,12 +43,11 @@
                                                    (titleChange) = "tab.title=$event">
                                 </app-tab-title-edit>
                             </span>
-                            <span [style.visibility]="tab.bookmarkAllowed && tab.active && !tab.editMode ? 'visible' : 'hidden'"
+                            <span [style.visibility]="tab.bookmarkAllowed && tab.active && !tab.editMode && !isLocked() ? 'visible' : 'hidden'"
                                   (click)="switchPopover($event)"
                                   (mouseover)="overedTabIndex=i" (mouseout)="overedTabIndex=null"
                                   class="glyphicon glyphicon-star"
-                                  style="margin-left: -12px; padding-right: 5px;"
-                                  [ngClass]="{'glyphicon-star-rtl': ls.isRtl()}"></span>
+                                  [ngClass]="{'glyphicon-star-rtl': ls.isRtl(), 'bm-star-container-ltr': !ls.isRtl(), 'bm-star-container-rtl': ls.isRtl()}"></span>
                             <span [style.visibility]="tab.removable && tab.active ? 'visible' : 'hidden'"
                                   (click)="$event.preventDefault(); $event.stopPropagation(); hidePopover(); removeTab(tab);"
                                   class="glyphicon glyphicon-remove-circle"

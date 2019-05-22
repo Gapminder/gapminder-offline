@@ -67,6 +67,10 @@ export class BookmarkFormComponent implements OnInit, OnDestroy {
       document.body.appendChild(scriptEl);
     });
 
+    this.es.ipcRenderer.on(this.globConst.BOOKMARK_ADDED, () => {
+      this.ms.sendMessage(ALERT, {message: 'Saved to bookmarks!', type: 'success', timeout: 3000});
+    });
+
     this.es.ipcRenderer.on(this.globConst.BOOKMARK_UPDATED, () => {
       this.onPopoverClose.emit();
     });

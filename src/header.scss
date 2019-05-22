@@ -19,9 +19,9 @@
   color: rgba(0, 0, 0, 0);
 }
 
-.glyphicon-star-rtl:before {
+/*.glyphicon-star-rtl:before {
   right: -2px;
-}
+}*/
 
 .popover {
   max-width: unset;
@@ -333,6 +333,7 @@
   .glyphicon-remove-circle.inactive-glyph:before {
     color: #555  !important;
   }
+  /**/
   .glyphicon-star.inactive-glyph:before {
     color: #555  !important;
   }
@@ -499,10 +500,27 @@
     color: #555555;
 }
 
-.blured-tab {
+.bm-star-container-ltr {
+  margin-left: -12px;
+  padding-right: 5px;
+}
+
+.bm-star-container-rtl {
+  margin-right: -12px;
+}
+
+.blured-tab-ltr {
   -webkit-mask-image: -webkit-gradient(linear, left top, right top,
     from(rgba(255,202,52,1)), to(rgba(255,202,52,0)));
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: 90%, auto;
   -webkit-mask-position: left top;
+}
+
+.blured-tab-rtl {
+  -webkit-mask-image: -webkit-gradient(linear, right top, left top,
+    from(rgba(255,202,52,1)), to(rgba(255,202,52,0)));
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 90%, auto;
+  -webkit-mask-position: right top;
 }
