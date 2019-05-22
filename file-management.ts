@@ -391,7 +391,7 @@ export const addBookmark = async (event, params) => {
     const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
 
     normalizeModelToSave(params.bookmark.content.model, params.bookmark.content.chartType);
-    allBookmarksData.content.push(params.bookmark);
+    allBookmarksData.content.unshift(params.bookmark);
     await writeFile(bookmarkFile, JSON.stringify(allBookmarksData, null, 2));
     const originalImageData = Buffer.from(params.image, 'base64');
 

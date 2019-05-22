@@ -27,6 +27,7 @@ export class ElectronService {
   CsvReader: typeof csvReader;
   ddfValidation: typeof ddfValidation;
   vizabi: any;
+  d3: any;
   SETTINGS_FILE: string;
   appPath: string;
   userDataPath: string;
@@ -48,6 +49,7 @@ export class ElectronService {
       this.CsvReader = window.require('vizabi-csv-reader');
       this.ddfValidation = window.require('ddf-validation');
       this.vizabi = (window as any).Vizabi;
+      this.d3 = (window as any).d3;
       const currentWindow: any = this.remote.getCurrentWindow();
       this.appPath = currentWindow.appPath;
       this.userDataPath = currentWindow.userDataPath;

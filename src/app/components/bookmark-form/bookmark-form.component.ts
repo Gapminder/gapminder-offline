@@ -19,10 +19,12 @@ export class BookmarkFormComponent implements OnInit, OnDestroy {
   isBookmarkConstructed = false;
   private globConst;
   private screenShotListener;
+  private readonly monthNameFormat;
 
   constructor(public ls: LocalizationService, private ms: MessageService, private es: ElectronService) {
     this.globConst = this.es.remote.getGlobal('globConst');
     this.initBookmark();
+    this.monthNameFormat = this.es.d3.time.format('%Y-%m-%d %H:%M:%S');
     this.subscription = this.ms.getMessage().subscribe((event: any) => {
       if (event.message === SEND_TAB_TO_BOOKMARK) {
         this.initBookmark();
@@ -49,7 +51,7 @@ export class BookmarkFormComponent implements OnInit, OnDestroy {
       this.bookmarkFolders = result.data.folders;
       this.waitForId = false;
       this.bookmark.id = this.getNextBookmarkId(result.data.content);
-      this.bookmark.date = new Date().toISOString();
+      this.bookmark.date = this.monthNameFormat(new Date());
       const crowBar = document.getElementById('svg-crowbar');
 
       if (crowBar) {
@@ -94,7 +96,7 @@ export class BookmarkFormComponent implements OnInit, OnDestroy {
   }
 
   done() {
-    this.bookmark.date = new Date().toISOString();
+    this.bookmark.date = this.monthNameFormat(new Date());
     this.es.ipcRenderer.send(this.globConst.UPDATE_BOOKMARK, {bookmark: this.bookmark});
     this.isBookmarkConstructed = false;
     this.onPopoverClose.emit();
