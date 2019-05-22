@@ -138,5 +138,11 @@
   "quarter": "квартал",
   "Reading Excel sheets": "поиск доступных листов",
   "Quit": "Выход",
-  "Updating": "Обновляю..."
+  "Updating": "Обновляю...",
+  "Rename": "Переименовать:",
+  "Move to folder": "Переместить в папку:",
+  "Remove": "Удалить",
+  "Done": "Готово",
+  "Bookmarks": "Закладки",
+  "New folder": "Новая папка"
 }

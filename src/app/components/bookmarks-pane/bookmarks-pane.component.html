@@ -1,7 +1,7 @@
 <div class="wrapper">
   <div class="all-bookmarks">
     <div class="bookmarks-content">
-      <div class="bookmark-title"><span class="bookmark-title-label">Bookmarks</span></div>
+      <div class="bookmark-title"><span class="bookmark-title-label">{{'Bookmarks' | translate}}</span></div>
 
       <div class="bookmarks-container" [dragula]="'bm'" [(dragulaModel)]="unCategorizedBookmarks">
         <div *ngFor="let bookmark of unCategorizedBookmarks" [attr.id]="'bm_'+bookmark.id" class="bookmark-item">
@@ -39,7 +39,7 @@
     </div>
 
     <div class="bookmark-new">
-      <a href="#" (click)="isNewBookmarksFolderFormVisible = !isNewBookmarksFolderFormVisible">New folder</a>
+      <a href="#" (click)="isNewBookmarksFolderFormVisible = !isNewBookmarksFolderFormVisible">{{'New folder' | translate}}</a>
       <div *ngIf="isNewBookmarksFolderFormVisible">
         <div>
           <input [disabled]="isLocked()" [(ngModel)]="newBookmarksFolder" maxlength="50" style="width: 300px;">

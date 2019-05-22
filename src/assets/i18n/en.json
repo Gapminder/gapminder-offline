@@ -138,5 +138,11 @@
   "quarter": "quarter",
   "Reading Excel sheets": "Reading Excel sheets…",
   "Quit": "Quit",
-  "Updating": "Updating..."
+  "Updating": "Updating...",
+  "Rename": "Rename:",
+  "Move to folder": "Move to folder:",
+  "Remove": "Remove",
+  "Done": "Done",
+  "Bookmarks": "Bookmarks",
+  "New folder": "New folder"
 }
