@@ -29,12 +29,12 @@
             <div style = "flex-grow: 1; max-width: calc(100% - 270px)">
                 <ul #tabsContainer (window:resize) = "autoScroll()" class = "nav nav-tabs noscrollbar"
                     (click) = "$event.preventDefault()">
-                    <li *ngFor = "let tab of tabs" class = "nav-item" [class.active] = "tab.active">
+                    <li *ngFor = "let tab of tabs; index as i" class = "nav-item" [class.active] = "tab.active">
                         <a href = "javascript:void(0);" class = "nav-link"
                            [class.active] = "tab.active"
                            (click) = "hidePopover($event); selectTab(tab);">
                             <span *ngIf = "!tab.editMode"
-                                  class = "doNotEditTabInput">{{tab.title}}</span>
+                                  class = "doNotEditTabInput" [ngClass]="{'blured-tab': overedTabIndex===i}">{{tab.title}}</span>
                             <span *ngIf = "tab.editMode">
                                 <app-tab-title-edit (blur) = "resetEditMode()"
                                                    (enter) = "applyEditedTitle()"
@@ -43,12 +43,16 @@
                                                    (titleChange) = "tab.title=$event">
                                 </app-tab-title-edit>
                             </span>
-
-                            <span *ngIf="tab.bookmarkAllowed && tab.active" (click)="switchPopover($event)" class = "glyphicon glyphicon-star" [ngClass]="{'glyphicon-star-rtl': ls.isRtl()}"></span>
-                            <span *ngIf = "tab.removable && tab.active" (click) = "$event.preventDefault(); $event.stopPropagation(); hidePopover(); removeTab(tab);"
-                                  class = "glyphicon glyphicon-remove-circle" [ngClass]="{'glyphicon-remove-circle-rtl': ls.isRtl()}"></span>
-                            <span *ngIf="tab.bookmarkAllowed && !tab.active" class = "glyphicon glyphicon-star inactive-glyph" [ngClass]="{'glyphicon-star-rtl': ls.isRtl()}"></span>
-                            <span *ngIf = "tab.removable && !tab.active" class = "glyphicon glyphicon-remove-circle inactive-glyph" [ngClass]="{'glyphicon-remove-circle-rtl': ls.isRtl()}"></span>
+                            <span [style.visibility]="tab.bookmarkAllowed && tab.active && !tab.editMode ? 'visible' : 'hidden'"
+                                  (click)="switchPopover($event)"
+                                  (mouseover)="overedTabIndex=i" (mouseout)="overedTabIndex=null"
+                                  class="glyphicon glyphicon-star"
+                                  style="margin-left: -12px;"
+                                  [ngClass]="{'glyphicon-star-rtl': ls.isRtl()}"></span>
+                            <span [style.visibility]="tab.removable && tab.active ? 'visible' : 'hidden'"
+                                  (click)="$event.preventDefault(); $event.stopPropagation(); hidePopover(); removeTab(tab);"
+                                  class="glyphicon glyphicon-remove-circle"
+                                  [ngClass]="{'glyphicon-remove-circle-rtl': ls.isRtl()}"></span>
                         </a>
                     </li>
                     <li class = "add-tab">

@@ -16,6 +16,7 @@
   position: relative;
   left: 2px;
   cursor: pointer;
+  color: rgba(0, 0, 0, 0);
 }
 
 .glyphicon-star-rtl:before {
@@ -299,7 +300,7 @@
   }
 
   .nav-tabs > li > a .glyphicon-star:before {
-    color: $inactive-tab-color;
+    color: rgba(0, 0, 0, 0);
   }
 
   .nav-tabs > li > a .glyphicon-remove-circle:hover:before {
@@ -496,4 +497,12 @@
 
 .scroll-control > a .glyphicon-triangle-left:hover:before {
     color: #555555;
+}
+
+.blured-tab {
+  -webkit-mask-image: -webkit-gradient(linear, left top, right top,
+    from(rgba(255,202,52,1)), to(rgba(255,202,52,0)));
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 90%, auto;
+  -webkit-mask-position: left top;
 }

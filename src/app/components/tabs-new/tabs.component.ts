@@ -35,6 +35,7 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
   @ViewChild('tabsContainer') tabsContainer: ElementRef;
   subscription: Subscription;
   isBookmarkPaneVisible = false;
+  overedTabIndex: number;
 
   private intervalId: any;
   private prevPopoverTarget;
