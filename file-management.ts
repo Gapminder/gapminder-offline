@@ -431,10 +431,15 @@ export const updateBookmark = async (event, params) => {
 
 export const updateBookmarksFolder = async (event, params) => {
   try {
+    if (params.newFolderName === params.oldFolderName) {
+      event.sender.send(globConst.BOOKMARK_FOLDER_UPDATED, {bookmarkFile, params});
+      return;
+    }
+
     const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
     const related = allBookmarksData.folders.filter(folder => folder === params.newFolderName);
 
-    if (related.length > 0) {
+    if (related.length > 0 && params.newFolderName) {
       event.sender.send(globConst.BOOKMARK_FOLDER_UPDATED,
         {error: true, transData: {template: 'Impossible to rename folder already exists', params}, bookmarkFile, params});
       return;
