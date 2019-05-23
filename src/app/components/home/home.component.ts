@@ -61,9 +61,14 @@ interface IAlertActivity {
   event: string;
 }
 
+interface ITranslatableAlertData {
+  template: string;
+  params?;
+}
+
 interface IAlert {
   type: string;
-  message: string;
+  message: string | ITranslatableAlertData;
   activities: IAlertActivity[];
   timeout?: number;
   data?;
@@ -473,6 +478,11 @@ export class HomeComponent implements OnInit {
 
   getDismissableAlerts(): IAlert[] {
     return this.alerts.filter(alert => alert.timeout > 0);
+  }
+
+  shouldAlertBeTranslated(alert: IAlert): boolean {
+    return typeof alert.message === 'object' && !!alert.message.template;
+
   }
 
   doAlertActivity(alert: IAlert, activity: IAlertActivity) {

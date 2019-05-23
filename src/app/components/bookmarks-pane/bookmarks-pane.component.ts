@@ -260,9 +260,8 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
   private onGotBookmarks() {
     return (event, result) => {
-      if (result.error) {
-        console.log(result.error);
-        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+      if (this.processError(result)) {
+        return;
       }
       this.bookmarksByFolder = {};
       this.unCategorizedBookmarks = [];
@@ -308,9 +307,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
   private onBookmarkRemoved() {
     return (event, result) => {
-      if (result.error) {
-        console.log(result.error);
-        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+      if (this.processError(result)) {
         return;
       }
 
@@ -326,7 +323,10 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
       }
 
       this.ms.sendMessage(ALERT, {
-        message: `Bookmark "${result.bookmark.name}" just removed...`,
+        message: {
+          template: 'Bookmark just removed',
+          params: result.bookmark
+        },
         type: 'info',
         timeout: 5000,
         activities: [{label: 'Undo', event: this.globConst.BOOKMARKS_REMOVE_RESTORE}]
@@ -338,17 +338,13 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
   private onBookmarkAdded() {
     return (event, result) => {
-      if (result.error) {
-        console.log(result.error);
-        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
-      }
+      this.processError(result);
     };
   }
 
   private onBookmarksFolderCreated() {
     return (event, result) => {
-      if (result.error) {
-        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+      if (this.processError(result)) {
         return;
       }
 
@@ -360,9 +356,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
   private onBookmarkFolderUpdated() {
     return (event, result) => {
-      if (result.error) {
-        console.log(result.error);
-        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+      if (this.processError(result)) {
         return;
       }
 
@@ -372,14 +366,16 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
   private onBookmarkFolderRemoved() {
     return (event, result) => {
-      if (result.error) {
-        console.log(result.error);
-        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+      if (this.processError(result)) {
         return;
       }
 
       this.ms.sendMessage(ALERT, {
-        message: `Folder "${result.params.folderName}" just removed...`,
+        message: {
+          template: 'Folder just removed',
+          params: result.params
+
+        },
         type: 'info',
         timeout: 5000,
         activities: [{label: 'Undo', event: this.globConst.BOOKMARKS_REMOVE_RESTORE}]
@@ -407,5 +403,21 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
       // this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
     };
+  }
+
+  private processError(result): boolean {
+    if (result.error && typeof result.error !== 'boolean') {
+      console.log(result.error);
+      this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+      return true;
+    }
+
+    if (result.error && typeof result.error === 'boolean' && result.transData) {
+      console.log(result.error);
+      this.ms.sendMessage(ALERT, {message: result.transData, type: 'danger'});
+      return true;
+    }
+
+    return false;
   }
 }

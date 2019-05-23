@@ -436,7 +436,7 @@ export const updateBookmarksFolder = async (event, params) => {
 
     if (related.length > 1) {
       event.sender.send(globConst.BOOKMARK_FOLDER_UPDATED,
-        {error: `Impossible to rename: folder ${params.newFolderName} already exists!`, bookmarkFile, params});
+        {error: true, transData: {template: 'Impossible to rename folder already exists', params}, bookmarkFile, params});
       return;
     }
 
@@ -551,8 +551,11 @@ export const removeBookmarksFolder = async (event, params) => {
     const index = allBookmarksData.folders.indexOf(params.folderName);
 
     if (index < 0) {
-      event.sender.send(globConst.BOOKMARK_FOLDER_REMOVED,
-        {error: `Impossible to remove: folder ${params.folderName} does not exist!`, bookmarkFile, params});
+      event.sender.send(globConst.BOOKMARK_FOLDER_REMOVED, {
+        error: true, // `Impossible to remove: folder ${params.folderName} does not exist!`,
+        transData: {template: 'Impossible to remove:folder does not exist', params},
+        bookmarkFile, params
+      });
       return;
     }
 
@@ -583,7 +586,12 @@ export const createNewBookmarksFolder = async (event, params) => {
     if (allBookmarksData.folders.indexOf(params.folder) < 0) {
       allBookmarksData.folders.unshift(params.folder);
     } else {
-      throw Error(`folder ${params.folder} already exists`);
+      event.sender.send(globConst.BOOKMARKS_FOLDER_CREATED, {
+        error: true,
+        transData: {template: 'Folder already exists', params},
+        bookmarkFile
+      });
+      return;
     }
     await writeFile(bookmarkFile, JSON.stringify(allBookmarksData, null, 2));
     event.sender.send(globConst.BOOKMARKS_FOLDER_CREATED, {bookmarkFile, allBookmarksData});
