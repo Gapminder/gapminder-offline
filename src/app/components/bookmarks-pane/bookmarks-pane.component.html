@@ -54,7 +54,7 @@
 
     <div *ngFor="let folder of bookmarksFolders">
       <div class="bookmark-title">
-        <span *ngIf="!folder.editMode" class="bookmark-title-label">{{folder.name}}</span>
+        <span *ngIf="!folder.editMode" class="bookmark-title-label" [ngClass]="{'bookmark-title-label-rtl': ls.isRtl()}">{{folder.name}}</span>
         <input *ngIf="folder.editMode" [disabled]="isLocked()" maxlength="50" [(ngModel)]="folder.tmpName">
         <span>
            <button

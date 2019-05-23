@@ -432,9 +432,9 @@ export const updateBookmark = async (event, params) => {
 export const updateBookmarksFolder = async (event, params) => {
   try {
     const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
-    const related = allBookmarksData.folders.filter(folder => folder === params.oldFolderName);
+    const related = allBookmarksData.folders.filter(folder => folder === params.newFolderName);
 
-    if (related.length > 1) {
+    if (related.length > 0) {
       event.sender.send(globConst.BOOKMARK_FOLDER_UPDATED,
         {error: true, transData: {template: 'Impossible to rename folder already exists', params}, bookmarkFile, params});
       return;
@@ -552,7 +552,7 @@ export const removeBookmarksFolder = async (event, params) => {
 
     if (index < 0) {
       event.sender.send(globConst.BOOKMARK_FOLDER_REMOVED, {
-        error: true, // `Impossible to remove: folder ${params.folderName} does not exist!`,
+        error: true,
         transData: {template: 'Impossible to remove:folder does not exist', params},
         bookmarkFile, params
       });

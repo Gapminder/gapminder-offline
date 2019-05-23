@@ -149,5 +149,6 @@
   "Bookmark just removed": "Bookmark \"<b>{{name}}</b>\" just removed...",
   "Folder just removed": "Folder \"<b>{{folderName}}</b>\" just removed...",
   "Folder already exists": "Folder \"<b>{{folder}}</b>\" already exists!",
-  "Impossible to remove:folder does not exist": "Impossible to remove: folder \"<b>{{folderName}}</b>\" does not exist!"
+  "Impossible to remove:folder does not exist": "Impossible to remove: folder \"<b>{{folderName}}</b>\" does not exist!",
+  "Saved to bookmarks": "Saved to bookmarks!"
 }

@@ -4,6 +4,7 @@ import { MessageService } from '../../message.service';
 import { Subscription } from 'rxjs';
 import { ElectronService } from '../../providers/electron.service';
 import { LocalizationService } from '../../providers/localization.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-bookmark-form',
@@ -21,7 +22,7 @@ export class BookmarkFormComponent implements OnInit, OnDestroy {
   private screenShotListener;
   private readonly monthNameFormat;
 
-  constructor(public ls: LocalizationService, private ms: MessageService, private es: ElectronService) {
+  constructor(public ls: LocalizationService, private ms: MessageService, private es: ElectronService, private ts: TranslateService) {
     this.globConst = this.es.remote.getGlobal('globConst');
     this.initBookmark();
     this.monthNameFormat = this.es.d3.time.format('%Y-%m-%d %H:%M:%S');
@@ -70,7 +71,7 @@ export class BookmarkFormComponent implements OnInit, OnDestroy {
     });
 
     this.es.ipcRenderer.on(this.globConst.BOOKMARK_ADDED, () => {
-      this.ms.sendMessage(ALERT, {message: 'Saved to bookmarks!', type: 'success', timeout: 3000});
+      this.ms.sendMessage(ALERT, {message: this.ts.instant('Saved to bookmarks'), type: 'success', timeout: 3000});
     });
 
     this.es.ipcRenderer.on(this.globConst.BOOKMARK_UPDATED, () => {
