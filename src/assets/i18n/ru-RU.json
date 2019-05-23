@@ -150,5 +150,5 @@
   "Folder just removed": "Папка \"<b>{{folderName}}</b>\" удалена...",
   "Folder already exists": "Папка \"<b>{{folder}}</b>\" уже существует!",
   "Impossible to remove:folder does not exist": "Удаление невозможно: папка \"<b>{{folderName}}</b>\" не существует!",
-  "Saved to bookmarks": "Сохранено в закладках!"
+  "Saved to bookmarks": "Сохранено!"
 }
