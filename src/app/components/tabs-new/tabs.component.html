@@ -25,7 +25,7 @@
                     <span class = "glyphicon glyphicon-triangle-left"></span>
                 </a>
             </div>
-            <div style = "flex-grow: 1; max-width: calc(100% - 270px)">
+            <div style = "flex-grow: 1; max-width: calc(100% - 300px)">
                 <ul #tabsContainer (window:resize) = "autoScroll()" class = "nav nav-tabs noscrollbar"
                     (click) = "$event.preventDefault()">
                     <li *ngFor = "let tab of tabs; index as i" class = "nav-item" [class.active] = "tab.active">
