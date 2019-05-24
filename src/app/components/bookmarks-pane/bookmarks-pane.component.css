@@ -92,3 +92,19 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.card-container {
+  position: relative;
+  width: 100%;
+  min-height: 25vh;
+  height: auto;
+  overflow :hidden;
+}
+
+.card-content {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: auto;
+}
