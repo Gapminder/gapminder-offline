@@ -259,50 +259,52 @@
 .locked {
   $inactive-tab-color: #bbbbbb !important;
 
-  .nav-tabs > li > a > span {
-    color: $inactive-tab-color;
-  }
+  .nav-tabs {
+    li {
+      a {
+        span {
+          color: $inactive-tab-color;
+        }
 
-  .nav-tabs > li > a:hover {
-    background-color: unset !important;
-    color: $inactive-tab-color;
+        .glyphicon-remove-circle:before {
+          color: $inactive-tab-color;
+        }
+
+        .glyphicon-star:before {
+          color: rgba(0, 0, 0, 0);
+        }
+
+        .glyphicon-remove-circle:hover:before {
+          color: $inactive-tab-color;
+        }
+      }
+
+      a:hover {
+        background-color: unset !important;
+        color: $inactive-tab-color;
+      }
+    }
   }
 
   .nav-link.active {
     background-color: unset !important;
   }
 
-  .nav-tabs > li > a .glyphicon-remove-circle:before {
-    color: $inactive-tab-color;
+
+  .bookmarks-tab {
+    a {
+      .glyphicon-star:before, .glyphicon-star:hover:before {
+        color: $inactive-tab-color;
+      }
+    }
   }
 
-  .nav-tabs > li > a .glyphicon-star:before {
-    color: rgba(0, 0, 0, 0);
-  }
-
-  .nav-tabs > li > a .glyphicon-remove-circle:hover:before {
-    color: $inactive-tab-color;
-  }
-
-  /*.nav-tabs > li > a .glyphicon-star:hover:before {
-    color: $inactive-tab-color;
-  }*/
-
-  .bookmarks-tab > a .glyphicon-star:before {
-    color: #bbbbbb;
-  }
-
-  .bookmarks-tab > a .glyphicon-star:hover:before {
-    color: #bbbbbb;
-  }
-
-
-  .add-tab > a .glyphicon-plus:before {
-    color: #bbbbbb;
-  }
-
-  .add-tab > a .glyphicon-plus:hover:before {
-    color: #bbbbbb;
+  .add-tab {
+    a {
+      .glyphicon-plus:before, .glyphicon-plus:hover:before {
+        color: $inactive-tab-color;
+      }
+    }
   }
 }
 
@@ -310,20 +312,22 @@
   .glyphicon-remove-circle.inactive-glyph:before {
     color: #555 !important;
   }
-
-  /*.glyphicon-star.inactive-glyph:before {
-    color: #555 !important;
-  }*/
 }
 
-.nav-tabs > li > a .glyphicon-remove-circle.inactive-glyph:hover:before, .nav-tabs > li > a .glyphicon-star.inactive-glyph:hover:before {
-  background-color: unset !important;
-  color: #555 !important;
-}
+.nav-tabs {
+  li {
+    a {
+      .glyphicon-remove-circle.inactive-glyph:hover:before, .glyphicon-star.inactive-glyph:hover:before {
+        background-color: unset !important;
+        color: #555 !important;
+      }
 
-.nav-tabs > li > a .glyphicon-remove-circle.inactive-glyph:before, .nav-tabs > li > a .glyphicon-star.inactive-glyph:before {
-  background-color: unset !important;
-  color: #bbbbbb !important;
+      .glyphicon-remove-circle.inactive-glyph:before, .glyphicon-star.inactive-glyph:before {
+        background-color: unset !important;
+        color: #bbbbbb !important;
+      }
+    }
+  }
 }
 
 .tab-container > ul > li > a {
@@ -365,31 +369,35 @@
   width: 100%;
   padding-bottom: 1px;
   border-bottom: none;
-}
 
-.nav-tabs > li > a {
-  margin: 0;
-  border: none;
-  border-radius: 0 0 0 0;
-}
+  li {
+    a {
+      margin: 0;
+      border: none;
+      border-radius: 0 0 0 0;
+    }
 
-.nav-tabs > li > a:hover {
-  margin: 0;
-  background-color: #ffca34 ! important;
-  border: none ! important;
-}
+    a:hover {
+      margin: 0;
+      background-color: #ffca34 ! important;
+      border: none ! important;
+    }
+  }
 
-.nav-tabs > li:last-child > a:hover {
-  margin: 0;
-  background-color: inherit ! important;
-  font-weight: bold;
-  border: none ! important;
-}
+  li:last-child {
+    a:hover {
+      margin: 0;
+      background-color: inherit ! important;
+      font-weight: bold;
+      border: none ! important;
+    }
 
-.nav-tabs > li:last-child > a:focus {
-  margin: 0;
-  background-color: inherit ! important;
-  border: none ! important;
+    a:focus {
+      margin: 0;
+      background-color: inherit ! important;
+      border: none ! important;
+    }
+  }
 }
 
 .nav-link {
@@ -404,14 +412,16 @@
 .add-tab {
   margin: 0;
   padding: 0;
-}
 
-.add-tab > a .glyphicon-plus:before {
-  color: #ffca34;
-}
+  a {
+    .glyphicon-plus:before {
+      color: #ffca34;
+    }
 
-.add-tab > a .glyphicon-plus:hover:before {
-  color: #555555;
+    .glyphicon-plus:hover:before {
+      color: #555555;
+    }
+  }
 }
 
 .bookmarks-tab {
@@ -419,16 +429,18 @@
   padding-left: 5px;
   padding-right: 7px;
   padding-top: 6px;
-}
 
-.bookmarks-tab > a .glyphicon-star:before {
-  color: #ffca34;
-  font-size: 22px;
-}
+  a {
+    .glyphicon-star:before {
+      color: #ffca34;
+      font-size: 22px;
+    }
 
-.bookmarks-tab > a .glyphicon-star:hover:before {
-  color: #555555;
-  font-size: 22px;
+    .glyphicon-star:hover:before {
+      color: #555555;
+      font-size: 22px;
+    }
+  }
 }
 
 .bookmarks-tab-active {
