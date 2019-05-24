@@ -109,22 +109,26 @@
   outline: none ! important;
 }
 
-.ddf-menu .dropdown-menu {
-  left: auto !important;
-  right: 0 !important;
-}
+.ddf-menu {
+  .dropdown-menu {
+    left: auto !important;
+    right: 0 !important;
+  }
 
-.ddf-menu .dropdown .btn {
-  border: none !important;
-  box-shadow: none !important;
-}
+  .dropdown {
+    .btn {
+      border: none !important;
+      box-shadow: none !important;
+    }
 
-.ddf-menu .dropdown .btn:hover {
-  background: none;
-}
+    .btn:hover {
+      background: none;
+    }
 
-.ddf-menu .dropdown .btn-default, .ddf-menu .dropdown .btn-default:active, .ddf-menu .dropdown .btn-default:focus {
-  background-color: #ffffff;
+    .btn-default, .btn-default:active, .btn-default:focus {
+      background-color: #ffffff;
+    }
+  }
 }
 
 .menu-container {
