@@ -23,18 +23,77 @@
   max-width: unset;
 }
 
-.nav-tabs > li > a .glyphicon-remove-circle:hover:before, .nav-tabs > li > a .glyphicon-star:hover:before {
-  background-color: #555;
-  color: #ffca34;
-  border-radius: 5px;
+.nav-tabs {
+  display: flex;
+  overflow-x: scroll;
+  width: 100%;
+  padding-bottom: 1px;
+  border-bottom: none;
+
+  li {
+    a {
+      margin: 0;
+      border: none;
+      border-radius: 0 0 0 0;
+
+      .glyphicon-remove-circle.inactive-glyph:hover:before, .glyphicon-star.inactive-glyph:hover:before {
+        background-color: unset !important;
+        color: #555 !important;
+      }
+
+      .glyphicon-remove-circle.inactive-glyph:before, .glyphicon-star.inactive-glyph:before {
+        background-color: unset !important;
+        color: #bbbbbb !important;
+      }
+    }
+  }
+
+  a:hover {
+    margin: 0;
+    background-color: #ffca34 ! important;
+    border: none ! important;
+  }
 }
 
-.nav-tabs > li > a .glyphicon-plus:before {
-  color: #ffca34;
-}
+.nav-tabs > {
+  li > {
+    a {
+      .glyphicon-remove-circle:hover:before, .glyphicon-star:hover:before {
+        background-color: #555;
+        color: #ffca34;
+        border-radius: 5px;
+      }
 
-.nav-tabs > li > a .glyphicon-plus:hover:before {
-  color: #555555;
+      .glyphicon-plus:before {
+        color: #ffca34;
+      }
+
+      .glyphicon-plus:hover:before {
+        color: #555555;
+      }
+    }
+
+    a:hover {
+      .glyphicon-remove-circle.inactive-glyph:before {
+        color: #555 !important;
+      }
+    }
+  }
+
+  li:last-child > {
+    a:hover {
+      margin: 0;
+      background-color: inherit ! important;
+      font-weight: bold;
+      border: none ! important;
+    }
+
+    a:focus {
+      margin: 0;
+      background-color: inherit ! important;
+      border: none ! important;
+    }
+  }
 }
 
 .main-menu-btn {
@@ -308,28 +367,6 @@
   }
 }
 
-.nav-tabs > li > a:hover {
-  .glyphicon-remove-circle.inactive-glyph:before {
-    color: #555 !important;
-  }
-}
-
-.nav-tabs {
-  li {
-    a {
-      .glyphicon-remove-circle.inactive-glyph:hover:before, .glyphicon-star.inactive-glyph:hover:before {
-        background-color: unset !important;
-        color: #555 !important;
-      }
-
-      .glyphicon-remove-circle.inactive-glyph:before, .glyphicon-star.inactive-glyph:before {
-        background-color: unset !important;
-        color: #bbbbbb !important;
-      }
-    }
-  }
-}
-
 .tab-container > ul > li > a {
   margin: 0;
   border: none;
@@ -361,43 +398,6 @@
   border-left: none;
   border-right: none;
   border-bottom: 2px solid #ffca34;
-}
-
-.nav-tabs {
-  display: flex;
-  overflow-x: scroll;
-  width: 100%;
-  padding-bottom: 1px;
-  border-bottom: none;
-
-  li {
-    a {
-      margin: 0;
-      border: none;
-      border-radius: 0 0 0 0;
-    }
-
-    a:hover {
-      margin: 0;
-      background-color: #ffca34 ! important;
-      border: none ! important;
-    }
-  }
-
-  li:last-child {
-    a:hover {
-      margin: 0;
-      background-color: inherit ! important;
-      font-weight: bold;
-      border: none ! important;
-    }
-
-    a:focus {
-      margin: 0;
-      background-color: inherit ! important;
-      border: none ! important;
-    }
-  }
 }
 
 .nav-link {
