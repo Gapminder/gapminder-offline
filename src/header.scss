@@ -1,3 +1,7 @@
+$inactive-tab-color: #bbbbbb !important;
+$grey-color: #555555;
+$yellow-main-color: #ffca34;
+
 .glyphicon-remove-circle:before {
   content: "\e014";
   top: 1px;
@@ -38,19 +42,19 @@
 
       .glyphicon-remove-circle.inactive-glyph:hover:before, .glyphicon-star.inactive-glyph:hover:before {
         background-color: unset !important;
-        color: #555 !important;
+        color: $grey-color !important;
       }
 
       .glyphicon-remove-circle.inactive-glyph:before, .glyphicon-star.inactive-glyph:before {
         background-color: unset !important;
-        color: #bbbbbb !important;
+        color: $inactive-tab-color;
       }
     }
   }
 
   a:hover {
     margin: 0;
-    background-color: #ffca34 ! important;
+    background-color: $yellow-main-color ! important;
     border: none ! important;
   }
 }
@@ -59,23 +63,23 @@
   li > {
     a {
       .glyphicon-remove-circle:hover:before, .glyphicon-star:hover:before {
-        background-color: #555;
-        color: #ffca34;
+        background-color: $grey-color;
+        color: $yellow-main-color;
         border-radius: 5px;
       }
 
       .glyphicon-plus:before {
-        color: #ffca34;
+        color: $yellow-main-color;
       }
 
       .glyphicon-plus:hover:before {
-        color: #555555;
+        color: $grey-color;
       }
     }
 
     a:hover {
       .glyphicon-remove-circle.inactive-glyph:before {
-        color: #555 !important;
+        color: $grey-color !important;
       }
     }
   }
@@ -301,13 +305,13 @@
   font-size: 1.25em;
   font-weight: 700;
   color: white;
-  background-color: #ffca34;
+  background-color: $yellow-main-color;
   display: inline-block;
 }
 
 .inputfile:focus + label,
 .inputfile + label:hover {
-  background-color: #ffca34;
+  background-color: $yellow-main-color;
 }
 
 .inputfile + label {
@@ -315,13 +319,11 @@
 }
 
 .nav-item > .active {
-  background-color: #ffca34 ! important;
+  background-color: $yellow-main-color ! important;
   border: none ! important;
 }
 
 .locked {
-  $inactive-tab-color: #bbbbbb !important;
-
   .nav-tabs {
     li {
       a {
@@ -401,7 +403,7 @@
   border-top: none;
   border-left: none;
   border-right: none;
-  border-bottom: 2px solid #ffca34;
+  border-bottom: 2px solid $yellow-main-color;
 }
 
 .nav-link {
@@ -419,11 +421,11 @@
 
   a {
     .glyphicon-plus:before {
-      color: #ffca34;
+      color: $yellow-main-color;
     }
 
     .glyphicon-plus:hover:before {
-      color: #555555;
+      color: $grey-color;
     }
   }
 }
@@ -436,19 +438,19 @@
 
   a {
     .glyphicon-star:before {
-      color: #ffca34;
+      color: $yellow-main-color;
       font-size: 22px;
     }
 
     .glyphicon-star:hover:before {
-      color: #555555;
+      color: $grey-color;
       font-size: 22px;
     }
   }
 }
 
 .bookmarks-tab-active {
-  background-color: #ffca34;
+  background-color: $yellow-main-color;
 }
 
 .bookmarks-tab-active > a .glyphicon-star:before,
@@ -463,12 +465,12 @@
 }
 
 .scroll-control > a .glyphicon-triangle-right:before, .scroll-control > a .glyphicon-triangle-left:before {
-  color: #ffca34;
+  color: $yellow-main-color;
 }
 
 
 .scroll-control > a .glyphicon-triangle-right:hover:before, .scroll-control > a .glyphicon-triangle-left:hover:before {
-  color: #555555;
+  color: $grey-color;
 }
 
 .bm-star-container-ltr {
