@@ -36,6 +36,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
   private dragulaSubs: Subscription;
   private scrollTimer;
   private scrollDirection = ScrollMove.NO_SCROLL;
+  private lastY = null;
 
   constructor(public ls: LocalizationService,
               public es: ElectronService,
@@ -70,7 +71,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
         const mouseY = event['pageY'] - container.offsetTop;
         const elementHeight = value.el.getBoundingClientRect().height;
         const midPoint = container.offsetHeight / 2;
-        const luft = elementHeight / 5;
+        const luft = elementHeight / 2;
         const initUp = () => {
           this.scrollTimer = setInterval(() => {
             container.scrollBy(0, -15);
@@ -83,25 +84,25 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
           }, 30);
           this.scrollDirection = ScrollMove.SCROLL_DN;
         };
+        const isTopPoint = () => mouseY < midPoint - luft;
+        const isBottomPoint = () => mouseY > midPoint + luft;
+        const direction = this.lastY === null ? null : e.pageY < this.lastY ? 1 : 0;
 
-        if (mouseY < midPoint - luft && !this.scrollTimer) {
+        if ((isTopPoint() || isBottomPoint()) && direction === 1) {
+          if (this.scrollTimer) {
+            clearInterval(this.scrollTimer);
+            this.scrollTimer = null;
+          }
           initUp();
-        } else if (mouseY < midPoint - luft && this.scrollTimer) {
-          if (this.scrollDirection !== ScrollMove.SCROLL_UP) {
+        } else if ((isTopPoint() || isBottomPoint()) && direction === 0) {
+          if (this.scrollTimer) {
             clearInterval(this.scrollTimer);
-            initUp();
+            this.scrollTimer = null;
           }
-        } else if (mouseY > midPoint + luft && !this.scrollTimer) {
           initDn();
-        } else if (mouseY > midPoint + luft && this.scrollTimer) {
-          if (this.scrollDirection !== ScrollMove.SCROLL_DN) {
-            clearInterval(this.scrollTimer);
-            initDn();
-          }
-        } else if (this.scrollTimer) {
-          clearInterval(this.scrollTimer);
-          this.scrollTimer = null;
         }
+
+        this.lastY = e.pageY;
       };
     });
 
