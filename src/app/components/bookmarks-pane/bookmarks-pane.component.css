@@ -123,7 +123,7 @@
   margin: 20px;
   width: 70%;
   border: 2px dashed #555555;
-  height: 15vh;
+  min-height: 15vh;
   position:relative;
 }
 

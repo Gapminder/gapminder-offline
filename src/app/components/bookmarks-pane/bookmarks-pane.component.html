@@ -4,10 +4,10 @@
       <div class="bookmark-title"><span class="bookmark-title-label">{{'Bookmarks' | translate}}</span></div>
       <div class="card-container">
         <div *ngIf="!unCategorizedBookmarks || unCategorizedBookmarks.length <= 0" class="empty-desc">
-          Bookmarks will appear here. To create a bookmark, make a chart you like and click a little star in the tab head.
+          Bookmarks will appear here. To create a bookmark, make a chart you like and click a little star in the tab
+          head.
         </div>
-        <div *ngIf="unCategorizedBookmarks && unCategorizedBookmarks.length > 0"
-             [dragula]="'bm'"
+        <div [dragula]="'bm'"
              [ngClass]="{'drop-landing': !unCategorizedBookmarks || unCategorizedBookmarks.length <= 0}"
              [(dragulaModel)]="unCategorizedBookmarks"
              class="bookmarks-container card-content">
@@ -49,7 +49,8 @@
     </div>
 
     <div class="bookmark-new">
-      <a href="#" (click)="isNewBookmarksFolderFormVisible = !isNewBookmarksFolderFormVisible">{{'New folder' | translate}}</a>
+      <a href="#"
+         (click)="isNewBookmarksFolderFormVisible = !isNewBookmarksFolderFormVisible">{{'New folder' | translate}}</a>
       <div *ngIf="isNewBookmarksFolderFormVisible">
         <div>
           <input [disabled]="isLocked()" [(ngModel)]="newBookmarksFolder" maxlength="50" style="width: 300px;">
@@ -64,7 +65,8 @@
 
     <div *ngFor="let folder of bookmarksFolders">
       <div class="bookmark-title">
-        <span *ngIf="!folder.editMode" class="bookmark-title-label" [ngClass]="{'bookmark-title-label-rtl': ls.isRtl()}">{{folder.name}}</span>
+        <span *ngIf="!folder.editMode" class="bookmark-title-label"
+              [ngClass]="{'bookmark-title-label-rtl': ls.isRtl()}">{{folder.name}}</span>
         <input *ngIf="folder.editMode" [disabled]="isLocked()" maxlength="50" [(ngModel)]="folder.tmpName">
         <span>
            <button
@@ -88,7 +90,8 @@
       </div>
       <div class="card-container">
         <div *ngIf="!bookmarksByFolder[folder.name] || bookmarksByFolder[folder.name].length <= 0" class="empty-desc">
-          Bookmarks will appear here. To create a bookmark, make a chart you like and click a little star in the tab head.
+          Bookmarks will appear here. To create a bookmark, make a chart you like and click a little star in the tab
+          head.
         </div>
         <div *ngIf="!folder.collapsed"
              [dragula]="'bm'"
