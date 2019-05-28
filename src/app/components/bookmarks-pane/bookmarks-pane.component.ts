@@ -398,7 +398,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
       if (result.error) {
         console.log(result.error);
-        this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+        this.ms.sendMessage(ALERT, {message: result.error, timeout: 5000, type: 'danger'});
         return;
       }
 
@@ -409,13 +409,13 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
   private processError(result): boolean {
     if (result.error && typeof result.error !== 'boolean') {
       console.log(result.error);
-      this.ms.sendMessage(ALERT, {message: result.error, type: 'danger'});
+      this.ms.sendMessage(ALERT, {message: result.error, timeout: 5000, type: 'danger'});
       return true;
     }
 
     if (result.error && typeof result.error === 'boolean' && result.transData) {
       console.log(result.error);
-      this.ms.sendMessage(ALERT, {message: result.transData, type: 'danger'});
+      this.ms.sendMessage(ALERT, {message: result.transData, timeout: 5000, type: 'danger'});
       return true;
     }
 
