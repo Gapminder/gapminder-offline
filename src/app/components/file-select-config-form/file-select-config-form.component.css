@@ -25,6 +25,9 @@
     background-color: yellow;
     color: #b81f00;
 }
+.bad-header {
+  color: #b81f00;
+}
 label.step-label {
     margin-left: 1px;
 }

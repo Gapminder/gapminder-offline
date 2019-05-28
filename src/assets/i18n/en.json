@@ -150,5 +150,7 @@
   "Folder just removed": "Folder \"<b>{{folderName}}</b>\" just removed...",
   "Folder already exists": "Folder \"<b>{{folder}}</b>\" already exists!",
   "Impossible to remove:folder does not exist": "Impossible to remove: folder \"<b>{{folderName}}</b>\" does not exist!",
-  "Saved to bookmarks": "Saved to bookmarks!"
+  "Saved to bookmarks": "Saved to bookmarks!",
+  "bad-header-format": "Expected \"{{expectedHeaderKey}}\" but found \"{{existingHeaderKey}}\" in the first column of the file. Importing is still possible, but the result might not be not what you expect.",
+  "csv-excel-empty-data": "Importing is impossible due to empty data!"
 }

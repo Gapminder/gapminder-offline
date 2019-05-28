@@ -37,11 +37,13 @@
                                      (done)="onFileChanged($event)"></app-smart-path-selector>
           </div>
           <div *ngIf="!loadingSheetsTitle && worksheets.length > 0 && format==='excel'">
-            <select type="string" [disabled]="worksheets.length < 2" [(ngModel)]="sheet" class="form-control">
+            <select type="string" [disabled]="worksheets.length < 2"  (change)="checkExcelHeader()" [(ngModel)]="sheet" class="form-control">
               <option *ngFor="let worksheet of worksheets" [ngValue]="worksheet">{{worksheet}}</option>
             </select>
           </div>
           <app-wait-indicator [title]="loadingSheetsTitle"></app-wait-indicator>
+          <div *ngIf="!!badFormatHeader" class="bad-header">{{'bad-header-format' | translate:badFormatHeader}}</div>
+          <div *ngIf="dataError" class="bad-header">{{'csv-excel-empty-data' | translate}}</div>
         </div>
     </div>
 
@@ -91,8 +93,8 @@
             </div>
             <div class="col-sm-4" [ngClass]="{'col-sm-pull-8': ls.isRtl(), 'bottom-controls-rtl': ls.isRtl(), 'bottom-controls': !ls.isRtl()}">
                 <input type="button" class="close-btn" (click)="close()" value="{{'Cancel' | translate}}" />
-                <input type="button" *ngIf="format === 'csv'" class="ok-btn" (click)="ok()" [disabled]="!choice || !file || !delimiter" value="{{'OK' | translate}}" />
-                <input type="button" *ngIf="format === 'excel'" class="ok-btn" (click)="ok()" [disabled]="loadingSheetsTitle || !choice || !file" value="{{'OK' | translate}}" />
+                <input type="button" *ngIf="format === 'csv'" class="ok-btn" (click)="ok()" [disabled]="!choice || !file || !delimiter || dataError" value="{{'OK' | translate}}" />
+                <input type="button" *ngIf="format === 'excel'" class="ok-btn" (click)="ok()" [disabled]="loadingSheetsTitle || !choice || !file || dataError" value="{{'OK' | translate}}" />
             </div>
         </div>
     </div>
