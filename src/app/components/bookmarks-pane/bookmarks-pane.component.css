@@ -138,7 +138,7 @@
   left: 0;
 }
 .drop-landing::after{
-  content: "Drag and drop bookmarks here...";
+  content: var(--drop-here);
   position: absolute;
   top: 0;
   left: 0;

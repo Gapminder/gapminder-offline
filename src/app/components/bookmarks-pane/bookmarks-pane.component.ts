@@ -5,6 +5,8 @@ import { LocalizationService } from '../../providers/localization.service';
 import { ALERT, BOOKMARKS_PANE_OFF_OUTSIDE, SWITCH_BOOKMARKS_PANE } from '../../constants';
 import { MessageService } from '../../message.service';
 import { Subscription } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 const BOOKMARKS_THUMBNAILS_FOLDER = 'bookmarks-thumbnails';
 
@@ -40,6 +42,8 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
   constructor(public ls: LocalizationService,
               public es: ElectronService,
+              public ts: TranslateService,
+              public sanitizer: DomSanitizer,
               private ms: MessageService,
               private dragulaService: DragulaService) {
     this.globConst = this.es.remote.getGlobal('globConst');

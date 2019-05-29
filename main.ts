@@ -54,7 +54,11 @@ let isVersionCheckPassed = false;
 function createWindow() {
   const isFileArgumentValid = fileName => fs.existsSync(fileName) && fileName.indexOf('-psn_') === -1;
 
-  mainWindow = new BrowserWindow({width: 1200, height: 800});
+  mainWindow = new BrowserWindow({
+    width: 1200, height: 800, webPreferences: {
+      nodeIntegration: true
+    }
+  });
   mainWindow.appPath = nonAsarAppPath;
   mainWindow.devMode = devMode;
   mainWindow.userDataPath = userDataPath;

@@ -152,5 +152,7 @@
   "Impossible to remove:folder does not exist": "Impossible to remove: folder \"<b>{{folderName}}</b>\" does not exist!",
   "Saved to bookmarks": "Saved to bookmarks!",
   "bad-header-format": "Expected \"{{expectedHeaderKey}}\" but found \"{{existingHeaderKey}}\" in the first column of the file. Importing is still possible, but the result might not be not what you expect.",
-  "csv-excel-empty-data": "Importing is impossible due to empty data!"
+  "csv-excel-empty-data": "Importing is impossible due to empty data!",
+  "Drag and drop bookmarks here": "Drag and drop bookmarks here...",
+  "Bookmarks will appear here": "Bookmarks will appear here. To create a bookmark, make a chart you like and click a little star in the tab head."
 }

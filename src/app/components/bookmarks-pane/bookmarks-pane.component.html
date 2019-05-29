@@ -3,12 +3,10 @@
     <div class="bookmarks-content">
       <div class="bookmark-title"><span class="bookmark-title-label">{{'Bookmarks' | translate}}</span></div>
       <div class="card-container">
-        <div *ngIf="!unCategorizedBookmarks || unCategorizedBookmarks.length <= 0" class="empty-desc">
-          Bookmarks will appear here. To create a bookmark, make a chart you like and click a little star in the tab
-          head.
-        </div>
+        <div *ngIf="!unCategorizedBookmarks || unCategorizedBookmarks.length <= 0" class="empty-desc">{{'Bookmarks will appear here' | translate}}</div>
         <div [dragula]="'bm'"
              [ngClass]="{'drop-landing': !unCategorizedBookmarks || unCategorizedBookmarks.length <= 0}"
+             [attr.style]="sanitizer.bypassSecurityTrustStyle('--drop-here: \''+this.ts.instant('Drag and drop bookmarks here')+'\'')"
              [(dragulaModel)]="unCategorizedBookmarks"
              class="bookmarks-container card-content">
           <div *ngFor="let bookmark of unCategorizedBookmarks" [attr.id]="'bm_'+bookmark.id"
@@ -89,14 +87,12 @@
         </span>
       </div>
       <div class="card-container">
-        <div *ngIf="!bookmarksByFolder[folder.name] || bookmarksByFolder[folder.name].length <= 0" class="empty-desc">
-          Bookmarks will appear here. To create a bookmark, make a chart you like and click a little star in the tab
-          head.
-        </div>
+        <div *ngIf="!bookmarksByFolder[folder.name] || bookmarksByFolder[folder.name].length <= 0" class="empty-desc">{{'Bookmarks will appear here' | translate}}</div>
         <div *ngIf="!folder.collapsed"
              [dragula]="'bm'"
              [attr.id]="folder.name"
              [ngClass]="{'drop-landing': !bookmarksByFolder[folder.name] || bookmarksByFolder[folder.name].length <= 0}"
+             [attr.style]="sanitizer.bypassSecurityTrustStyle('--drop-here: \''+this.ts.instant('Drag and drop bookmarks here')+'\'')"
              [(dragulaModel)]="bookmarksByFolder[folder.name]"
              class="bookmarks-container card-content">
           <div *ngFor="let bookmark of bookmarksByFolder[folder.name]" [attr.id]="'bm_'+bookmark.id"
