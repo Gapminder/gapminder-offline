@@ -86,17 +86,17 @@ export class HomeComponent implements OnInit {
   menuActions: any = {};
   calculatedDataView: ICalculatedDataView;
 
-  @ViewChild('ddfModal') ddfModal: ModalDirective;
-  @ViewChild('additionalDataModal') additionalDataModal: ModalDirective;
-  @ViewChild('presetsModal') presetsModal: ModalDirective;
-  @ViewChild('versionsModal') versionsModal: ModalDirective;
-  @ViewChild('validationModal') validationModal: ModalDirective;
-  @ViewChild('ddfDatasetConfigModal') ddfDatasetConfigModal: ModalDirective;
-  @ViewChild('csvConfigModal') csvConfigModal: ModalDirective;
-  @ViewChild('excelConfigModal') excelConfigModal: ModalDirective;
-  @ViewChild('additionalCsvConfigModal') additionalCsvConfigModal: ModalDirective;
-  @ViewChild('additionalExcelConfigModal') additionalExcelConfigModal: ModalDirective;
-  @ViewChild('addDdfFolder') addDdfFolderInput: ElementRef;
+  @ViewChild('ddfModal', {static: true}) ddfModal: ModalDirective;
+  @ViewChild('additionalDataModal', {static: true}) additionalDataModal: ModalDirective;
+  @ViewChild('presetsModal', {static: true}) presetsModal: ModalDirective;
+  @ViewChild('versionsModal', {static: true}) versionsModal: ModalDirective;
+  @ViewChild('validationModal', {static: true}) validationModal: ModalDirective;
+  @ViewChild('ddfDatasetConfigModal', {static: true}) ddfDatasetConfigModal: ModalDirective;
+  @ViewChild('csvConfigModal', {static: true}) csvConfigModal: ModalDirective;
+  @ViewChild('excelConfigModal', {static: true}) excelConfigModal: ModalDirective;
+  @ViewChild('additionalCsvConfigModal', {static: true}) additionalCsvConfigModal: ModalDirective;
+  @ViewChild('additionalExcelConfigModal', {static: true}) additionalExcelConfigModal: ModalDirective;
+  @ViewChild('addDdfFolder', {static: true}) addDdfFolderInput: ElementRef;
   tabsDisabled = false;
   alerts: IAlert[] = [];
   private globConst;

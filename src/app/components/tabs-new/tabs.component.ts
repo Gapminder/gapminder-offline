@@ -32,7 +32,7 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
   @Input() syncActions: ITabActionsSynchronizer;
   @Input() disabled: boolean;
 
-  @ViewChild('tabsContainer') tabsContainer: ElementRef;
+  @ViewChild('tabsContainer', {static: true}) tabsContainer: ElementRef;
   subscription: Subscription;
   isBookmarkPaneVisible = false;
   overedTabIndex: number;

@@ -10,7 +10,7 @@ import { ElectronService } from '../../providers/electron.service';
   styleUrls: ['./ddf-dataset-config-form.component.css']
 })
 export class DdfDatasetConfigFormComponent {
-  @ViewChild('uploadBtn') uploadBtn: ElementRef;
+  @ViewChild('uploadBtn', {static: true}) uploadBtn: ElementRef;
 
   isDataPackageExists = false;
 
