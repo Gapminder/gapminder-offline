@@ -71,7 +71,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
         const mouseY = event['pageY'] - container.offsetTop;
         const elementHeight = value.el.getBoundingClientRect().height;
         const midPoint = container.offsetHeight / 2;
-        const luft = elementHeight;
+        const luft = elementHeight / 2;
         const initUp = () => {
           this.scrollTimer = setInterval(() => {
             container.scrollBy(0, -15);
@@ -100,6 +100,9 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
             this.scrollTimer = null;
           }
           initDn();
+        } else if (!isTopPoint() && !isBottomPoint()) {
+          clearInterval(this.scrollTimer);
+          this.scrollTimer = null;
         }
 
         this.lastY = e.pageY;
