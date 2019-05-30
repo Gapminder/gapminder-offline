@@ -67,6 +67,11 @@ label.step-label {
     width: 50%;
     height: 40px;
 }
+.ok-btn:disabled, .ok-btn[disabled], .close-btn:disabled, .close-btn[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
 .fileUpload.btn.btn-default {
     margin-bottom: 3px;
     padding: 2px 12px;
