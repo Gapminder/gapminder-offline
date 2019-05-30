@@ -202,7 +202,7 @@ export class FileSelectConfigFormComponent {
             lastModified: new Date().getTime()
           });
           const data = await readerObject.load();
-          if (data.columns[0] !== this.calculatedDataView.dim) {
+          if (this.addDataMode && data.columns[0] !== this.calculatedDataView.dim) {
             this.badFormatHeader = {
               expectedHeaderKey: this.calculatedDataView.dim,
               existingHeaderKey: data.columns[0]
@@ -238,7 +238,7 @@ export class FileSelectConfigFormComponent {
       this.loadingSheetsTitle = this.ts.instant('Reading Excel sheets');
       const data = await readerObject.load();
       this.loadingSheetsTitle = '';
-      if (data.columns[0] !== this.calculatedDataView.dim) {
+      if (this.addDataMode && data.columns[0] !== this.calculatedDataView.dim) {
         this.badFormatHeader = {
           expectedHeaderKey: this.calculatedDataView.dim,
           existingHeaderKey: data.columns[0]
