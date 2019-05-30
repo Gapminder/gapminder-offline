@@ -24,7 +24,7 @@
 }
 
 .bookmark-title-label {
-  font-size: large;
+  /* font-size: large; */
   margin-right: 20px;
 }
 
@@ -109,7 +109,7 @@
   min-height: auto;
   height: 100%;
   text-align: center;
-  font-size: larger;
+  /* font-size: larger; */
   vertical-align: middle;
 }
 
