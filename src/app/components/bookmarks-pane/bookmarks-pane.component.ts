@@ -276,7 +276,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
       for (const bookmark of result.data.content) {
         bookmark.tmpName = bookmark.name;
-        bookmark.image = this.es.path.resolve(this.es.userDataPath, BOOKMARKS_THUMBNAILS_FOLDER, `${bookmark.id}.png`);
+        bookmark.image = 'file:' + this.es.path.resolve(this.es.userDataPath, BOOKMARKS_THUMBNAILS_FOLDER, `${bookmark.id}.png`);
         bookmark.editMode = false;
         bookmark.removeRequest = false;
 

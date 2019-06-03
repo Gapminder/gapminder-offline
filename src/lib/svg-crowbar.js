@@ -299,7 +299,7 @@
 
     const svgPos = svgContent.indexOf('<svg');
     const justSvg = svgContent.substr(svgPos);
-    const headerRegexp = /<svg\s+width="(\d+)"\s+height="(\d+)"/;
+    const headerRegexp = /<svg\s+width="([\d\.]+)"\s+height="([\d\.]+)"/;
     const match = headerRegexp.exec(justSvg);
     const width = match[1];
     const height = match[2];

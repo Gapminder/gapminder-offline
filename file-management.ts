@@ -36,17 +36,13 @@ const initBookmarksThumbnailsCache = async () => {
 };
 
 const clearBookmarksThumbnailsCache = async () => new Promise((resolve, reject) => {
-  fs.readdir(bookmarksThumbnailsUndoPath, (readErr, files) => {
+  fs.readdir(bookmarksThumbnailsUndoPath, async (readErr, files) => {
     if (readErr) {
       return reject(readErr);
     }
 
     for (const file of files) {
-      fs.unlink(path.join(bookmarksThumbnailsUndoPath, file), err => {
-        if (err) {
-          return reject(err);
-        }
-      });
+      await unlink(path.join(bookmarksThumbnailsUndoPath, file));
     }
 
     resolve();
@@ -54,17 +50,13 @@ const clearBookmarksThumbnailsCache = async () => new Promise((resolve, reject) 
 });
 
 const restoreBookmarksThumbnails = async () => new Promise((resolve, reject) => {
-  fs.readdir(bookmarksThumbnailsUndoPath, (readErr, files) => {
+  fs.readdir(bookmarksThumbnailsUndoPath, async (readErr, files) => {
     if (readErr) {
       return reject(readErr);
     }
 
     for (const file of files) {
-      fs.copyFile(path.resolve(bookmarksThumbnailsUndoPath, file), path.resolve(bookmarksThumbnailsPath, file), err => {
-        if (err) {
-          return reject(err);
-        }
-      });
+      await copyFile(path.resolve(bookmarksThumbnailsUndoPath, file), path.resolve(bookmarksThumbnailsPath, file));
     }
 
     resolve();
