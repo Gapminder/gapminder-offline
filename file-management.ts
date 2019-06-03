@@ -479,7 +479,6 @@ export const restoreBookmarks = async (event) => {
     await restoreBookmarksThumbnails();
     const content = await readFile(bookmarkUndoFile);
     await writeFile(bookmarkFile, content);
-    // await copyFile(bookmarkUndoFile, bookmarkFile);
   } catch (e) {
     event.sender.send(globConst.BOOKMARKS_REMOVE_RESTORED, {error: e.toString(), bookmarkFile});
   } finally {
@@ -566,7 +565,7 @@ export const removeBookmarksFolder = async (event, params) => {
         const thumbnailPath = path.resolve(bookmarksThumbnailsPath, `${bookmark.id}.png`);
         const thumbnailUndoPath = path.resolve(bookmarksThumbnailsUndoPath, `${bookmark.id}.png`);
         await copyFile(thumbnailPath, thumbnailUndoPath);
-        unlink(thumbnailPath);
+        await unlink(thumbnailPath);
       } else {
         newContent.push(bookmark);
       }
