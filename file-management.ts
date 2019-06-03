@@ -462,7 +462,7 @@ export const removeBookmark = async (event, params) => {
     await copyFile(thumbnailPath, thumbnailUndoPath);
     const newBookmarks = allBookmarksData.content.filter(bookmark => params.bookmark.id !== bookmark.id);
     await writeFile(bookmarkFile, JSON.stringify({content: newBookmarks, folders: allBookmarksData.folders}, null, 2));
-    unlink(thumbnailPath);
+    await unlink(thumbnailPath);
     event.sender.send(globConst.BOOKMARK_REMOVED, {bookmarkFile, bookmark: params.bookmark});
   } catch (e) {
     event.sender.send(globConst.BOOKMARK_REMOVED, {error: e.toString(), bookmarkFile, bookmark: params.bookmark});
@@ -477,12 +477,14 @@ const commitBookmarks = async () => {
 export const restoreBookmarks = async (event) => {
   try {
     await restoreBookmarksThumbnails();
-    await copyFile(bookmarkUndoFile, bookmarkFile);
-    event.sender.send(globConst.BOOKMARKS_REMOVE_RESTORED, {bookmarkFile});
+    const content = await readFile(bookmarkUndoFile);
+    await writeFile(bookmarkFile, content);
+    // await copyFile(bookmarkUndoFile, bookmarkFile);
   } catch (e) {
     event.sender.send(globConst.BOOKMARKS_REMOVE_RESTORED, {error: e.toString(), bookmarkFile});
   } finally {
     await commitBookmarks();
+    event.sender.send(globConst.BOOKMARKS_REMOVE_RESTORED, {bookmarkFile});
   }
 };
 
