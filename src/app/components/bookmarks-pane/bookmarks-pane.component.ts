@@ -239,6 +239,19 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
     return this.ms.isLocked();
   }
 
+  areBookmarksPresent(): boolean {
+    const unCategorizedBookmarksPresent = this.unCategorizedBookmarks.length > 0;
+    let bookmarksByFolderPresent = false;
+
+    for (const folder of this.bookmarksFolders) {
+      if (this.bookmarksByFolder[folder.name] && this.bookmarksByFolder[folder.name].length > 0) {
+        bookmarksByFolderPresent = true;
+      }
+    }
+
+    return unCategorizedBookmarksPresent || bookmarksByFolderPresent;
+  }
+
   private removeBookmarkIn(bookmarks, bookmarkId: string): boolean {
     if (!bookmarks || !bookmarks.findIndex) {
       return false;
@@ -251,19 +264,6 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
     }
 
     return false;
-  }
-
-  private areBookmarksPresent(): boolean {
-    const unCategorizedBookmarksPresent = this.unCategorizedBookmarks.length > 0;
-    let bookmarksByFolderPresent = false;
-
-    for (const folder of this.bookmarksFolders) {
-      if (this.bookmarksByFolder[folder.name] && this.bookmarksByFolder[folder.name].length > 0) {
-        bookmarksByFolderPresent = true;
-      }
-    }
-
-    return unCategorizedBookmarksPresent || bookmarksByFolderPresent;
   }
 
   private onGotBookmarks() {
@@ -304,10 +304,10 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
         collapsed: false
       }));
 
-      if (this.needToFullnessCheck && !this.areBookmarksPresent()) {
+      /* if (this.needToFullnessCheck && !this.areBookmarksPresent()) {
         this.ms.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: false, dontRestoreTab: true});
         this.ms.sendMessage(BOOKMARKS_PANE_OFF_OUTSIDE);
-      }
+      } */
 
       this.needToFullnessCheck = false;
     };
