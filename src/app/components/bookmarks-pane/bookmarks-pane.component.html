@@ -62,7 +62,7 @@
     </div>
 
     <div *ngFor="let folder of bookmarksFolders">
-      <div class="bookmark-title">
+      <div class="bookmark-title folder-control">
         <span *ngIf="!folder.editMode" class="bookmark-title-label"
               [ngClass]="{'bookmark-title-label-rtl': ls.isRtl()}">{{folder.name}}</span>
         <input *ngIf="folder.editMode" [disabled]="isLocked()" maxlength="50" [(ngModel)]="folder.tmpName">
@@ -76,9 +76,9 @@
            </button>
            <button *ngIf="!folder.editMode"
                    [disabled]="isLocked()"
-                   (click)="switchFolderEditMode(bookmarksFolders, folder)"><span
+                   (click)="switchFolderEditMode(bookmarksFolders, folder)" class="folder-edit-control"><span
              class="glyphicon glyphicon-edit"></span></button>
-           <button *ngIf="!folder.editMode" [disabled]="isLocked()" (click)="removeFolder(folder)"><span
+           <button *ngIf="!folder.editMode" [disabled]="isLocked()" (click)="removeFolder(folder)" class="folder-edit-control"><span
              class="glyphicon glyphicon-trash"></span></button>
            <button *ngIf="folder.editMode" [disabled]="isLocked()" (click)="saveFolder(folder)"><span
              class="glyphicon glyphicon-ok"></span></button>

@@ -149,3 +149,11 @@
   text-align: center;
   padding: 5px;
 }
+
+.folder-control .folder-edit-control {
+  visibility: hidden;
+}
+
+.folder-control:hover .folder-edit-control {
+  visibility: visible;
+}
