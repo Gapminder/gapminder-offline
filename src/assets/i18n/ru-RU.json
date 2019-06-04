@@ -144,7 +144,7 @@
   "Remove": "Удалить",
   "Done": "Готово",
   "Bookmarks": "Закладки",
-  "New folder": "Новая папка",
+  "New folder": "Создать новую папку",
   "Impossible to rename folder already exists": "Переименовать невозможно: папка \"<b>{{newFolderName}}</b>\" уже существует!",
   "Bookmark just removed": "Закладка \"<b>{{name}}</b>\" удалена...",
   "Folder just removed": "Папка \"<b>{{folderName}}</b>\" удалена...",

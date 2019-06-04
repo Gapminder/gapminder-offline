@@ -144,7 +144,7 @@
   "Remove": "Remove",
   "Done": "Done",
   "Bookmarks": "Bookmarks",
-  "New folder": "New folder",
+  "New folder": "Create new folder",
   "Impossible to rename folder already exists": "Impossible to rename: folder \"<b>{{newFolderName}}</b>\" already exists!",
   "Bookmark just removed": "Bookmark \"<b>{{name}}</b>\" just removed...",
   "Folder just removed": "Folder \"<b>{{folderName}}</b>\" just removed...",

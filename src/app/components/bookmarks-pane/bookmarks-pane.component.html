@@ -3,9 +3,10 @@
     <div class="bookmarks-content">
       <div class="bookmark-title"><span class="bookmark-title-label">{{'Bookmarks' | translate}}</span></div>
       <div class="card-container">
-        <div *ngIf="!unCategorizedBookmarks || unCategorizedBookmarks.length <= 0" class="empty-desc">{{'Bookmarks will appear here' | translate}}</div>
+        <div *ngIf="!areUncategorizedBookmarksPresent()"
+             class="empty-desc">{{'Bookmarks will appear here' | translate}}</div>
         <div [dragula]="'bm'"
-             [ngClass]="{'drop-landing': (!unCategorizedBookmarks || unCategorizedBookmarks.length <= 0) && areBookmarksPresent()}"
+             [ngClass]="{'drop-landing': !areUncategorizedBookmarksPresent() && areBookmarksPresent()}"
              [attr.style]="sanitizer.bypassSecurityTrustStyle('--drop-here: \''+this.ts.instant('Drag and drop bookmarks here')+'\'')"
              [(dragulaModel)]="unCategorizedBookmarks"
              class="bookmarks-container card-content">
@@ -15,10 +16,10 @@
             <div>
               <div *ngIf="!bookmark.editMode" class="hellip-block" [title]="bookmark.name">{{bookmark.name}}</div>
               <div *ngIf="bookmark.editMode">
-                <input [(ngModel)]="bookmark.tmpName">
+                <input [(ngModel)]="bookmark.tmpName" (keyup.enter)="save(bookmark)" (keyup.escape)="cancel(bookmark)">
                 <button (click)="save(bookmark)"><span class="glyphicon glyphicon-ok"></span></button>
                 <button (click)="cancel(bookmark)"><span class="glyphicon glyphicon-remove"></span></button>
-                <div>
+                <div *ngIf="!areBookmarksFoldersEmpty()">
                   <select (change)="onBookmarkFolderChange($event, bookmark)" class="form-control">
                     <option value="">---</option>
                     <option *ngFor="let folder of bookmarksFolders"
@@ -47,12 +48,15 @@
     </div>
 
     <div class="bookmark-new">
-      <a href="#"
-         (click)="isNewBookmarksFolderFormVisible = !isNewBookmarksFolderFormVisible">{{'New folder' | translate}}</a>
+      <a href="#" (click)="switchNewFolderControl()">{{'New folder' | translate}}</a>
       <div *ngIf="isNewBookmarksFolderFormVisible">
         <div>
-          <input [disabled]="isLocked()" [(ngModel)]="newBookmarksFolder" maxlength="50" style="width: 300px;">
-          <button [disabled]="isLocked()" (click)="createNewBookmarksFolder()"><span
+          <input #inputNewFolder
+                 [disabled]="isLocked()"
+                 (keyup.enter)="createNewBookmarksFolder()"
+                 (keyup.escape)="resetFolderForm()"
+                 [(ngModel)]="newBookmarksFolder" maxlength="50" style="width: 300px;">
+          <button [disabled]="isLocked() || newBookmarksFolder === ''" (click)="createNewBookmarksFolder()"><span
             class="glyphicon glyphicon-ok"></span></button>
           <button [disabled]="isLocked()" (click)="resetFolderForm()"><span class="glyphicon glyphicon-remove"></span>
           </button>
@@ -68,7 +72,7 @@
         <input *ngIf="folder.editMode" [disabled]="isLocked()" maxlength="50" [(ngModel)]="folder.tmpName">
         <span>
            <button
-             *ngIf="!folder.editMode && (bookmarksByFolder[folder.name] && bookmarksByFolder[folder.name].length > 0)"
+             *ngIf="!folder.editMode && areBookmarksPresentInFolder(folder.name)"
              [disabled]="isLocked()"
              (click)="folder.collapsed=!folder.collapsed">
              <span *ngIf="folder.collapsed" class="glyphicon glyphicon-chevron-down"></span>
@@ -78,7 +82,8 @@
                    [disabled]="isLocked()"
                    (click)="switchFolderEditMode(bookmarksFolders, folder)" class="folder-edit-control"><span
              class="glyphicon glyphicon-edit"></span></button>
-           <button *ngIf="!folder.editMode" [disabled]="isLocked()" (click)="removeFolder(folder)" class="folder-edit-control"><span
+           <button *ngIf="!folder.editMode" [disabled]="isLocked()" (click)="removeFolder(folder)"
+                   class="folder-edit-control"><span
              class="glyphicon glyphicon-trash"></span></button>
            <button *ngIf="folder.editMode" [disabled]="isLocked()" (click)="saveFolder(folder)"><span
              class="glyphicon glyphicon-ok"></span></button>
@@ -87,11 +92,12 @@
         </span>
       </div>
       <div class="card-container">
-        <div *ngIf="!bookmarksByFolder[folder.name] || bookmarksByFolder[folder.name].length <= 0" class="empty-desc">{{'Empty folder' | translate}}</div>
+        <div *ngIf="!areBookmarksPresentInFolder(folder.name)"
+             class="empty-desc">{{'Empty folder' | translate}}</div>
         <div *ngIf="!folder.collapsed"
              [dragula]="'bm'"
              [attr.id]="folder.name"
-             [ngClass]="{'drop-landing': (!bookmarksByFolder[folder.name] || bookmarksByFolder[folder.name].length <= 0) && areBookmarksPresent()}"
+             [ngClass]="{'drop-landing': !areBookmarksPresentInFolder(folder.name) && areBookmarksPresent()}"
              [attr.style]="sanitizer.bypassSecurityTrustStyle('--drop-here: \''+this.ts.instant('Drag and drop bookmarks here')+'\'')"
              [(dragulaModel)]="bookmarksByFolder[folder.name]"
              class="bookmarks-container card-content">
@@ -101,10 +107,10 @@
             <div>
               <div *ngIf="!bookmark.editMode" class="hellip-block" [title]="bookmark.name">{{bookmark.name}}</div>
               <div *ngIf="bookmark.editMode">
-                <input [(ngModel)]="bookmark.tmpName">
+                <input [(ngModel)]="bookmark.tmpName" (keyup.enter)="save(bookmark)" (keyup.escape)="cancel(bookmark)">
                 <button (click)="save(bookmark)"><span class="glyphicon glyphicon-ok"></span></button>
                 <button (click)="cancel(bookmark)"><span class="glyphicon glyphicon-remove"></span></button>
-                <div>
+                <div *ngIf="!areBookmarksFoldersEmpty()">
                   <select (change)="onBookmarkFolderChange($event, bookmark)" class="form-control">
                     <option value="">---</option>
                     <option *ngFor="let folder of bookmarksFolders"

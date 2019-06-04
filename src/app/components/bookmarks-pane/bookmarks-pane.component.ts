@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { DragulaService } from 'ng2-dragula';
 import { ElectronService } from '../../providers/electron.service';
 import { LocalizationService } from '../../providers/localization.service';
@@ -7,6 +7,7 @@ import { MessageService } from '../../message.service';
 import { Subscription } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { isEmpty } from 'lodash';
 
 const BOOKMARKS_THUMBNAILS_FOLDER = 'bookmarks-thumbnails';
 
@@ -20,6 +21,7 @@ enum ScrollMove {
   styleUrls: ['./bookmarks-pane.component.css']
 })
 export class BookmarksPaneComponent implements OnInit, OnDestroy {
+  @ViewChild('inputNewFolder', {static: false}) inputNewFolder: ElementRef;
   bookmarksByFolder;
   unCategorizedBookmarks;
   bookmarksFolders;
@@ -201,8 +203,10 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
   }
 
   createNewBookmarksFolder() {
-    this.es.ipcRenderer.send(this.globConst.CREATE_NEW_BOOKMARKS_FOLDER, {folder: this.newBookmarksFolder});
-    this.ms.lock();
+    if (this.newBookmarksFolder !== '') {
+      this.es.ipcRenderer.send(this.globConst.CREATE_NEW_BOOKMARKS_FOLDER, {folder: this.newBookmarksFolder});
+      this.ms.lock();
+    }
   }
 
   resetFolderForm() {
@@ -239,17 +243,40 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
     return this.ms.isLocked();
   }
 
+  areUncategorizedBookmarksPresent(): boolean {
+    return !isEmpty(this.unCategorizedBookmarks);
+  }
+
+  areBookmarksPresentInFolder(folder: string): boolean {
+    return !isEmpty(this.bookmarksByFolder[folder]);
+  }
+
+  areBookmarksFoldersEmpty(): boolean {
+    return isEmpty(this.bookmarksFolders);
+  }
+
   areBookmarksPresent(): boolean {
-    const unCategorizedBookmarksPresent = this.unCategorizedBookmarks.length > 0;
+    const unCategorizedBookmarksPresent = this.areUncategorizedBookmarksPresent();
     let bookmarksByFolderPresent = false;
 
-    for (const folder of this.bookmarksFolders) {
-      if (this.bookmarksByFolder[folder.name] && this.bookmarksByFolder[folder.name].length > 0) {
-        bookmarksByFolderPresent = true;
+    if (!this.areBookmarksFoldersEmpty()) {
+      for (const folder of this.bookmarksFolders) {
+        if (this.areBookmarksPresentInFolder(folder.name)) {
+          bookmarksByFolderPresent = true;
+        }
       }
     }
 
     return unCategorizedBookmarksPresent || bookmarksByFolderPresent;
+  }
+
+  switchNewFolderControl() {
+    this.isNewBookmarksFolderFormVisible = !this.isNewBookmarksFolderFormVisible;
+    if (this.isNewBookmarksFolderFormVisible) {
+      setTimeout(() => {
+        this.inputNewFolder.nativeElement.focus();
+      }, 0);
+    }
   }
 
   private removeBookmarkIn(bookmarks, bookmarkId: string): boolean {
