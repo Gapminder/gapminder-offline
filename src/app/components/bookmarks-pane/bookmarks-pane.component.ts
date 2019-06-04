@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { isEmpty } from 'lodash';
+import { ChartService } from '../tabs/chart.service';
 
 const BOOKMARKS_THUMBNAILS_FOLDER = 'bookmarks-thumbnails';
 
@@ -46,6 +47,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
               public es: ElectronService,
               public ts: TranslateService,
               public sanitizer: DomSanitizer,
+              private chartService: ChartService,
               private ms: MessageService,
               private dragulaService: DragulaService) {
     this.globConst = this.es.remote.getGlobal('globConst');

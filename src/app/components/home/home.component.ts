@@ -1,5 +1,5 @@
 import * as waterfall from 'async-waterfall';
-import { isEmpty } from 'lodash';
+import { isEmpty, endsWith } from 'lodash';
 import {
   Component,
   OnInit,
@@ -376,7 +376,14 @@ export class HomeComponent implements OnInit {
 
     newTab.model = config;
 
-    this.chartService.setReaderDefaults(newTab);
+    if (parameters.tab.data.reader !== 'ext-csv' && parameters.tab.data.reader !== 'excel') {
+      this.chartService.setReaderDefaults(newTab);
+    } else {
+      this.chartService.registerNewReader('ext-csv');
+      this.chartService.registerNewReader('excel');
+      newTab.readerName = parameters.tab.data.reader;
+    }
+
     this.registerNewReaders(newTab.model);
     this.tabsModel.forEach((tab: TabModel) => tab.active = false);
     this.tabsModel.push(newTab);

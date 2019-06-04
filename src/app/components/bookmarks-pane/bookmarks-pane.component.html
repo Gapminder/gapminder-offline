@@ -1,7 +1,8 @@
 <div class="wrapper">
   <div class="all-bookmarks">
     <div class="bookmarks-content">
-      <div class="bookmark-title alert alert-folder"><span class="bookmark-title-label">{{'Bookmarks' | translate}}</span></div>
+      <div class="bookmark-title alert alert-folder"><span
+        class="bookmark-title-label">{{'Bookmarks' | translate}}</span></div>
       <div class="card-container">
         <div *ngIf="!areUncategorizedBookmarksPresent()"
              class="empty-desc">{{'Bookmarks will appear here' | translate}}</div>
@@ -69,7 +70,12 @@
       <div class="bookmark-title folder-control alert alert-folder">
         <span *ngIf="!folder.editMode" class="bookmark-title-label"
               [ngClass]="{'bookmark-title-label-rtl': ls.isRtl()}">{{folder.name}}</span>
-        <input *ngIf="folder.editMode" [disabled]="isLocked()" maxlength="50" [(ngModel)]="folder.tmpName">
+        <input *ngIf="folder.editMode"
+               [disabled]="isLocked()"
+               (keyup.enter)="saveFolder(folder)"
+               (keyup.escape)="cancelFolder(folder)"
+               maxlength="50"
+               [(ngModel)]="folder.tmpName">
         <span>
            <button
              *ngIf="!folder.editMode && areBookmarksPresentInFolder(folder.name)"
