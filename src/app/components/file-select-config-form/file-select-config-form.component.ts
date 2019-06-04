@@ -10,6 +10,8 @@ import { LocalizationService } from '../../providers/localization.service';
 interface IBadFormatHeader {
   expectedHeaderKey: string;
   existingHeaderKey: string;
+  expectedHeaderTime: string;
+  existingHeaderTime: string;
 }
 
 @Component({
@@ -202,14 +204,7 @@ export class FileSelectConfigFormComponent {
             lastModified: new Date().getTime()
           });
           const data = await readerObject.load();
-          if (this.addDataMode && data.columns[0] !== this.calculatedDataView.dim) {
-            this.badFormatHeader = {
-              expectedHeaderKey: this.calculatedDataView.dim,
-              existingHeaderKey: data.columns[0]
-            };
-          } else {
-            this.badFormatHeader = null;
-          }
+          this.badFormatHeader = this.getBadFormatHeader(data);
         }
       } catch (e) {
         console.log(e);
@@ -238,14 +233,7 @@ export class FileSelectConfigFormComponent {
       this.loadingSheetsTitle = this.ts.instant('Reading Excel sheets');
       const data = await readerObject.load();
       this.loadingSheetsTitle = '';
-      if (this.addDataMode && data.columns[0] !== this.calculatedDataView.dim) {
-        this.badFormatHeader = {
-          expectedHeaderKey: this.calculatedDataView.dim,
-          existingHeaderKey: data.columns[0]
-        };
-      } else {
-        this.badFormatHeader = null;
-      }
+      this.badFormatHeader = this.getBadFormatHeader(data);
     } catch (e) {
       console.log(e);
       this.badFormatHeader = null;
@@ -259,5 +247,31 @@ export class FileSelectConfigFormComponent {
 
   setChartType(chartType: string) {
     this.chartType = chartType;
+  }
+
+  getTranslationKeyForBadFormatHeader(): string {
+    if (this.badFormatHeader.expectedHeaderKey && this.badFormatHeader.existingHeaderKey &&
+      this.badFormatHeader.expectedHeaderTime && this.badFormatHeader.existingHeaderTime) {
+      return 'bad-header-format-all';
+    } else if (this.badFormatHeader.expectedHeaderKey && this.badFormatHeader.existingHeaderKey) {
+      return 'bad-header-format-key';
+    } else if (this.badFormatHeader.expectedHeaderTime && this.badFormatHeader.existingHeaderTime) {
+      return 'bad-header-format-time';
+    }
+
+    return null;
+  }
+
+  private getBadFormatHeader(data): IBadFormatHeader {
+    if (this.addDataMode && (data.columns[0] !== this.calculatedDataView.dim || data.columns[1] !== this.calculatedDataView.time)) {
+      return {
+        expectedHeaderKey: data.columns[0] !== this.calculatedDataView.dim ? this.calculatedDataView.dim : null,
+        existingHeaderKey: data.columns[0] !== this.calculatedDataView.dim ? data.columns[0] : null,
+        expectedHeaderTime: data.columns[1] !== this.calculatedDataView.time ? this.calculatedDataView.time : null,
+        existingHeaderTime: data.columns[1] !== this.calculatedDataView.time ? data.columns[1] : null
+      };
+    }
+
+    return null;
   }
 }

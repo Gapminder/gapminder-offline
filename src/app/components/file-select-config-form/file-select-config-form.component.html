@@ -42,7 +42,7 @@
             </select>
           </div>
           <app-wait-indicator [title]="loadingSheetsTitle"></app-wait-indicator>
-          <div *ngIf="!!badFormatHeader" class="bad-header">{{'bad-header-format' | translate:badFormatHeader}}</div>
+          <div *ngIf="!!badFormatHeader" class="bad-header">{{getTranslationKeyForBadFormatHeader() | translate:badFormatHeader}}</div>
           <div *ngIf="dataError" class="bad-header">{{'csv-excel-empty-data' | translate}}</div>
         </div>
     </div>

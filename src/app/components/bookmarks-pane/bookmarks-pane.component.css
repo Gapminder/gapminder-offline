@@ -157,3 +157,12 @@
 .folder-control:hover .folder-edit-control {
   visibility: visible;
 }
+
+.alert-folder {
+  background-color:#fcf8e3;
+  border-color:#faebcc
+}
+
+.alert-folder hr {
+  border-top-color:#f7e1b5
+}
