@@ -18,7 +18,14 @@ import {
   OPEN_DDF_FOLDER_ACTION,
   TAB_READY_ACTION,
   SWITCH_MENU_ACTION,
-  MODEL_CHANGED, CLEAR_VALIDATION_FORM, ABANDON_VALIDATION, BOOKMARK_TAB, SEND_TAB_TO_BOOKMARK, ALERT, CLEAR_ALERTS
+  MODEL_CHANGED,
+  CLEAR_VALIDATION_FORM,
+  ABANDON_VALIDATION,
+  BOOKMARK_TAB,
+  SEND_TAB_TO_BOOKMARK,
+  ALERT,
+  CLEAR_ALERTS,
+  BOOKMARKS_PANE_OFF_OUTSIDE, SWITCH_BOOKMARKS_PANE
 } from '../../constants';
 import { initMenuComponent } from '../menu/system-menu';
 import { getMenuActions } from '../menu/menu-actions';
@@ -162,6 +169,9 @@ export class HomeComponent implements OnInit {
 
             const newTab = new TabModel(event.options.chartType, false);
             const chartIssue = this.chartService.newChart(newTab, tabDataDescriptor, false);
+
+            this.messageService.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: false, dontRestoreTab: true});
+            this.messageService.sendMessage(BOOKMARKS_PANE_OFF_OUTSIDE);
 
             this.tabsModel.forEach((tab: TabModel) => tab.active = false);
 
@@ -436,6 +446,8 @@ export class HomeComponent implements OnInit {
     this.excelConfigModal.hide();
 
     if (event) {
+      this.messageService.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: false, dontRestoreTab: true});
+      this.messageService.sendMessage(BOOKMARKS_PANE_OFF_OUTSIDE);
       this.chartService.newSimpleChart(this.tabsModel, event, () => {
         this.doDetectChanges();
       });
