@@ -318,6 +318,7 @@ app.on('before-quit', (event) => {
   event.preventDefault();
 
   if (!queueProcessor.isAlive()) {
+    loggedout = true;
     app.quit();
   } else {
     setInterval(() => {

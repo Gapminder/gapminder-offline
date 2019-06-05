@@ -31,7 +31,7 @@
             <div class="footer" [ngClass]="{'footer-rtl': ls.isRtl()}">
                 <span *ngFor="let lang of ls.langConfig">
                      <span *ngIf="lang.id === ls.currentLanguage.id" [ngClass]="{'ru': ls.currentLanguage.id === 'ru'}">{{lang.label}}</span>
-                     <span *ngIf="lang.id !== ls.currentLanguage.id"><a href="#" [ngClass]="{'ru': ls.currentLanguage.id === 'ru'}" (click)="ls.setLanguage(lang)">{{lang.label}}</a></span>
+                     <span *ngIf="lang.id !== ls.currentLanguage.id"><a href="#" [ngClass]="{'ru': ls.currentLanguage.id === 'ru'}" (click)="ls.setLanguage(lang)" tabindex="-1">{{lang.label}}</a></span>
                 </span>
             </div>
         </div>
