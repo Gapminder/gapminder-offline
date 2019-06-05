@@ -578,6 +578,7 @@ export const removeBookmarksFolder = async (event, params) => {
     }
 
     allBookmarksData.folders.splice(index, 1);
+    delete allBookmarksData.settings.folders[params.folderName];
     const newContent = [];
     for (let i = 0; i < allBookmarksData.content.length; i++) {
       const bookmark = allBookmarksData.content[i];
