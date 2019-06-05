@@ -21,6 +21,7 @@ const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 const nonAsarAppPath = app.getAppPath().replace(/app\.asar/, '');
 const userDataPath = (app || remote.app).getPath('userData');
 const bookmarkFile = path.resolve(userDataPath, 'bookmarks.json');
+const bookmarkCopyFile = path.resolve(userDataPath, 'bookmarks-copy.json');
 const bookmarkUndoFile = path.resolve(userDataPath, 'bookmarks-undo.json');
 const bookmarksThumbnailsPath = path.resolve(userDataPath, 'bookmarks-thumbnails');
 const bookmarksThumbnailsUndoPath = path.resolve(userDataPath, 'bookmarks-thumbnails-undo');
@@ -377,7 +378,9 @@ export const getBookmarksObject = async (filePar?: string) => {
   return new Promise<any[]>(async (resolve, reject) => {
     try {
       await initFile(_file);
-      const data = JSON.parse(await readFile(_file, 'utf-8'));
+      const content = await readFile(_file, 'utf-8');
+      const data = JSON.parse(content);
+      await writeFile(bookmarkCopyFile, content);
 
       if (!data || !data.content || !data.folders || !_.isArray(data.content) || !_.isArray(data.folders)) {
         return reject('wrong bookmark file format');
