@@ -9,12 +9,22 @@ import { autoUpdater } from 'electron-updater';
 import {
   addBookmark,
   exportForWeb,
-  getUpdateLinks, openBookmark,
+  getUpdateLinks,
+  openBookmark,
   openFileWhenDoubleClick,
-  openFileWithDialog, getBookmarksObject, removeBookmark,
+  openFileWithDialog,
+  getBookmarksObject,
+  removeBookmark,
   saveAllTabs,
-  saveFile, updateBookmark,
-  QueueProcessor, createNewBookmarksFolder, updateBookmarksFolder, removeBookmarksFolder, moveBookmark, restoreBookmarks
+  saveFile,
+  updateBookmark,
+  QueueProcessor,
+  createNewBookmarksFolder,
+  updateBookmarksFolder,
+  removeBookmarksFolder,
+  moveBookmark,
+  restoreBookmarks,
+  switchBookmarksFolderVisibility
 } from './file-management';
 import { GoogleAnalytics } from './google-analytics';
 import { getLatestGithubTag, updateDataset } from './dataset-update';
@@ -50,6 +60,7 @@ let mainWindow;
 let currentFile;
 let isVersionCheckPassed = false;
 
+let loggedout = false;
 
 function createWindow() {
   const isFileArgumentValid = fileName => fs.existsSync(fileName) && fileName.indexOf('-psn_') === -1;
@@ -238,6 +249,9 @@ function createWindow() {
   ipc.on(globConst.CREATE_NEW_BOOKMARKS_FOLDER, async (event, params) => {
     queueProcessor.executeRequest(createNewBookmarksFolder, event, params);
   });
+  ipc.on(globConst.BOOKMARKS_FOLDER_VISIBILITY_SWITCH, async (event, params) => {
+    queueProcessor.executeRequest(switchBookmarksFolderVisibility, event, params);
+  });
   ipc.on(globConst.DO_SAVE_ALL_TABS, saveAllTabs);
   ipc.on(globConst.DO_EXPORT_FOR_WEB, exportForWeb);
   ipc.on(globConst.NEW_CHART, (event, chartType) => {
@@ -292,6 +306,25 @@ app.on('open-file', (event, filePath) => {
     if (!devMode) {
       currentFile = filePath;
     }
+  }
+});
+
+app.on('before-quit', (event) => {
+  if (loggedout) {
+    return;
+  }
+
+  queueProcessor.active = false;
+  event.preventDefault();
+
+  if (!queueProcessor.isAlive()) {
+    app.quit();
+  } else {
+    setInterval(() => {
+      if (!queueProcessor.isAlive()) {
+        app.quit();
+      }
+    }, 500);
   }
 });
 

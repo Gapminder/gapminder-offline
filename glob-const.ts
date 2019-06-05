@@ -38,5 +38,7 @@
   BOOKMARK_FOLDER_REMOVED: 'bookmark-folder-removed',
   BOOKMARK_UPDATED: 'bookmark-updated',
   MOVE_BOOKMARK: 'move-bookmark',
-  BOOKMARK_MOVED: 'bookmark-moved'
+  BOOKMARK_MOVED: 'bookmark-moved',
+  BOOKMARKS_FOLDER_VISIBILITY_SWITCH: 'bookmarks-folder-visibility-switch',
+  BOOKMARKS_FOLDER_VISIBILITY_SWITCHED: 'bookmarks-folder-visibility-switched'
 };

@@ -242,17 +242,24 @@ const openFile = (event, fileName, fileNameOnly) => {
 };
 
 export class QueueProcessor {
+  active = true;
   private i = null;
   private queue = [];
   private working = false;
 
   executeRequest(fun, event, params) {
-    if (this.i === null) {
-      this.i = setInterval(async () => {
-        await this.queueProcessor();
-      }, 1000);
+    if (this.active) {
+      if (this.i === null) {
+        this.i = setInterval(async () => {
+          await this.queueProcessor();
+        }, 1000);
+      }
+      this.queue.push({fun, event, params});
     }
-    this.queue.push({fun, event, params});
+  }
+
+  isAlive(): boolean {
+    return this.working || !_.isEmpty(this.queue);
   }
 
   private async queueProcessor() {
@@ -260,8 +267,13 @@ export class QueueProcessor {
       if (!this.working) {
         const exec = this.queue.shift();
         this.working = true;
-        await exec.fun(exec.event, exec.params);
-        this.working = false;
+        try {
+          await exec.fun(exec.event, exec.params);
+        } catch (e) {
+          throw e;
+        } finally {
+          this.working = false;
+        }
       }
     } else {
       clearInterval(this.i);
@@ -595,6 +607,20 @@ export const createNewBookmarksFolder = async (event, params) => {
     event.sender.send(globConst.BOOKMARKS_FOLDER_CREATED, {bookmarkFile, allBookmarksData});
   } catch (e) {
     event.sender.send(globConst.BOOKMARKS_FOLDER_CREATED, {error: e.toString(), bookmarkFile});
+  }
+};
+
+export const switchBookmarksFolderVisibility = async (event, params) => {
+  try {
+    const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
+    const settings = _.defaultsDeep(allBookmarksData.settings, {folders: {}});
+    settings.folders[params.folder.name] = {};
+    allBookmarksData.settings = settings;
+    allBookmarksData.settings.folders[params.folder.name].collapsed = params.folder.collapsed;
+    await writeFile(bookmarkFile, JSON.stringify(allBookmarksData, null, 2));
+    event.sender.send(globConst.BOOKMARKS_FOLDER_VISIBILITY_SWITCHED, {bookmarkFile, allBookmarksData});
+  } catch (e) {
+    event.sender.send(globConst.BOOKMARKS_FOLDER_VISIBILITY_SWITCHED, {error: e.toString(), bookmarkFile});
   }
 };
 

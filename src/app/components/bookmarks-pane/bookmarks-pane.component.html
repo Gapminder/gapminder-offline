@@ -80,7 +80,7 @@
            <button
              *ngIf="!folder.editMode && areBookmarksPresentInFolder(folder.name)"
              [disabled]="isLocked()"
-             (click)="folder.collapsed=!folder.collapsed">
+             (click)="switchFolderContentVisibility(folder)">
              <span *ngIf="folder.collapsed" class="glyphicon glyphicon-chevron-down"></span>
              <span *ngIf="!folder.collapsed" class="glyphicon glyphicon-chevron-up"></span>
            </button>
@@ -89,7 +89,7 @@
                    (click)="switchFolderEditMode(bookmarksFolders, folder)" class="folder-edit-control"><span
              class="glyphicon glyphicon-edit"></span></button>
            <button *ngIf="!folder.editMode" [disabled]="isLocked()" (click)="removeFolder(folder)"
-                   class="folder-edit-control"><span
+                   class="folder-remove-control"><span
              class="glyphicon glyphicon-trash"></span></button>
            <button *ngIf="folder.editMode" [disabled]="isLocked()" (click)="saveFolder(folder)"><span
              class="glyphicon glyphicon-ok"></span></button>

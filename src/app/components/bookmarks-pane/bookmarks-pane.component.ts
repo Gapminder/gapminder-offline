@@ -7,13 +7,20 @@ import { MessageService } from '../../message.service';
 import { Subscription } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
-import { isEmpty } from 'lodash';
+import { isEmpty, defaultsDeep } from 'lodash';
 import { ChartService } from '../tabs/chart.service';
 
 const BOOKMARKS_THUMBNAILS_FOLDER = 'bookmarks-thumbnails';
 
 enum ScrollMove {
   SCROLL_UP, SCROLL_DN, NO_SCROLL
+}
+
+interface IFolder {
+  name: string;
+  tmpName?: string;
+  editMode: boolean;
+  collapsed: boolean;
 }
 
 @Component({
@@ -199,7 +206,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
     bookmark.tmpName = bookmark.name;
   }
 
-  removeFolder(folder) {
+  removeFolder(folder: IFolder) {
     this.es.ipcRenderer.send(this.globConst.REMOVE_BOOKMARKS_FOLDER, {folderName: folder.name});
     this.ms.lock();
   }
@@ -216,7 +223,7 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
     this.newBookmarksFolder = '';
   }
 
-  switchFolderEditMode(folders, folder) {
+  switchFolderEditMode(folders: IFolder[], folder: IFolder) {
     for (const f of folders) {
       f.editMode = false;
     }
@@ -227,12 +234,12 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
     }
   }
 
-  saveFolder(folder) {
+  saveFolder(folder: IFolder) {
     this.es.ipcRenderer.send(this.globConst.UPDATE_BOOKMARKS_FOLDER, {oldFolderName: folder.name, newFolderName: folder.tmpName});
     this.ms.lock();
   }
 
-  cancelFolder(folder) {
+  cancelFolder(folder: IFolder) {
     folder.editMode = false;
     folder.tmpName = folder.name;
   }
@@ -281,6 +288,11 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
     }
   }
 
+  switchFolderContentVisibility(folder: IFolder) {
+    folder.collapsed = !folder.collapsed;
+    this.es.ipcRenderer.send(this.globConst.BOOKMARKS_FOLDER_VISIBILITY_SWITCH, {folder});
+  }
+
   private removeBookmarkIn(bookmarks, bookmarkId: string): boolean {
     if (!bookmarks || !bookmarks.findIndex) {
       return false;
@@ -326,12 +338,17 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
         }
       }
 
-      this.bookmarksFolders = result.data.folders.map(folderName => ({
-        name: folderName,
-        tmpName: folderName,
-        editMode: false,
-        collapsed: false
-      }));
+      const settings = defaultsDeep(result.data.settings, {folders: {}});
+
+      this.bookmarksFolders = result.data.folders.map(folderName => {
+        const collapsed = (settings.folders[folderName] && settings.folders[folderName].collapsed) || false;
+        return {
+          name: folderName,
+          tmpName: folderName,
+          editMode: false,
+          collapsed
+        };
+      });
 
       /* if (this.needToFullnessCheck && !this.areBookmarksPresent()) {
         this.ms.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: false, dontRestoreTab: true});
