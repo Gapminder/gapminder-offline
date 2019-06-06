@@ -71,7 +71,7 @@
     <div>
       <div class="row-container column-name-container">
         <label>
-          <input type="checkbox" [(ngModel)]="hasNameColumn" >&nbsp;{{'Table has an extra column with nice looking names at position' | translate}}
+          <input type="checkbox" [(ngModel)]="hasNameColumn" (change)="nameColumnPositionChanged()">&nbsp;{{'Table has an extra column with nice looking names at position' | translate}}
         </label>&nbsp;
         <input [(ngModel)]="nameColumnPosition" [attr.disabled]="hasNameColumn === false ? '' : null" type="number" min="0" maxlength="3">&nbsp;&nbsp;
         (<a href="#" (click)="openURL('https://vizabi.org/tutorials/2017/04/10/nice-looking-names/')">{{'see examples here' | translate}}</a>)

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { ChartService } from '../tabs/chart.service';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNumber } from 'lodash';
 import { TabModel } from '../tabs/tab.model';
 import { ElectronService } from '../../providers/electron.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -81,10 +81,11 @@ export class FileSelectConfigFormComponent {
   sheet = '';
   loadingSheetsTitle = '';
   hasNameColumn = false;
-  nameColumnPosition = 0;
   badFormatHeader: IBadFormatHeader;
+  header: string[];
   dataError = false;
 
+  private _nameColumnPosition = 0;
   private _currentTab: TabModel;
 
   constructor(public ts: TranslateService,
@@ -108,6 +109,15 @@ export class FileSelectConfigFormComponent {
     }
 
     this.timeFormat = newTimeFormat || this.timeFormats[0];
+  }
+
+  get nameColumnPosition() {
+    return this._nameColumnPosition;
+  }
+
+  set nameColumnPosition(value: number) {
+    this._nameColumnPosition = value;
+    this.nameColumnPositionChanged();
   }
 
   ok() {
@@ -204,10 +214,12 @@ export class FileSelectConfigFormComponent {
             lastModified: new Date().getTime()
           });
           const data = await readerObject.load();
-          this.badFormatHeader = this.getBadFormatHeader(data);
+          this.header = data.columns;
+          this.badFormatHeader = this.getBadFormatHeader();
         }
       } catch (e) {
         console.log(e);
+        this.header = null;
         this.badFormatHeader = null;
         this.dataError = true;
       }
@@ -232,10 +244,12 @@ export class FileSelectConfigFormComponent {
       });
       this.loadingSheetsTitle = this.ts.instant('Reading Excel sheets');
       const data = await readerObject.load();
+      this.header = data.columns;
       this.loadingSheetsTitle = '';
-      this.badFormatHeader = this.getBadFormatHeader(data);
+      this.badFormatHeader = this.getBadFormatHeader();
     } catch (e) {
       console.log(e);
+      this.header = null;
       this.badFormatHeader = null;
       this.dataError = true;
     }
@@ -262,14 +276,23 @@ export class FileSelectConfigFormComponent {
     return null;
   }
 
-  private getBadFormatHeader(data): IBadFormatHeader {
-    if (this.addDataMode && (data.columns[0] !== this.calculatedDataView.dim || data.columns[1] !== this.calculatedDataView.time)) {
-      return {
-        expectedHeaderKey: data.columns[0] !== this.calculatedDataView.dim ? this.calculatedDataView.dim : null,
-        existingHeaderKey: data.columns[0] !== this.calculatedDataView.dim ? data.columns[0] : null,
-        expectedHeaderTime: data.columns[1] !== this.calculatedDataView.time ? this.calculatedDataView.time : null,
-        existingHeaderTime: data.columns[1] !== this.calculatedDataView.time ? data.columns[1] : null
-      };
+  nameColumnPositionChanged() {
+    this.badFormatHeader = this.getBadFormatHeader();
+  }
+
+  private getBadFormatHeader(): IBadFormatHeader {
+    if (this.header) {
+      const offset = this.hasNameColumn && isNumber(this.nameColumnPosition) ? this.nameColumnPosition + 1 : 0;
+
+      if (this.addDataMode && (this.header[0 + offset] !== this.calculatedDataView.dim ||
+        this.header[1 + offset] !== this.calculatedDataView.time)) {
+        return {
+          expectedHeaderKey: this.header[0 + offset] !== this.calculatedDataView.dim ? this.calculatedDataView.dim : null,
+          existingHeaderKey: this.header[0 + offset] !== this.calculatedDataView.dim ? this.header[0 + offset] || ' ' : null,
+          expectedHeaderTime: this.header[1 + offset] !== this.calculatedDataView.time ? this.calculatedDataView.time : null,
+          existingHeaderTime: this.header[1 + offset] !== this.calculatedDataView.time ? this.header[1 + offset] || ' ' : null
+        };
+      }
     }
 
     return null;
