@@ -459,6 +459,14 @@ $yellow-main-color: #ffca34;
   color: #ffffff;
 }
 
+.scroll-control a:focus,
+.scroll-control-inactive a:focus,
+.nav-link:focus,
+.bookmarks-tab a:focus,
+.bookmarks-tab-active a:focus,
+.add-tab a:focus {
+  outline: none;
+}
 
 .scroll-control, .scroll-control-inactive {
   padding: 11px 3px 3px 0;
