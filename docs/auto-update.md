@@ -1,54 +1,35 @@
 # Auto update functionality
 
-So, we have next kinds of `auto update`:
+So, we have following kinds of `auto update`:
 
-* Manual update
-* Full update
-* Partial update
-
-### Manual update
-
-This kind of update should be applied only for major (semver) update. For example, from 0.99.0 to 1.0.0.
-
-In this case a popup with direct link to download will be opened and user should download and reinstall the app
-according to instructions. 
-
-### Full update
-
-This kind of update should be applied for minor (semver) update. For example, from 0.44.10 to 0.45.0.
-In this case all parts of the application should be updated. Auto update system will use next url for data getting: 
-
-`http://s3-eu-west-1.amazonaws.com/gapminder-offline/#version#/Gapminder Offline-#type#.zip`
-
-Where `#version#` is expected application version.
-
-`#type#` can be:
-
-* mac - MacOS
-* win64 - Windows 64 bit
-* win32 - Windows 32 bit
-* linux - Linux
-
-Parts of the application:
-
-* V8 and electron libraries
-* `gapminder offline` scripts
-* Inner DDF dataset
+* Whole application update
+* Inner DDF dataset update
 
 
-### Partial (application) update
+## Whole application update
 
-This kind of update should be applied for patch (semver) updates. For example, from 0.44.10 to 0.44.11. 
+This kind of functionality is built-in into the app. All that you need to know are settings that include type of provider and a place that should contain new version.
 
-In this case only `gapminder offline` application data (see above) or `inner DDF dataset update` would be updated. 
+Let's look at the `publish` section in [electron-builder.json](https://raw.githubusercontent.com/Gapminder/gapminder-offline/development/electron-builder.json)
 
-Auto update system will use next url for data getting: 
+```
+"publish": [
+  {
+    "provider": "s3",
+    "bucket": "gapminder-offline",
+    "path": "dist"
+  }
+],
+```
 
-`http://s3-eu-west-1.amazonaws.com/gapminder-offline/#version#/partial/Gapminder Offline-#type#.zip` 
-(see ‘Build’ paragraph above)
+It means that new version will be picked up automatically from AWS S3 storage on `gapminder-offline` bucket in `dist` folder during automatic update (ie `http://s3-eu-west-1.amazonaws.com/gapminder-offline/dist/`, for example).
 
-### Inner DDF dataset update
+If you want to know more about this feature, please read `How to use test auto-update functionality locally (without AWS S3 storage)` [here](https://github.com/Gapminder/gapminder-offline/blob/feat-docs-manual-test-flow/docs/manual-test-flow.md)
+
+## Inner DDF dataset update
 
 Inner DDF dataset would be updated if semver version of current dataset less than semver version of dataset on
-github (https://github.com/open-numbers/ddf--gapminder--systema_globalis) 
+github (https://github.com/open-numbers/ddf--gapminder--systema_globalis)
 with existing tag (https://github.com/open-numbers/ddf--gapminder--systema_globalis/archive/1.1.0.zip , for example).
+
+No need to full reload for the app in this case.

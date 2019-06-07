@@ -53,7 +53,7 @@ Download the stable version from here http://www.gapminder.org/tools-offline/
     **Even more important note:** while generating token (using tutorial given above) you need to choose which permissions should be granted to it. For our *release purposes* you need to choose all permissions under the section `repo`
 
 ## Contributing
-We use Angular 6, Electron & chrome app featuring Webpack
+We use Angular 8, Electron 5 & chrome app featuring Webpack
 
 If you want to build the app in developer mode (simple build without creating a distributive and code signing) use the following commands:
 
@@ -63,32 +63,26 @@ npm i
 npm run electron:mac
 ```
 
-Win 64 *(should be done under Win 64 environment)*
+Windows 64 *(should be done under Win 64 and Win32 environment)*
 ```
 npm i
-electron:windows
-```
-
-Win 32 *(should be done under Win 32 environment)*
-```
-npm i
-npm run electron:windows32
+npm run electron:windows
 ```
 
 Linux
 ```
 npm i
-./build-dev
+npm run electron:linux
 ```
 
 Important note! The main goal of building the app in developer mode is testing only, 
-because `auto update` functionality will be unavailable in this case. 
+because `auto update` functionality may NOT be working properly in this case. 
 
 [Read how to build the application with code signing and stuff](https://github.com/Gapminder/gapminder-offline/blob/master/docs/build.md)  
 
 [Read about auto-update functionality](https://github.com/Gapminder/gapminder-offline/blob/master/docs/auto-update.md)
 
-
+[Read about main points regarding manual testing](https://github.com/Gapminder/gapminder-offline/blob/master/docs/manual-test-flow.md)
 
 ## License
 
