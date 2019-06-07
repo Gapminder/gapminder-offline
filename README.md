@@ -1,11 +1,11 @@
-# Gapminder Tools Offline  
+# Gapminder Tools Offline
 
 With Gapminder Tools Offline you can show animated statistics from your own laptop!
 
-• You can use it without internet access  
-• You can visualise your own data with it or even combine it with the datasets provided (examples & instructions)  
-• The software and the datasets will update automatically when connection is available  
-• It’s free  
+• You can use it without internet access
+• You can visualise your own data with it or even combine it with the datasets provided (examples & instructions)
+• The software and the datasets will update automatically when connection is available
+• It’s free
 
 ![app screenshot](https://s3-eu-west-1.amazonaws.com/static.gapminder.org/GapminderMedia/wp-uploads/20170113171243/Gapminder-Offline-Tools.png)
 
@@ -63,7 +63,7 @@ npm i
 npm run electron:mac
 ```
 
-Windows 64 *(should be done under Win 64 and Win32 environment)*
+Windows *(should be done under Win 64 and Win32 environment)*
 ```
 npm i
 npm run electron:windows
@@ -75,10 +75,10 @@ npm i
 npm run electron:linux
 ```
 
-Important note! The main goal of building the app in developer mode is testing only, 
-because `auto update` functionality may NOT be working properly in this case. 
+Important note! The main goal of building the app in developer mode is testing only,
+because `auto update` functionality may NOT be working properly in this case.
 
-[Read how to build the application with code signing and stuff](https://github.com/Gapminder/gapminder-offline/blob/master/docs/build.md)  
+[Read how to build the application with code signing and stuff](https://github.com/Gapminder/gapminder-offline/blob/master/docs/build.md)
 
 [Read about auto-update functionality](https://github.com/Gapminder/gapminder-offline/blob/master/docs/auto-update.md)
 
