@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { ChartService } from '../tabs/chart.service';
-import { isEmpty, isNumber } from 'lodash';
+import { isEmpty } from 'lodash';
 import { TabModel } from '../tabs/tab.model';
 import { ElectronService } from '../../providers/electron.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -282,15 +282,25 @@ export class FileSelectConfigFormComponent {
 
   private getBadFormatHeader(): IBadFormatHeader {
     if (this.header) {
-      const offset = this.hasNameColumn && isNumber(this.nameColumnPosition) ? this.nameColumnPosition + 1 : 0;
+      let keyOffset = 0;
+      let timeOffset = 1;
 
-      if (this.addDataMode && (this.header[0 + offset] !== this.calculatedDataView.dim ||
-        this.header[1 + offset] !== this.calculatedDataView.time)) {
+      if (this.hasNameColumn) {
+        if (this.nameColumnPosition === 0) {
+          keyOffset = 1;
+          timeOffset = 2;
+        } else if (this.nameColumnPosition === 1) {
+          timeOffset = 2;
+        }
+      }
+
+      if (this.addDataMode && (this.header[keyOffset] !== this.calculatedDataView.dim ||
+        this.header[timeOffset] !== this.calculatedDataView.time)) {
         return {
-          expectedHeaderKey: this.header[0 + offset] !== this.calculatedDataView.dim ? this.calculatedDataView.dim : null,
-          existingHeaderKey: this.header[0 + offset] !== this.calculatedDataView.dim ? this.header[0 + offset] || ' ' : null,
-          expectedHeaderTime: this.header[1 + offset] !== this.calculatedDataView.time ? this.calculatedDataView.time : null,
-          existingHeaderTime: this.header[1 + offset] !== this.calculatedDataView.time ? this.header[1 + offset] || ' ' : null
+          expectedHeaderKey: this.header[keyOffset] !== this.calculatedDataView.dim ? this.calculatedDataView.dim : null,
+          existingHeaderKey: this.header[keyOffset] !== this.calculatedDataView.dim ? this.header[keyOffset] || ' ' : null,
+          expectedHeaderTime: this.header[timeOffset] !== this.calculatedDataView.time ? this.calculatedDataView.time : null,
+          existingHeaderTime: this.header[timeOffset] !== this.calculatedDataView.time ? this.header[timeOffset] || ' ' : null
         };
       }
     }
