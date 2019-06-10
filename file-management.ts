@@ -454,11 +454,15 @@ export const updateBookmarksFolder = async (event, params) => {
 
     const index = allBookmarksData.folders.indexOf(params.oldFolderName);
     allBookmarksData.folders[index] = params.newFolderName;
-    const state = allBookmarksData.settings.folders[params.oldFolderName];
 
-    delete allBookmarksData.settings.folders[params.oldFolderName];
+    if (allBookmarksData.settings && allBookmarksData.settings.folders) {
+      const state = allBookmarksData.settings.folders[params.oldFolderName];
 
-    allBookmarksData.settings.folders[params.newFolderName] = state;
+      delete allBookmarksData.settings.folders[params.oldFolderName];
+
+      allBookmarksData.settings.folders[params.newFolderName] = state;
+    }
+
     for (const bookmark of allBookmarksData.content) {
       if (bookmark.folder === params.oldFolderName) {
         bookmark.folder = params.newFolderName;
