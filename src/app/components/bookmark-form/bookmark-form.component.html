@@ -1,7 +1,7 @@
 <div class="bookmark-popover">
   <div *ngIf="!isBookmarkConstructed || isLocked()"><img src="assets/images/hourglass.gif"></div>
-  <div *ngIf="isBookmarkConstructed && !isLocked()" (window:keyup.enter)="done()">
-    <div>{{'Rename' | translate}} <input [(ngModel)]="bookmark.name"></div>
+  <div *ngIf="isBookmarkConstructed && !isLocked()">
+    <div>{{'Rename' | translate}} <input [(ngModel)]="bookmark.name" (keyup.enter)="done()"></div>
     <div *ngIf="bookmarkFolders && bookmarkFolders.length > 0" style="margin-top: 5px;">{{'Move to folder' | translate}}
       <select [disabled]="!bookmarkFolders" (change)="onFolderChange($event)" class="form-control">
         <option value="">---</option>

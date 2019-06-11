@@ -12,14 +12,12 @@
              [(dragulaModel)]="unCategorizedBookmarks"
              class="bookmarks-container card-content">
           <div *ngFor="let bookmark of unCategorizedBookmarks" [attr.id]="'bm_'+bookmark.id"
-               (window:keyup.enter)="save(bookmark)"
-               (window:keyup.escape)="cancel(bookmark)"
                class="bookmark-item">
             <div><img src="{{bookmark.image}}"></div>
             <div>
               <div *ngIf="!bookmark.editMode" class="hellip-block" [title]="bookmark.name">{{bookmark.name}}</div>
               <div *ngIf="bookmark.editMode">
-                <input [(ngModel)]="bookmark.tmpName">
+                <input [(ngModel)]="bookmark.tmpName" (keyup.enter)="save(bookmark)" (keyup.escape)="cancel(bookmark)">
                 <button (click)="save(bookmark)"><span class="glyphicon glyphicon-ok"></span></button>
                 <button (click)="cancel(bookmark)"><span class="glyphicon glyphicon-remove"></span></button>
                 <div *ngIf="!areBookmarksFoldersEmpty()">
@@ -110,14 +108,12 @@
              [(dragulaModel)]="bookmarksByFolder[folder.name]"
              class="bookmarks-container card-content">
           <div *ngFor="let bookmark of bookmarksByFolder[folder.name]" [attr.id]="'bm_'+bookmark.id"
-               (window:keyup.enter)="save(bookmark)"
-               (window:keyup.escape)="cancel(bookmark)"
                class="bookmark-item">
             <div><img src="{{bookmark.image}}"></div>
             <div>
               <div *ngIf="!bookmark.editMode" class="hellip-block" [title]="bookmark.name">{{bookmark.name}}</div>
               <div *ngIf="bookmark.editMode">
-                <input [(ngModel)]="bookmark.tmpName">
+                <input [(ngModel)]="bookmark.tmpName" (keyup.enter)="save(bookmark)" (keyup.escape)="cancel(bookmark)">
                 <button (click)="save(bookmark)"><span class="glyphicon glyphicon-ok"></span></button>
                 <button (click)="cancel(bookmark)"><span class="glyphicon glyphicon-remove"></span></button>
                 <div *ngIf="!areBookmarksFoldersEmpty()">
