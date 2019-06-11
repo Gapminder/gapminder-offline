@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { DragulaService } from 'ng2-dragula';
 import { ElectronService } from '../../providers/electron.service';
 import { LocalizationService } from '../../providers/localization.service';
@@ -58,6 +58,10 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
               private ms: MessageService,
               private dragulaService: DragulaService) {
     this.globConst = this.es.remote.getGlobal('globConst');
+  }
+
+  @HostListener('document:keydown.enter', ['$event']) onKeydownHandler(event: KeyboardEvent) {
+    event.preventDefault();
   }
 
   ngOnInit() {
