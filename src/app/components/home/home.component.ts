@@ -118,7 +118,7 @@ export class HomeComponent implements OnInit {
     this.globConst = this.es.remote.getGlobal('globConst');
     this.menuActions = getMenuActions(this, es);
 
-    document.addEventListener('click', (event: any) => {
+    document.addEventListener('mousedown', (event: any) => {
       const el = event.srcElement;
 
       if (!this.messageService.isLocked()) {

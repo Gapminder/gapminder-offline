@@ -68,7 +68,7 @@
                 </a>
             </div>
             <div class = "scroll-control-inactive" *ngIf = "!canMoveLeft()">
-                <a href (click) = "$event.preventDefault();" (mouseup) = "hidePopover(); actionScrollFinish()" tabindex="-1">
+                <a href (click) = "$event.preventDefault();" (mousedown) = "hidePopover(); actionScrollFinish()" tabindex="-1">
                     <span class = "glyphicon glyphicon-triangle-right"></span>
                 </a>
             </div>
