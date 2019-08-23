@@ -1,0 +1,12 @@
+<div class="recorder-container">
+  <div>
+    <div class="label">Make video</div>
+    <span>
+      <input type="button" (click)="start()" value="start" class="btn" />
+      <input type="button" (click)="stop()" value="stop" class="btn btn-margin" />
+    </span>
+    <div *ngIf="url" class="label">
+      <a href="{{url}}">download</a>
+    </div>
+  </div>
+</div>

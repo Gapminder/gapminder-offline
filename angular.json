@@ -24,7 +24,10 @@
               "src/assets/images",
               "src/assets/translation",
               "src/assets/logo.gif",
-              "src/lib/svg-crowbar.js"
+              "src/lib/svg-crowbar.js",
+              "src/lib/html2canvas.js",
+              "src/lib/whammy.js",
+              "src/lib/canvg.js"
             ],
             "styles": [
               "src/bootstrap.scss",
