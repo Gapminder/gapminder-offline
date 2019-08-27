@@ -157,5 +157,10 @@
   "csv-excel-empty-data": "Importing is impossible due to empty data!",
   "Drag and drop bookmarks here": "Drag and drop bookmarks here...",
   "Bookmarks will appear here": "Bookmarks will appear here. To create a bookmark, make a chart you like and click a little star in the tab head.",
-  "Empty folder": "Empty folder"
+  "Empty folder": "Empty folder",
+  "Record a video": "Record a video",
+  "Stop recording": "Stop recording",
+  "Saved video": "Saved video: \"<b>{{file}}</b>\"",
+  "No files are chosen": "No files are chosen",
+  "Save video as": "Save video as ..."
 }

@@ -1,0 +1,22 @@
+<div class="recorder-container">
+  <!--<button type="button"
+          *ngIf="!isRecording()"
+          (click)="start()"
+          class="btn plain-btn btn-margin">
+    <span class="glyphicon glyphicon-facetime-video"></span>Capture the screen
+  </button>-->
+
+  <button type="button"
+          (click)="stop()"
+          *ngIf="isRecording()"
+          class="btn stop-btn btn-margin">
+    <span class="glyphicon glyphicon-record"></span>{{'Stop recording' | translate}}
+  </button>
+
+  <!--<button type="button"
+          (click)="doClose()"
+          *ngIf="!isRecording()"
+          class="btn plain-btn btn-margin">
+    <span class="glyphicon glyphicon-remove"></span>Close
+  </button>-->
+</div>

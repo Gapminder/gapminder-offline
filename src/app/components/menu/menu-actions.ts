@@ -92,6 +92,10 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => {
 
       context.isMenuOpened = false;
     },
+    prepareScreenCapture: () => {
+      context.isCaptureScreenWidgetOpened = true;
+      context.isMenuOpened = false;
+    },
     exportForWeb: () => {
       const currentTab = context.getCurrentTab();
       const isAdditionalDataPresent = currentTab.component && currentTab.component.getModel;

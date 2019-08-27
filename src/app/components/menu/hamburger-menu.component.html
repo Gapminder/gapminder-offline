@@ -75,6 +75,9 @@
         <li class="menu-item" (click)="execute('exportToPng')">
           <button type="button" class="menu-btn"><span class="menu-text">{{'to PNG...' | translate}}</span> </button>
         </li>
+        <li class="menu-item" (click)="execute('prepareScreenCapture')">
+          <button type="button" class="menu-btn"><span class="menu-text">{{'Record a video' | translate}}</span> </button>
+        </li>
       </ul>
     </li>
     <li class="menu-item submenu" [ngClass]="{'menu-item-ltr': !ls.isRtl(), 'menu-item-rtl': ls.isRtl()}" *ngIf="getCurrentTab() && !getCurrentTab().chartType">
@@ -88,6 +91,9 @@
         </li>
         <li class="menu-item">
           <button type="button" class="menu-btn"><span class="menu-text" style="color: grey">{{'to PNG...' | translate}}</span></button>
+        </li>
+        <li class="menu-item" (click)="execute('prepareScreenCapture')">
+          <button type="button" class="menu-btn"><span class="menu-text">{{'Record a video' | translate}}</span> </button>
         </li>
       </ul>
     </li>

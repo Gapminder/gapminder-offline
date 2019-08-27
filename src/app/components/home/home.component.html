@@ -17,6 +17,7 @@
     </alert>
   </div>
   <app-auto-update></app-auto-update>
+  <app-recorder *ngIf="isCaptureScreenWidgetOpened" (close)="isCaptureScreenWidgetOpened = false"></app-recorder>
 
   <div class="menu-container" [ngClass]="{'menu-container-ltr': !ls.isRtl(), 'menu-container-rtl': ls.isRtl()}">
     <div class="ddf-menu">

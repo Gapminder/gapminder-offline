@@ -89,6 +89,7 @@ interface IAlert {
 export class HomeComponent implements OnInit {
   tabsModel: TabModel[] = [];
   isMenuOpened = false;
+  isCaptureScreenWidgetOpened = false;
   menuComponent;
   menuActions: any = {};
   calculatedDataView: ICalculatedDataView;

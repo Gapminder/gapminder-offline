@@ -6,6 +6,9 @@
       <div class="card-container">
         <div *ngIf="!areUncategorizedBookmarksPresent()"
              class="empty-desc">{{'Bookmarks will appear here' | translate}}</div>
+        <div *ngIf="!areUncategorizedBookmarksPresent() && !areBookmarksPresent()" class="empty-desc">
+          <img src="assets/images/empty-bookmark-folder.gif">
+        </div>
         <div [dragula]="'bm'"
              [ngClass]="{'drop-landing': !areUncategorizedBookmarksPresent() && areBookmarksPresent()}"
              [attr.style]="sanitizer.bypassSecurityTrustStyle('--drop-here: \''+this.ts.instant('Drag and drop bookmarks here')+'\'')"

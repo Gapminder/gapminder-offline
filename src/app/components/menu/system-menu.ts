@@ -135,6 +135,10 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
           }
         },
         {
+          label: 'Capture the screen',
+          click: () => appComponent.menuActions.prepareScreenCapture()
+        },
+        {
           type: 'separator'
         },
         {
