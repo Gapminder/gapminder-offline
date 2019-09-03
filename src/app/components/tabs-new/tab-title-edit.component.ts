@@ -3,13 +3,13 @@ import { Component, Input, Output, EventEmitter, AfterContentInit, ViewChild, El
 @Component({
   selector: 'app-tab-title-edit',
   template: `
-      <input #tabEditInput
-             class = "editTabInput"
-             (blur) = "doBlur($event)"
-             (keyup.enter) = "doEnter()"
-             (keyup.esc) = "doEsc()"
-             [ngModel] = "title"
-             (input) = "update($event.target.value)"/>
+    <input #tabEditInput
+           class="editTabInput"
+           (blur)="doBlur($event)"
+           (keyup.enter)="doEnter()"
+           (keyup.esc)="doEsc()"
+           [ngModel]="title"
+           (input)="update($event.target.value)"/>
   `
 })
 export class TabTitleEditComponent implements AfterContentInit {
@@ -18,7 +18,7 @@ export class TabTitleEditComponent implements AfterContentInit {
   @Output() public blur: EventEmitter<any> = new EventEmitter();
   @Output() public enter: EventEmitter<any> = new EventEmitter();
   @Output() public esc: EventEmitter<any> = new EventEmitter();
-  @ViewChild('tabEditInput') public tabEditInput: ElementRef;
+  @ViewChild('tabEditInput', {static: true}) public tabEditInput: ElementRef;
 
   private initTitle: string;
   private escFlag: boolean;

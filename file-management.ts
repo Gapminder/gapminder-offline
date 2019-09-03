@@ -4,20 +4,65 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as fsExtra from 'fs-extra';
 import * as zipdir from 'zip-dir';
+import { promisify } from 'util';
 import { app, remote } from 'electron';
 import { GoogleAnalytics } from './google-analytics';
+import './glob-const';
 
 const dialog = require('electron').dialog;
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
+const copyFile = promisify(fsExtra.copy);
+const removeFileOrDir = promisify(fsExtra.remove);
+const unlink = promisify(fs.unlink);
 
 const packageJSON = require('./package.json');
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 const nonAsarAppPath = app.getAppPath().replace(/app\.asar/, '');
 const userDataPath = (app || remote.app).getPath('userData');
+const bookmarkFile = path.resolve(userDataPath, 'bookmarks.json');
+const bookmarkCopyFile = path.resolve(userDataPath, 'bookmarks-copy.json');
+const bookmarkUndoFile = path.resolve(userDataPath, 'bookmarks-undo.json');
+const bookmarksThumbnailsPath = path.resolve(userDataPath, 'bookmarks-thumbnails');
+const bookmarksThumbnailsUndoPath = path.resolve(userDataPath, 'bookmarks-thumbnails-undo');
 const DATA_PATH = path.resolve(nonAsarAppPath, 'ddf--gapminder--systema_globalis');
 const PREVIEW_DATA_PATH = path.resolve(nonAsarAppPath, 'preview-data');
 const WEB_RESOURCE_PATH = path.resolve(nonAsarAppPath, 'export-template');
 const WEB_PATH = path.resolve(userDataPath, 'web');
 const previouslyOpened = {};
+const globConst = (global as any).globConst;
+
+const initBookmarksThumbnailsCache = async () => {
+  return fsExtra.ensureDir(bookmarksThumbnailsUndoPath);
+};
+
+const clearBookmarksThumbnailsCache = async () => new Promise((resolve, reject) => {
+  fs.readdir(bookmarksThumbnailsUndoPath, async (readErr, files) => {
+    if (readErr) {
+      return reject(readErr);
+    }
+
+    for (const file of files) {
+      await unlink(path.join(bookmarksThumbnailsUndoPath, file));
+    }
+
+    resolve();
+  });
+});
+
+const restoreBookmarksThumbnails = async () => new Promise((resolve, reject) => {
+  fs.readdir(bookmarksThumbnailsUndoPath, async (readErr, files) => {
+    if (readErr) {
+      return reject(readErr);
+    }
+
+    for (const file of files) {
+      await copyFile(path.resolve(bookmarksThumbnailsUndoPath, file), path.resolve(bookmarksThumbnailsPath, file));
+    }
+
+    resolve();
+  });
+});
 
 const getPathCorrectFunction = brokenPathObject => onPathReady => {
   const parsed = path.parse(brokenPathObject.path);
@@ -83,7 +128,7 @@ const normalizeModelToSave = (model, chartType) => {
 
   model.chartType = chartType;
 };
-const normalizeModelToOpen = (model, currentDir, brokenFileActions) => {
+const normalizeModelToOpen = (model, brokenFileActions) => {
   Object.keys(model).forEach(key => {
     if ((key === 'data' || key.indexOf('data_') === 0) && typeof model[key] === 'object') {
       if (model[key].__abandoned) {
@@ -145,7 +190,7 @@ const getConfigWithoutAbandonedData = config => {
 
   return newConfig;
 };
-const openFile = (event, fileName, currentDir, fileNameOnly) => {
+const openFile = (event, fileName, fileNameOnly) => {
   const sender = event.sender || event.webContents;
 
   fs.readFile(fileName, 'utf-8', (err, data) => {
@@ -159,7 +204,7 @@ const openFile = (event, fileName, currentDir, fileNameOnly) => {
 
     if (config.length) {
       config.forEach(configItem => {
-        normalizeModelToOpen(configItem.model, currentDir, brokenFileActions);
+        normalizeModelToOpen(configItem.model, brokenFileActions);
       });
 
       async.waterfall(brokenFileActions, () => {
@@ -176,7 +221,7 @@ const openFile = (event, fileName, currentDir, fileNameOnly) => {
     }
 
     if (!config.length) {
-      normalizeModelToOpen(config, currentDir, brokenFileActions);
+      normalizeModelToOpen(config, brokenFileActions);
 
       async.waterfall(brokenFileActions, () => {
         const newConfigAsArray = getConfigWithoutAbandonedData(config);
@@ -197,6 +242,66 @@ const openFile = (event, fileName, currentDir, fileNameOnly) => {
   });
 };
 
+export class QueueProcessor {
+  active = true;
+  private i = null;
+  private queue = [];
+  private working = false;
+
+  executeRequest(fun, event, params) {
+    if (this.active) {
+      if (this.i === null) {
+        this.i = setInterval(async () => {
+          await this.queueProcessor();
+        }, 1000);
+      }
+      this.queue.push({fun, event, params});
+    }
+  }
+
+  isAlive(): boolean {
+    return this.working || !_.isEmpty(this.queue);
+  }
+
+  private async queueProcessor() {
+    if (this.queue.length > 0) {
+      if (!this.working) {
+        const exec = this.queue.shift();
+        this.working = true;
+        try {
+          await exec.fun(exec.event, exec.params);
+        } catch (e) {
+          throw e;
+        } finally {
+          this.working = false;
+        }
+      }
+    } else {
+      clearInterval(this.i);
+      this.i = null;
+    }
+  }
+}
+
+export const openBookmark = (event, bookmark) => {
+  const sender = event.sender || event.webContents;
+  const brokenFileActions = [];
+
+  normalizeModelToOpen(bookmark.content.model, brokenFileActions);
+
+  async.waterfall(brokenFileActions, () => {
+    const newConfigAsArray = getConfigWithoutAbandonedData(bookmark.content.model);
+
+    if (!_.isEmpty(newConfigAsArray)) {
+      const newConfig = _.head(newConfigAsArray);
+
+      if (!_.isEmpty(newConfig)) {
+        sender.send('do-bookmark-open-completed', {tab: newConfig, file: bookmark.name});
+      }
+    }
+  });
+};
+
 export const openFileWithDialog = event => {
   dialog.showOpenDialog({
     title: 'Open chart state ...',
@@ -210,20 +315,18 @@ export const openFileWithDialog = event => {
 
     const fileName = fileNames[0];
     const parseFileData = path.parse(fileName);
-    const currentDir = parseFileData.dir;
     const fileNameOnly = parseFileData.name;
 
-    openFile(event, fileName, currentDir, fileNameOnly);
+    openFile(event, fileName, fileNameOnly);
   });
 };
 
 export const openFileWhenDoubleClick = (event, fileName) => {
   const parseFileData = path.parse(fileName);
-  const currentDir = parseFileData.dir;
   const fileNameOnly = parseFileData.name;
 
   if (fs.existsSync(fileName) && fileName.indexOf('-psn_') === -1) {
-    openFile(event, fileName, currentDir, fileNameOnly);
+    openFile(event, fileName, fileNameOnly);
   }
 };
 
@@ -249,6 +352,291 @@ export const saveFile = (event, params) => {
       ga.error('Chart state successfully saved');
     });
   });
+};
+
+export const getBookmarksObject = async (filePar?: string) => {
+  const _file = filePar;
+
+  async function initFile(filename) {
+    return new Promise((resolve, reject) => {
+      fs.open(filename, 'r', (openErr) => {
+        if (openErr) {
+          fs.writeFile(filename, '{"content": [], "folders": []}', (writeErr) => {
+            if (writeErr) {
+              return reject(writeErr);
+            }
+
+            return resolve();
+          });
+        }
+
+        resolve();
+      });
+    });
+  }
+
+  return new Promise<any[]>(async (resolve, reject) => {
+    try {
+      await initFile(_file);
+      const content = await readFile(_file, 'utf-8');
+      const data = JSON.parse(content);
+      await writeFile(bookmarkCopyFile, content);
+
+      if (!data || !data.content || !data.folders || !_.isArray(data.content) || !_.isArray(data.folders)) {
+        return reject('wrong bookmark file format');
+      }
+
+      resolve(data);
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+export const addBookmark = async (event, params) => {
+  try {
+    const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
+
+    normalizeModelToSave(params.bookmark.content.model, params.bookmark.content.chartType);
+    allBookmarksData.content.unshift(params.bookmark);
+    await writeFile(bookmarkFile, JSON.stringify(allBookmarksData, null, 2));
+    const originalImageData = Buffer.from(params.image, 'base64');
+
+    if (!fs.existsSync(bookmarksThumbnailsPath)) {
+      fs.mkdirSync(bookmarksThumbnailsPath);
+    }
+
+    const thumbnailPath = path.resolve(bookmarksThumbnailsPath, `${params.bookmark.id}.png`);
+    const imageData = originalImageData.toString('binary');
+
+    await writeFile(thumbnailPath, imageData, 'binary');
+
+    event.sender.send(globConst.BOOKMARK_ADDED, {bookmarkFile, bookmark: params.bookmark});
+  } catch (e) {
+    event.sender.send(globConst.BOOKMARK_ADDED, {error: e.toString(), bookmarkFile, bookmark: params.bookmark});
+  }
+};
+
+export const updateBookmark = async (event, params) => {
+  try {
+    const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
+
+    for (const bookmark of allBookmarksData.content) {
+      if (params.bookmark.id === bookmark.id) {
+        bookmark.name = params.bookmark.name;
+        bookmark.date = params.bookmark.date;
+        bookmark.folder = params.bookmark.folder;
+        break;
+      }
+    }
+    await writeFile(bookmarkFile, JSON.stringify(allBookmarksData, null, 2));
+    event.sender.send(globConst.BOOKMARK_UPDATED, {bookmarkFile, bookmark: params.bookmark});
+  } catch (e) {
+    event.sender.send(globConst.BOOKMARK_UPDATED, {error: e.toString(), bookmarkFile, bookmark: params.bookmark});
+  }
+};
+
+export const updateBookmarksFolder = async (event, params) => {
+  try {
+    if (params.newFolderName === params.oldFolderName) {
+      event.sender.send(globConst.BOOKMARK_FOLDER_UPDATED, {bookmarkFile, params});
+      return;
+    }
+
+    const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
+    const related = allBookmarksData.folders.filter(folder => folder === params.newFolderName);
+
+    if (related.length > 0 && params.newFolderName) {
+      event.sender.send(globConst.BOOKMARK_FOLDER_UPDATED,
+        {error: true, transData: {template: 'Impossible to rename folder already exists', params}, bookmarkFile, params});
+      return;
+    }
+
+    const index = allBookmarksData.folders.indexOf(params.oldFolderName);
+    allBookmarksData.folders[index] = params.newFolderName;
+
+    if (allBookmarksData.settings && allBookmarksData.settings.folders) {
+      const state = allBookmarksData.settings.folders[params.oldFolderName];
+
+      delete allBookmarksData.settings.folders[params.oldFolderName];
+
+      allBookmarksData.settings.folders[params.newFolderName] = state;
+    }
+
+    for (const bookmark of allBookmarksData.content) {
+      if (bookmark.folder === params.oldFolderName) {
+        bookmark.folder = params.newFolderName;
+      }
+    }
+    await writeFile(bookmarkFile, JSON.stringify(allBookmarksData, null, 2));
+    event.sender.send(globConst.BOOKMARK_FOLDER_UPDATED, {bookmarkFile, params});
+  } catch (e) {
+    event.sender.send(globConst.BOOKMARK_FOLDER_UPDATED, {error: e.toString(), bookmarkFile, params});
+  }
+};
+
+export const removeBookmark = async (event, params) => {
+  try {
+    await initBookmarksThumbnailsCache();
+    await clearBookmarksThumbnailsCache();
+    const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
+    await writeFile(bookmarkUndoFile, JSON.stringify(allBookmarksData, null, 2));
+    const thumbnailPath = path.resolve(bookmarksThumbnailsPath, `${params.bookmark.id}.png`);
+    const thumbnailUndoPath = path.resolve(bookmarksThumbnailsUndoPath, `${params.bookmark.id}.png`);
+    await copyFile(thumbnailPath, thumbnailUndoPath);
+    const newBookmarks = allBookmarksData.content.filter(bookmark => params.bookmark.id !== bookmark.id);
+    await writeFile(bookmarkFile, JSON.stringify({content: newBookmarks, folders: allBookmarksData.folders}, null, 2));
+    await unlink(thumbnailPath);
+    event.sender.send(globConst.BOOKMARK_REMOVED, {bookmarkFile, bookmark: params.bookmark});
+  } catch (e) {
+    event.sender.send(globConst.BOOKMARK_REMOVED, {error: e.toString(), bookmarkFile, bookmark: params.bookmark});
+  }
+};
+
+const commitBookmarks = async () => {
+  await removeFileOrDir(bookmarkUndoFile);
+  await clearBookmarksThumbnailsCache();
+};
+
+export const restoreBookmarks = async (event) => {
+  try {
+    await restoreBookmarksThumbnails();
+    const content = await readFile(bookmarkUndoFile);
+    await writeFile(bookmarkFile, content);
+  } catch (e) {
+    event.sender.send(globConst.BOOKMARKS_REMOVE_RESTORED, {error: e.toString(), bookmarkFile});
+  } finally {
+    await commitBookmarks();
+    event.sender.send(globConst.BOOKMARKS_REMOVE_RESTORED, {bookmarkFile});
+  }
+};
+
+export const moveBookmark = async (event, params) => {
+  try {
+    const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
+    const elIdPos = allBookmarksData.content.map(bm => bm.id).indexOf(params.elId);
+    const el = _.cloneDeep(allBookmarksData.content[elIdPos]);
+    const todo: { action: string, position?: number } = {action: 'nop'};
+    allBookmarksData.content[elIdPos].old = true;
+
+    for (let i = 0; i < allBookmarksData.content.length; i++) {
+      if (params.leftId === allBookmarksData.content[i].id) {
+        if (i + 1 < allBookmarksData.content.length - 2) {
+          todo.action = 'insert';
+          todo.position = i + 1;
+        } else {
+          todo.action = 'push';
+        }
+        break;
+      } else if (params.rightId === allBookmarksData.content[i].id) {
+        if (i - 1 > 0) {
+          todo.action = 'insert';
+          todo.position = i - 1;
+        } else {
+          todo.action = 'unshift';
+        }
+        break;
+      }
+    }
+
+    el.folder = params.targetFolder || '';
+
+    if (todo.action === 'insert') {
+      allBookmarksData.content.splice(todo.position, 0, el);
+    } else if (todo.action === 'push') {
+      allBookmarksData.content.push(el);
+    } else if (todo.action === 'unshift') {
+      allBookmarksData.content.unshift(el);
+    }
+
+    if (todo.action !== 'nop') {
+      const elIdPosToDelete = allBookmarksData.content.map(bm => bm.old).indexOf(true);
+      allBookmarksData.content.splice(elIdPosToDelete, 1);
+    } else {
+      delete allBookmarksData.content[elIdPos].old;
+      allBookmarksData.content[elIdPos].folder = params.targetFolder || '';
+    }
+
+    await writeFile(bookmarkFile, JSON.stringify({content: allBookmarksData.content, folders: allBookmarksData.folders}, null, 2));
+    event.sender.send(globConst.BOOKMARK_MOVED, {bookmarkFile});
+  } catch (e) {
+    event.sender.send(globConst.BOOKMARK_MOVED, {error: e.toString(), bookmarkFile});
+  }
+};
+
+export const removeBookmarksFolder = async (event, params) => {
+  try {
+    await initBookmarksThumbnailsCache();
+    await clearBookmarksThumbnailsCache();
+    const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
+    await writeFile(bookmarkUndoFile, JSON.stringify(allBookmarksData, null, 2));
+    const index = allBookmarksData.folders.indexOf(params.folderName);
+
+    if (index < 0) {
+      event.sender.send(globConst.BOOKMARK_FOLDER_REMOVED, {
+        error: true,
+        transData: {template: 'Impossible to remove:folder does not exist', params},
+        bookmarkFile, params
+      });
+      return;
+    }
+
+    allBookmarksData.folders.splice(index, 1);
+    if (allBookmarksData.settings && allBookmarksData.settings.folders) {
+      delete allBookmarksData.settings.folders[params.folderName];
+    }
+    const newContent = [];
+    for (let i = 0; i < allBookmarksData.content.length; i++) {
+      const bookmark = allBookmarksData.content[i];
+      if (bookmark.folder === params.folderName) {
+        const thumbnailPath = path.resolve(bookmarksThumbnailsPath, `${bookmark.id}.png`);
+        const thumbnailUndoPath = path.resolve(bookmarksThumbnailsUndoPath, `${bookmark.id}.png`);
+        await copyFile(thumbnailPath, thumbnailUndoPath);
+        await unlink(thumbnailPath);
+      } else {
+        newContent.push(bookmark);
+      }
+    }
+    allBookmarksData.content = newContent;
+    await writeFile(bookmarkFile, JSON.stringify(allBookmarksData, null, 2));
+    event.sender.send(globConst.BOOKMARK_FOLDER_REMOVED, {bookmarkFile, params});
+  } catch (e) {
+    event.sender.send(globConst.BOOKMARK_FOLDER_REMOVED, {error: e.toString(), bookmarkFile, params});
+  }
+};
+
+export const createNewBookmarksFolder = async (event, params) => {
+  try {
+    const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
+    if (allBookmarksData.folders.indexOf(params.folder) < 0) {
+      allBookmarksData.folders.unshift(params.folder);
+    } else {
+      event.sender.send(globConst.BOOKMARKS_FOLDER_CREATED, {
+        error: true,
+        transData: {template: 'Folder already exists', params},
+        bookmarkFile
+      });
+      return;
+    }
+    await writeFile(bookmarkFile, JSON.stringify(allBookmarksData, null, 2));
+    event.sender.send(globConst.BOOKMARKS_FOLDER_CREATED, {bookmarkFile, allBookmarksData});
+  } catch (e) {
+    event.sender.send(globConst.BOOKMARKS_FOLDER_CREATED, {error: e.toString(), bookmarkFile});
+  }
+};
+
+export const switchBookmarksFolderVisibility = async (event, params) => {
+  try {
+    const allBookmarksData: any = await getBookmarksObject(bookmarkFile);
+    const settings = _.defaultsDeep(allBookmarksData.settings, {folders: {}});
+    settings.folders[params.folder.name] = {};
+    allBookmarksData.settings = settings;
+    allBookmarksData.settings.folders[params.folder.name].collapsed = params.folder.collapsed;
+    await writeFile(bookmarkFile, JSON.stringify(allBookmarksData, null, 2));
+    event.sender.send(globConst.BOOKMARKS_FOLDER_VISIBILITY_SWITCHED, {bookmarkFile, allBookmarksData});
+  } catch (e) {
+    event.sender.send(globConst.BOOKMARKS_FOLDER_VISIBILITY_SWITCHED, {error: e.toString(), bookmarkFile});
+  }
 };
 
 export const saveAllTabs = (event, tabsDescriptor) => {

@@ -14,7 +14,7 @@ export class FreshenerService {
   }
 
   checkCurrentTabModification(tab: TabModel) {
-    if (tab.model) {
+    if (tab && tab.model) {
       this.activeTab = tab;
 
       const activePaths = [this.activeTab.model.data.path];

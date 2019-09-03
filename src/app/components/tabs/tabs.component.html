@@ -1,8 +1,12 @@
 <app-tabs-new [syncActions]="getSyncActions()" [disabled]="disabled" class="vizabi-content">
-    <app-tab-new *ngFor = "let tab of tabsModel"
+  <div *ngIf="bookmarksVisible">
+    <app-bookmarks-pane></app-bookmarks-pane>
+  </div>
+  <app-tab-new *ngFor = "let tab of tabsModel"
                 [title] = "tab.title"
                 [active] = "tab.active"
                 [removable] = "true"
+                [bookmarkAllowed]="!!tab.chartType"
                 (select) = "selectTab(tab)"
                 (deselect) = "deselectTab(tab)"
                 (remove) = "removeTab($event)"
@@ -27,7 +31,7 @@
             <div class="footer" [ngClass]="{'footer-rtl': ls.isRtl()}">
                 <span *ngFor="let lang of ls.langConfig">
                      <span *ngIf="lang.id === ls.currentLanguage.id" [ngClass]="{'ru': ls.currentLanguage.id === 'ru'}">{{lang.label}}</span>
-                     <span *ngIf="lang.id !== ls.currentLanguage.id"><a href="#" [ngClass]="{'ru': ls.currentLanguage.id === 'ru'}" (click)="ls.setLanguage(lang)">{{lang.label}}</a></span>
+                     <span *ngIf="lang.id !== ls.currentLanguage.id"><a href="#" [ngClass]="{'ru': ls.currentLanguage.id === 'ru'}" (click)="ls.setLanguage(lang)" tabindex="-1">{{lang.label}}</a></span>
                 </span>
             </div>
         </div>

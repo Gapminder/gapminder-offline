@@ -15,6 +15,7 @@ export class TabNewComponent {
   @Input() active = false;
   @Input() disabled = false;
   @Input() removable = false;
+  @Input() bookmarkAllowed = false;
 
   @Output() select: EventEmitter<TabNewComponent> = new EventEmitter();
   @Output() deselect: EventEmitter<TabNewComponent> = new EventEmitter();

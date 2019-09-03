@@ -37,11 +37,13 @@
                                      (done)="onFileChanged($event)"></app-smart-path-selector>
           </div>
           <div *ngIf="!loadingSheetsTitle && worksheets.length > 0 && format==='excel'">
-            <select type="string" [disabled]="worksheets.length < 2" [(ngModel)]="sheet" class="form-control">
+            <select type="string" [disabled]="worksheets.length < 2"  (change)="checkExcelHeader()" [(ngModel)]="sheet" class="form-control">
               <option *ngFor="let worksheet of worksheets" [ngValue]="worksheet">{{worksheet}}</option>
             </select>
           </div>
           <app-wait-indicator [title]="loadingSheetsTitle"></app-wait-indicator>
+          <div *ngIf="!!badFormatHeader" class="bad-header">{{getTranslationKeyForBadFormatHeader() | translate:badFormatHeader}}</div>
+          <div *ngIf="dataError" class="bad-header">{{'csv-excel-empty-data' | translate}}</div>
         </div>
     </div>
 
@@ -69,7 +71,7 @@
     <div>
       <div class="row-container column-name-container">
         <label>
-          <input type="checkbox" [(ngModel)]="hasNameColumn" >&nbsp;{{'Table has an extra column with nice looking names at position' | translate}}
+          <input type="checkbox" [(ngModel)]="hasNameColumn" (change)="nameColumnPositionChanged()">&nbsp;{{'Table has an extra column with nice looking names at position' | translate}}
         </label>&nbsp;
         <input [(ngModel)]="nameColumnPosition" [attr.disabled]="hasNameColumn === false ? '' : null" type="number" min="0" maxlength="3">&nbsp;&nbsp;
         (<a href="#" (click)="openURL('https://vizabi.org/tutorials/2017/04/10/nice-looking-names/')">{{'see examples here' | translate}}</a>)
@@ -91,8 +93,8 @@
             </div>
             <div class="col-sm-4" [ngClass]="{'col-sm-pull-8': ls.isRtl(), 'bottom-controls-rtl': ls.isRtl(), 'bottom-controls': !ls.isRtl()}">
                 <input type="button" class="close-btn" (click)="close()" value="{{'Cancel' | translate}}" />
-                <input type="button" *ngIf="format === 'csv'" class="ok-btn" (click)="ok()" [disabled]="!choice || !file || !delimiter" value="{{'OK' | translate}}" />
-                <input type="button" *ngIf="format === 'excel'" class="ok-btn" (click)="ok()" [disabled]="loadingSheetsTitle || !choice || !file" value="{{'OK' | translate}}" />
+                <input type="button" *ngIf="format === 'csv'" class="ok-btn" (click)="ok()" [disabled]="!choice || !file || !delimiter || dataError" value="{{'OK' | translate}}" />
+                <input type="button" *ngIf="format === 'excel'" class="ok-btn" (click)="ok()" [disabled]="loadingSheetsTitle || !choice || !file || dataError" value="{{'OK' | translate}}" />
             </div>
         </div>
     </div>

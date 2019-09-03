@@ -25,6 +25,9 @@
     background-color: yellow;
     color: #b81f00;
 }
+.bad-header {
+  color: #b81f00;
+}
 label.step-label {
     margin-left: 1px;
 }
@@ -63,6 +66,11 @@ label.step-label {
 .ok-btn {
     width: 50%;
     height: 40px;
+}
+.ok-btn:disabled, .ok-btn[disabled], .close-btn:disabled, .close-btn[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
 }
 .fileUpload.btn.btn-default {
     margin-bottom: 3px;

@@ -1,5 +1,23 @@
 <div [dir]="ls.isRtl() ? 'rtl' : 'ltr'" [ngClass]="ls.getLanguagePrefix()" style="height: 100%" (click)="appMainClickHandler($event)">
+  <div class="alert-container">
+    <alert *ngFor="let alert of getPersistentAlerts()" [type]="alert.type" [dismissible]="true">
+      <span *ngIf="!shouldAlertBeTranslated(alert)" [innerHtml]="alert.message"></span>
+      <span *ngIf="shouldAlertBeTranslated(alert)" [innerHtml]="alert.message.template | translate:alert.message.params"></span>
+    </alert>
+    <alert *ngFor="let alert of getDismissableAlerts()"
+           [type]="alert.type"
+           [dismissible]="true"
+           [dismissOnTimeout]="alert.timeout">
+      <span *ngIf="!shouldAlertBeTranslated(alert)" [innerHtml]="alert.message"></span>
+      <span *ngIf="shouldAlertBeTranslated(alert)" [innerHtml]="alert.message.template | translate:alert.message.params"></span>
+      <span *ngIf="alert.activities && alert.activities.length>0">&nbsp;|&nbsp;</span>
+      <span *ngFor="let activity of alert.activities">
+        <a href="#" (click)="doAlertActivity(alert, activity)">{{activity.label | translate}}</a>
+      </span>
+    </alert>
+  </div>
   <app-auto-update></app-auto-update>
+  <app-recorder *ngIf="isCaptureScreenWidgetOpened" (close)="isCaptureScreenWidgetOpened = false"></app-recorder>
 
   <div class="menu-container" [ngClass]="{'menu-container-ltr': !ls.isRtl(), 'menu-container-rtl': ls.isRtl()}">
     <div class="ddf-menu">

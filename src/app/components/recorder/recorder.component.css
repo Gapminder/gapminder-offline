@@ -1,0 +1,52 @@
+.recorder-container {
+  position: absolute;
+  top: 0;
+  left: 700px;
+  z-index: 999999;
+  padding: 5px 5px 0 5px;
+  background-color: #ffffff;
+}
+
+.btn {
+  font-size: 14px;
+  background: #f9cc3e;
+  padding: 5px 5px 5px 5px;
+  text-decoration: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+.btn span {
+  margin-right: 5px;
+}
+
+.plain-btn {
+  color: #444;
+}
+
+.stop-btn {
+  color: red;
+  animation: blinkingText 1s infinite;
+}
+
+@keyframes blinkingText {
+  0% {
+    color: red;
+  }
+  50% {
+    color: #770000;
+  }
+  100% {
+    color: red;
+  }
+}
+
+.btn-margin {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.label {
+  font-size: smaller;
+}

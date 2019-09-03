@@ -1,5 +1,5 @@
 import * as waterfall from 'async-waterfall';
-import { isEmpty } from 'lodash';
+import { isEmpty, endsWith } from 'lodash';
 import {
   Component,
   OnInit,
@@ -18,7 +18,14 @@ import {
   OPEN_DDF_FOLDER_ACTION,
   TAB_READY_ACTION,
   SWITCH_MENU_ACTION,
-  MODEL_CHANGED, CLEAR_VALIDATION_FORM, ABANDON_VALIDATION
+  MODEL_CHANGED,
+  CLEAR_VALIDATION_FORM,
+  ABANDON_VALIDATION,
+  BOOKMARK_TAB,
+  SEND_TAB_TO_BOOKMARK,
+  ALERT,
+  CLEAR_ALERTS,
+  BOOKMARKS_PANE_OFF_OUTSIDE, SWITCH_BOOKMARKS_PANE
 } from '../../constants';
 import { initMenuComponent } from '../menu/system-menu';
 import { getMenuActions } from '../menu/menu-actions';
@@ -45,29 +52,62 @@ const vizabiStateFacade: any = {
   }
 };
 
+function isDescendant(parent, child) {
+  let node = child.parentNode;
+  while (node !== null) {
+    if (node === parent) {
+      return true;
+    }
+    node = node.parentNode;
+  }
+  return false;
+}
+
+interface IAlertActivity {
+  label: string;
+  event: string;
+}
+
+interface ITranslatableAlertData {
+  template: string;
+  params?;
+}
+
+interface IAlert {
+  type: string;
+  message: string | ITranslatableAlertData;
+  activities: IAlertActivity[];
+  timeout?: number;
+  data?;
+}
+
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html'
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
   tabsModel: TabModel[] = [];
   isMenuOpened = false;
+  isCaptureScreenWidgetOpened = false;
   menuComponent;
   menuActions: any = {};
   calculatedDataView: ICalculatedDataView;
 
-  @ViewChild('ddfModal') ddfModal: ModalDirective;
-  @ViewChild('additionalDataModal') additionalDataModal: ModalDirective;
-  @ViewChild('presetsModal') presetsModal: ModalDirective;
-  @ViewChild('versionsModal') versionsModal: ModalDirective;
-  @ViewChild('validationModal') validationModal: ModalDirective;
-  @ViewChild('ddfDatasetConfigModal') ddfDatasetConfigModal: ModalDirective;
-  @ViewChild('csvConfigModal') csvConfigModal: ModalDirective;
-  @ViewChild('excelConfigModal') excelConfigModal: ModalDirective;
-  @ViewChild('additionalCsvConfigModal') additionalCsvConfigModal: ModalDirective;
-  @ViewChild('additionalExcelConfigModal') additionalExcelConfigModal: ModalDirective;
-  @ViewChild('addDdfFolder') addDdfFolderInput: ElementRef;
+  @ViewChild('ddfModal', {static: true}) ddfModal: ModalDirective;
+  @ViewChild('additionalDataModal', {static: true}) additionalDataModal: ModalDirective;
+  @ViewChild('presetsModal', {static: true}) presetsModal: ModalDirective;
+  @ViewChild('versionsModal', {static: true}) versionsModal: ModalDirective;
+  @ViewChild('validationModal', {static: true}) validationModal: ModalDirective;
+  @ViewChild('ddfDatasetConfigModal', {static: true}) ddfDatasetConfigModal: ModalDirective;
+  @ViewChild('csvConfigModal', {static: true}) csvConfigModal: ModalDirective;
+  @ViewChild('excelConfigModal', {static: true}) excelConfigModal: ModalDirective;
+  @ViewChild('additionalCsvConfigModal', {static: true}) additionalCsvConfigModal: ModalDirective;
+  @ViewChild('additionalExcelConfigModal', {static: true}) additionalExcelConfigModal: ModalDirective;
+  @ViewChild('addDdfFolder', {static: true}) addDdfFolderInput: ElementRef;
   tabsDisabled = false;
+  alerts: IAlert[] = [];
+  private globConst;
 
   constructor(
     public chartService: ChartService,
@@ -76,10 +116,19 @@ export class HomeComponent implements OnInit {
     public ls: LocalizationService,
     private viewContainerRef: ViewContainerRef,
     private messageService: MessageService) {
+    this.globConst = this.es.remote.getGlobal('globConst');
     this.menuActions = getMenuActions(this, es);
 
-    document.addEventListener('click', (event: any) => {
+    document.addEventListener('mousedown', (event: any) => {
       const el = event.srcElement;
+
+      if (!this.messageService.isLocked()) {
+        const popover: any = document.querySelector('.popover');
+
+        if (el.className !== 'glyphicon glyphicon-star' && popover.style.display === 'block' && !isDescendant(popover, el)) {
+          popover.style.display = 'none';
+        }
+      }
 
       if (el && el.tagName === 'A' && el.protocol === 'http:' && el.target === '_blank') {
         event.preventDefault();
@@ -122,6 +171,9 @@ export class HomeComponent implements OnInit {
             const newTab = new TabModel(event.options.chartType, false);
             const chartIssue = this.chartService.newChart(newTab, tabDataDescriptor, false);
 
+            this.messageService.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: false, dontRestoreTab: true});
+            this.messageService.sendMessage(BOOKMARKS_PANE_OFF_OUTSIDE);
+
             this.tabsModel.forEach((tab: TabModel) => tab.active = false);
 
             newTab.active = true;
@@ -133,7 +185,7 @@ export class HomeComponent implements OnInit {
                 `Could not open DDF folder ${this.chartService.ddfFolderDescriptor.ddfUrl}, because ${chartIssue}`);
             }
 
-            this.es.ipcRenderer.send('new-chart', this.getCurrentTab().chartType + ' by DDF folder');
+            this.es.ipcRenderer.send(this.globConst.NEW_CHART, this.getCurrentTab().chartType + ' by DDF folder');
             this.doDetectChanges();
           }
         }
@@ -146,6 +198,31 @@ export class HomeComponent implements OnInit {
       if (event.message === MODEL_CHANGED) {
         this.dataItemsAvailability();
         this.doDetectChanges();
+      }
+
+      if (event.message === BOOKMARK_TAB) {
+        const tab = this.tabsModel[event.options.index];
+        const isAdditionalDataPresent = tab.component && tab.component.getModel;
+        const isModel = tab.instance && tab.instance.getModel();
+
+        if (!isModel && isAdditionalDataPresent) {
+          return;
+        }
+
+        const model = Object.assign({}, isAdditionalDataPresent ? tab.component.getModel() : tab.instance.getModel());
+        this.messageService.sendMessage(SEND_TAB_TO_BOOKMARK, {chartType: tab.chartType, model, name: event.options.name});
+      }
+
+      if (event.message === ALERT) {
+        const {message, type, timeout, data, activities} = event.options;
+        for (const alert of this.alerts) {
+          alert.activities = [];
+        }
+        this.alerts.unshift({message, type, timeout, data, activities});
+      }
+
+      if (event.message === CLEAR_ALERTS) {
+        this.alerts = [];
       }
     });
 
@@ -162,6 +239,14 @@ export class HomeComponent implements OnInit {
         this.chartService.initTab(this.tabsModel);
         this.doDetectChanges();
       }
+    });
+
+    this.es.ipcRenderer.on('do-bookmark-open-completed', (event: any, parameters: any) => {
+      this.doOpenCompleted(event, parameters);
+    });
+
+    this.es.ipcRenderer.on(this.globConst.BOOKMARKS_REMOVE_RESTORED, (event: any, parameters: any) => {
+      this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
     });
   }
 
@@ -268,7 +353,7 @@ export class HomeComponent implements OnInit {
 
     this.chartService.log('add data', data, currentTab.additionalData);
 
-    this.es.ipcRenderer.send('modify-chart', `user data was added to ${currentTab.chartType}`);
+    this.es.ipcRenderer.send(this.globConst.MODIFY_CHART, `user data was added to ${currentTab.chartType}`);
   }
 
   onDdfExtFolderChanged(filePaths: string[]) {
@@ -302,7 +387,14 @@ export class HomeComponent implements OnInit {
 
     newTab.model = config;
 
-    this.chartService.setReaderDefaults(newTab);
+    if (parameters.tab.data.reader !== 'ext-csv' && parameters.tab.data.reader !== 'excel') {
+      this.chartService.setReaderDefaults(newTab);
+    } else {
+      this.chartService.registerNewReader('ext-csv');
+      this.chartService.registerNewReader('excel');
+      newTab.readerName = parameters.tab.data.reader;
+    }
+
     this.registerNewReaders(newTab.model);
     this.tabsModel.forEach((tab: TabModel) => tab.active = false);
     this.tabsModel.push(newTab);
@@ -355,11 +447,13 @@ export class HomeComponent implements OnInit {
     this.excelConfigModal.hide();
 
     if (event) {
+      this.messageService.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: false, dontRestoreTab: true});
+      this.messageService.sendMessage(BOOKMARKS_PANE_OFF_OUTSIDE);
       this.chartService.newSimpleChart(this.tabsModel, event, () => {
         this.doDetectChanges();
       });
 
-      this.es.ipcRenderer.send('new-chart', 'Simple chart: json based');
+      this.es.ipcRenderer.send(this.globConst.NEW_CHART, 'Simple chart: json based');
     }
   }
 
@@ -389,6 +483,31 @@ export class HomeComponent implements OnInit {
       dim: this.getDim(),
       time: this.getTime()
     };
+  }
+
+  removeAlert(alert: IAlert) {
+    const pos = this.alerts.indexOf(alert);
+    if (pos >= 0) {
+      this.alerts.splice(pos, 1);
+    }
+  }
+
+  getPersistentAlerts(): IAlert[] {
+    return this.alerts.filter(alert => !alert.timeout);
+  }
+
+  getDismissableAlerts(): IAlert[] {
+    return this.alerts.filter(alert => alert.timeout > 0);
+  }
+
+  shouldAlertBeTranslated(alert: IAlert): boolean {
+    return typeof alert.message === 'object' && !!alert.message.template;
+
+  }
+
+  doAlertActivity(alert: IAlert, activity: IAlertActivity) {
+    this.es.ipcRenderer.send(activity.event);
+    this.removeAlert(alert);
   }
 
   private getCurrentTabInstance(): boolean {

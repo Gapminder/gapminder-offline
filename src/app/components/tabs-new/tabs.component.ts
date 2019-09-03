@@ -15,9 +15,8 @@ import { MessageService } from '../../message.service';
 import { Subscription } from 'rxjs/Subscription';
 import {
   CLEAR_EDITABLE_TABS_ACTION, TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, SWITCH_MENU_ACTION,
-  MODEL_CHANGED, SET_ACTIVE_TAB, REMOVE_TAB
+  MODEL_CHANGED, SET_ACTIVE_TAB, REMOVE_TAB, SWITCH_BOOKMARKS_PANE, BOOKMARK_TAB, BOOKMARKS_PANE_OFF_OUTSIDE, CLEAR_ALERTS
 } from '../../constants';
-import { ChartService } from '../tabs/chart.service';
 import { LocalizationService } from '../../providers/localization.service';
 
 const TAB_TIMEOUT = 100;
@@ -33,10 +32,15 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
   @Input() syncActions: ITabActionsSynchronizer;
   @Input() disabled: boolean;
 
-  @ViewChild('tabsContainer') tabsContainer: ElementRef;
+  @ViewChild('tabsContainer', {static: true}) tabsContainer: ElementRef;
   subscription: Subscription;
+  isBookmarkPaneVisible = false;
+  overedTabIndex: number;
 
   private intervalId: any;
+  private prevPopoverTarget;
+  private popoverElement: any;
+  private lastBookmarkButton;
 
   constructor(public ls: LocalizationService, public messageService: MessageService) {
     this.messageService = messageService;
@@ -95,6 +99,10 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
           tab.remove.emit({tab: this.tabs[index]});
           this.syncActions.onTabRemove(index);
         }
+
+        if (event.message === BOOKMARKS_PANE_OFF_OUTSIDE) {
+          this.isBookmarkPaneVisible = false;
+        }
       });
   }
 
@@ -127,10 +135,16 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
   }
 
   selectTab(selectedTab: TabNewComponent) {
-    this.messageService.sendMessage(SET_ACTIVE_TAB, selectedTab);
+    if (!this.messageService.isLocked()) {
+      this.messageService.sendMessage(SET_ACTIVE_TAB, selectedTab);
+    }
+    this.messageService.sendMessage(CLEAR_ALERTS);
   }
 
   removeTab(tab: TabNewComponent) {
+    if (this.messageService.isLocked()) {
+      return;
+    }
     if (!this.disabled) {
       this.messageService.sendMessage(REMOVE_TAB, tab);
     }
@@ -171,26 +185,32 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
   }
 
   addTabAction() {
-    this.messageService.sendMessage(TABS_ADD_TAB_ACTION);
+    if (!this.messageService.isLocked()) {
+      this.messageService.sendMessage(TABS_ADD_TAB_ACTION);
 
-    const el = this.tabsContainer.nativeElement;
+      const el = this.tabsContainer.nativeElement;
 
-    setTimeout(() => {
-      el.scrollLeft = el.scrollWidth;
-    }, TAB_TIMEOUT);
+      setTimeout(() => {
+        el.scrollLeft = el.scrollWidth;
+      }, TAB_TIMEOUT);
+    }
   }
 
   switchMenuAction(event: any) {
     event.stopPropagation();
     event.preventDefault();
-    this.messageService.sendMessage(SWITCH_MENU_ACTION);
+    if (!this.messageService.isLocked()) {
+      this.messageService.sendMessage(SWITCH_MENU_ACTION);
+    }
   }
 
   actionScroll(direction: number) {
-    const el = this.tabsContainer.nativeElement;
-    const tabWidthWithDirection = direction * el.children[0].getBoundingClientRect().width;
+    if (!this.messageService.isLocked()) {
+      const el = this.tabsContainer.nativeElement;
+      const tabWidthWithDirection = direction * el.children[0].getBoundingClientRect().width;
 
-    el.scrollLeft += tabWidthWithDirection;
+      el.scrollLeft += tabWidthWithDirection;
+    }
   }
 
   actionScrollStart(direction: number) {
@@ -227,5 +247,69 @@ export class TabsNewComponent implements AfterViewInit, OnDestroy {
     const scrollLeft = Math.ceil(el.scrollLeft);
 
     return scrollWidth > width && scrollWidth - scrollLeft !== width;
+  }
+
+  switchBookmark(event: any) {
+    event.stopPropagation();
+    event.preventDefault();
+    if (!this.messageService.isLocked()) {
+      this.hidePopover();
+      this.isBookmarkPaneVisible = !this.isBookmarkPaneVisible;
+      this.messageService.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: this.isBookmarkPaneVisible, dontRestoreTab: true});
+    }
+  }
+
+  switchPopover(eventOrigin) {
+    eventOrigin.preventDefault();
+    eventOrigin.stopPropagation();
+
+    if (!this.messageService.isLocked()) {
+      this.lastBookmarkButton = eventOrigin.target;
+
+      const tabElement = eventOrigin.srcElement.parentNode.parentNode;
+      const left = tabElement.offsetLeft;
+      const top = tabElement.offsetTop;
+      const height = tabElement.offsetHeight;
+
+      this.popoverElement = document.querySelector('.popover');
+      this.popoverElement.style.top = (top + height) + 'px';
+      this.popoverElement.style.left = left + 'px';
+      this.popoverElement.style.display = this.popoverElement.style.display === 'none' ? 'block' : 'none';
+
+      if (left + this.popoverElement.offsetWidth > document.body.clientWidth) {
+        this.popoverElement.style.left = (document.body.clientWidth - this.popoverElement.offsetWidth) + 'px';
+      }
+
+      if (this.popoverElement.style.display === 'block') {
+        this.prevPopoverTarget = tabElement;
+        this.tabs.forEach((tab: TabNewComponent, index) => {
+          if (tab.active) {
+            this.messageService.sendMessage(BOOKMARK_TAB, {index, name: tab.title});
+            this.messageService.lock();
+          }
+        });
+      } else {
+        this.prevPopoverTarget = null;
+      }
+    }
+  }
+
+  hidePopover(bookmarkButton?) {
+    if (!this.messageService.isLocked()) {
+      if (bookmarkButton) {
+        if (bookmarkButton.target.className === 'glyphicon glyphicon-star' && this.lastBookmarkButton === bookmarkButton.target) {
+          return;
+        }
+      }
+
+      if (this.popoverElement && this.popoverElement.style.display === 'block') {
+        this.popoverElement.style.display = 'none';
+        this.prevPopoverTarget = null;
+      }
+    }
+  }
+
+  isLocked(): boolean {
+    return this.messageService.isLocked();
   }
 }
