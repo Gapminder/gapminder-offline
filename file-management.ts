@@ -558,7 +558,7 @@ export const moveBookmark = async (event, params) => {
     }
 
     await writeFile(bookmarkFile, JSON.stringify({content: allBookmarksData.content, folders: allBookmarksData.folders}, null, 2));
-    event.sender.send(globConst.BOOKMARK_MOVED, {bookmarkFile});
+    event.sender.send(globConst.BOOKMARK_MOVED, {bookmarkFile, params});
   } catch (e) {
     event.sender.send(globConst.BOOKMARK_MOVED, {error: e.toString(), bookmarkFile});
   }

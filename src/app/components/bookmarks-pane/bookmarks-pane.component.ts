@@ -451,6 +451,23 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
 
   private onBookmarkMoved() {
     return (event, result) => {
+      let el = this.unCategorizedBookmarks.filter(record => +record.id === +result.params.elId);
+
+      if (el.length <= 0) {
+        for (const folder of Object.keys(this.bookmarksByFolder)) {
+          el = this.bookmarksByFolder[folder].filter(record => +record.id === +result.params.elId);
+
+          if (el.length === 1) {
+            el = el[0];
+            break;
+          }
+        }
+      } else {
+        el = el[0];
+      }
+
+      el.folder = result.params.targetFolder;
+
       this.ms.unlock();
 
       if (result.error) {
@@ -458,8 +475,6 @@ export class BookmarksPaneComponent implements OnInit, OnDestroy {
         this.ms.sendMessage(ALERT, {message: result.error, timeout: 5000, type: 'danger'});
         return;
       }
-
-      // this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
     };
   }
 
