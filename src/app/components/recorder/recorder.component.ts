@@ -2,7 +2,7 @@ import { desktopCapturer } from 'electron';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ElectronService } from '../../providers/electron.service';
 import { MessageService } from '../../message.service';
-import { ALERT } from '../../constants';
+import { ALERT, CLOSE_SCREEN_RECORDER } from '../../constants';
 import { TranslateService } from '@ngx-translate/core';
 
 declare const navigator;
@@ -20,8 +20,6 @@ let recorder;
   styleUrls: ['./recorder.component.css']
 })
 export class RecorderComponent implements OnInit, OnDestroy {
-  @Output() close = new EventEmitter();
-
   constructor(private es: ElectronService, private ms: MessageService, private ts: TranslateService) {
   }
 
@@ -79,10 +77,10 @@ export class RecorderComponent implements OnInit, OnDestroy {
 
               this.ms.sendMessage(ALERT, {message, type: 'warning', timeout: 3000});
             } finally {
-              this.doClose();
+              this.ms.sendMessage(CLOSE_SCREEN_RECORDER);
             }
           });
-          this.doClose();
+          this.ms.sendMessage(CLOSE_SCREEN_RECORDER);
         };
       }
 
@@ -105,10 +103,6 @@ export class RecorderComponent implements OnInit, OnDestroy {
 
     }
     return recorder.state === 'recording';
-  }
-
-  doClose() {
-    this.close.emit();
   }
 
   private async getSelectedFileFromDialog(): Promise<string> {

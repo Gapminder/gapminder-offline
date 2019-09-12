@@ -16,3 +16,4 @@ export const REMOVE_TAB = 'remove tab';
 export const BOOKMARK_TAB = 'bookmark tab';
 export const ALERT = 'alert';
 export const CLEAR_ALERTS = 'clear-alerts';
+export const CLOSE_SCREEN_RECORDER = 'close-screen-recorder';

@@ -25,7 +25,7 @@ import {
   SEND_TAB_TO_BOOKMARK,
   ALERT,
   CLEAR_ALERTS,
-  BOOKMARKS_PANE_OFF_OUTSIDE, SWITCH_BOOKMARKS_PANE
+  BOOKMARKS_PANE_OFF_OUTSIDE, SWITCH_BOOKMARKS_PANE, CLOSE_SCREEN_RECORDER
 } from '../../constants';
 import { initMenuComponent } from '../menu/system-menu';
 import { getMenuActions } from '../menu/menu-actions';
@@ -223,6 +223,10 @@ export class HomeComponent implements OnInit {
 
       if (event.message === CLEAR_ALERTS) {
         this.alerts = [];
+      }
+
+      if (event.message === CLOSE_SCREEN_RECORDER) {
+        this.isCaptureScreenWidgetOpened = false;
       }
     });
 
