@@ -1,10 +1,7 @@
 .recorder-container {
-  position: absolute;
-  top: 0;
-  left: 700px;
-  z-index: 999999;
-  padding: 5px 5px 0 5px;
+  padding: 5px;
   background-color: #ffffff;
+  text-align: center;
 }
 
 .btn {
@@ -17,9 +14,22 @@
   border-radius: 0;
 }
 
-.btn span {
+.glyphicon-record-ltr:before {
+  content: "\e165"
+}
+
+.glyphicon-record-rtl:after {
+  content: "\e165"
+}
+
+.btn-ltr span {
   margin-right: 5px;
 }
+
+.btn-rtl span {
+  margin-left: 5px;
+}
+
 
 .plain-btn {
   color: #444;

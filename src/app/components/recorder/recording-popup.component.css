@@ -1,0 +1,35 @@
+
+.popup-win {
+  position: fixed;
+  min-width: 200px;
+  border: 1px solid #ffca32;
+}
+
+.popup-content {
+  padding: 5px;
+  background-color: #fff;
+}
+
+.popup-drag span {
+  font-size: 10px;
+}
+
+.popup-title-bar {
+  padding: 2px;
+  color: #444;
+  background-color: #f9cc3e;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 11px;
+}
+
+.popup-title-bar > div > div {
+  cursor: default;
+}
+
+.popup-title-bar div:nth-child(2) {
+  margin-right: 6px;
+  font-size: 9px;
+}

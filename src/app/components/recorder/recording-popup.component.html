@@ -1,0 +1,14 @@
+<div class="popup" *ngIf="show">
+  <div class="popup-win"
+       [ngStyle]="{'top': curY + 'px', 'left': curX + 'px','z-index': curZIndex}"
+       (mousedown)="mousedown($event)">
+    <div class="popup-title-bar">
+      <div><div>{{'Screen Recorder' | translate}}</div></div>
+      <div class="glyphicon glyphicon-remove-circle" (click)="disappear()"></div>
+    </div>
+
+    <div class="popup-content">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

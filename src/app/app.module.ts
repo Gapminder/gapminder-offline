@@ -37,6 +37,7 @@ import { VersionsFormComponent } from './components/versions-form/versions-form.
 import { BookmarksPaneComponent } from './components/bookmarks-pane/bookmarks-pane.component';
 import { BookmarkFormComponent } from './components/bookmark-form/bookmark-form.component';
 import { RecorderComponent } from './components/recorder/recorder.component';
+import { RecordingPopupComponent } from './components/recorder/recording-popup.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -62,6 +63,7 @@ export function createTranslateLoader(http: HttpClient) {
     WaitIndicatorComponent,
     VersionsFormComponent,
     RecorderComponent,
+    RecordingPopupComponent,
     WebviewDirective,
     VizabiDirective
   ],
