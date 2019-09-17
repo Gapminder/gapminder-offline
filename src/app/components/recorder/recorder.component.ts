@@ -21,10 +21,13 @@ let recorder;
   styleUrls: ['./recorder.component.css']
 })
 export class RecorderComponent implements OnInit, OnDestroy {
+  private readonly recentVideoPathSetting: string;
+
   constructor(public ls: LocalizationService,
               private es: ElectronService,
               private ms: MessageService,
               private ts: TranslateService) {
+    this.recentVideoPathSetting = this.es.path.resolve(this.es.userDataPath, 'recent-video-path');
   }
 
   ngOnInit() {
@@ -63,7 +66,7 @@ export class RecorderComponent implements OnInit, OnDestroy {
             try {
               const file = await this.getSelectedFileFromDialog();
 
-              this.es.fs.writeFile(file, buffer, 'binary', err => {
+              this.es.fs.writeFile(file, buffer, 'binary', async err => {
                 if (err) {
                   const message = this.ts.instant('Failed to save video', {err});
 
@@ -74,6 +77,7 @@ export class RecorderComponent implements OnInit, OnDestroy {
 
                   console.log(message);
                   this.ms.sendMessage(ALERT, {message, type: 'success', timeout: 3000});
+                  await this.writeCurrentVideoDir(file);
                 }
               });
             } catch (e) {
@@ -109,12 +113,40 @@ export class RecorderComponent implements OnInit, OnDestroy {
     return recorder.state === 'recording';
   }
 
-  private async getSelectedFileFromDialog(): Promise<string> {
+  private async readCurrentVideoDir(): Promise<string> {
+    return new Promise((resolve: Function) => {
+      this.es.fs.readFile(this.recentVideoPathSetting, 'utf8', (err, data) => {
+        if (err) {
+          return resolve(this.es.path.resolve(require('os').homedir()));
+        }
+
+        resolve(data);
+      });
+    });
+  }
+
+  private async writeCurrentVideoDir(file: string): Promise<void> {
     return new Promise((resolve: Function, reject: Function) => {
+      const customPath = this.es.path.dirname(file);
+
+      this.es.fs.writeFile(this.recentVideoPathSetting, customPath, 'utf8', (err) => {
+        if (err) {
+          return reject(err);
+        }
+
+        resolve();
+      });
+    });
+  }
+
+  private async getSelectedFileFromDialog(): Promise<string> {
+    return new Promise(async (resolve: Function, reject: Function) => {
       const filename = this.getFileName();
+      const defaultPath = await this.readCurrentVideoDir();
+
       this.es.remote.dialog.showSaveDialog({
         title: this.ts.instant('Save video as'),
-        defaultPath: this.es.path.resolve(require('os').homedir(), `${filename}.mkv`),
+        defaultPath: this.es.path.resolve(defaultPath, `${filename}.mkv`),
         filters: [{name: 'MKV video', extensions: ['mkv']}]
       }, file => {
         if (!file) {
