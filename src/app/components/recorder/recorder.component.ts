@@ -1,9 +1,10 @@
 import { desktopCapturer } from 'electron';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ElectronService } from '../../providers/electron.service';
 import { MessageService } from '../../message.service';
 import { ALERT, CLOSE_SCREEN_RECORDER } from '../../constants';
 import { TranslateService } from '@ngx-translate/core';
+import { LocalizationService } from '../../providers/localization.service';
 
 declare const navigator;
 
@@ -22,7 +23,10 @@ let recorder;
 export class RecorderComponent implements OnInit, OnDestroy {
   private readonly recentVideoPathSetting: string;
 
-  constructor(private es: ElectronService, private ms: MessageService, private ts: TranslateService) {
+  constructor(public ls: LocalizationService,
+              private es: ElectronService,
+              private ms: MessageService,
+              private ts: TranslateService) {
     this.recentVideoPathSetting = this.es.path.resolve(this.es.userDataPath, 'recent-video-path');
   }
 
@@ -104,8 +108,8 @@ export class RecorderComponent implements OnInit, OnDestroy {
   isRecording(): boolean {
     if (!recorder) {
       return false;
-
     }
+
     return recorder.state === 'recording';
   }
 
@@ -168,7 +172,7 @@ export class RecorderComponent implements OnInit, OnDestroy {
 
   private async getCurrentWindowMediaSource(): Promise<CurrentMediaSource> {
     return new Promise((resolve: Function, reject: Function) => {
-      const nativeWindowPrefix = 'Gapminder Tools Offline';
+      const nativeWindowPrefix = 'Gapminder Tools Offline v';
 
       desktopCapturer.getSources({types: ['window']}).then((sources) => {
         let currentSource;

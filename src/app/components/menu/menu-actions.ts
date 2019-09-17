@@ -93,6 +93,7 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => {
       context.isMenuOpened = false;
     },
     prepareScreenCapture: () => {
+      context.recordingPopup.appear();
       context.isCaptureScreenWidgetOpened = true;
       context.isMenuOpened = false;
     },
