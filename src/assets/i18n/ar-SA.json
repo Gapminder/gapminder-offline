@@ -163,5 +163,6 @@
   "Saved video": "Saved video: \"<b>{{file}}</b>\"",
   "Failed to save video": "Failed to save video: \"<b>{{err}}</b>\"",
   "No files are chosen": "No files are chosen",
-  "Save video as": "Save video as ..."
+  "Save video as": "Save video as ...",
+  "Screen Recorder": "Screen Recorder"
 }
