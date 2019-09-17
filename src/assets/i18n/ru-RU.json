@@ -162,5 +162,6 @@
   "Stop recording": "Остановить запись",
   "Saved video": "Видео записано: \"<b>{{file}}</b>\"",
   "No files are chosen": "Файл не выбран",
-  "Save video as": "Записать видео как ..."
+  "Save video as": "Записать видео как ...",
+  "Screen Recorder": "Запись экрана"
 }

@@ -162,5 +162,6 @@
   "Stop recording": "Stop recording",
   "Saved video": "Saved video: \"<b>{{file}}</b>\"",
   "No files are chosen": "No files are chosen",
-  "Save video as": "Save video as ..."
+  "Save video as": "Save video as ...",
+  "Screen Recorder": "Screen Recorder"
 }

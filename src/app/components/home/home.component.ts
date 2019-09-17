@@ -34,6 +34,7 @@ import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { LocalizationService } from '../../providers/localization.service';
 import { langConfigTemplate } from '../../../lang-config';
 import { ICalculatedDataView } from '../file-select-config-form/calculated-data-view';
+import { RecordingPopupComponent } from '../recorder/recording-popup.component';
 
 const vizabiStateFacade: any = {
   getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
@@ -94,6 +95,7 @@ export class HomeComponent implements OnInit {
   menuActions: any = {};
   calculatedDataView: ICalculatedDataView;
 
+  @ViewChild('recordingPopup', {static: true}) recordingPopup: RecordingPopupComponent;
   @ViewChild('ddfModal', {static: true}) ddfModal: ModalDirective;
   @ViewChild('additionalDataModal', {static: true}) additionalDataModal: ModalDirective;
   @ViewChild('presetsModal', {static: true}) presetsModal: ModalDirective;
@@ -227,6 +229,7 @@ export class HomeComponent implements OnInit {
 
       if (event.message === CLOSE_SCREEN_RECORDER) {
         this.isCaptureScreenWidgetOpened = false;
+        this.recordingPopup.disappear();
       }
     });
 
@@ -252,6 +255,10 @@ export class HomeComponent implements OnInit {
     this.es.ipcRenderer.on(this.globConst.BOOKMARKS_REMOVE_RESTORED, (event: any, parameters: any) => {
       this.es.ipcRenderer.send(this.globConst.GET_BOOKMARKS);
     });
+  }
+
+  closeScreenRecorder() {
+    this.messageService.sendMessage(CLOSE_SCREEN_RECORDER);
   }
 
   onMenuItemSelected(method: string) {
