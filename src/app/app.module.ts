@@ -33,7 +33,6 @@ import { MessageService } from './message.service';
 import { FreshenerService } from './components/tab-freshener/freshener.service';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LocalizationService } from './providers/localization.service';
-import { VersionsFormComponent } from './components/versions-form/versions-form.component';
 import { BookmarksPaneComponent } from './components/bookmarks-pane/bookmarks-pane.component';
 import { BookmarkFormComponent } from './components/bookmark-form/bookmark-form.component';
 import { RecorderComponent } from './components/recorder/recorder.component';
@@ -61,7 +60,6 @@ export function createTranslateLoader(http: HttpClient) {
     TabsComponent,
     SmartPathSelectorComponent,
     WaitIndicatorComponent,
-    VersionsFormComponent,
     RecorderComponent,
     RecordingPopupComponent,
     WebviewDirective,

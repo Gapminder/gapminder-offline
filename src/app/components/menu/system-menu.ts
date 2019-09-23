@@ -181,7 +181,7 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
       role: 'help',
       submenu: [
         {
-          label: appComponent.translate.instant('Check for updates...'),
+          label: appComponent.translate.instant('Older versions'),
           click: () => appComponent.menuActions.checkForUpdates()
         },
         {

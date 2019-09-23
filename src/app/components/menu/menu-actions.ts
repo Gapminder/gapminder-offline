@@ -144,7 +144,7 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => {
       document.body.appendChild(e);
     },
     checkForUpdates: () => {
-      context.versionsModal.show();
+      context.es.shell.openExternal('https://vizabi.org/gapminder-offline-version-archive.html');
       context.isMenuOpened = false;
     },
     openDevTools: () => {

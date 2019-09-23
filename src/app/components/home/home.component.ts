@@ -99,7 +99,6 @@ export class HomeComponent implements OnInit {
   @ViewChild('ddfModal', {static: true}) ddfModal: ModalDirective;
   @ViewChild('additionalDataModal', {static: true}) additionalDataModal: ModalDirective;
   @ViewChild('presetsModal', {static: true}) presetsModal: ModalDirective;
-  @ViewChild('versionsModal', {static: true}) versionsModal: ModalDirective;
   @ViewChild('validationModal', {static: true}) validationModal: ModalDirective;
   @ViewChild('ddfDatasetConfigModal', {static: true}) ddfDatasetConfigModal: ModalDirective;
   @ViewChild('csvConfigModal', {static: true}) csvConfigModal: ModalDirective;
@@ -324,13 +323,6 @@ export class HomeComponent implements OnInit {
   switchMenu() {
     if (!this.tabsDisabled) {
       this.isMenuOpened = !this.isMenuOpened;
-    }
-  }
-
-  versionsFormComplete(version?: string) {
-    if (version) {
-      this.es.ipcRenderer.send('request-custom-update', version);
-      this.versionsModal.hide();
     }
   }
 
