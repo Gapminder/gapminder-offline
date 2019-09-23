@@ -4,7 +4,7 @@
     "export-template/**/*",
     "preview-data/**/*"
   ],
-  "productName": "Gapminder Tools Offline",
+  "productName": "Gapminder Offline",
   "directories": {
     "output": "app-builds"
   },
@@ -37,7 +37,7 @@
       "portable"
     ],
     "verifyUpdateCodeSignature": false,
-    "publisherName": "COMODO RSA Code Signing CA",
+    "publisherName": "Sectigo RSA Code Signing CA",
     "certificateSubjectName": "Stiftelsen Gapminder"
   },
   "mac": {
@@ -63,7 +63,7 @@
     "createStartMenuShortcut": false
   },
   "dmg": {
-    "title": "Gapminder Tools Offline",
+    "title": "Gapminder Offline",
     "icon": "icons/gapminder_package.icns",
     "background": "icons/gapminder.png",
     "window": {
@@ -79,14 +79,14 @@
     {
       "provider": "s3",
       "bucket": "gapminder-offline",
-      "path": "dist"
+      "path": ""
     }
   ],
   "fileAssociations": [
     {
       "ext": "gmstat",
-      "name": "Gapminder Statistics File",
-      "description": "Gapminder Statistics File",
+      "name": "Gapminder offline chart",
+      "description": "Gapminder offline chart",
       "role": "Viewer"
     }
   ]
