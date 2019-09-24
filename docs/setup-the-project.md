@@ -1,6 +1,6 @@
-1. [Setup guide for Gapminder Tools Offline](#setup-guide-for-gapminder-tools-offline)
+1. [Setup guide for Gapminder Offline](#setup-guide-for-gapminder-tools-offline)
    1. [How to build an app](#how-to-build-an-app)
-      * [Tools necessary to build Gapminder Tools Offline](#tools-necessary-to-build-gapminder-tools-offline)
+      * [Tools necessary to build Gapminder Offline](#tools-necessary-to-build-gapminder-tools-offline)
    1. [Building for Windows](#building-for-windows)
       * [Clarifications for Windows build](#clarifications-for-windows-build)
       * [Application structure on Windows](#application-structure-on-windows)
@@ -18,11 +18,11 @@
       * [Mac](#mac)
       * [Linux](#linux)
 
-# Setup guide for Gapminder Tools Offline
+# Setup guide for Gapminder Offline
 
 ## How to build an app
 
-### Tools necessary to build Gapminder Tools Offline
+### Tools necessary to build Gapminder Offline
 
 * `git`
 * `nodejs` >= 10.15.0 with bundled `npm` for all platforms
@@ -57,8 +57,8 @@
 After successful Windows build, there should be following files and directories in build directory:
 
 * `"app-build"` - Project folder containing all setup and update files.
-* `Gapminder Tools Offline Setup X.X.X.exe` - Installation executable for Gapminder Tools Offline.
-* `Gapminder Tools Offline x.x.x.exe` - Gapminder Tools Offline portable version executable.
+* `Gapminder Offline Setup X.X.X.exe` - Installation executable for Gapminder Offline.
+* `Gapminder Offline x.x.x.exe` - Gapminder Offline portable version executable.
 
 ### Clarifications for Windows build
 
@@ -122,7 +122,7 @@ Important parts of the *"electron-builder.json"* for Windows:
 After successful Linux build, there should be following files and directories in build directory:
 
 * `"app-build"` - Project folder containing AppImage and update file.
-* `Gapminder Tools Offline X.X.X.AppImage` - Universal [AppImage](https://appimage.org) container.
+* `Gapminder Offline X.X.X.AppImage` - Universal [AppImage](https://appimage.org) container.
 
 ### Application structure on Linux
 
@@ -154,8 +154,8 @@ It's recommended to save *.yml files with application version in their name (i.e
 After successful MacOS build, there should be following files and directories in build directory:
 
 * `"app-build"` - Project folder containing .dmg mountable disk image and update file;
-* `*.dmg` - Mountable disk image containing MacOS version of Gapminder Tools Offline;
-* `Gapminder Tools Offline-X.X.X-mac.zip` - Update file for MacOS Gapminder Tools Offline.
+* `*.dmg` - Mountable disk image containing MacOS version of Gapminder Offline;
+* `Gapminder Offline-X.X.X-mac.zip` - Update file for MacOS Gapminder Offline.
 
 ### Application structure on MacOS
 
@@ -186,7 +186,7 @@ Important parts of the "electron-builder.json" for Mac platform:
 
 ```json
    "dmg": {
-        "title": "Gapminder Tools Offline",
+        "title": "Gapminder Offline",
          "icon": "icons/gapminder_package.icns",
          "background": "icons/gapminder.png",
          "window": {
@@ -222,19 +222,19 @@ Files listed by platform are following:
 ### Windows
 
 * `latest.yml`
-* `Gapminder Tools Offline-X.X.X-ia32-win.zip` file for the version with installation
-* `Gapminder Tools Offline-X.X.X-ia32-win.zip` file for portable version
-* `Gapminder Tools Offline Setup X.X.X.exe.blockmap` files
-* `Gapminder Tools Offline-X.X.X-win.zip ; Gapminder Tools Offline-X.X.X-ia32-win.zip` files for x32 and x64 versions
+* `Gapminder Offline-X.X.X-ia32-win.zip` file for the version with installation
+* `Gapminder Offline-X.X.X-ia32-win.zip` file for portable version
+* `Gapminder Offline Setup X.X.X.exe.blockmap` files
+* `Gapminder Offline-X.X.X-win.zip ; Gapminder Offline-X.X.X-ia32-win.zip` files for x32 and x64 versions
 
 ### Mac
 
 * `latest-mac.yml`
-* `Gapminder Tools Offline-X.X.X.dmg` file
-* `Gapminder Tools Offline-X.X.X.dmg.blockmap` file
-* `Gapminder Tools Offline-X.X.X-mac.zip` file
+* `Gapminder Offline-X.X.X.dmg` file
+* `Gapminder Offline-X.X.X.dmg.blockmap` file
+* `Gapminder Offline-X.X.X-mac.zip` file
 
 ### Linux
 
 * `latest-linux.yml`
-* `Gapminder Tools Offline X.X.X.AppImage` file
+* `Gapminder Offline X.X.X.AppImage` file

@@ -1,6 +1,6 @@
-# Gapminder Tools Offline  
+# Gapminder Offline  
 
-With Gapminder Tools Offline you can show animated statistics from your own laptop!
+With Gapminder Offline you can show animated statistics from your own laptop!
 
 • You can use it without internet access  
 • You can visualise your own data with it or even combine it with the datasets provided (examples & instructions)  

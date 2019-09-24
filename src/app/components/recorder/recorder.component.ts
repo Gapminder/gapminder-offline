@@ -172,7 +172,7 @@ export class RecorderComponent implements OnInit, OnDestroy {
 
   private async getCurrentWindowMediaSource(): Promise<CurrentMediaSource> {
     return new Promise((resolve: Function, reject: Function) => {
-      const nativeWindowPrefix = 'Gapminder Tools Offline v';
+      const nativeWindowPrefix = 'Gapminder Offline v';
 
       desktopCapturer.getSources({types: ['window']}).then((sources) => {
         let currentSource;
