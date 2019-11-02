@@ -64,7 +64,7 @@
   "dependencies": {
     "async": "2.6.2",
     "async-waterfall": "0.1.5",
-    "csv-parse": "4.3.3",
+    "csv-parse": "4.4.6",
     "ddf-validation": "1.19.0",
     "decompress-zip": "0.2.2",
     "electron-log": "3.0.1",
