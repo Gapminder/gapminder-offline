@@ -81,6 +81,11 @@ npm i
 ./build-dev
 ```
 
+Run the app with debugger open
+`"./Gapminder Offline" dev`
+Example on Mac, since apps are really folder on Mac:
+`./Gapminder\ Offline.app/Contents/MacOS/Gapminder\ Offline dev`
+
 Important note! The main goal of building the app in developer mode is testing only, 
 because `auto update` functionality will be unavailable in this case. 
 
