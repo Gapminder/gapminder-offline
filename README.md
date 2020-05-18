@@ -55,7 +55,7 @@ Download the stable version from here http://www.gapminder.org/tools-offline/
 ## Contributing
 We use Angular 6, Electron & chrome app featuring Webpack
 
-If you want to build the app in developer mode (simple build without creating a distributive and code signing) use the following commands:
+### Building the app
 
 Mac
 ```
@@ -81,10 +81,16 @@ npm i
 ./build-dev
 ```
 
-Run the app with debugger open
-`"./Gapminder Offline" dev`
-Example on Mac, since apps are really folder on Mac:
-`./Gapminder\ Offline.app/Contents/MacOS/Gapminder\ Offline dev`
+### Running the app with debugger open  
+
+```
+"./Gapminder Offline" dev
+```
+
+Example on Mac, since apps are really just folders:  
+```
+./Gapminder\ Offline.app/Contents/MacOS/Gapminder\ Offline dev
+```
 
 Important note! The main goal of building the app in developer mode is testing only, 
 because `auto update` functionality will be unavailable in this case. 
