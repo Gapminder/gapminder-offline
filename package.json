@@ -76,7 +76,7 @@
     "is-online": "8.0.0",
     "lodash": "4.17.11",
     "minimist": "1.2.0",
-    "node-fetch": "2.3.0",
+    "node-fetch": "2.6.1",
     "request": "2.88.0",
     "semver": "5.6.0",
     "semver-sort": "0.0.4",
