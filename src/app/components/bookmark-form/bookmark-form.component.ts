@@ -25,7 +25,7 @@ export class BookmarkFormComponent implements OnInit, OnDestroy {
   constructor(public ls: LocalizationService, private ms: MessageService, private es: ElectronService, private ts: TranslateService) {
     this.globConst = this.es.remote.getGlobal('globConst');
     this.initBookmark();
-    this.monthNameFormat = this.es.d3.time.format('%Y-%m-%d %H:%M:%S');
+    this.monthNameFormat = this.es.d3.timeFormat('%Y-%m-%d %H:%M:%S');
     this.subscription = this.ms.getMessage().subscribe((event: any) => {
       if (event.message === SEND_TAB_TO_BOOKMARK) {
         this.initBookmark();
