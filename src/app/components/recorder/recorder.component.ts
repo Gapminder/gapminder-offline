@@ -148,7 +148,7 @@ export class RecorderComponent implements OnInit, OnDestroy {
         title: this.ts.instant('Save video as'),
         defaultPath: this.es.path.resolve(defaultPath, `${filename}.mkv`),
         filters: [{name: 'MKV video', extensions: ['mkv']}]
-      }, file => {
+      }).then(({filePath: file}) => {
         if (!file) {
           return reject(this.ts.instant('No files are chosen'));
         }

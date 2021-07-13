@@ -36,7 +36,7 @@ const initBookmarksThumbnailsCache = async () => {
   return fsExtra.ensureDir(bookmarksThumbnailsUndoPath);
 };
 
-const clearBookmarksThumbnailsCache = async () => new Promise((resolve, reject) => {
+const clearBookmarksThumbnailsCache = async () => new Promise<void>((resolve, reject) => {
   fs.readdir(bookmarksThumbnailsUndoPath, async (readErr, files) => {
     if (readErr) {
       return reject(readErr);
@@ -50,7 +50,7 @@ const clearBookmarksThumbnailsCache = async () => new Promise((resolve, reject) 
   });
 });
 
-const restoreBookmarksThumbnails = async () => new Promise((resolve, reject) => {
+const restoreBookmarksThumbnails = async () => new Promise<void>((resolve, reject) => {
   fs.readdir(bookmarksThumbnailsUndoPath, async (readErr, files) => {
     if (readErr) {
       return reject(readErr);
@@ -80,12 +80,12 @@ const getPathCorrectFunction = brokenPathObject => onPathReady => {
     title: 'Confirm',
     message: `The chart you are about to open depends on the external file ${parsed.base}, which was not found because it was moved or
     renamed or left on some other computer. Press OK to help locate the file or Cancel to ignore and just open the app.`
-  }, function (response) {
+  }).then(({response}) => {
     if (response === 0) {
       dialog.showOpenDialog({
         title: `Choose correct location for "${parsed.base}"...`,
         properties: brokenPathObject.reader.indexOf('ddf') === 0 ? ['openDirectory'] : ['openFile']
-      }, dirPaths => {
+      }).then(({filePaths: dirPaths}) => {
         if (!dirPaths || dirPaths.length < 0) {
           brokenPathObject.__abandoned = true;
           onPathReady();
@@ -307,7 +307,7 @@ export const openFileWithDialog = event => {
     title: 'Open chart state ...',
     filters: [{name: 'Gapminder stat document', extensions: ['gmstat']}],
     properties: ['openFile']
-  }, fileNames => {
+  }).then(({ filePaths: fileNames }) => {
 
     if (!fileNames || fileNames.length <= 0) {
       return;
@@ -335,7 +335,7 @@ export const saveFile = (event, params) => {
     title: 'Save current chart as ...',
     defaultPath: `${params.title}.gmstat`,
     filters: [{name: 'Gapminder stat document', extensions: ['gmstat']}]
-  }, fileName => {
+  }).then(({ filePath: fileName}) => {
     if (!fileName) {
       return;
     }
@@ -646,7 +646,7 @@ export const saveAllTabs = (event, tabsDescriptor) => {
     title: 'Save charts as ...',
     defaultPath: `charts-${timeLabel}.gmstat`,
     filters: [{name: 'Gapminder stat document', extensions: ['gmstat']}]
-  }, fileName => {
+  }).then(({ filePath: fileName}) => {
     if (!fileName) {
       return;
     }
@@ -703,7 +703,7 @@ export const exportForWeb = (event, params) => {
   dialog.showSaveDialog({
     title: 'Export current chart as ...',
     filters: [{name: 'ZIP', extensions: ['zip']}]
-  }, fileName => {
+  }).then(({ filePath: fileName }) => {
     if (!fileName) {
       return;
     }

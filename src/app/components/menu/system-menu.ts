@@ -106,7 +106,7 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
         {label: appComponent.translate.instant('Cut'), accelerator: 'CmdOrCtrl+X', role: 'cut'},
         {label: appComponent.translate.instant('Copy'), accelerator: 'CmdOrCtrl+C', role: 'copy'},
         {label: appComponent.translate.instant('Paste'), accelerator: 'CmdOrCtrl+V', role: 'paste'},
-        {label: appComponent.translate.instant('Select All'), accelerator: 'CmdOrCtrl+A', role: 'selectall'}
+        {label: appComponent.translate.instant('Select All'), accelerator: 'CmdOrCtrl+A', role: 'selectAll'}
       ]
     },
     {
@@ -143,15 +143,15 @@ export const initMenuComponent = (appComponent: HomeComponent, es: ElectronServi
         },
         {
           label: appComponent.translate.instant('Actual Size'),
-          role: 'resetzoom'
+          role: 'resetZoom'
         },
         {
           label: appComponent.translate.instant('Zoom In'),
-          role: 'zoomin'
+          role: 'zoomIn'
         },
         {
           label: appComponent.translate.instant('Zoom Out'),
-          role: 'zoomout'
+          role: 'zoomOut'
         },
         {
           type: 'separator'
