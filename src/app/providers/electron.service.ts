@@ -47,7 +47,7 @@ export class ElectronService {
       this.fs = window.require('fs');
       this.path = window.require('path');
       this.process = window.process;
-      this.ddfCsvReader = window.require('vizabi-ddfcsv-reader');
+      this.ddfCsvReader = window.require('@vizabi/reader-ddfcsv');
       this.ExcelReader = window.require('vizabi-excel-reader');
       this.CsvReader = window.require('vizabi-csv-reader');
       this.ddfValidation = window.require('ddf-validation');

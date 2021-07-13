@@ -38,7 +38,7 @@
               "node_modules/@vizabi/mountainchart/build/mountainchart.css"
             ],
             "scripts": [
-              "node_modules/mobx/lib/mobx.js",
+              "node_modules/mobx/lib/mobx.umd.js",
               "node_modules/d3/dist/d3.js",
               "node_modules/@vizabi/core/dist/Vizabi.js",
               "node_modules/@vizabi/shared-components/build/VizabiSharedComponents.js",
