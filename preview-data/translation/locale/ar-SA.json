@@ -1,0 +1,8 @@
+{
+    "rtl": true,
+    "dictionary": {
+        "button-play": "لعب",
+        "button-pause": "وقفة",
+        "hints/dataWarning": "شكوك حول البيانات"
+    }
+}

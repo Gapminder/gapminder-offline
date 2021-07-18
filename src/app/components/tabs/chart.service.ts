@@ -7,7 +7,7 @@ import { MODEL_CHANGED } from '../../constants';
 import { ElectronService } from '../../providers/electron.service';
 
 const configSg = {
-  BarRankChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BarRankChart.json'),
+  BarRankChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BarRank.json'),
   BubbleChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleChart.json'),
   BubbleMap: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleMap.json'),
   LineChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/LineChart.json'),
@@ -52,7 +52,7 @@ export class ChartService {
 
   registerNewReader(readerName: string) {
     if (this.registeredReaders.indexOf(readerName) < 0 && this.readersDefinitions[readerName]) {
-      this.es.vizabi.Reader.extend(readerName, this.readersDefinitions[readerName]);
+      this.es.Vizabi.stores.dataSources.createAndAddType(readerName,  this.readersDefinitions[readerName]);
       this.registeredReaders.push(readerName);
     }
   }
@@ -84,20 +84,28 @@ export class ChartService {
       return ddfFolderDescriptor.error;
     }
 
-    config.data = {
-      reader: 'ddf1-csv-ext',
-      ddfPath: this.ddfFolderDescriptor.ddfUrl,
-      path: this.ddfFolderDescriptor.ddfUrl,
-      assetsPath: this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data') + this.es.path.sep,
-      _lastModified: ddfFolderDescriptor.lastModified
+    config.model.dataSources = {
+      'ddf1-csv-ext-ds': {
+        modelType: 'ddf1-csv-ext',
+        path: this.ddfFolderDescriptor.ddfUrl,
+        assetsPath: this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data') + this.es.path.sep,
+        _lastModified: ddfFolderDescriptor.lastModified  
+      }
     };
 
-    config.locale = {
+    const markers = config.model.markers;
+    const markerId = ["bubble", "line", "bar", "mountain", "pyramid", "spreadsheet"].find(id => markers[id]);
+    const datasourceIDs = Object.keys(config.model.dataSources);
+    if (!datasourceIDs.includes(config.model.markers[markerId].data.source))
+      config.model.markers = { [markerId]: { data: { source: datasourceIDs[0] } } };
+
+    config.ui.locale = {
       id: 'en',
-      filePath: this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data', 'translation') + this.es.path.sep
+      path: this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data', 'translation') + this.es.path.sep
     };
 
-    config.ui.splash = false;
+    //TODO: check splash
+    //config.ui.splash = false;
     tab.model = config;
 
     this.messageService.sendMessage(MODEL_CHANGED);

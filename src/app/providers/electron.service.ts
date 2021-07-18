@@ -29,6 +29,11 @@ export class ElectronService {
   vizabi: any;
   Vizabi: any;
   VizabiSharedComponents: any;
+  BubbleChart: any;
+  BubbleMap: any;
+  LineChart: any;
+  MountainChart: any;
+  BarRank: any;
   d3: any;
   mobx: any;
   SETTINGS_FILE: string;
@@ -54,6 +59,11 @@ export class ElectronService {
       this.vizabi = (window as any).Vizabi;
       this.Vizabi = (window as any).Vizabi;
       this.VizabiSharedComponents = (window as any).VizabiSharedComponents;
+      this.BubbleChart = (window as any).BubbleChart;
+      this.BubbleMap = (window as any).BubbleMap;
+      this.LineChart = (window as any).LineChart;
+      this.BarRank = (window as any).BarRank;
+      this.MountainChart = (window as any).MountainChart;      
       this.mobx = (window as any).mobx;
       this.d3 = (window as any).d3;
       const currentWindow: any = this.remote.getCurrentWindow();
