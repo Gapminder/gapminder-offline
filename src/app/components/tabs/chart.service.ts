@@ -87,7 +87,7 @@ export class ChartService {
     config.model.dataSources = {
       'ddf1-csv-ext-ds': {
         modelType: 'ddf1-csv-ext',
-        path: this.ddfFolderDescriptor.ddfUrl,
+        path: this.ddfFolderDescriptor.ddfUrl + this.es.path.sep,
         assetsPath: this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data') + this.es.path.sep,
         _lastModified: ddfFolderDescriptor.lastModified  
       }
@@ -97,7 +97,7 @@ export class ChartService {
     const markerId = ["bubble", "line", "bar", "mountain", "pyramid", "spreadsheet"].find(id => markers[id]);
     const datasourceIDs = Object.keys(config.model.dataSources);
     if (!datasourceIDs.includes(config.model.markers[markerId].data.source))
-      config.model.markers = { [markerId]: { data: { source: datasourceIDs[0] } } };
+      config.model.markers[markerId].data.source = datasourceIDs[0];
 
     config.ui.locale = {
       id: 'en',

@@ -222,7 +222,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
   
   
 
-        const fullModel = this.es.vizabi.utils.deepExtend({}, this.vizabiModel, true);
+        const fullModel = deepExtend({}, this.vizabiModel, true);
         const lastModified = new Date().getTime();
 
         //this.refreshLastModified(fullModel, lastModified);
@@ -231,7 +231,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         //   delete fullModel.state;
         // }
 
-        this.ms.lock();
+        //this.ms.lock();
 
         // if (fullModel.locale) {
         //   fullModel.locale.id = this.language;
@@ -241,7 +241,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         //   };
         // }
 
-        const model = this.es.Vizabi(fullModel);
+        const model = this.es.Vizabi(fullModel.model);
 
         this.viz = new this.es[this.chartType]({
           Vizabi: this.es.Vizabi,
