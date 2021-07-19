@@ -29,7 +29,7 @@ interface IFolder {
   styleUrls: ['./bookmarks-pane.component.css']
 })
 export class BookmarksPaneComponent implements OnInit, OnDestroy {
-  @ViewChild('inputNewFolder', {static: false}) inputNewFolder: ElementRef;
+  @ViewChild('inputNewFolder') inputNewFolder: ElementRef;
   bookmarksByFolder;
   unCategorizedBookmarks;
   bookmarksFolders;

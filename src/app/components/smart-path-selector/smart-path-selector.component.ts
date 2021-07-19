@@ -34,8 +34,8 @@ export class SmartPathSelectorComponent implements ControlValueAccessor, Validat
   @Input() accept = '.csv';
   @Input() clearValueAfterHide: boolean;
   @Output() done: EventEmitter<any> = new EventEmitter();
-  @ViewChild('uploadBtn', {static: false}) uploadBtn: ElementRef;
-  @ViewChild('uploadFileInput', {static: false}) uploadFileInput: ElementRef;
+  @ViewChild('uploadBtn') uploadBtn: ElementRef;
+  @ViewChild('uploadFileInput') uploadFileInput: ElementRef;
   directory = '';
   file = '';
   fileDoesNotExistsError: boolean;
