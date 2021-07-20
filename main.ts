@@ -74,6 +74,7 @@ function createWindow() {
   mainWindow.appPath = nonAsarAppPath;
   mainWindow.devMode = devMode;
   mainWindow.userDataPath = userDataPath;
+  mainWindow.serve = serve;
 
   if (serve) {
     require('electron-reload')(__dirname, {

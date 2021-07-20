@@ -40,6 +40,7 @@ export class ElectronService {
   appPath: string;
   userDataPath: string;
   devMode: boolean;
+  isServe: boolean;
 
   constructor() {
     if (this.isElectron()) {
@@ -70,6 +71,7 @@ export class ElectronService {
       this.appPath = currentWindow.appPath;
       this.userDataPath = currentWindow.userDataPath;
       this.devMode = currentWindow.devMode;
+      this.isServe = currentWindow.serve;
       this.SETTINGS_FILE = this.path.resolve(this.userDataPath, 'gapminder-offline-settings.json');
     }
   }

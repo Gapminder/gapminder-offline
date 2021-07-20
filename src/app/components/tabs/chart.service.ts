@@ -101,7 +101,7 @@ export class ChartService {
 
     config.ui.locale = {
       id: 'en',
-      path: this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data', 'translation') + this.es.path.sep
+      path: this.es.isServe ? "assets/translation" : this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data', 'translation') + this.es.path.sep
     };
 
     //TODO: check splash
