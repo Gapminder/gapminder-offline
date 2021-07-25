@@ -17,7 +17,7 @@ export class FreshenerService {
     if (tab && tab.model) {
       this.activeTab = tab;
 
-      const activePaths = [this.activeTab.model.data.path];
+      const activePaths = [(<any>(Object.values(this.activeTab.model.model.dataSources)[0])).path];
 
       if (!isEmpty(this.activeTab.additionalData)) {
         const additionalPaths =

@@ -39,6 +39,9 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
   private urlUpdateDisposer;
 
   constructor(private element: ElementRef, private ms: MessageService, private es: ElectronService) {
+  }
+
+  ngOnInit(): void {
     this.createPlaceholder();
   }
 
@@ -79,9 +82,9 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
 
     this._language = _language;
 
-    if (this.viz && this.viz.services && this.viz.model.locale) {
+    if (this.viz && this.viz.services && this.viz.services.locale) {
       this.viz.services.locale.id = _language;
-      this.reloadTime = new Date().getTime();
+      //this.reloadTime = new Date().getTime();
     }
   }
 
@@ -385,7 +388,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
 
   private createPlaceholder() {
     this.placeholder = document.createElement('div');
-    this.placeholder.className = 'vzb-placeholder';
+    this.placeholder.className = 'vzb-placeholder_' + this.order;
     this.placeholder.style.width = '100%';
     this.placeholder.style.height = '100%';
     this.element.nativeElement.appendChild(this.placeholder);
