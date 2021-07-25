@@ -7,7 +7,7 @@ import { MODEL_CHANGED } from '../../constants';
 import { ElectronService } from '../../providers/electron.service';
 
 const configSg = {
-  BarRankChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BarRank.json'),
+  BarRank: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BarRank.json'),
   BubbleChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleChart.json'),
   BubbleMap: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleMap.json'),
   LineChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/LineChart.json'),

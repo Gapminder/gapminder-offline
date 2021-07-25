@@ -32,7 +32,7 @@ export class ValidationFormComponent implements OnInit, OnDestroy {
   preserveHeaders = false;
   chartsToOpen: ChartOption[] = [
     {label: 'Bubbles', type: 'BubbleChart'},
-    {label: 'Rankings', type: 'BarRankChart'},
+    {label: 'Rankings', type: 'BarRank'},
     {label: 'Lines', type: 'LineChart'}
   ];
   chartTypeToOpen: string = this.chartsToOpen[0].type;
