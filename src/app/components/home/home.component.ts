@@ -202,15 +202,31 @@ export class HomeComponent implements OnInit {
       }
 
       if (event.message === BOOKMARK_TAB) {
+        const {
+          deepExtend
+        } = this.es.VizabiSharedComponents.LegacyUtils;
+
+        let model;
         const tab = this.tabsModel[event.options.index];
-        const isAdditionalDataPresent = tab.component && tab.component.getModel;
-        const isModel = tab.instance && tab.instance.getModel();
+        // const isAdditionalDataPresent = tab.component && tab.component.getModel;
+        // const isModel = tab.instance && tab.instance.getModel();
 
-        if (!isModel && isAdditionalDataPresent) {
-          return;
-        }
+        // if (!isModel && isAdditionalDataPresent) {
+        //   return;
+        // }
 
-        const model = Object.assign({}, isAdditionalDataPresent ? tab.component.getModel() : tab.instance.getModel());
+        // const model = Object.assign({}, isAdditionalDataPresent ? tab.component.getModel() : tab.instance.getModel());
+        model = deepExtend({}, tab.component);
+        // deepExtend(model.model, tab.model.model, true);
+        // deepExtend(model.ui, tab.model.ui, true);
+        
+        //delete placeholder and translation path
+        
+        delete model.ui.layout.placeholder;
+        delete model.ui.locale.placeholder;
+        
+        //delete model.ui.locale.path;
+
         this.messageService.sendMessage(SEND_TAB_TO_BOOKMARK, {chartType: tab.chartType, model, name: event.options.name});
       }
 
@@ -385,12 +401,11 @@ export class HomeComponent implements OnInit {
     const config = parameters.tab;
     const newTab = new TabModel(config.chartType, true, parameters.file);
 
-    delete config.bind;
     delete config.chartType;
 
     newTab.model = config;
 
-    if (parameters.tab.data.reader !== 'ext-csv' && parameters.tab.data.reader !== 'excel') {
+    if (!['ext-csv','excel'].includes((<any>Object.values(config.model.dataSources)[0]).modelType)) {
       this.chartService.setReaderDefaults(newTab);
     } else {
       this.chartService.registerNewReader('ext-csv');

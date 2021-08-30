@@ -306,7 +306,7 @@ export class TabsComponent implements OnInit {
   }
 
   private chartChanged(data: any, tab: TabModel) {
-    tab.component = data.component;
+    tab.component = data.model;
 
     this.onChartChanged.emit();
     this.redefineHrefs();
