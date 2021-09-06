@@ -107,52 +107,47 @@ const getPathCorrectFunction = brokenPathObject => onPathReady => {
 
 const isPathInternal = (_path: string, template: string) => _path.startsWith(template);
 const normalizeModelToSave = (model, chartType) => {
-  Object.keys(model).forEach(key => {
-    if ((key === 'data' || key.indexOf('data_') === 0) && typeof model[key] === 'object') {
-      if (isPathInternal(model[key].path, DATA_PATH)) {
-        model[key].path = `@internal`;
-        model[key].assetsPath = `@internal`;
-      }
-
-      model[key].ddfPath = model[key].path;
+  const dataSources = model.model.dataSources;
+  dataSources && Object.keys(dataSources).forEach(key => {
+    if (isPathInternal(dataSources[key].path, DATA_PATH)) {
+      dataSources[key].path = `@internal`;
+      dataSources[key].assetsPath = `@internal`;
     }
 
-    if (key === 'locale' && typeof model[key] === 'object') {
-      if (isPathInternal(model[key].filePath, PREVIEW_DATA_PATH)) {
-        model[key].filePath = `@internal`;
-      } else {
-        model[key].filePath = path.resolve(__dirname, '..', '..', model[key].filePath);
-      }
-    }
+    dataSources[key].ddfPath = dataSources[key].path;
   });
+
+  if (isPathInternal(model.ui.locale.path, PREVIEW_DATA_PATH)) {
+    model.ui.locale.path = `@internal`;
+  } else {
+    model.ui.locale.path = path.resolve(__dirname, '..', '..', model.ui.locale.path);
+  }
 
   model.chartType = chartType;
 };
 const normalizeModelToOpen = (model, brokenFileActions) => {
-  Object.keys(model).forEach(key => {
-    if ((key === 'data' || key.indexOf('data_') === 0) && typeof model[key] === 'object') {
-      if (model[key].__abandoned) {
-        return;
-      }
+  const dataSources = model.model.dataSources;
 
-      if (model[key].path.indexOf('@internal') >= 0) {
-        model[key].path = DATA_PATH;
-        model[key].assetsPath = PREVIEW_DATA_PATH + path.sep;
-      } else {
-        if (!fs.existsSync(model[key].path)) {
-          brokenFileActions.push(getPathCorrectFunction(model[key]));
-        }
-      }
-
-      model[key].ddfPath = model[key].path;
+  dataSources && Object.keys(dataSources).forEach(key => {
+    if (dataSources[key].__abandoned) {
+      return;
     }
 
-    if (key === 'locale' && typeof model[key] === 'object') {
-      if (model[key].filePath.indexOf('@internal') >= 0) {
-        model[key].filePath = path.resolve(PREVIEW_DATA_PATH, 'translation') + path.sep;
+    if (dataSources[key].path.indexOf('@internal') >= 0) {
+      dataSources[key].path = DATA_PATH;
+      dataSources[key].assetsPath = PREVIEW_DATA_PATH + path.sep;
+    } else {
+      if (!fs.existsSync(dataSources[key].path)) {
+        brokenFileActions.push(getPathCorrectFunction(dataSources[key]));
       }
     }
+
+    dataSources[key].ddfPath = dataSources[key].path;
   });
+
+  if (model.ui.locale.path.indexOf('@internal') >= 0) {
+    model.ui.locale.path = path.resolve(PREVIEW_DATA_PATH, 'translation') + path.sep;
+  }
 };
 const getConfigWithoutAbandonedData = config => {
   const newConfig = [];

@@ -87,7 +87,7 @@ export class ChartService {
     config.model.dataSources = {
       'ddf1-csv-ext-ds': {
         modelType: 'ddf1-csv-ext',
-        path: this.ddfFolderDescriptor.ddfUrl + this.es.path.sep,
+        path: this.ddfFolderDescriptor.ddfUrl,// + this.es.path.sep,
         assetsPath: this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data') + this.es.path.sep,
         _lastModified: ddfFolderDescriptor.lastModified  
       }
