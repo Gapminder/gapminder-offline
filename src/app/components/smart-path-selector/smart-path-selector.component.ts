@@ -98,12 +98,13 @@ export class SmartPathSelectorComponent implements ControlValueAccessor, Validat
   }
 
   public onCsvFileChanged(event: any) {
-    const selectedFile = ChartService.getFirst(event.srcElement.files);
+    let selectedFile = ChartService.getFirst(event.srcElement.files);
 
     if (selectedFile) {
-      this.uploadFileInput.nativeElement.value = selectedFile.path;
+      const selectedFilePath = this.isDirectory ? this.es.path.dirname(selectedFile.path) : selectedFile.path;
+      this.uploadFileInput.nativeElement.value = selectedFilePath;
       this.uploadFileInput.nativeElement.dispatchEvent(new Event('input'));
-      this.onChange({target: {value: selectedFile.path}});
+      this.onChange({target: {value: selectedFilePath}});
       this.uploadBtn.nativeElement.value = '';
     }
   }

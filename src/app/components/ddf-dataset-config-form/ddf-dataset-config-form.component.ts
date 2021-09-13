@@ -43,7 +43,7 @@ export class DdfDatasetConfigFormComponent {
 
     if (selectedFolder) {
       this.isDataPackageExists = false;
-      this.parameters.selectedFolder = selectedFolder.path;
+      this.parameters.selectedFolder = this.es.path.dirname(selectedFolder.path);
 
       this.es.fs.stat(this.es.path.resolve(this.parameters.selectedFolder, 'datapackage.json'), (err: any) => {
         this.isDataPackageExists = !err;
