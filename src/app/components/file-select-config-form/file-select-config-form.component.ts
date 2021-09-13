@@ -196,8 +196,10 @@ export class FileSelectConfigFormComponent {
       try {
         if (this.format === 'excel') {
           this.loadingSheetsTitle = this.ts.instant('Reading Excel sheets');
-          const VizabiExcelReader = this.es.vizabi.Reader.extend(this.es.ExcelReader.excelReaderObject);
-          const readerObject = new VizabiExcelReader({
+          const VizabiExcelReader = function(config) {
+            return Object.assign({}, this.es.ExcelReader.excelReaderObject);
+          }
+          const readerObject = new (VizabiExcelReader as any)({
             path: this.file,
             lastModified: new Date().getTime()
           });
@@ -208,12 +210,16 @@ export class FileSelectConfigFormComponent {
           this.loadingSheetsTitle = '';
           await this.checkExcelHeader();
         } else {
-          const VizabiCsvReader = this.es.vizabi.Reader.extend(this.es.CsvReader.csvReaderObject);
-          const readerObject = new VizabiCsvReader({
+          const VizabiCsvReader = function(config, readerObject) {
+            const reader = Object.assign({}, readerObject);
+            reader.init(config);
+            return reader;
+          };
+          const readerObject = new (VizabiCsvReader as any)({
             path: this.file,
             lastModified: new Date().getTime()
-          });
-          const data = await readerObject.load();
+          }, this.es.CsvReader.csvReaderObject);
+          const data = await readerObject.read();
           this.header = data.columns;
           this.badFormatHeader = this.getBadFormatHeader();
         }

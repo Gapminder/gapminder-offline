@@ -14,6 +14,14 @@ const configSg = {
   MountainChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/MountainChart.json')
 };
 
+const chartMarkerName = {
+  BarRank: "bar",
+  BubbleChart: "bubble",
+  BubbleMap: "bubble",
+  LineChart: "line",
+  MountainChart: "mountain"
+}
+
 @Injectable()
 export class ChartService {
   isDevMode = false;
@@ -21,7 +29,7 @@ export class ChartService {
   currentTab: TabModel;
 
   private readonly readersDefinitions;
-  private registeredReaders = ['csv', 'csv-time_in_columns'];
+  private registeredReaders = ['ext-csv', 'csv', 'csv-time_in_columns'];
 
   static getFirst(arr: any[]): any {
     return arr && arr.length > 0 ? arr[0] : null;
@@ -31,7 +39,7 @@ export class ChartService {
     this.ddfFolderDescriptor = new DdfFolderDescriptor();
     this.readersDefinitions = {
       'excel': this.es.ExcelReader.excelReaderObject,
-      'ext-csv': this.es.CsvReader.csvReaderObject
+      //'ext-csv': this.es.CsvReader.csvReaderObject
     };
   }
 
@@ -76,8 +84,18 @@ export class ChartService {
     tab.readerName = tabDataDescriptor.readerName;
     tab.additionalData = this.ddfFolderDescriptor.additionalData;
 
+    const deepExtend = this.es.VizabiSharedComponents.LegacyUtils.deepExtend;
     const chartType = tab.chartType;
-    const config = isDefaults ? {...configSg[chartType]} : {ui: {}};
+    const config = isDefaults ? {...configSg[chartType]} : {
+      model: {
+        markers: {
+          [chartMarkerName[chartType]]: {
+            data: {}
+          }
+        }
+      },
+      ui: deepExtend({}, {...configSg[chartType]}.ui)
+    };
     const ddfFolderDescriptor = this.getDdfFolderDescriptor(this.ddfFolderDescriptor.ddfUrl);
 
     if (ddfFolderDescriptor.error) {
@@ -118,21 +136,34 @@ export class ChartService {
   }
 
   newSimpleChart(tabsModel: TabModel[], properties: any, onChartReady ?: Function) {
+    const deepExtend = this.es.VizabiSharedComponents.LegacyUtils.deepExtend;
     const newTab = new TabModel(properties.chartType, true);
 
     this.es.fs.stat(properties.path, (err: any, stats: any) => {
       newTab.chartType = properties.chartType;
       newTab.model = {
-        data: {
-          reader: properties.reader,
-          timeInColumns: properties.timeInColumns,
-          sheet: properties.sheet,
-          noCache: true,
-          delimiter: properties.delimiter,
-          path: properties.path,
-          lastModified: stats.mtime.valueOf(),
-          hasNameColumn: properties.hasNameColumn,
-          nameColumnPosition: properties.nameColumnPosition
+        model: {
+          dataSources: {
+            [properties.reader]: {
+              modelType: properties.reader,
+              isTimeInColumns: properties.timeInColumns,
+              sheet: properties.sheet,
+              noCache: true,
+              delimiter: properties.delimiter,
+              path: properties.path,
+              lastModified: stats.mtime.valueOf(),
+              hasNameColumn: properties.hasNameColumn,
+              nameColumnPosition: properties.nameColumnPosition
+            }
+          }
+        }
+      };
+
+      newTab.model.model.markers = {
+        [chartMarkerName[properties.chartType]]: {
+          data: {
+            source: properties.reader
+          }
         }
       };
 
@@ -144,6 +175,13 @@ export class ChartService {
         this.log(JSON.stringify(newTab.model));
       }
 
+      newTab.model.ui = deepExtend({}, {...configSg[properties.chartType]}.ui);
+      
+      newTab.model.ui.locale = {
+        id: 'en',
+        path: this.es.isServe ? "assets/translation/" : this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data', 'translation') + this.es.path.sep
+      };
+  
       tabsModel.forEach((tab: TabModel) => tab.active = false);
       tabsModel.push(newTab);
 

@@ -405,10 +405,10 @@ export class HomeComponent implements OnInit {
 
     newTab.model = config;
 
-    if (!['ext-csv','excel'].includes((<any>Object.values(config.model.dataSources)[0]).modelType)) {
+    if (!['excel'].includes((<any>Object.values(config.model.dataSources)[0]).modelType)) {
       this.chartService.setReaderDefaults(newTab);
     } else {
-      this.chartService.registerNewReader('ext-csv');
+      //this.chartService.registerNewReader('ext-csv');
       this.chartService.registerNewReader('excel');
       newTab.readerName = parameters.tab.data.reader;
     }
