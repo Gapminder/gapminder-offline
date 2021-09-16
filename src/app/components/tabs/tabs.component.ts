@@ -63,7 +63,7 @@ export class TabsComponent implements OnInit {
     this.es.ipcRenderer.send(this.globConst.GET_VERSIONS_INFO);
     this.es.ipcRenderer.send(this.globConst.GET_APP_ARGUMENTS);
 
-    this.chartService.ddfFolderDescriptor.electronPath = this.es.appPath;// + this.es.path.sep;
+    this.chartService.ddfFolderDescriptor.electronPath = this.es.appPath + (this.es.isServe ? this.es.path.sep : "");
     this.chartService.isDevMode = this.es.devMode;
 
     Observable.fromEvent(this.es.ipcRenderer, this.globConst.GOT_APP_FILE_ARGUMENT,
