@@ -102,8 +102,9 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         return;
       }
 
-      const currentModel = JSON.parse(JSON.stringify(this.viz.getModel()));
-      this.viz.clear();
+      const currentModel = JSON.parse(JSON.stringify(this.model));
+      this.urlUpdateDisposer && this.urlUpdateDisposer();
+      this.removeTool();
       VizabiDirective.removeElement(this.placeholder);
 
       this.createPlaceholder();
@@ -125,7 +126,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
       if (!this.viz || !_reloadTime) {
         return;
       }
-      const currentModel = JSON.parse(JSON.stringify(this.viz.getModel()));
+      const currentModel = JSON.parse(JSON.stringify(this.model));
 
       this._reloadTime = _reloadTime;
       this.viz.clear();
@@ -434,8 +435,13 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         }
       }
     }
+    this.additionalItems.length = 0;
 
-    return result;
+    return {
+      model: {
+        dataSources: result
+      }
+    }
   }
 
   private emitError(error: any) {
@@ -464,7 +470,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         dispose();
       }
       this.es.mobx.runInAction(() => {
-        this.es.Vizabi.stores.markers.dispose(legendMarkerName);
+        legendMarkerName && this.es.Vizabi.stores.markers.dispose(legendMarkerName);
         this.es.Vizabi.stores.markers.dispose(markerName);
       });
     }

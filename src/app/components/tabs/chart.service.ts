@@ -38,7 +38,7 @@ export class ChartService {
   constructor(private messageService: MessageService, private es: ElectronService) {
     this.ddfFolderDescriptor = new DdfFolderDescriptor();
     this.readersDefinitions = {
-      'excel': this.es.ExcelReader.excelReaderObject,
+      'excel': this.es.ExcelReader.excelReaderObject(this.es.Vizabi.csvReader),
       //'ext-csv': this.es.CsvReader.csvReaderObject
     };
   }

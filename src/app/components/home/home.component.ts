@@ -37,8 +37,14 @@ import { ICalculatedDataView } from '../file-select-config-form/calculated-data-
 import { RecordingPopupComponent } from '../recorder/recording-popup.component';
 
 const vizabiStateFacade: any = {
-  getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
-  getTime: (currentTabInstance: any) => currentTabInstance.model.state.time.dim,
+  getDim: (currentTabInstance: any) => {
+    const markerName = currentTabInstance.options.markerName;
+    return currentTabInstance.model.markers[markerName].data.space;
+  },
+  getTime: (currentTabInstance: any) => {
+    const markerName = currentTabInstance.options.markerName;
+    return currentTabInstance.model.markers[markerName].encoding.frame.data.concept;
+  },
   getCountries: (currentTabInstance: any, dim: any) =>
     currentTabInstance.model.state.marker.getKeys()
       .slice(0, 5)
@@ -496,8 +502,8 @@ export class HomeComponent implements OnInit {
     this.calculatedDataView = {
       firstStep,
       secondStep,
-      countries: this.getCountries(),
-      timePoints: this.getTimePoints(),
+      //countries: this.getCountries(),
+      //timePoints: this.getTimePoints(),
       dim: this.getDim(),
       time: this.getTime()
     };
@@ -536,7 +542,9 @@ export class HomeComponent implements OnInit {
     const currentTabInstance: any = this.getCurrentTabInstance();
 
     if (currentTabInstance) {
-      return vizabiStateFacade.getDim(currentTabInstance);
+      const time = this.getTime();
+
+      return vizabiStateFacade.getDim(currentTabInstance).filter(dim => dim !== time)[0];
     }
 
     return '';
@@ -549,7 +557,7 @@ export class HomeComponent implements OnInit {
       return vizabiStateFacade.getTime(currentTabInstance);
     }
 
-    return currentTabInstance ? currentTabInstance.model.state.time.dim : null;
+    return null;
   }
 
   private getCountries(): string {
