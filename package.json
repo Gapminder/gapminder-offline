@@ -22,7 +22,6 @@
   "scripts": {
     "md-export-template-lib": "mkdirp ./export-template/libs && mkdirp ./export-template/libs/assets && mkdirp ./export-template/assets",
     "cp-vizabi-ddfcsv-reader": "copyfiles -u 3 ./node_modules/@vizabi/reader-ddfcsv/dist/* ./export-template/libs",
-    "cp-vizabi-csv-reader": "copyfiles -u 3 ./node_modules/vizabi-csv-reader/dist/* ./export-template/libs",
     "cp-vizabi-excel-reader": "copyfiles -u 3 ./node_modules/vizabi-excel-reader/dist/* ./export-template/libs",
     "cp-vizabi-core": "copyfiles -u 3 ./node_modules/@vizabi/core/dist/* ./export-template/libs",
     "cp-vizabi-shared-components": "copyfiles -u 3 ./node_modules/@vizabi/shared-components/build/* ./export-template/libs",
@@ -35,7 +34,7 @@
     "cp-linechart": "copyfiles -u 3 ./node_modules/@vizabi/linechart/build/* ./export-template/libs",
     "cp-d3": "copyfiles -u 3 ./node_modules/d3/dist/d3.js ./export-template/libs",
     "cp-mobx": "copyfiles -u 3 ./node_modules/mobx/lib/mobx.umd.js ./export-template/libs",
-    "sync-deps": "npm run md-export-template-lib && npm run cp-vizabi-ddfcsv-reader && npm run cp-vizabi-csv-reader && npm run cp-vizabi-excel-reader && npm run cp-vizabi-core && npm run cp-vizabi-shared-components && npm run cp-barrank && npm run cp-bubblechart && npm run cp-bubblemap && npm run cp-mountainchart && npm run cp-linechart && npm run cp-d3 && npm run cp-mobx",
+    "sync-deps": "npm run md-export-template-lib && npm run cp-vizabi-ddfcsv-reader && npm run cp-vizabi-excel-reader && npm run cp-vizabi-core && npm run cp-vizabi-shared-components && npm run cp-barrank && npm run cp-bubblechart && npm run cp-bubblemap && npm run cp-mountainchart && npm run cp-linechart && npm run cp-d3 && npm run cp-mobx",
     "postinstall": "electron-builder install-app-deps",
     "ng": "ng",
     "start": "npm-run-all -p ng:serve electron:serve",
@@ -84,7 +83,6 @@
     "tslib": "^2.0.0",
     "universal-analytics": "0.4.20",
     "urlon": "3.0.1",
-    "vizabi-csv-reader": "0.4.2",
     "vizabi-excel-reader": "0.4.1",
     "zip-dir": "1.0.2"
   },
