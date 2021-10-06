@@ -1,4 +1,4 @@
-// https://github.com/vizabi/@vizabi/shared-components#readme v1.17.3 build 1625932944843 Copyright 2021 Gapminder Foundation and contributors
+// https://github.com/vizabi/@vizabi/shared-components#readme v1.18.0 build 1631744967367 Copyright 2021 Gapminder Foundation and contributors
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('mobx')) :
   typeof define === 'function' && define.amd ? define(['exports', 'mobx'], factory) :
@@ -1851,6 +1851,7 @@
 
   function getConceptNameCompliment(enc) {
     const dims = enc.data.filter.dimensions;
+    if(!dims) Promise.resolve("");
 
     return requestEntityNames(enc.data.source, Object.keys(dims))
       .then(response => {
@@ -3277,7 +3278,7 @@
   d3.selection.prototype.onTap = onTap;
   d3.selection.prototype.onLongTap = onLongTap;
 
-  const versionInfo = {version: "1.17.3", build: 1625932944843, package: {"contributors":[{"name":"Jasper","url":"https://github.com/jheeffer"},{"name":"Angie","url":"https://github.com/angieskazka"},{"name":"Dima","url":"https://github.com/dab2000"},{"name":"Ola","url":"https://github.com/olarosling"}],"author":{"name":"Gapminder Foundation","url":"https://www.gapminder.org","email":"info@gapminder.org"},"homepage":"https://github.com/vizabi/@vizabi/shared-components#readme","name":"@vizabi/shared-components","description":"Vizabi shared components"}};
+  const versionInfo = {version: "1.18.0", build: 1631744967367, package: {"contributors":[{"name":"Jasper","url":"https://github.com/jheeffer"},{"name":"Angie","url":"https://github.com/angieskazka"},{"name":"Dima","url":"https://github.com/dab2000"},{"name":"Ola","url":"https://github.com/olarosling"}],"author":{"name":"Gapminder Foundation","url":"https://www.gapminder.org","email":"info@gapminder.org"},"homepage":"https://github.com/vizabi/@vizabi/shared-components#readme","name":"@vizabi/shared-components","description":"Vizabi shared components"}};
   const Icons = iconset;
   const Utils = _Utils;
   const LegacyUtils = _LegacyUtils;
@@ -3296,17 +3297,6 @@
 
     deconstruct() {}
     setup() {}
-  }
-
-  class CapitalVizabiService extends BaseService {
-
-    setup(){
-      this.Vizabi = this.config.Vizabi;
-    }
-
-    deconstruct() {
-      delete this.Vizabi;
-    }
   }
 
   const PROFILES = [
@@ -3610,6 +3600,17 @@
     "id": mobx.computed,
     "status": mobx.observable
   });
+
+  class CapitalVizabiService extends BaseService {
+
+    setup(){
+      this.Vizabi = this.config.Vizabi;
+    }
+
+    deconstruct() {
+      delete this.Vizabi;
+    }
+  }
 
   function ui(defaults = {}, config = {}, baseConfig = {}) {
     const _ui = {};
@@ -4127,6 +4128,1236 @@
   CollectionMixin$2._collection = {};
 
   class Chart extends CollectionMixin$2(BaseComponent) {}
+
+  class DataNotes extends BaseComponent {
+
+    constructor(config) {
+      super(config);
+    }
+
+
+    setup() {
+      this.state = {
+      };
+
+      this.DOM = {
+
+      };
+
+
+      this.hidden = true;
+      this.showNotes = false;
+      this.pinned = false;
+      this.left = 0;
+      this.top = 0;
+      this.encoding = null;
+
+
+      this.element.classed("vzb-hidden", this.hidden);
+      this.element.append("div")
+        .html(ICON_CLOSE)
+        .on("click", (event) => {
+          event.stopPropagation();
+          this.close();
+        })
+        .select("svg")
+        .attr("width", "0px")
+        .attr("height", "0px")
+        .attr("class", "vzb-data-notes-close")
+        .classed("vzb-hidden", true);
+
+      this.element.append("div")
+        .attr("class", "vzb-data-notes-body vzb-dialog-scrollable");
+
+      this.element.append("div")
+        .attr("class", "vzb-data-notes-link");
+
+
+    }
+    
+    draw() {
+      this.localise = this.services.locale.auto();
+      
+      this.addReaction(this.setValues);
+      this.addReaction(this.resize);
+    }
+
+    resize(){
+      this.services.layout.size;
+      this.close();
+    }
+
+    setEncoding(enc) {
+      this.encoding = enc;
+      this.setValues();
+      return this;
+    }
+
+    setValues() {
+      if (!this.encoding) return;
+      const { description, source_url, source } = this.encoding.data.conceptProps;
+
+      this.element.select(".vzb-data-notes-body")
+        .classed("vzb-hidden", !description)
+        .text(replaceNumberSpacesToNonBreak(description));
+
+      const label = this.localise("hints/source");
+      this.element.select(".vzb-data-notes-link")
+        .classed("vzb-hidden", !source_url)
+        .html("<span>" + (source ? (label + ": ") : "") 
+          + '<a href="' + normaliseLink(source_url) + '" target="_blank">' + (source ? source : label) 
+          + "</a></span>");
+
+      this.showNotes = source_url || description;
+    }
+
+    setPos(_left, _top, force) {
+      this.left = _left;
+      this.top = _top;
+      if (this.pinned && !force) return this;
+      const parentHeight = this.parent.element.node().offsetHeight;
+      const width = this.element.node().offsetWidth;
+      const height = this.element.node().offsetHeight;
+      let leftMove;
+      let topMove;
+      let leftPos = this.left - width;
+      let topPos = this.top;
+      if (leftPos < 10) {
+        leftPos = 10;
+        leftMove = true;
+      }
+      if ((topPos + height + 10) > parentHeight) {
+        topPos = parentHeight - height - 10;
+        topMove = true;
+      }
+
+      if (leftMove && topMove) {
+        topPos = this.top - height - 30;
+      }
+
+      this.element.style("top", topPos + "px");
+      this.element.style("left", leftPos + "px");
+
+      return this;
+    }
+
+    pin(arg) {
+      if (this.hidden) return this;
+      this.pinned = !this.pinned;
+      if (arg != null) this.pinned = arg;
+      this.element.select(".vzb-data-notes-close").classed("vzb-hidden", !this.pinned);
+      this.element.classed("vzb-data-notes-pinned", this.pinned);
+      this.element.select(".vzb-data-notes-body").node().scrollTop = 0;
+
+      return this.showNotes ?
+        this.setPos(this.left, this.top, true) :
+        this.hide();
+    }
+
+    toggle(arg) {
+      if (this.pinned) return this;
+      if (arg == null) arg = !this.hidden;
+      this.hidden = arg;
+      this.element.classed("vzb-hidden", this.hidden || !this.showNotes);
+      return this;
+    }
+
+    show() {
+      return this.toggle(false);
+    }
+
+    hide() {
+      return this.toggle(true);
+    }
+
+    close() {
+      if (!this.hidden) {
+        this.pin(false).hide();
+      }
+    }  
+
+  }
+
+  const CIRCLE_RADIUS = 6;
+
+  function updateRainbowLegend(isVisible) {
+    const DOM = this.DOM;
+    
+    //Hide rainbow element if showing minimap or if color is discrete
+    DOM.rainbowHolder.classed("vzb-hidden", !isVisible);
+    if (!isVisible) return;
+    
+    const localise = this.localise;
+    const colorModel = this.MDL.color.scale;
+    const gradientWidth = DOM.rainbow.node().getBoundingClientRect().width;
+    const paletteKeys = colorModel.palette.paletteDomain.map(parseFloat);
+    const paletteLabels = colorModel.palette.paletteLabels;
+    const cScale = colorModel.d3Scale.copy();
+      
+    const marginLeft = parseInt(DOM.rainbow.style("left"), 10) || 0;
+    const marginRight = parseInt(DOM.rainbow.style("right"), 10) || marginLeft;
+    
+    let domain, range, paletteMax;
+    
+    if (paletteLabels) {
+      domain = paletteLabels.map(val => parseFloat(val));
+      paletteMax = d3.max(domain);
+      range = domain.map(val => val / paletteMax * gradientWidth);
+    } else {
+      domain = cScale.domain();
+      paletteMax = d3.max(paletteKeys);
+      range = paletteKeys.map(val => val / paletteMax * gradientWidth);
+    }
+
+    const labelsAxis = axisSmart$1("bottom");
+    const labelScale = cScale.copy()
+      .interpolate(d3.interpolate)
+      .range(range);
+
+    const edgeDomain = d3.extent(domain);
+
+    const domainScale = labelScale.copy()
+      .domain(edgeDomain)
+      .range(edgeDomain);
+
+    const paletteScaleLinear = d3.scaleLinear()
+      .domain(edgeDomain)
+      .range([0, 100]);
+
+    updateLabelScale();
+    updateRainbowCanvas();
+    updateSubtitle();
+
+    if (DOM.rainbowLegend.style("display") !== "none")
+      updateColorStops();
+
+
+    function updateLabelScale(){
+
+      DOM.labelScaleSVG.style("width", marginLeft + gradientWidth + marginRight + "px");
+      DOM.labelScaleG.attr("transform", "translate(" + marginLeft + ",2)");
+      
+      labelsAxis
+        .scale(labelScale)
+        .tickSizeOuter(5)
+        .tickPadding(8)
+        .tickSizeMinor(3, -3)
+        .labelerOptions({
+          scaleType: colorModel.type,
+          toolMargin: {
+            right: marginRight,
+            left: marginLeft
+          },
+          showOuter: false,
+          formatter: localise,
+          bump: marginLeft,
+          cssFontSize: "8px",
+          fitIntoScale: paletteLabels ? "optimistic" : null
+        });
+
+      DOM.labelScaleG.call(labelsAxis);
+    }
+
+
+    function updateRainbowCanvas(){
+      DOM.rainbow
+        .style("top", 3 + CIRCLE_RADIUS + "px");
+
+      DOM.rainbowCanvas
+        .attr("width", gradientWidth)
+        .attr("height", 1)
+        .style("width", gradientWidth + "px")
+        .style("height", "100%");
+
+      const context = DOM.rainbowCanvas.node().getContext("2d");
+      const image = context.createImageData(gradientWidth, 1);
+      for (let i = 0, j = -1, c; i < gradientWidth; ++i) {
+        c = d3.rgb(cScale(labelScale.invert(i)));
+        image.data[++j] = c.r;
+        image.data[++j] = c.g;
+        image.data[++j] = c.b;
+        image.data[++j] = 255;
+      }
+      context.putImageData(image, 0, 0);
+
+    }
+    
+    
+    function updateSubtitle(){
+      const conceptProps = colorModel.parent.data.conceptProps;
+      const subtitle = getSubtitle(conceptProps.name, conceptProps.name_short);
+    
+      DOM.subtitleText
+        .classed("vzb-hidden", subtitle == "")
+        .text(subtitle);
+
+      DOM.subtitleReset
+        .text(localise("buttons/reset"))
+        .classed("vzb-hidden", !Object.keys(colorModel.palette.config.palette).length)
+        .on("click", () => {
+          mobx.runInAction(()=>{
+            Object.keys(colorModel.palette.config.palette)
+              .forEach(d => colorModel.palette.removeColor(d));
+          });
+        });
+    }
+
+
+    function updateColorStops(){
+
+      DOM.rainbowLegend
+        .style("width", gradientWidth + "px")
+        .style("left", (marginLeft - CIRCLE_RADIUS) + "px")
+        .style("top", "3px");
+
+      DOM.labelScale.selectAll(".vzb-axis-value text")
+        .attr("dy", "1.5em");
+
+      DOM.rainbowLegendEventArea
+        .style("width", gradientWidth + "px")
+        .style("top", 3 + CIRCLE_RADIUS + "px")
+        .style("left", CIRCLE_RADIUS + "px")
+        .on("mousemove", function(event) {
+          highlightValue(labelScale.invert(d3.pointer(event)[0]));
+        })
+        .on("mouseleave", () => highlightValue("none"))
+        .on("dblclick", function(event) {
+          let x = d3.pointer(event)[0];
+          x = x <= (CIRCLE_RADIUS * 2) ? CIRCLE_RADIUS * 2 : x >= (gradientWidth - CIRCLE_RADIUS * 2) ? gradientWidth - CIRCLE_RADIUS * 2 : x;
+          const newValue = labelScale.invert(x);
+          const color = cScale(newValue);
+          const paletteKey = getPaletteKey(newValue);
+          colorModel.palette.setColor(color, paletteKey);
+        });
+
+      if (!d3.extent(domain).includes(0)) {
+        //find tick with zero
+        DOM.labelScaleG.selectAll(".tick text")
+          .filter(function() { return d3.select(this).text() === "0"; })
+          .style("cursor", "pointer")
+          .on("dblclick", () => {
+            const color = cScale(0);
+            const paletteKey = getPaletteKey(0);
+            colorModel.palette.setColor(color, paletteKey);
+          });
+      }
+
+      const value0 = d3.min(domain) < 0 && d3.max(domain) > 0 ? labelScale(0) : null;
+      const colorStops = domain.map((val, i) => ({ 
+        val, 
+        i, 
+        value0,
+        isEdgePoint: i === 0 || i === domain.length - 1,
+        color: cScale.range()[i],
+        paletteKey: paletteKeys[i],
+        xMin: i - 1 < 0 ? 1 : labelScale(domain[i - 1]) + CIRCLE_RADIUS * 2,
+        xMax: i + 1 >= domain.length ? gradientWidth - 1 : labelScale(domain[i + 1]) - CIRCLE_RADIUS * 2
+      }));
+        
+
+      let dblclick = false;
+      let lastClickId;
+
+      let rainbowLegendCircles = DOM.rainbowLegend.selectAll(".vzb-cl-rainbow-legend-circle")
+        .data(colorStops, d => d.i);
+      rainbowLegendCircles.exit().remove();
+      rainbowLegendCircles = rainbowLegendCircles.enter().append("div")
+        .attr("class", "vzb-cl-rainbow-legend-circle")
+        .style("width", 2 * CIRCLE_RADIUS + "px")
+        .style("height", 2 * CIRCLE_RADIUS + "px")
+        .style("border", "1px solid #000")
+        .each(function(){
+          d3.select(this).append("input")
+            .attr("type", "color");
+        })
+        .merge(rainbowLegendCircles);
+          
+      rainbowLegendCircles
+        .style("border-radius", d => d.isEdgePoint ? null : (CIRCLE_RADIUS + "px"))
+        .call(dragCircles())
+        .on("mouseenter", d => {
+          highlightValue(d.val);
+        })
+        .on("mouseleave", () => {
+          highlightValue("none");
+        })
+        .on("click", function(){
+          const input = d3.select(this).select("input").node();
+          lastClickId = setTimeout(() => {
+            if (!dblclick){
+              input.click();
+            } else {
+              clearTimeout(lastClickId);
+              dblclick = false;
+            }
+          }, 500);
+        })
+        .on("dblclick", function(event, d){
+          dblclick = true;
+          if (d.isEdgePoint) return;
+          removeColor(d.paletteKey);
+        })
+        .each(function(d) {
+          d3.select(this).select("input").property("value", d.color)
+            .on("click", (event)=>{event.stopPropagation();})
+            .on("input", function(){
+              const value = d3.select(this).property("value");
+              setColor(value, d.paletteKey);
+            });
+          d3.select(this).style("left", (d.x = labelScale(d.val)) + "px");
+        });
+    }
+
+
+    function dragCircles() {
+      return d3.drag()
+        .on("start", function start(event) {
+
+          const circle = d3.select(this);
+          let dragged = false;
+
+          circle.classed("dragging", true);
+
+          event.on("drag", drag).on("end", end);
+
+          function drag(event, d) {
+            if (d.isEdgePoint) return;
+            if (event.x < 0) return;
+            if (event.x > gradientWidth) return;
+            if (event.x < d.xMin || event.x > d.xMax) return;
+            if (!dragged && event.dx !== 0) dragged = true;
+
+            d.x = event.x;
+            if (d.value0 !== null) {
+              d.x = (d.x < d.value0 - 3 || d.x > d.value0 + 3) ? d.x : d.value0;
+            }
+
+            circle.style("left", d.x + "px");
+
+            if (dragged) {
+              const newValue = labelScale.invert(d.x);
+              const paletteKey = getPaletteKey(newValue);
+              highlightValue(newValue);
+
+              if(d.paletteKey !== paletteKey){
+                replaceColor(d.color, d.paletteKey, paletteKey);                
+                d.val = newValue;
+                d.paletteKey = paletteKey;
+              }
+            }
+          }
+
+          function end() {
+            circle.classed("dragging", false);
+          }
+        });
+    }
+
+
+    function getPaletteKey(value){
+      return Math.round(+paletteScaleLinear(domainScale(value)));
+    }
+
+
+    function highlightValue(value){
+      DOM.labelScaleG.call(labelsAxis.highlightValue(value));
+    }
+
+
+    function setColor(value, key){
+      colorModel.palette.setColor(value, key);
+    }
+
+
+    function removeColor(key){
+      if (colorModel.palette.defaultPalette[key])
+        colorModel.palette.setColor(null, key);    
+      else 
+        colorModel.palette.removeColor(key);  
+    }
+
+
+    function replaceColor(value, oldKey, newKey){
+      mobx.runInAction(()=>{
+        removeColor(oldKey);
+        setColor(value, newKey);
+      });
+    }
+  }
+
+  /*!
+   * VIZABI BUBBLE COLOR LEGEND COMPONENT
+   */
+
+  function isTrailBubble(d){
+    return !!d[Symbol.for("trailHeadKey")];
+  }
+
+  class ColorLegend extends BaseComponent {
+    constructor(config) {
+      config.template = `
+      <div class="vzb-cl-outer">
+        <div class="vzb-cl-holder">
+          <div class="vzb-cl-minimap">
+            <svg>
+              <g></g>
+            </svg>
+          </div>
+
+          <div class="vzb-cl-colorlist vzb-hidden"></div>
+
+          <div class="vzb-cl-rainbow-holder vzb-hidden">
+            <div class="vzb-cl-rainbow">
+              <canvas></canvas>
+            </div>
+
+            <div class="vzb-cl-rainbow-legend">
+              <div class="vzb-cl-rainbow-legend-eventarea"></div>
+            </div>
+
+            <div class="vzb-cl-labelscale">
+              <svg>
+                <g></g>
+              </svg>
+            </div>
+
+            <div class="vzb-cl-subtitle">
+              <span class="vzb-cl-subtitle-text"></span>
+              <span class="vzb-cl-subtitle-reset"></span>
+            </div>
+          </div>
+          
+          <span class="vzb-cl-more-hint vzb-hidden">click for more options</span>
+
+          <div class="vzb-cl-select-dialog vzb-hidden">
+            <div class="vzb-cl-select-dialog-title"></div>
+            <div class="vzb-cl-select-dialog-close"></div>
+          </div>
+      </div>
+    `;
+
+      super(config);
+    }
+
+    setup(options) {
+      this.DOM = {
+        wrapper: this.element.select(".vzb-cl-holder"),
+      };
+
+      this.DOM.minimap = this.DOM.wrapper.select(".vzb-cl-minimap");
+      this.DOM.minimapSVG = this.DOM.minimap.select("svg");
+      this.DOM.minimapG = this.DOM.minimapSVG.select("g");
+
+      this.DOM.listColors = this.DOM.wrapper.select(".vzb-cl-colorlist");
+
+      this.DOM.rainbowHolder = this.DOM.wrapper.select(".vzb-cl-rainbow-holder");
+      this.DOM.rainbow = this.DOM.rainbowHolder.select(".vzb-cl-rainbow");
+      this.DOM.rainbowCanvas = this.DOM.rainbow.select("canvas");
+      this.DOM.rainbowLegend = this.DOM.rainbowHolder.select(".vzb-cl-rainbow-legend");
+      this.DOM.rainbowLegendEventArea = this.DOM.rainbowLegend.select(".vzb-cl-rainbow-legend-eventarea");
+
+      this.DOM.labelScale = this.DOM.rainbowHolder.select(".vzb-cl-labelscale");
+      this.DOM.labelScaleSVG = this.DOM.labelScale.select("svg");
+      this.DOM.labelScaleG = this.DOM.labelScaleSVG.select("g");
+      this.DOM.subtitleDiv = this.DOM.rainbowHolder.select(".vzb-cl-subtitle");
+      this.DOM.subtitleText = this.DOM.subtitleDiv.select(".vzb-cl-subtitle-text");
+      this.DOM.subtitleReset = this.DOM.subtitleDiv.select(".vzb-cl-subtitle-reset");
+
+      this.legendModelName = options.legendModelName;
+      this.colorModelName = options.colorModelName;
+    
+      this._initSelectDialog();
+    }
+
+
+    get MDL() {
+      return {
+        color: this.model.encoding[this.colorModelName],
+        selected: this.model.encoding.selected,
+        highlighted: this.model.encoding.highlighted,
+        superHighlighted: this.model.encoding.superhighlighted,
+        legend: this.root.model.markers[this.legendModelName]
+      };
+    }
+
+    draw() {
+      this.localise = this.services.locale.auto();
+     
+      if (this._legendHasOwnModel() && !this._isLegendModelReady()) return;
+
+      this.KEY = Symbol.for("key");
+      this.canShowMap = this.MDL.legend && this._canShowMap();
+      this.which = this.MDL.color.data.constant || this.MDL.color.data.concept;
+
+      this.addReaction(this._updateView);
+      this.addReaction(this._translateSelectDialog);
+      this.addReaction(this.closeSelectDialogOnConceptChange);
+    }
+
+    _legendHasOwnModel() {
+      return this.MDL.legend
+        && !this.MDL.color.data.isConstant 
+        && isEntityConcept(this.MDL.color.data.conceptProps);
+    }
+
+    _isLegendModelReady() {
+      return this.MDL.legend.state == STATUS.READY;
+    }
+
+    _canShowMap() {
+      if(!this._legendHasOwnModel()) return false;
+      const dataArray = this.MDL.legend.dataArray;
+      return dataArray.length > 0 && dataArray.every(d => d.map);
+    }
+
+    _updateView() {
+      if (this._legendHasOwnModel() && !this._isLegendModelReady()) return;
+
+      const individualColors = false;
+      this._updateListLegend(this.MDL.color.scale.isDiscrete() && !this.canShowMap && !individualColors);
+      this._updateMinimapLegend(this.MDL.color.scale.isDiscrete() && this.canShowMap);
+      updateRainbowLegend.bind(this)(!this.MDL.color.scale.isDiscrete());
+    }
+
+    _updateListLegend(isVisible) {
+      this.DOM.listColors.classed("vzb-hidden", !isVisible);
+      if (!isVisible) return;
+
+      const _this = this;
+      const cScale = this.MDL.color.scale.d3Scale;
+
+      let colorOptionsArray = [];
+
+      if (this._legendHasOwnModel() && this._isLegendModelReady() && !this.MDL.color.data.isConstant) {
+        colorOptionsArray = this.MDL.legend.dataArray;
+      } else {
+        colorOptionsArray = cScale.domain().map(value => {
+          const result = {};
+          result[this.which] = value;
+          return result;
+        });
+      }
+
+      let colorOptions = this.DOM.listColors.selectAll(".vzb-cl-option")
+        .data(unique(colorOptionsArray, d => d[this.which]), d => d[this.which]);
+
+      colorOptions.exit().remove();
+
+      colorOptions = colorOptions.enter().append("div").attr("class", "vzb-cl-option")
+        .each(function() {
+          d3.select(this).append("div").attr("class", "vzb-cl-color-sample");
+          d3.select(this).append("div").attr("class", "vzb-cl-color-legend");
+        })
+        .on("mouseover", (event, d) => this._interact().mouseover(d))
+        .on("mouseout", () => this._interact().mouseout())
+        .on("click", (event, d) => {
+          this._bindSelectDialogItems(d);
+          this.DOM.selectDialog.classed("vzb-hidden", false);
+        })
+        .merge(colorOptions);
+
+      colorOptions.each(function(d) {
+        d3.select(this).select(".vzb-cl-color-sample")
+          .style("background-color", cScale(d[_this.which]))
+          .style("border", "1px solid " + cScale(d[_this.which]));
+        //Apply names to color legend entries if color is a property
+        let label = d["name"];
+        if (!label && label !== 0) label = d[_this.which];
+        if (_this.MDL.color.data.isConstant) label = _this.localise("indicator/_default/color");
+        d3.select(this).select(".vzb-cl-color-legend").text(label);
+      });
+    }
+
+    _updateMinimapLegend(isVisible) {
+      this.DOM.minimap.classed("vzb-hidden", !isVisible);
+      if (!isVisible) return;
+
+      if (!this._isLegendModelReady()) return;
+
+      const cScale = this.MDL.color.scale.d3Scale;
+
+      const tempdivEl = this.DOM.minimap.append("div").attr("class", "vzb-temp");
+
+      this.DOM.minimapSVG.attr("viewBox", null);
+      this.DOM.minimapSVG.selectAll("g").remove();
+      this.DOM.minimapG = this.DOM.minimapSVG.append("g");
+      this.DOM.minimapG.selectAll("path")
+        .data(this.MDL.legend.dataArray, d => d[this.KEY])
+        .enter().append("path")
+        .on("mouseover", (event, d) => this._interact().mouseover(d))
+        .on("mouseout", () => this._interact().mouseout())
+        .on("click", (event, d) => {
+          this._bindSelectDialogItems(d);
+          this.DOM.selectDialog.classed("vzb-hidden", false);
+        })
+        .each(function(d) {
+          let shapeString = d["map"].trim();
+
+          //check if shape string starts with svg tag -- then it's a complete svg
+          if (shapeString.slice(0, 4) == "<svg") {
+            //append svg element from string to the temporary div
+            tempdivEl.html(shapeString);
+            //replace the shape string with just the path data from svg
+            //TODO: this is not very resilient. potentially only the first path will be taken!
+            shapeString = tempdivEl.select("svg").select("path").attr("d");
+          }
+
+          d3.select(this)
+            .attr("d", shapeString)
+            .style("fill", cScale(d["color"]))
+            .append("title").text(d["name"]);
+
+          tempdivEl.html("");
+        });
+
+      const gbbox = this.DOM.minimapG.node().getBBox();
+      this.DOM.minimapSVG.attr("viewBox", "0 0 " + gbbox.width * 1.05 + " " + gbbox.height * 1.05);
+      tempdivEl.remove();
+
+    }
+
+    _interact() {
+      const _this = this;
+
+      return {
+        mouseover(d) {
+          _this.DOM.moreOptionsHint.classed("vzb-hidden", false);
+
+          if (!isEntityConcept(_this.MDL.color.data.conceptProps)) return;
+          const concept = _this.MDL.color.data.concept;
+          const colorMdlName = _this.MDL.color.name;
+          
+          const selectArray = _this.model.dataArray?.filter(f => f[colorMdlName] == d[concept]);
+
+          if (!selectArray) return;
+
+          _this.root.ui?.chart?.superhighlightOnMinimapHover && _this.MDL.superHighlighted ?
+            _this.MDL.superHighlighted.data.filter.set(selectArray) :
+            _this.MDL.highlighted.data.filter.set(selectArray);
+        },
+
+        mouseout() {
+          _this.DOM.moreOptionsHint.classed("vzb-hidden", true);
+
+          if (!isEntityConcept(_this.MDL.color.data.conceptProps)) return;
+          _this.root.ui?.chart?.superhighlightOnMinimapHover && _this.MDL.superHighlighted ?
+            _this.MDL.superHighlighted.data.filter.clear() :
+            _this.MDL.highlighted.data.filter.clear();
+        },
+        clickToShow(d) {
+          if (!isEntityConcept(_this.MDL.color.data.conceptProps)) return;
+
+          const filter = _this.model.data.filter;
+          const colorSpace = _this.model.encoding.color.data.space;
+          const concept = _this.MDL.color.data.concept;
+          
+          filter.config.dimensions[colorSpace][concept] = d[concept];
+        },
+        clickToSelect(d) {
+          if (!isEntityConcept(_this.MDL.color.data.conceptProps)) return;
+
+          const concept = _this.MDL.color.data.concept;
+          const colorMdlName = _this.MDL.color.name;
+          const selectedFilter = _this.MDL.selected.data.filter;
+          
+          const selectArray = _this.model.dataArray?.filter(f => !isTrailBubble(f) && f[colorMdlName] == d[concept]);
+          
+          if (!selectArray) return;
+
+          if (selectArray.every(d => selectedFilter.has(d)))
+            mobx.runInAction(() => selectedFilter.delete(selectArray));
+          else
+            mobx.runInAction(() => selectedFilter.set(selectArray));        
+        }
+      };
+    }
+
+    _initSelectDialog() {
+      this.DOM.moreOptionsHint = this.DOM.wrapper.select(".vzb-cl-more-hint");
+
+      this.DOM.selectDialog = this.DOM.wrapper.select(".vzb-cl-select-dialog");
+      this.DOM.selectDialogTitle = this.DOM.selectDialog.select(".vzb-cl-select-dialog-title");
+
+      this.DOM.selectDialogClose = this.DOM.selectDialog.select(".vzb-cl-select-dialog-close");
+      this.DOM.selectDialogClose
+        .html(ICON_CLOSE)
+        .on("click", () => this._closeSelectDialog());
+
+      this.DOM.selectAllButton = this.DOM.selectDialog.append("div")
+        .attr("class", "vzb-cl-select-dialog-item vzb-clickable");
+
+      this.DOM.removeElseButton = this.DOM.selectDialog.append("div")
+        .attr("class", "vzb-cl-select-dialog-item vzb-clickable");
+
+      this.DOM.editColorButton = this.DOM.selectDialog.append("div")
+        .attr("class", "vzb-cl-select-dialog-item vzb-cl-select-dialog-item-moreoptions");
+      this.DOM.editColorButton.append("label")
+        .attr("class", "vzb-clickable")
+        .attr("for", "vzb-cl-select-dialog-color-" + this.id);
+      this.DOM.editColorButton.append("input")
+        .attr("type", "color")
+        .attr("class", "vzb-invisible")
+        .attr("id", "vzb-cl-select-dialog-color-" + this.id);
+      this.DOM.editColorButton.append("span")
+        .attr("class", "vzb-clickable");
+
+      this.DOM.editColorButtonTooltip = this.DOM.editColorButton.append("div")
+        .attr("class", "vzb-cl-select-dialog-item-tooltip");
+    }
+
+    _translateSelectDialog() {
+      const t = this.localise;
+      this.DOM.moreOptionsHint.text(t("hints/color/more"));
+      this.DOM.selectAllButton.text("✅ " + t("dialogs/color/select-all"));
+      this.DOM.removeElseButton.text("🗑️ " + t("dialogs/color/remove-else"));
+      this.DOM.editColorButton.select("label").text("🎨 " + t("dialogs/color/edit-color"));
+      this.DOM.editColorButton.select("span").text(t("buttons/reset"));
+      this.DOM.editColorButtonTooltip.text(t("dialogs/color/edit-color-blocked-hint"));
+    }
+    
+    closeSelectDialogOnConceptChange(){
+      this.MDL.color.data.concept;
+      this._closeSelectDialog();
+    }
+
+    _closeSelectDialog() {
+      this.DOM.selectDialog.classed("vzb-hidden", true);
+    }
+
+    _bindSelectDialogItems(d) {
+      const _this = this;
+      this.DOM.selectDialogTitle.text(d.name);
+
+      this.DOM.selectAllButton
+        .classed("vzb-cl-select-dialog-item-disabled", !isEntityConcept(this.MDL.color.data.conceptProps))
+        .on("click", () => {
+          this._interact().clickToSelect(d);
+          this._closeSelectDialog();
+        });
+
+      this.DOM.removeElseButton
+        .classed("vzb-cl-select-dialog-item-disabled", !isEntityConcept(this.MDL.color.data.conceptProps))
+        .on("click", () => {
+          this._interact().clickToShow(d);
+          this._closeSelectDialog();
+        });
+
+      const isColorSelectable = this.MDL.color.scale.palette.isUserSelectable;
+      this.DOM.editColorButtonTooltip.classed("vzb-hidden", isColorSelectable);
+      this.DOM.editColorButton.select("span").classed("vzb-hidden", !isColorSelectable);
+      this.DOM.editColorButton.classed("vzb-cl-select-dialog-item-disabled", !isColorSelectable);
+      
+      if (isColorSelectable){
+        const colorScaleModel = this.MDL.color.scale;
+        const concept = this.MDL.color.data.concept;
+        const target = this.MDL.color.data.isConstant ? "_default" : d[concept];
+        const colorOld = colorScaleModel.palette.getColor(target);
+        const colorDef = colorScaleModel.palette.getColor(target, colorScaleModel.palette.defaultPalette);
+        this.DOM.editColorButton.select("input")
+          .property("value", colorOld)
+          .on("input", function(){
+            const value = d3.select(this).property("value");
+            colorScaleModel.palette.setColor(value, target);
+          })
+          .on("change", function(){
+            _this._closeSelectDialog();
+          });
+
+        //reset color
+        this.DOM.editColorButton.select("span")
+          .classed("vzb-hidden", colorOld == colorDef)
+          .style("color", colorDef)
+          .on("click", function(){
+            colorScaleModel.palette.removeColor(target);
+            _this._closeSelectDialog();
+          });
+      }
+    }
+  }
+
+  const decorated$7 = mobx.decorate(ColorLegend, {
+    "MDL": mobx.computed
+  });
+
+  let hidden$2 = true;
+  const HIDE_WHEN_SMALLER_THAN = 100; //px
+  class _DataWarning extends BaseComponent {
+    constructor(config) {
+      config.template = `
+      <div class="vzb-data-warning-background"></div>
+      <div class="vzb-data-warning-box">
+        <div class="vzb-data-warning-link"></div>
+        <div class="vzb-data-warning-title"></div>
+        <div class="vzb-data-warning-body vzb-dialog-scrollable"></div>
+      </div>
+    `;
+
+      super(config);
+    }
+
+    setup() {
+      this.DOM = {
+        background: this.element.select(".vzb-data-warning-background"),
+        container: this.element.select(".vzb-data-warning-box"),
+        icon: this.element.select(".vzb-data-warning-link"),
+        close: this.element.select(".vzb-data-warning-close"),
+        title: this.element.select(".vzb-data-warning-title"),
+        body: this.element.select(".vzb-data-warning-body"),
+        button: d3.select(this.options.button)
+      };
+      
+      this.element.classed("vzb-hidden", true);
+
+      this.setupDialog();
+      this.setupTiggerButton();
+      this.setOptions();
+    }
+
+    setupDialog() {
+      this.DOM.background
+        .on("click", () => {
+          this.toggle(true);
+        });
+
+      this.DOM.container.append("div")
+        .html(ICON_CLOSE)
+        .on("click", () => {
+          this.toggle();
+        })
+        .select("svg")
+        .attr("width", "0px")
+        .attr("height", "0px")
+        .attr("class", "vzb-data-warning-close");
+
+      this.DOM.icon.html(ICON_WARN)
+        .append("div");
+    }
+
+    setupTiggerButton() {
+      if(!this.DOM.button.size()) return warn("quit setupTiggerButton of DataWarning because no button provided");
+      
+      setIcon(this.DOM.button, ICON_WARN)
+        .append("text")
+        .attr("text-anchor", "end")
+        .on("click", () => {
+          this.toggle();
+        })
+        .on("mouseover", () => {
+          this.updateButtonOpacity(1);
+        })
+        .on("mouseout", () => {
+          this.updateButtonOpacity();
+        });
+    }
+
+    get MDL(){
+      return {
+        frame: this.model.encoding.frame,
+        selected: this.model.encoding.selected
+      };
+    }
+
+    draw() {
+      this.localise = this.services.locale.auto();
+
+      this.addReaction(this.updateUIstrings);
+      this.addReaction(this.updateButtonOpacityScale);
+      this.addReaction(this.updateButtonOpacity);
+      this.addReaction(this.updateButtonPosition);
+    }
+
+    updateUIstrings(){
+      if (this.DOM.button) this.DOM.button.select("text")
+        .text(this.localise("hints/dataWarning"));
+
+      this.DOM.icon.select("div")
+        .text(this.localise("hints/dataWarning"));
+
+      const title = this.localise("datawarning/title/" + this.root.name);
+      this.DOM.title.html(title)
+        .classed("vzb-hidden", !title || title == ("datawarning/title/" + this.root.name));
+
+      this.DOM.body.html(this.localise("datawarning/body/" + this.root.name));
+    }
+
+    toggle(arg) {
+      if (arg == null) arg = !hidden$2;
+      hidden$2 = arg;
+      this.element.classed("vzb-hidden", hidden$2);
+
+      this.root.children.forEach(c => {
+        c.element.classed("vzb-blur", c != this && !hidden$2);
+      });
+    }
+
+    updateButtonOpacityScale() {
+      this.wScale = this.MDL.frame.scale.d3Scale.copy()
+        .domain(this.ui.doubtDomain.map(m => this.MDL.frame.parseValue("" + m)))
+        .range(this.ui.doubtRange)
+        .clamp(true);
+    }
+
+    updateButtonOpacity(opacity) {
+      if(!this.DOM.button.size()) return warn("quit updateButtonOpacity of DataWarning because no button provided");
+
+      if (opacity == null) opacity = this.wScale(this.MDL.frame.value);
+      if (this.MDL.selected.data.filter.any()) opacity = 1;
+      this.DOM.button.style("opacity", opacity);
+    }
+
+    updateButtonPosition() {
+      if(!this.DOM.button.size()) return warn("quit updateButtonPosition of DataWarning because no button provided");
+      const {vertical, horizontal, width, height, wLimit} = this;
+      const {top, bottom, left, right} = this;
+
+      // reset font size to remove jumpy measurement
+      const dataWarningText = this.DOM.button.select("text")
+        .style("font-size", null);
+
+      // reduce font size if the caption doesn't fit
+      let warnBB = dataWarningText.node().getBBox();
+      const dataWarningWidth = warnBB.width + warnBB.height * 3;
+      if (wLimit > 0 && dataWarningWidth > wLimit) {
+        const font = parseInt(dataWarningText.style("font-size")) * wLimit / dataWarningWidth;
+        dataWarningText.style("font-size", font + "px");
+      }
+
+      // position the warning icon
+      warnBB = dataWarningText.node().getBBox();
+      this.DOM.button.select("svg")
+        .attr("width", warnBB.height * 0.75)
+        .attr("height", warnBB.height * 0.75)
+        .attr("x", -warnBB.width - warnBB.height * 1.2)
+        .attr("y", -warnBB.height * 0.65);
+
+      // position the whole group
+      warnBB = this.DOM.button.node().getBBox();
+      this.DOM.button
+        .classed("vzb-hidden", this.services.layout.projector || wLimit && wLimit < HIDE_WHEN_SMALLER_THAN)
+        .attr("transform", `translate(${
+        horizontal == "left" ? (left + warnBB.width) : (width - right)
+      }, ${
+        vertical == "top" ? (top + warnBB.height) : (height - bottom)
+      })`);
+    }
+
+    setOptions({
+      //container size
+      width = 0,
+      height = 0,
+      //alignment
+      vertical = "top", 
+      horizontal = "right", 
+      //margins
+      top = 0,
+      bottom = 0,
+      left = 0,
+      right = 0,
+      //size limit
+      wLimit = null
+    } = {}) {
+      mobx.runInAction(() => {
+        this.vertical = vertical;
+        this.horizontal = horizontal;
+        this.width = width;
+        this.height = height;
+        this.top = top;
+        this.bottom = bottom;
+        this.left = left;
+        this.right = right;
+        this.wLimit = wLimit || width;
+      });
+    }
+
+  }
+
+  _DataWarning.DEFAULT_UI = {
+    doubtDomain: [],
+    doubtRange: []
+  };
+
+  //export default BubbleChart;
+  const DataWarning = mobx.decorate(_DataWarning, {
+    "MDL": mobx.computed,
+    "vertical": mobx.observable, 
+    "horizontal": mobx.observable, 
+    "width": mobx.observable, 
+    "height": mobx.observable, 
+    "top": mobx.observable, 
+    "bottom": mobx.observable, 
+    "left": mobx.observable, 
+    "right": mobx.observable, 
+    "wLimit": mobx.observable
+  });
+
+  class DynamicBackground extends BaseComponent {
+
+    setup(conditions) {
+      this.DOM = {
+        textEl: this.element.append("text").style("font-size", "20px"),
+        sampleTextEl: this.element.append("text").style("font-size", "20px").style("opacity", 0)
+      };
+      
+      this.element.classed("vzb-dynamic-background", true);
+
+      this.width = 0;
+      this.height = 0;
+      this.topOffset = 0;
+      this.leftOffset = 0;
+      this.bottomOffset = 0;
+      this.rightOffset = 0;
+      this.textWidth = 0;
+      this.textHeight = 0;
+      this.widthRatio = 0.9;
+      this.heightRatio = 0.9;
+      this.xAlign = "center";
+      this.yAlign = "center";
+
+      if (conditions) {
+        this.setConditions(conditions);
+      }
+    }
+
+    setConditions(conditions) {
+      if (!isNaN(parseFloat(conditions.rightOffset)) && isFinite(conditions.rightOffset)) {
+        this.rightOffset = conditions.rightOffset;
+      }
+      if (!isNaN(parseFloat(conditions.leftOffset)) && isFinite(conditions.leftOffset)) {
+        this.leftOffset = conditions.leftOffset;
+      }
+      if (!isNaN(parseFloat(conditions.topOffset)) && isFinite(conditions.topOffset)) {
+        this.topOffset = conditions.topOffset;
+      }
+      if (!isNaN(parseFloat(conditions.bottomOffset)) && isFinite(conditions.bottomOffset)) {
+        this.bottomOffset = conditions.bottomOffset;
+      }
+      if (conditions.xAlign) {
+        this.xAlign = conditions.xAlign;
+      }
+      if (conditions.yAlign) {
+        this.yAlign = conditions.yAlign;
+      }
+      if (!isNaN(parseFloat(conditions.widthRatio)) && conditions.widthRatio > 0 && conditions.widthRatio <= 1) {
+        this.widthRatio = conditions.widthRatio;
+      }
+      if (!isNaN(parseFloat(conditions.heightRatio)) && conditions.heightRatio > 0 && conditions.heightRatio <= 1) {
+        this.heightRatio = conditions.heightRatio;
+      }
+      return this;
+    }
+
+    draw() {
+      this.MDL = {
+
+      };
+    }
+
+    resizeText(width, height, topOffset, leftOffset) {
+      this.width = parseInt(width, 10) || 0;
+      this.height = parseInt(height, 10) || 0;
+
+      if (topOffset) {
+        this.topOffset = topOffset;
+      }
+      if (leftOffset) {
+        this.leftOffset = leftOffset;
+      }
+
+      this._resizeText();
+    }
+
+    setText(text, delay = 0) {
+      const {
+        textEl,
+        sampleTextEl
+      } = this.DOM;
+
+      const callback = () => {
+        sampleTextEl.text(text);
+        this._resizeText();
+        textEl.text(text);
+      };
+
+      const clear = () => {
+        clearTimeout(this._text.timeout);
+        delete this._text;
+      };
+
+      if (!delay) {
+        if (this._text) {
+          clear();
+        }
+        callback();
+      } else {
+        if (this._text) {
+          this._text.callback();
+          clear();
+        }
+        this._text = {
+          callback,
+          timeout: setTimeout(() => {
+            callback();
+            clear();
+          }, delay)
+        };
+      }
+
+      return this;
+    }
+
+
+    _resizeText() {
+      const {
+        textEl,
+        sampleTextEl
+      } = this.DOM;
+
+      const bbox = sampleTextEl.node().getBBox();
+      if (!bbox.width || !bbox.height || !this.width || !this.height) return this;
+
+      // method from http://stackoverflow.com/a/22580176
+      const widthTransform = this.width * this.widthRatio / bbox.width;
+      const heightTransform = this.height * this.heightRatio / bbox.height;
+      this.scalar = Math.min(widthTransform, heightTransform);
+      textEl.attr("transform", "scale(" + this.scalar + ")");
+
+      this.textHeight = bbox.height * this.scalar;
+      this.textWidth = bbox.width * this.scalar;
+
+      switch (this.yAlign) {
+      case "bottom": textEl.attr("dy", ".325em"); break;
+      case "center": textEl.attr("dy", ".325em"); break;
+      case "top": textEl.attr("dy", "0"); break;
+      }
+
+      this.element.attr("transform", "translate(" + this._getLeftOffset() + "," + this._getTopOffset() + ")");
+
+      return this;
+    }
+
+    _getLeftOffset() {
+      switch (this.xAlign) {
+      case "right":
+        return this.width - this.textWidth / 2 - this.rightOffset;
+      case "left":
+        return this.textWidth / 2 + this.leftOffset;
+      default :
+        return this.width / 2;
+      }
+    }
+
+    _getTopOffset() {
+      switch (this.yAlign) {
+      case "top":
+        return this.textHeight / 2 + this.topOffset;
+      case "bottom":
+        return this.height - this.textHeight / 2 - this.bottomOffset;
+      default :
+        return this.height / 2;
+      }
+    }
+
+  }
 
   const CollectionMixin$1 = superClass => class extends superClass {
     //static _collection = {};
@@ -4877,1854 +6108,6 @@
       navigator.userAgent && !navigator.userAgent.match("CriOS"));
   }
 
-  const CIRCLE_RADIUS = 6;
-
-  function updateRainbowLegend(isVisible) {
-    const DOM = this.DOM;
-    
-    //Hide rainbow element if showing minimap or if color is discrete
-    DOM.rainbowHolder.classed("vzb-hidden", !isVisible);
-    if (!isVisible) return;
-    
-    const localise = this.localise;
-    const colorModel = this.MDL.color.scale;
-    const gradientWidth = DOM.rainbow.node().getBoundingClientRect().width;
-    const paletteKeys = colorModel.palette.paletteDomain.map(parseFloat);
-    const paletteLabels = colorModel.palette.paletteLabels;
-    const cScale = colorModel.d3Scale.copy();
-      
-    const marginLeft = parseInt(DOM.rainbow.style("left"), 10) || 0;
-    const marginRight = parseInt(DOM.rainbow.style("right"), 10) || marginLeft;
-    
-    let domain, range, paletteMax;
-    
-    if (paletteLabels) {
-      domain = paletteLabels.map(val => parseFloat(val));
-      paletteMax = d3.max(domain);
-      range = domain.map(val => val / paletteMax * gradientWidth);
-    } else {
-      domain = cScale.domain();
-      paletteMax = d3.max(paletteKeys);
-      range = paletteKeys.map(val => val / paletteMax * gradientWidth);
-    }
-
-    const labelsAxis = axisSmart$1("bottom");
-    const labelScale = cScale.copy()
-      .interpolate(d3.interpolate)
-      .range(range);
-
-    const edgeDomain = d3.extent(domain);
-
-    const domainScale = labelScale.copy()
-      .domain(edgeDomain)
-      .range(edgeDomain);
-
-    const paletteScaleLinear = d3.scaleLinear()
-      .domain(edgeDomain)
-      .range([0, 100]);
-
-    updateLabelScale();
-    updateRainbowCanvas();
-    updateSubtitle();
-
-    if (DOM.rainbowLegend.style("display") !== "none")
-      updateColorStops();
-
-
-    function updateLabelScale(){
-
-      DOM.labelScaleSVG.style("width", marginLeft + gradientWidth + marginRight + "px");
-      DOM.labelScaleG.attr("transform", "translate(" + marginLeft + ",2)");
-      
-      labelsAxis
-        .scale(labelScale)
-        .tickSizeOuter(5)
-        .tickPadding(8)
-        .tickSizeMinor(3, -3)
-        .labelerOptions({
-          scaleType: colorModel.type,
-          toolMargin: {
-            right: marginRight,
-            left: marginLeft
-          },
-          showOuter: false,
-          formatter: localise,
-          bump: marginLeft,
-          cssFontSize: "8px",
-          fitIntoScale: paletteLabels ? "optimistic" : null
-        });
-
-      DOM.labelScaleG.call(labelsAxis);
-    }
-
-
-    function updateRainbowCanvas(){
-      DOM.rainbow
-        .style("top", 3 + CIRCLE_RADIUS + "px");
-
-      DOM.rainbowCanvas
-        .attr("width", gradientWidth)
-        .attr("height", 1)
-        .style("width", gradientWidth + "px")
-        .style("height", "100%");
-
-      const context = DOM.rainbowCanvas.node().getContext("2d");
-      const image = context.createImageData(gradientWidth, 1);
-      for (let i = 0, j = -1, c; i < gradientWidth; ++i) {
-        c = d3.rgb(cScale(labelScale.invert(i)));
-        image.data[++j] = c.r;
-        image.data[++j] = c.g;
-        image.data[++j] = c.b;
-        image.data[++j] = 255;
-      }
-      context.putImageData(image, 0, 0);
-
-    }
-    
-    
-    function updateSubtitle(){
-      const conceptProps = colorModel.parent.data.conceptProps;
-      const subtitle = getSubtitle(conceptProps.name, conceptProps.name_short);
-    
-      DOM.subtitleText
-        .classed("vzb-hidden", subtitle == "")
-        .text(subtitle);
-
-      DOM.subtitleReset
-        .text(localise("buttons/reset"))
-        .classed("vzb-hidden", !Object.keys(colorModel.palette.config.palette).length)
-        .on("click", () => {
-          mobx.runInAction(()=>{
-            Object.keys(colorModel.palette.config.palette)
-              .forEach(d => colorModel.palette.removeColor(d));
-          });
-        });
-    }
-
-
-    function updateColorStops(){
-
-      DOM.rainbowLegend
-        .style("width", gradientWidth + "px")
-        .style("left", (marginLeft - CIRCLE_RADIUS) + "px")
-        .style("top", "3px");
-
-      DOM.labelScale.selectAll(".vzb-axis-value text")
-        .attr("dy", "1.5em");
-
-      DOM.rainbowLegendEventArea
-        .style("width", gradientWidth + "px")
-        .style("top", 3 + CIRCLE_RADIUS + "px")
-        .style("left", CIRCLE_RADIUS + "px")
-        .on("mousemove", function(event) {
-          highlightValue(labelScale.invert(d3.pointer(event)[0]));
-        })
-        .on("mouseleave", () => highlightValue("none"))
-        .on("dblclick", function(event) {
-          let x = d3.pointer(event)[0];
-          x = x <= (CIRCLE_RADIUS * 2) ? CIRCLE_RADIUS * 2 : x >= (gradientWidth - CIRCLE_RADIUS * 2) ? gradientWidth - CIRCLE_RADIUS * 2 : x;
-          const newValue = labelScale.invert(x);
-          const color = cScale(newValue);
-          const paletteKey = getPaletteKey(newValue);
-          colorModel.palette.setColor(color, paletteKey);
-        });
-
-      if (!d3.extent(domain).includes(0)) {
-        //find tick with zero
-        DOM.labelScaleG.selectAll(".tick text")
-          .filter(function() { return d3.select(this).text() === "0"; })
-          .style("cursor", "pointer")
-          .on("dblclick", () => {
-            const color = cScale(0);
-            const paletteKey = getPaletteKey(0);
-            colorModel.palette.setColor(color, paletteKey);
-          });
-      }
-
-      const value0 = d3.min(domain) < 0 && d3.max(domain) > 0 ? labelScale(0) : null;
-      const colorStops = domain.map((val, i) => ({ 
-        val, 
-        i, 
-        value0,
-        isEdgePoint: i === 0 || i === domain.length - 1,
-        color: cScale.range()[i],
-        paletteKey: paletteKeys[i],
-        xMin: i - 1 < 0 ? 1 : labelScale(domain[i - 1]) + CIRCLE_RADIUS * 2,
-        xMax: i + 1 >= domain.length ? gradientWidth - 1 : labelScale(domain[i + 1]) - CIRCLE_RADIUS * 2
-      }));
-        
-
-      let dblclick = false;
-      let lastClickId;
-
-      let rainbowLegendCircles = DOM.rainbowLegend.selectAll(".vzb-cl-rainbow-legend-circle")
-        .data(colorStops, d => d.i);
-      rainbowLegendCircles.exit().remove();
-      rainbowLegendCircles = rainbowLegendCircles.enter().append("div")
-        .attr("class", "vzb-cl-rainbow-legend-circle")
-        .style("width", 2 * CIRCLE_RADIUS + "px")
-        .style("height", 2 * CIRCLE_RADIUS + "px")
-        .style("border", "1px solid #000")
-        .each(function(){
-          d3.select(this).append("input")
-            .attr("type", "color");
-        })
-        .merge(rainbowLegendCircles);
-          
-      rainbowLegendCircles
-        .style("border-radius", d => d.isEdgePoint ? null : (CIRCLE_RADIUS + "px"))
-        .call(dragCircles())
-        .on("mouseenter", d => {
-          highlightValue(d.val);
-        })
-        .on("mouseleave", () => {
-          highlightValue("none");
-        })
-        .on("click", function(){
-          const input = d3.select(this).select("input").node();
-          lastClickId = setTimeout(() => {
-            if (!dblclick){
-              input.click();
-            } else {
-              clearTimeout(lastClickId);
-              dblclick = false;
-            }
-          }, 500);
-        })
-        .on("dblclick", function(event, d){
-          dblclick = true;
-          if (d.isEdgePoint) return;
-          removeColor(d.paletteKey);
-        })
-        .each(function(d) {
-          d3.select(this).select("input").property("value", d.color)
-            .on("click", (event)=>{event.stopPropagation();})
-            .on("input", function(){
-              const value = d3.select(this).property("value");
-              setColor(value, d.paletteKey);
-            });
-          d3.select(this).style("left", (d.x = labelScale(d.val)) + "px");
-        });
-    }
-
-
-    function dragCircles() {
-      return d3.drag()
-        .on("start", function start(event) {
-
-          const circle = d3.select(this);
-          let dragged = false;
-
-          circle.classed("dragging", true);
-
-          event.on("drag", drag).on("end", end);
-
-          function drag(event, d) {
-            if (d.isEdgePoint) return;
-            if (event.x < 0) return;
-            if (event.x > gradientWidth) return;
-            if (event.x < d.xMin || event.x > d.xMax) return;
-            if (!dragged && event.dx !== 0) dragged = true;
-
-            d.x = event.x;
-            if (d.value0 !== null) {
-              d.x = (d.x < d.value0 - 3 || d.x > d.value0 + 3) ? d.x : d.value0;
-            }
-
-            circle.style("left", d.x + "px");
-
-            if (dragged) {
-              const newValue = labelScale.invert(d.x);
-              const paletteKey = getPaletteKey(newValue);
-              highlightValue(newValue);
-
-              if(d.paletteKey !== paletteKey){
-                replaceColor(d.color, d.paletteKey, paletteKey);                
-                d.val = newValue;
-                d.paletteKey = paletteKey;
-              }
-            }
-          }
-
-          function end() {
-            circle.classed("dragging", false);
-          }
-        });
-    }
-
-
-    function getPaletteKey(value){
-      return Math.round(+paletteScaleLinear(domainScale(value)));
-    }
-
-
-    function highlightValue(value){
-      DOM.labelScaleG.call(labelsAxis.highlightValue(value));
-    }
-
-
-    function setColor(value, key){
-      colorModel.palette.setColor(value, key);
-    }
-
-
-    function removeColor(key){
-      if (colorModel.palette.defaultPalette[key])
-        colorModel.palette.setColor(null, key);    
-      else 
-        colorModel.palette.removeColor(key);  
-    }
-
-
-    function replaceColor(value, oldKey, newKey){
-      mobx.runInAction(()=>{
-        removeColor(oldKey);
-        setColor(value, newKey);
-      });
-    }
-  }
-
-  /*!
-   * VIZABI BUBBLE COLOR LEGEND COMPONENT
-   */
-
-  function isTrailBubble(d){
-    return !!d[Symbol.for("trailHeadKey")];
-  }
-
-  class ColorLegend extends BaseComponent {
-    constructor(config) {
-      config.template = `
-      <div class="vzb-cl-outer">
-        <div class="vzb-cl-holder">
-          <div class="vzb-cl-minimap">
-            <svg>
-              <g></g>
-            </svg>
-          </div>
-
-          <div class="vzb-cl-colorlist vzb-hidden"></div>
-
-          <div class="vzb-cl-rainbow-holder vzb-hidden">
-            <div class="vzb-cl-rainbow">
-              <canvas></canvas>
-            </div>
-
-            <div class="vzb-cl-rainbow-legend">
-              <div class="vzb-cl-rainbow-legend-eventarea"></div>
-            </div>
-
-            <div class="vzb-cl-labelscale">
-              <svg>
-                <g></g>
-              </svg>
-            </div>
-
-            <div class="vzb-cl-subtitle">
-              <span class="vzb-cl-subtitle-text"></span>
-              <span class="vzb-cl-subtitle-reset"></span>
-            </div>
-          </div>
-          
-          <span class="vzb-cl-more-hint vzb-hidden">click for more options</span>
-
-          <div class="vzb-cl-select-dialog vzb-hidden">
-            <div class="vzb-cl-select-dialog-title"></div>
-            <div class="vzb-cl-select-dialog-close"></div>
-          </div>
-      </div>
-    `;
-
-      super(config);
-    }
-
-    setup(options) {
-      this.DOM = {
-        wrapper: this.element.select(".vzb-cl-holder"),
-      };
-
-      this.DOM.minimap = this.DOM.wrapper.select(".vzb-cl-minimap");
-      this.DOM.minimapSVG = this.DOM.minimap.select("svg");
-      this.DOM.minimapG = this.DOM.minimapSVG.select("g");
-
-      this.DOM.listColors = this.DOM.wrapper.select(".vzb-cl-colorlist");
-
-      this.DOM.rainbowHolder = this.DOM.wrapper.select(".vzb-cl-rainbow-holder");
-      this.DOM.rainbow = this.DOM.rainbowHolder.select(".vzb-cl-rainbow");
-      this.DOM.rainbowCanvas = this.DOM.rainbow.select("canvas");
-      this.DOM.rainbowLegend = this.DOM.rainbowHolder.select(".vzb-cl-rainbow-legend");
-      this.DOM.rainbowLegendEventArea = this.DOM.rainbowLegend.select(".vzb-cl-rainbow-legend-eventarea");
-
-      this.DOM.labelScale = this.DOM.rainbowHolder.select(".vzb-cl-labelscale");
-      this.DOM.labelScaleSVG = this.DOM.labelScale.select("svg");
-      this.DOM.labelScaleG = this.DOM.labelScaleSVG.select("g");
-      this.DOM.subtitleDiv = this.DOM.rainbowHolder.select(".vzb-cl-subtitle");
-      this.DOM.subtitleText = this.DOM.subtitleDiv.select(".vzb-cl-subtitle-text");
-      this.DOM.subtitleReset = this.DOM.subtitleDiv.select(".vzb-cl-subtitle-reset");
-
-      this.legendModelName = options.legendModelName;
-      this.colorModelName = options.colorModelName;
-    
-      this._initSelectDialog();
-    }
-
-
-    get MDL() {
-      return {
-        color: this.model.encoding[this.colorModelName],
-        selected: this.model.encoding.selected,
-        highlighted: this.model.encoding.highlighted,
-        superHighlighted: this.model.encoding.superhighlighted,
-        legend: this.root.model.markers[this.legendModelName]
-      };
-    }
-
-    draw() {
-      this.localise = this.services.locale.auto();
-     
-      if (this._legendHasOwnModel() && !this._isLegendModelReady()) return;
-
-      this.KEY = Symbol.for("key");
-      this.canShowMap = this.MDL.legend && this._canShowMap();
-      this.which = this.MDL.color.data.constant || this.MDL.color.data.concept;
-
-      this.addReaction(this._updateView);
-      this.addReaction(this._translateSelectDialog);
-      this.addReaction(this.closeSelectDialogOnConceptChange);
-    }
-
-    _legendHasOwnModel() {
-      return this.MDL.legend
-        && !this.MDL.color.data.isConstant 
-        && isEntityConcept(this.MDL.color.data.conceptProps);
-    }
-
-    _isLegendModelReady() {
-      return this.MDL.legend.state == STATUS.READY;
-    }
-
-    _canShowMap() {
-      if(!this._legendHasOwnModel()) return false;
-      const dataArray = this.MDL.legend.dataArray;
-      return dataArray.length > 0 && dataArray.every(d => d.map);
-    }
-
-    _updateView() {
-      if (this._legendHasOwnModel() && !this._isLegendModelReady()) return;
-
-      const individualColors = false;
-      this._updateListLegend(this.MDL.color.scale.isDiscrete() && !this.canShowMap && !individualColors);
-      this._updateMinimapLegend(this.MDL.color.scale.isDiscrete() && this.canShowMap);
-      updateRainbowLegend.bind(this)(!this.MDL.color.scale.isDiscrete());
-    }
-
-    _updateListLegend(isVisible) {
-      this.DOM.listColors.classed("vzb-hidden", !isVisible);
-      if (!isVisible) return;
-
-      const _this = this;
-      const cScale = this.MDL.color.scale.d3Scale;
-
-      let colorOptionsArray = [];
-
-      if (this._legendHasOwnModel() && this._isLegendModelReady() && !this.MDL.color.data.isConstant) {
-        colorOptionsArray = this.MDL.legend.dataArray;
-      } else {
-        colorOptionsArray = cScale.domain().map(value => {
-          const result = {};
-          result[this.which] = value;
-          return result;
-        });
-      }
-
-      let colorOptions = this.DOM.listColors.selectAll(".vzb-cl-option")
-        .data(unique(colorOptionsArray, d => d[this.which]), d => d[this.which]);
-
-      colorOptions.exit().remove();
-
-      colorOptions = colorOptions.enter().append("div").attr("class", "vzb-cl-option")
-        .each(function() {
-          d3.select(this).append("div").attr("class", "vzb-cl-color-sample");
-          d3.select(this).append("div").attr("class", "vzb-cl-color-legend");
-        })
-        .on("mouseover", (event, d) => this._interact().mouseover(d))
-        .on("mouseout", () => this._interact().mouseout())
-        .on("click", (event, d) => {
-          this._bindSelectDialogItems(d);
-          this.DOM.selectDialog.classed("vzb-hidden", false);
-        })
-        .merge(colorOptions);
-
-      colorOptions.each(function(d) {
-        d3.select(this).select(".vzb-cl-color-sample")
-          .style("background-color", cScale(d[_this.which]))
-          .style("border", "1px solid " + cScale(d[_this.which]));
-        //Apply names to color legend entries if color is a property
-        let label = d["name"];
-        if (!label && label !== 0) label = d[_this.which];
-        if (_this.MDL.color.data.isConstant) label = _this.localise("indicator/_default/color");
-        d3.select(this).select(".vzb-cl-color-legend").text(label);
-      });
-    }
-
-    _updateMinimapLegend(isVisible) {
-      this.DOM.minimap.classed("vzb-hidden", !isVisible);
-      if (!isVisible) return;
-
-      if (!this._isLegendModelReady()) return;
-
-      const cScale = this.MDL.color.scale.d3Scale;
-
-      const tempdivEl = this.DOM.minimap.append("div").attr("class", "vzb-temp");
-
-      this.DOM.minimapSVG.attr("viewBox", null);
-      this.DOM.minimapSVG.selectAll("g").remove();
-      this.DOM.minimapG = this.DOM.minimapSVG.append("g");
-      this.DOM.minimapG.selectAll("path")
-        .data(this.MDL.legend.dataArray, d => d[this.KEY])
-        .enter().append("path")
-        .on("mouseover", (event, d) => this._interact().mouseover(d))
-        .on("mouseout", () => this._interact().mouseout())
-        .on("click", (event, d) => {
-          this._bindSelectDialogItems(d);
-          this.DOM.selectDialog.classed("vzb-hidden", false);
-        })
-        .each(function(d) {
-          let shapeString = d["map"].trim();
-
-          //check if shape string starts with svg tag -- then it's a complete svg
-          if (shapeString.slice(0, 4) == "<svg") {
-            //append svg element from string to the temporary div
-            tempdivEl.html(shapeString);
-            //replace the shape string with just the path data from svg
-            //TODO: this is not very resilient. potentially only the first path will be taken!
-            shapeString = tempdivEl.select("svg").select("path").attr("d");
-          }
-
-          d3.select(this)
-            .attr("d", shapeString)
-            .style("fill", cScale(d["color"]))
-            .append("title").text(d["name"]);
-
-          tempdivEl.html("");
-        });
-
-      const gbbox = this.DOM.minimapG.node().getBBox();
-      this.DOM.minimapSVG.attr("viewBox", "0 0 " + gbbox.width * 1.05 + " " + gbbox.height * 1.05);
-      tempdivEl.remove();
-
-    }
-
-    _interact() {
-      const _this = this;
-
-      return {
-        mouseover(d) {
-          _this.DOM.moreOptionsHint.classed("vzb-hidden", false);
-
-          if (!isEntityConcept(_this.MDL.color.data.conceptProps)) return;
-          const concept = _this.MDL.color.data.concept;
-          const colorMdlName = _this.MDL.color.name;
-          
-          const selectArray = _this.model.dataArray?.filter(f => f[colorMdlName] == d[concept]);
-
-          if (!selectArray) return;
-
-          _this.root.ui?.chart?.superhighlightOnMinimapHover && _this.MDL.superHighlighted ?
-            _this.MDL.superHighlighted.data.filter.set(selectArray) :
-            _this.MDL.highlighted.data.filter.set(selectArray);
-        },
-
-        mouseout() {
-          _this.DOM.moreOptionsHint.classed("vzb-hidden", true);
-
-          if (!isEntityConcept(_this.MDL.color.data.conceptProps)) return;
-          _this.root.ui?.chart?.superhighlightOnMinimapHover && _this.MDL.superHighlighted ?
-            _this.MDL.superHighlighted.data.filter.clear() :
-            _this.MDL.highlighted.data.filter.clear();
-        },
-        clickToShow(d) {
-          if (!isEntityConcept(_this.MDL.color.data.conceptProps)) return;
-
-          const filter = _this.model.data.filter;
-          const colorSpace = _this.model.encoding.color.data.space;
-          const concept = _this.MDL.color.data.concept;
-          
-          filter.config.dimensions[colorSpace][concept] = d[concept];
-        },
-        clickToSelect(d) {
-          if (!isEntityConcept(_this.MDL.color.data.conceptProps)) return;
-
-          const concept = _this.MDL.color.data.concept;
-          const colorMdlName = _this.MDL.color.name;
-          const selectedFilter = _this.MDL.selected.data.filter;
-          
-          const selectArray = _this.model.dataArray?.filter(f => !isTrailBubble(f) && f[colorMdlName] == d[concept]);
-          
-          if (!selectArray) return;
-
-          if (selectArray.every(d => selectedFilter.has(d)))
-            mobx.runInAction(() => selectedFilter.delete(selectArray));
-          else
-            mobx.runInAction(() => selectedFilter.set(selectArray));        
-        }
-      };
-    }
-
-    _initSelectDialog() {
-      this.DOM.moreOptionsHint = this.DOM.wrapper.select(".vzb-cl-more-hint");
-
-      this.DOM.selectDialog = this.DOM.wrapper.select(".vzb-cl-select-dialog");
-      this.DOM.selectDialogTitle = this.DOM.selectDialog.select(".vzb-cl-select-dialog-title");
-
-      this.DOM.selectDialogClose = this.DOM.selectDialog.select(".vzb-cl-select-dialog-close");
-      this.DOM.selectDialogClose
-        .html(ICON_CLOSE)
-        .on("click", () => this._closeSelectDialog());
-
-      this.DOM.selectAllButton = this.DOM.selectDialog.append("div")
-        .attr("class", "vzb-cl-select-dialog-item vzb-clickable");
-
-      this.DOM.removeElseButton = this.DOM.selectDialog.append("div")
-        .attr("class", "vzb-cl-select-dialog-item vzb-clickable");
-
-      this.DOM.editColorButton = this.DOM.selectDialog.append("div")
-        .attr("class", "vzb-cl-select-dialog-item vzb-cl-select-dialog-item-moreoptions");
-      this.DOM.editColorButton.append("label")
-        .attr("class", "vzb-clickable")
-        .attr("for", "vzb-cl-select-dialog-color-" + this.id);
-      this.DOM.editColorButton.append("input")
-        .attr("type", "color")
-        .attr("class", "vzb-invisible")
-        .attr("id", "vzb-cl-select-dialog-color-" + this.id);
-      this.DOM.editColorButton.append("span")
-        .attr("class", "vzb-clickable");
-
-      this.DOM.editColorButtonTooltip = this.DOM.editColorButton.append("div")
-        .attr("class", "vzb-cl-select-dialog-item-tooltip");
-    }
-
-    _translateSelectDialog() {
-      const t = this.localise;
-      this.DOM.moreOptionsHint.text(t("hints/color/more"));
-      this.DOM.selectAllButton.text("✅ " + t("dialogs/color/select-all"));
-      this.DOM.removeElseButton.text("🗑️ " + t("dialogs/color/remove-else"));
-      this.DOM.editColorButton.select("label").text("🎨 " + t("dialogs/color/edit-color"));
-      this.DOM.editColorButton.select("span").text(t("buttons/reset"));
-      this.DOM.editColorButtonTooltip.text(t("dialogs/color/edit-color-blocked-hint"));
-    }
-    
-    closeSelectDialogOnConceptChange(){
-      this.MDL.color.data.concept;
-      this._closeSelectDialog();
-    }
-
-    _closeSelectDialog() {
-      this.DOM.selectDialog.classed("vzb-hidden", true);
-    }
-
-    _bindSelectDialogItems(d) {
-      const _this = this;
-      this.DOM.selectDialogTitle.text(d.name);
-
-      this.DOM.selectAllButton
-        .classed("vzb-cl-select-dialog-item-disabled", !isEntityConcept(this.MDL.color.data.conceptProps))
-        .on("click", () => {
-          this._interact().clickToSelect(d);
-          this._closeSelectDialog();
-        });
-
-      this.DOM.removeElseButton
-        .classed("vzb-cl-select-dialog-item-disabled", !isEntityConcept(this.MDL.color.data.conceptProps))
-        .on("click", () => {
-          this._interact().clickToShow(d);
-          this._closeSelectDialog();
-        });
-
-      const isColorSelectable = this.MDL.color.scale.palette.isUserSelectable;
-      this.DOM.editColorButtonTooltip.classed("vzb-hidden", isColorSelectable);
-      this.DOM.editColorButton.select("span").classed("vzb-hidden", !isColorSelectable);
-      this.DOM.editColorButton.classed("vzb-cl-select-dialog-item-disabled", !isColorSelectable);
-      
-      if (isColorSelectable){
-        const colorScaleModel = this.MDL.color.scale;
-        const concept = this.MDL.color.data.concept;
-        const target = this.MDL.color.data.isConstant ? "_default" : d[concept];
-        const colorOld = colorScaleModel.palette.getColor(target);
-        const colorDef = colorScaleModel.palette.getColor(target, colorScaleModel.palette.defaultPalette);
-        this.DOM.editColorButton.select("input")
-          .property("value", colorOld)
-          .on("input", function(){
-            const value = d3.select(this).property("value");
-            colorScaleModel.palette.setColor(value, target);
-          })
-          .on("change", function(){
-            _this._closeSelectDialog();
-          });
-
-        //reset color
-        this.DOM.editColorButton.select("span")
-          .classed("vzb-hidden", colorOld == colorDef)
-          .style("color", colorDef)
-          .on("click", function(){
-            colorScaleModel.palette.removeColor(target);
-            _this._closeSelectDialog();
-          });
-      }
-    }
-  }
-
-  const decorated$7 = mobx.decorate(ColorLegend, {
-    "MDL": mobx.computed
-  });
-
-  class DataNotes extends BaseComponent {
-
-    constructor(config) {
-      super(config);
-    }
-
-
-    setup() {
-      this.state = {
-      };
-
-      this.DOM = {
-
-      };
-
-
-      this.hidden = true;
-      this.showNotes = false;
-      this.pinned = false;
-      this.left = 0;
-      this.top = 0;
-      this.encoding = null;
-
-
-      this.element.classed("vzb-hidden", this.hidden);
-      this.element.append("div")
-        .html(ICON_CLOSE)
-        .on("click", (event) => {
-          event.stopPropagation();
-          this.close();
-        })
-        .select("svg")
-        .attr("width", "0px")
-        .attr("height", "0px")
-        .attr("class", "vzb-data-notes-close")
-        .classed("vzb-hidden", true);
-
-      this.element.append("div")
-        .attr("class", "vzb-data-notes-body vzb-dialog-scrollable");
-
-      this.element.append("div")
-        .attr("class", "vzb-data-notes-link");
-
-
-    }
-    
-    draw() {
-      this.localise = this.services.locale.auto();
-      
-      this.addReaction(this.setValues);
-      this.addReaction(this.resize);
-    }
-
-    resize(){
-      this.services.layout.size;
-      this.close();
-    }
-
-    setEncoding(enc) {
-      this.encoding = enc;
-      this.setValues();
-      return this;
-    }
-
-    setValues() {
-      if (!this.encoding) return;
-      const { description, source_url, source } = this.encoding.data.conceptProps;
-
-      this.element.select(".vzb-data-notes-body")
-        .classed("vzb-hidden", !description)
-        .text(replaceNumberSpacesToNonBreak(description));
-
-      const label = this.localise("hints/source");
-      this.element.select(".vzb-data-notes-link")
-        .classed("vzb-hidden", !source_url)
-        .html("<span>" + (source ? (label + ": ") : "") 
-          + '<a href="' + normaliseLink(source_url) + '" target="_blank">' + (source ? source : label) 
-          + "</a></span>");
-
-      this.showNotes = source_url || description;
-    }
-
-    setPos(_left, _top, force) {
-      this.left = _left;
-      this.top = _top;
-      if (this.pinned && !force) return this;
-      const parentHeight = this.parent.element.node().offsetHeight;
-      const width = this.element.node().offsetWidth;
-      const height = this.element.node().offsetHeight;
-      let leftMove;
-      let topMove;
-      let leftPos = this.left - width;
-      let topPos = this.top;
-      if (leftPos < 10) {
-        leftPos = 10;
-        leftMove = true;
-      }
-      if ((topPos + height + 10) > parentHeight) {
-        topPos = parentHeight - height - 10;
-        topMove = true;
-      }
-
-      if (leftMove && topMove) {
-        topPos = this.top - height - 30;
-      }
-
-      this.element.style("top", topPos + "px");
-      this.element.style("left", leftPos + "px");
-
-      return this;
-    }
-
-    pin(arg) {
-      if (this.hidden) return this;
-      this.pinned = !this.pinned;
-      if (arg != null) this.pinned = arg;
-      this.element.select(".vzb-data-notes-close").classed("vzb-hidden", !this.pinned);
-      this.element.classed("vzb-data-notes-pinned", this.pinned);
-      this.element.select(".vzb-data-notes-body").node().scrollTop = 0;
-
-      return this.showNotes ?
-        this.setPos(this.left, this.top, true) :
-        this.hide();
-    }
-
-    toggle(arg) {
-      if (this.pinned) return this;
-      if (arg == null) arg = !this.hidden;
-      this.hidden = arg;
-      this.element.classed("vzb-hidden", this.hidden || !this.showNotes);
-      return this;
-    }
-
-    show() {
-      return this.toggle(false);
-    }
-
-    hide() {
-      return this.toggle(true);
-    }
-
-    close() {
-      if (!this.hidden) {
-        this.pin(false).hide();
-      }
-    }  
-
-  }
-
-  let hidden$2 = true;
-  const HIDE_WHEN_SMALLER_THAN = 100; //px
-  class _DataWarning extends BaseComponent {
-    constructor(config) {
-      config.template = `
-      <div class="vzb-data-warning-background"></div>
-      <div class="vzb-data-warning-box">
-        <div class="vzb-data-warning-link"></div>
-        <div class="vzb-data-warning-title"></div>
-        <div class="vzb-data-warning-body vzb-dialog-scrollable"></div>
-      </div>
-    `;
-
-      super(config);
-    }
-
-    setup() {
-      this.DOM = {
-        background: this.element.select(".vzb-data-warning-background"),
-        container: this.element.select(".vzb-data-warning-box"),
-        icon: this.element.select(".vzb-data-warning-link"),
-        close: this.element.select(".vzb-data-warning-close"),
-        title: this.element.select(".vzb-data-warning-title"),
-        body: this.element.select(".vzb-data-warning-body"),
-        button: d3.select(this.options.button)
-      };
-      
-      this.element.classed("vzb-hidden", true);
-
-      this.setupDialog();
-      this.setupTiggerButton();
-      this.setOptions();
-    }
-
-    setupDialog() {
-      this.DOM.background
-        .on("click", () => {
-          this.toggle(true);
-        });
-
-      this.DOM.container.append("div")
-        .html(ICON_CLOSE)
-        .on("click", () => {
-          this.toggle();
-        })
-        .select("svg")
-        .attr("width", "0px")
-        .attr("height", "0px")
-        .attr("class", "vzb-data-warning-close");
-
-      this.DOM.icon.html(ICON_WARN)
-        .append("div");
-    }
-
-    setupTiggerButton() {
-      if(!this.DOM.button.size()) return warn("quit setupTiggerButton of DataWarning because no button provided");
-      
-      setIcon(this.DOM.button, ICON_WARN)
-        .append("text")
-        .attr("text-anchor", "end")
-        .on("click", () => {
-          this.toggle();
-        })
-        .on("mouseover", () => {
-          this.updateButtonOpacity(1);
-        })
-        .on("mouseout", () => {
-          this.updateButtonOpacity();
-        });
-    }
-
-    get MDL(){
-      return {
-        frame: this.model.encoding.frame,
-        selected: this.model.encoding.selected
-      };
-    }
-
-    draw() {
-      this.localise = this.services.locale.auto();
-
-      this.addReaction(this.updateUIstrings);
-      this.addReaction(this.updateButtonOpacityScale);
-      this.addReaction(this.updateButtonOpacity);
-      this.addReaction(this.updateButtonPosition);
-    }
-
-    updateUIstrings(){
-      if (this.DOM.button) this.DOM.button.select("text")
-        .text(this.localise("hints/dataWarning"));
-
-      this.DOM.icon.select("div")
-        .text(this.localise("hints/dataWarning"));
-
-      const title = this.localise("datawarning/title/" + this.root.name);
-      this.DOM.title.html(title)
-        .classed("vzb-hidden", !title || title == ("datawarning/title/" + this.root.name));
-
-      this.DOM.body.html(this.localise("datawarning/body/" + this.root.name));
-    }
-
-    toggle(arg) {
-      if (arg == null) arg = !hidden$2;
-      hidden$2 = arg;
-      this.element.classed("vzb-hidden", hidden$2);
-
-      this.root.children.forEach(c => {
-        c.element.classed("vzb-blur", c != this && !hidden$2);
-      });
-    }
-
-    updateButtonOpacityScale() {
-      this.wScale = this.MDL.frame.scale.d3Scale.copy()
-        .domain(this.ui.doubtDomain.map(m => this.MDL.frame.parseValue("" + m)))
-        .range(this.ui.doubtRange)
-        .clamp(true);
-    }
-
-    updateButtonOpacity(opacity) {
-      if(!this.DOM.button.size()) return warn("quit updateButtonOpacity of DataWarning because no button provided");
-
-      if (opacity == null) opacity = this.wScale(this.MDL.frame.value);
-      if (this.MDL.selected.data.filter.any()) opacity = 1;
-      this.DOM.button.style("opacity", opacity);
-    }
-
-    updateButtonPosition() {
-      if(!this.DOM.button.size()) return warn("quit updateButtonPosition of DataWarning because no button provided");
-      const {vertical, horizontal, width, height, wLimit} = this;
-      const {top, bottom, left, right} = this;
-
-      // reset font size to remove jumpy measurement
-      const dataWarningText = this.DOM.button.select("text")
-        .style("font-size", null);
-
-      // reduce font size if the caption doesn't fit
-      let warnBB = dataWarningText.node().getBBox();
-      const dataWarningWidth = warnBB.width + warnBB.height * 3;
-      if (wLimit > 0 && dataWarningWidth > wLimit) {
-        const font = parseInt(dataWarningText.style("font-size")) * wLimit / dataWarningWidth;
-        dataWarningText.style("font-size", font + "px");
-      }
-
-      // position the warning icon
-      warnBB = dataWarningText.node().getBBox();
-      this.DOM.button.select("svg")
-        .attr("width", warnBB.height * 0.75)
-        .attr("height", warnBB.height * 0.75)
-        .attr("x", -warnBB.width - warnBB.height * 1.2)
-        .attr("y", -warnBB.height * 0.65);
-
-      // position the whole group
-      warnBB = this.DOM.button.node().getBBox();
-      this.DOM.button
-        .classed("vzb-hidden", this.services.layout.projector || wLimit && wLimit < HIDE_WHEN_SMALLER_THAN)
-        .attr("transform", `translate(${
-        horizontal == "left" ? (left + warnBB.width) : (width - right)
-      }, ${
-        vertical == "top" ? (top + warnBB.height) : (height - bottom)
-      })`);
-    }
-
-    setOptions({
-      //container size
-      width = 0,
-      height = 0,
-      //alignment
-      vertical = "top", 
-      horizontal = "right", 
-      //margins
-      top = 0,
-      bottom = 0,
-      left = 0,
-      right = 0,
-      //size limit
-      wLimit = null
-    } = {}) {
-      mobx.runInAction(() => {
-        this.vertical = vertical;
-        this.horizontal = horizontal;
-        this.width = width;
-        this.height = height;
-        this.top = top;
-        this.bottom = bottom;
-        this.left = left;
-        this.right = right;
-        this.wLimit = wLimit || width;
-      });
-    }
-
-  }
-
-  _DataWarning.DEFAULT_UI = {
-    doubtDomain: [],
-    doubtRange: []
-  };
-
-  //export default BubbleChart;
-  const DataWarning = mobx.decorate(_DataWarning, {
-    "MDL": mobx.computed,
-    "vertical": mobx.observable, 
-    "horizontal": mobx.observable, 
-    "width": mobx.observable, 
-    "height": mobx.observable, 
-    "top": mobx.observable, 
-    "bottom": mobx.observable, 
-    "left": mobx.observable, 
-    "right": mobx.observable, 
-    "wLimit": mobx.observable
-  });
-
-  /*!
-   * VIZABI DIALOG
-   * Reusable Dialog component
-   */
-
-  const PROFILE_CONSTANTS$3 = {
-    SMALL: {},
-    MEDIUM: {},
-    LARGE: {}
-  };
-
-
-  const PROFILE_CONSTANTS_FOR_PROJECTOR$3 = {
-    SMALL: {},
-    MEDIUM: {},
-    LARGE: {}
-  };
-
-
-  const CollectionMixin = superClass => class extends superClass {
-    //static _collection = {};
-    static add(name, addedClass) {
-      CollectionMixin._collection[name] = addedClass;
-    }
-    static get(name) { return CollectionMixin._collection[name];}
-  };
-
-  CollectionMixin._collection = {};
-
-  class Dialog extends CollectionMixin(BaseComponent) {
-    constructor(config) {
-
-      super(config);
-    } 
-
-    setup() {
-      this.DOM = {
-        dialog: this.element.select(".vzb-dialog-modal"),
-        title: this.element.select(".vzb-dialog-modal>.vzb-dialog-title"),
-        buttons: d3.select(this.element.selectAll(".vzb-dialog-modal>.vzb-dialog-buttons").nodes().pop()),
-        content: this.element.select(".vzb-dialog-modal > .vzb-dialog-content"),
-        dragHandler: this.element.select("[data-click='dragDialog']"),
-        pinIcon: this.element.select("[data-click='pinDialog']")
-      };
-      this.transitionEvents = ["webkitTransitionEnd", "transitionend", "msTransitionEnd", "oTransitionEnd"];
-
-      this.state["opened"] = false;
-
-      const _this = this;
-
-      this.DOM.dragHandler.html(ICON_DRAG);
-      this.DOM.pinIcon.html(ICON_PIN);
-      this.DOM.pinIcon.on("click", () => {
-        this.setPin(!this.getPin());
-      });
-
-      const dg = dialogDrag(this.element, this.root.element, 10);
-      const dragBehavior = d3.drag()
-        .on("start", (event) => {
-          const topPos = _this.element.node().offsetTop;
-          _this.element.style("top", topPos + "px");
-          _this.element.style("bottom", "auto");
-          _this.element.dispatch("custom-dragstart");
-          dg.dragStart(event);
-        })
-        .on("drag", (event) => {
-          _this.element.dispatch("custom-drag");
-          dg.drag(event);
-        })
-        .on("end", () => {
-          _this.rightPos = _this.element.style("right");
-          _this.topPos = _this.element.style("top");
-          _this.element.dispatch("custom-dragend");
-        });
-      this.DOM.dragHandler.call(dragBehavior);
-    }
-
-    get MDL() {
-      return {
-        frame: this.model.encoding.frame,
-        selected: this.model.encoding.selected,
-        highlighted: this.model.encoding.highlighted
-      };
-    }
-
-
-    draw() {
-      this.localise = this.services.locale.auto();
-
-      this._localiseDialogTexts();
-
-      if (this._updateLayoutProfile()) return; //return if exists with error
-      this.addReaction(this._pinButtonUpdate);
-      this.addReaction(this._updateSize);
-    }
-
-    resize() {
-      
-    }
-
-    _localiseDialogTexts() {
-      const _this = this;
-      this.element.selectAll("span[data-localise]").each(function() {
-        const view = d3.select(this);
-        view.text(_this.localise(view.attr("data-localise")));
-      });
-    }
-
-    _updateLayoutProfile(){
-      this.services.layout.size;
-
-      this.profileConstants = this.services.layout.getProfileConstants(PROFILE_CONSTANTS$3, PROFILE_CONSTANTS_FOR_PROJECTOR$3);
-      this.height = this.element.node().clientHeight || 0;
-      this.width = this.element.node().clientWidth || 0;
-      if (!this.height || !this.width) return warn("Dialog _updateProfile() abort: container is too little or has display:none");
-    }
-
-    _updateSize() {
-      this.services.layout.size;
-      
-      if (this.element.classed("vzb-top-dialog")) {
-        this.element.classed("notransition", true);
-
-        const profile = this.services.layout.profile;
-
-        if (profile !== "SMALL") {
-          const chartWidth = this.root.element.node().offsetWidth || 0;
-          const chartHeight = this.root.element.node().offsetHeight || 0;
-          const dialogWidth = parseInt(this.element.style("width"), 10) || 0;
-          const dialogHeight = parseInt(this.element.style("height"), 10) || 0;
-
-          const dialogRight = parseInt(this.rightPos, 10);
-          const dialogTop = parseInt(this.topPos, 10);
-          const dialogRightMargin = parseInt(this.element.style("margin-right"), 10) || 0;
-          if (isNumber(dialogRight) && dialogRight > chartWidth - dialogWidth - dialogRightMargin) {
-            if (this.rightPos) {
-              this.rightPos = (chartWidth - dialogWidth - dialogRightMargin) + "px";
-              if (this.isOpen) this.element.style("right", this.rightPos);
-            }
-          }
-          if (isNumber(dialogTop) && isNumber(dialogHeight) && dialogTop >= 0 && dialogTop > chartHeight - dialogHeight) {
-            if (this.topPos) {
-              this.topPos = ((chartHeight - dialogHeight) > 0 ? (chartHeight - dialogHeight) : 0)  + "px";
-              if (this.isOpen) this.element.style("top", this.topPos);
-            }
-          }
-
-          if (this.topPos && (profile === "LARGE" && this.root.element.classed("vzb-dialog-expand-true"))) {
-            this.element.style("bottom", "auto");
-          }
-
-          if (this.root.element.classed("vzb-landscape")) ;
-          //this.element.style('top', this.topPos);
-          this.DOM.dialog.style("max-height", "");
-        } else {
-          this.rightPos = "";
-          this.topPos = "";
-          this.element.attr("style", "");
-          // var totalHeight = this.root.element.offsetHeight;
-          // if(this.root.element.classed('vzb-portrait')) totalHeight = totalHeight - 50;
-          // this.DOM.dialog.style('max-height', (totalHeight - 10) + 'px');
-        }
-
-        this.DOM.dragHandler.classed("vzb-hidden", profile === "SMALL");
-        this.DOM.pinIcon.classed("vzb-hidden", profile === "SMALL");
-
-        this._setMaxHeight();
-      }
-    }
-
-    _setMaxHeight() {
-      let totalHeight = this.root.element.node().offsetHeight;
-      const profile = this.services.layout.profile;
-      if (profile !== "SMALL") {
-        if (!this.topPos && (profile === "LARGE" && this.root.element.classed("vzb-dialog-expand-true"))) {
-          const dialogBottom = parseInt(this.element.style("bottom"), 10);
-          totalHeight -= dialogBottom;
-        } else {
-          const topPos = this.topPos ? parseInt(this.topPos, 10) : this.element.node().offsetTop;
-          totalHeight -= topPos;
-        }
-      } else {
-        totalHeight = this.root.element.classed("vzb-portrait") ? totalHeight - 50 : totalHeight - 10;
-      }
-
-      this.DOM.dialog.style("max-height", totalHeight + "px");
-
-      //set 'max-height' to content for IE11
-      const contentHeight = totalHeight - this.DOM.title.node().offsetHeight - ((this.DOM.buttons.node() || {}).offsetHeight || 0);
-      this.DOM.content.style("max-height", contentHeight + "px");
-    }
-
-    beforeOpen() {
-      const _this = this;
-
-      this.transitionEvents.forEach(event => {
-        _this.element.on(event, _this._transitionEnd.bind(_this, event));
-      });
-
-      this.element.classed("notransition", true);
-
-      this.element.style("top", ""); // issues: 369 & 442
-      this.element.style("bottom", ""); // issues: 369 & 442
-
-      if (this.topPos && this.services.layout.profile === "LARGE" && this.root.element.classed("vzb-dialog-expand-true")) {
-        const topPos = this.element.node().offsetTop;
-        this.element.style("top", topPos + "px"); // issues: 369 & 442
-        this.element.style("bottom", "auto"); // issues: 369 & 442
-      } else if (this.services.layout.profile !== "SMALL") ;
-
-      this.element.node().offsetTop;
-      this.element.classed("notransition", false);
-
-      if (this.services.layout.profile === "SMALL") {
-        this.element.style("top", ""); // issues: 369 & 442
-      } else if (this.root.element.classed("vzb-landscape")) ;
-
-    }
-
-    /**
-     * User has clicked to open this dialog
-     */
-    open() {
-      this.isOpen = true;
-      if (this.services.layout.profile !== "SMALL") {
-        if (this.topPos) {
-          this.element.style("top", this.topPos);
-          this.element.style("right", this.rightPos);
-        }
-      }
-    }
-
-    beforeClose() {
-      //issues: 369 & 442
-      if (this.root.element.classed("vzb-portrait") && this.services.layout.profile === "SMALL") {
-        this.element.style("top", "auto"); // issues: 369 & 442
-      }
-      if (this.services.layout.profile === "LARGE" && this.root.element.classed("vzb-dialog-expand-true")) {
-        this.topPos0 = this.topPos ? (this.element.node().parentNode.offsetHeight - this.element.node().offsetHeight) + "px" : "";
-      }
-      this.element.classed("notransition", false);
-      this.element.node().offsetHeight; // trigger a reflow (flushing the css changes)
-    }
-
-    /**
-     * User has closed this dialog
-     */
-    close() {
-      //issues: 369 & 442
-      if (!(this.root.element.classed("vzb-portrait") && this.services.layout.profile === "SMALL")) {
-        this.element.style("top", ""); // issues: 369 & 442
-        this.element.style("right", ""); // issues: 369 & 442
-      }
-
-      if (this.services.layout.profile === "LARGE" && this.root.element.classed("vzb-dialog-expand-true")) {
-        this.element.style("top", this.topPos0);
-        this.element.style("right", "");
-      }
-      this.isOpen = false;
-      //this.trigger("close");
-    }
-
-    _transitionEnd() {
-      const _this = this;
-
-      this.transitionEvents.forEach(event => {
-        _this.element.on(event, null);
-      });
-      if (this.isOpen) {
-        this.element.classed("notransition", true);
-      }
-    }
-
-    setOpen(state) {
-      this.ui.opened = state;
-    }
-
-    getOpen() {
-      return this.ui.opened;
-    }
-
-    setPin(state) {
-      this.ui.pinned = state;
-    }
-
-    getPin() {
-      return this.ui.pinned;
-    }
-
-    _pinButtonUpdate() {
-      this.element.classed("pinned", this.getPin());
-    }  
-  }
-
-  Dialog.DEFAULT_UI = {
-    opened: false,
-    pinned: false
-  };
-
-  const decorated$6 = mobx.decorate(Dialog, {
-    "MDL": mobx.computed
-  });
-
-  function dialogDrag(element, container, xOffset) {
-    let posX, posY, divTop, divRight, marginRight, marginLeft, xOffsetRight, xOffsetLeft, eWi, eHe, cWi, cHe, diffX, diffY;
-
-    return {
-      move(x, y) {
-        element.style("right", x + "px");
-        element.style("top", y + "px");
-      },
-
-      dragStart(evt) {
-        if (!isTouchDevice()) {
-          posX = evt.sourceEvent.clientX;
-          posY = evt.sourceEvent.clientY;
-        } else {
-          const touchCoord = d3.pointer(container.node());
-          posX = touchCoord[0][0];
-          posY = touchCoord[0][1];
-        }
-        divTop = parseInt(element.style("top")) || 0;
-        divRight = parseInt(element.style("right")) || 0;
-        marginLeft = parseInt(element.style("margin-left")) || 0;
-        marginRight = parseInt(element.style("margin-right")) || 0;
-        xOffsetLeft = Math.min(xOffset, marginLeft);
-        xOffsetRight = Math.min(xOffset, marginRight);
-        eWi = (parseInt(element.style("width"), 10) + marginLeft - xOffsetLeft) || 0;
-        eHe = parseInt(element.style("height"), 10) || 0;
-        cWi = (container.node().offsetWidth - marginRight) || 0;
-        cHe = container.node().offsetHeight || 0;
-        diffX = posX + divRight;
-        diffY = posY - divTop;
-      },
-
-      drag(evt) {
-        if (!isTouchDevice()) {
-          posX = evt.sourceEvent.clientX;
-          posY = evt.sourceEvent.clientY;
-        } else {
-          const touchCoord = d3.pointer(container.node());
-          posX = touchCoord[0][0];
-          posY = touchCoord[0][1];
-        }
-        let aX = -posX + diffX,
-          aY = posY - diffY;
-        if (aX < -xOffsetRight) aX = -xOffsetRight;
-        if (aY < 0) aY = 0;
-        if (aX + eWi > cWi) aX = cWi - eWi;
-        if (aY + eHe > cHe) aY = cHe - eHe;
-
-        this.move(aX, aY);
-      }
-    };
-  }
-
-  /*!
-   * VIZABI DIALOGS
-   * Reusable dialogs component
-   */
-
-  //default existing dialogs
-  const class_active$1 = "vzb-active";
-
-  class Dialogs extends BaseComponent {
-    constructor(config) {
-      const { sidebar = [], popup = []} = deepExtend(deepExtend({}, config.ui.dialogs), config.default_ui.dialogs);
-      const subcomponents = [];
-      const templateArray  = [];
-
-      const dialogList = unique([...sidebar, ...popup]);
-
-      dialogList.forEach(dlg => {      
-        subcomponents.push({
-          type: decorated$6.get(dlg),
-          placeholder: '.vzb-dialogs-dialog[data-dlg="' + dlg + '"]',
-          model: config.model,
-          name: dlg,
-        });
-
-        templateArray.push(
-          `<div data-dlg="${dlg}" class="vzb-top-dialog vzb-dialogs-dialog vzb-dialog-shadow"></div>`
-        );
-      });
-
-      config.subcomponents = subcomponents;
-      config.template = templateArray.join("\n");
-      super(config);
-    } 
-
-    setup() {
-      this.DOM = {
-
-      };
-
-      const _this = this;
-      this._curr_dialog_index = 20;
-      
-      this.element.selectAll(".vzb-top-dialog").data(this.children.map(c => ({ 
-        name: c.name
-      })))
-        .on("custom-dragstart", function(event, d) {
-          _this.bringForward(d.name);
-        })
-        .select(".vzb-top-dialog>.vzb-dialog-modal>.vzb-dialog-buttons>[data-click='closeDialog']")
-        .on("click", (event, d) => {
-          this.toggleDialogOpen(d.name, false);
-        });
-    }
-
-    resize() {
-      const _this = this;
-      const profile = this.services.layout.profile;
-
-      this.children.forEach(childComp => {
-        const dialogEl = childComp.element;
-        let cls = dialogEl.attr("class").replace(" vzb-popup", "").replace(" vzb-sidebar", "");
-
-        if (profile === "LARGE" && _this.ui.dialogs.sidebar.indexOf(childComp.name) > -1) {
-          cls += _this.root.ui.buttons.sidebarCollapse ? " vzb-popup" : " vzb-sidebar";
-          if (!_this.root.ui.buttons.sidebarCollapse) dialogEl.style("z-index", null);
-        } else if (_this.ui.dialogs.popup.indexOf(childComp.name) > -1) {
-          cls += " vzb-popup";
-        }
-
-        dialogEl.attr("class", cls);
-      });
-
-    }
-
-    toggleDialogOpen(name, forceState) {
-      mobx.runInAction(() => {
-        const dialog = this.findChild({ name });
-        if (!dialog) return;
-        const newState = forceState ? forceState : !dialog.getOpen();
-        dialog.setOpen(newState);
-
-        if(newState) {
-          this.openDialog(name);
-        } else {
-          this.closeDialog(name);
-        }
-      });
-    }
-
-    //TODO: make opening/closing a dialog via update and model
-    /*
-     * Activate a dialog
-     * @param {String} id dialog id
-     */
-    openDialog(name) {
-      //close pinned dialogs for small profile
-      const forceClose = this.services.layout.profile === "SMALL";
-      
-      //TODO
-      this.closeAllDialogs(forceClose);
-
-      const dialog = this.element.selectAll(".vzb-popup.vzb-dialogs-dialog[data-dlg='" + name + "']");
-
-      this._active_comp = this.findChild({ name });
-
-      this._active_comp.beforeOpen();
-      //add classes
-      dialog.classed(class_active$1, true);
-
-      this.bringForward(name);
-
-      //call component function
-      this._active_comp.open();
-    }
-
-    /*
-     * Closes a dialog
-     * @param {String} id dialog id
-     */
-    closeDialog(name) {
-      const dialog = this.element.selectAll(".vzb-popup.vzb-dialogs-dialog[data-dlg='" + name + "']");
-
-      this._active_comp = this.findChild({ name });
-
-      if (this._active_comp && !this._active_comp.isOpen) return;
-
-      if (this._active_comp.getPin())
-        this._active_comp.setPin(false);
-
-      if (this._active_comp) {
-        this._active_comp.beforeClose();
-      }
-      //remove classes
-      dialog.classed(class_active$1, false);
-
-      //call component close function
-      if (this._active_comp) {
-        this._active_comp.close();
-      }
-      this._active_comp = false;
-
-    }
-
-    /*
-    * Close all dialogs
-    */
-    closeAllDialogs(forceclose) {
-      const _this = this;
-      //remove classes
-      const dialogClass = forceclose ? ".vzb-popup.vzb-dialogs-dialog.vzb-active" : ".vzb-popup.vzb-dialogs-dialog.vzb-active:not(.pinned)";
-      const all_dialogs = this.element.selectAll(dialogClass);
-      all_dialogs.each(d => {
-        _this.toggleDialogOpen(d.name);
-      });
-    }
-
-    bringForward(name) {
-      const dialog = this.element.select(".vzb-popup.vzb-dialogs-dialog[data-dlg='" + name + "']");
-      dialog.style("z-index", this._curr_dialog_index);
-      this._curr_dialog_index += 10;
-    }
-  }
-
-  class DynamicBackground extends BaseComponent {
-
-    setup(conditions) {
-      this.DOM = {
-        textEl: this.element.append("text").style("font-size", "20px"),
-        sampleTextEl: this.element.append("text").style("font-size", "20px").style("opacity", 0)
-      };
-      
-      this.element.classed("vzb-dynamic-background", true);
-
-      this.width = 0;
-      this.height = 0;
-      this.topOffset = 0;
-      this.leftOffset = 0;
-      this.bottomOffset = 0;
-      this.rightOffset = 0;
-      this.textWidth = 0;
-      this.textHeight = 0;
-      this.widthRatio = 0.9;
-      this.heightRatio = 0.9;
-      this.xAlign = "center";
-      this.yAlign = "center";
-
-      if (conditions) {
-        this.setConditions(conditions);
-      }
-    }
-
-    setConditions(conditions) {
-      if (!isNaN(parseFloat(conditions.rightOffset)) && isFinite(conditions.rightOffset)) {
-        this.rightOffset = conditions.rightOffset;
-      }
-      if (!isNaN(parseFloat(conditions.leftOffset)) && isFinite(conditions.leftOffset)) {
-        this.leftOffset = conditions.leftOffset;
-      }
-      if (!isNaN(parseFloat(conditions.topOffset)) && isFinite(conditions.topOffset)) {
-        this.topOffset = conditions.topOffset;
-      }
-      if (!isNaN(parseFloat(conditions.bottomOffset)) && isFinite(conditions.bottomOffset)) {
-        this.bottomOffset = conditions.bottomOffset;
-      }
-      if (conditions.xAlign) {
-        this.xAlign = conditions.xAlign;
-      }
-      if (conditions.yAlign) {
-        this.yAlign = conditions.yAlign;
-      }
-      if (!isNaN(parseFloat(conditions.widthRatio)) && conditions.widthRatio > 0 && conditions.widthRatio <= 1) {
-        this.widthRatio = conditions.widthRatio;
-      }
-      if (!isNaN(parseFloat(conditions.heightRatio)) && conditions.heightRatio > 0 && conditions.heightRatio <= 1) {
-        this.heightRatio = conditions.heightRatio;
-      }
-      return this;
-    }
-
-    draw() {
-      this.MDL = {
-
-      };
-    }
-
-    resizeText(width, height, topOffset, leftOffset) {
-      this.width = parseInt(width, 10) || 0;
-      this.height = parseInt(height, 10) || 0;
-
-      if (topOffset) {
-        this.topOffset = topOffset;
-      }
-      if (leftOffset) {
-        this.leftOffset = leftOffset;
-      }
-
-      this._resizeText();
-    }
-
-    setText(text, delay = 0) {
-      const {
-        textEl,
-        sampleTextEl
-      } = this.DOM;
-
-      const callback = () => {
-        sampleTextEl.text(text);
-        this._resizeText();
-        textEl.text(text);
-      };
-
-      const clear = () => {
-        clearTimeout(this._text.timeout);
-        delete this._text;
-      };
-
-      if (!delay) {
-        if (this._text) {
-          clear();
-        }
-        callback();
-      } else {
-        if (this._text) {
-          this._text.callback();
-          clear();
-        }
-        this._text = {
-          callback,
-          timeout: setTimeout(() => {
-            callback();
-            clear();
-          }, delay)
-        };
-      }
-
-      return this;
-    }
-
-
-    _resizeText() {
-      const {
-        textEl,
-        sampleTextEl
-      } = this.DOM;
-
-      const bbox = sampleTextEl.node().getBBox();
-      if (!bbox.width || !bbox.height || !this.width || !this.height) return this;
-
-      // method from http://stackoverflow.com/a/22580176
-      const widthTransform = this.width * this.widthRatio / bbox.width;
-      const heightTransform = this.height * this.heightRatio / bbox.height;
-      this.scalar = Math.min(widthTransform, heightTransform);
-      textEl.attr("transform", "scale(" + this.scalar + ")");
-
-      this.textHeight = bbox.height * this.scalar;
-      this.textWidth = bbox.width * this.scalar;
-
-      switch (this.yAlign) {
-      case "bottom": textEl.attr("dy", ".325em"); break;
-      case "center": textEl.attr("dy", ".325em"); break;
-      case "top": textEl.attr("dy", "0"); break;
-      }
-
-      this.element.attr("transform", "translate(" + this._getLeftOffset() + "," + this._getTopOffset() + ")");
-
-      return this;
-    }
-
-    _getLeftOffset() {
-      switch (this.xAlign) {
-      case "right":
-        return this.width - this.textWidth / 2 - this.rightOffset;
-      case "left":
-        return this.textWidth / 2 + this.leftOffset;
-      default :
-        return this.width / 2;
-      }
-    }
-
-    _getTopOffset() {
-      switch (this.yAlign) {
-      case "top":
-        return this.textHeight / 2 + this.topOffset;
-      case "bottom":
-        return this.height - this.textHeight / 2 - this.bottomOffset;
-      default :
-        return this.height / 2;
-      }
-    }
-
-  }
-
-  let hidden$1 = true;
-  class _ErrorMessage extends BaseComponent {
-    constructor(config) {
-      config.template = `
-      <div class="vzb-errormessage-background"></div>
-      <div class="vzb-errormessage-box">
-        <div class="vzb-errormessage-hero">🙄</div>
-        <div class="vzb-errormessage-title"></div>
-        <div class="vzb-errormessage-body vzb-dialog-scrollable">
-          <div class="vzb-errormessage-message"></div>
-          <div class="vzb-errormessage-expand"></div>
-          <pre class="vzb-errormessage-details vzb-hidden"></pre>
-        </div>
-      </div>
-    `;
-
-      super(config);
-    }
-
-    setup() {
-      this.DOM = {
-        background: this.element.select(".vzb-errormessage-background"),
-        container: this.element.select(".vzb-errormessage-box"),
-        close: this.element.select(".vzb-errormessage-close"),
-        hero: this.element.select(".vzb-errormessage-hero"),
-        title: this.element.select(".vzb-errormessage-title"),
-        message: this.element.select(".vzb-errormessage-message"),
-        expand: this.element.select(".vzb-errormessage-expand"),
-        details: this.element.select(".vzb-errormessage-details")
-      };
-      
-      this.element.classed("vzb-hidden", true);
-      this.DOM.background.on("click", () => {
-        this.toggle(true);
-      });
-      this.DOM.expand.on("click", () => {
-        this.DOM.details.classed("vzb-hidden", !this.DOM.details.classed("vzb-hidden"));
-      });
-    }
-
-    get MDL(){
-      return {
-        frame: this.model.encoding.frame
-      };
-    }
-
-    //this is a hack because MobX autorun onError would eat the error rethrowing from there doesn't help
-    rethrow(err){
-      setTimeout(function(){
-        throw(err);
-      }, 1);
-      setTimeout(function(){
-        throw("ERROR REACHED USER");
-      }, 1);
-    }
-
-    toggle(arg) {
-      if (arg == null) arg = !hidden$1;
-      hidden$1 = arg;
-      this.element.classed("vzb-hidden", hidden$1);
-
-      this.root.children.forEach(c => {
-        c.element.classed("vzb-blur", c != this && !hidden$1);
-      });
-    }
-
-    error(err){
-      if(!hidden$1) return console.warn("errorMessage: skipping action because already in error");
-
-      const localise = this.services.locale.status == "fulfilled"?
-        this.services.locale.auto()
-        : nop => nop;
-
-      this.DOM.title.text(localise(err.name));
-      this.DOM.message.text(localise(err.message));
-
-      this.DOM.expand
-        .style("display", err.details ? "block" : "none")
-        .html(localise("crash/expand"));
-
-      this.DOM.details
-        .style("display", err.details ? "block" : "none")
-        .text(JSON.stringify(err.details, null, 2));
-
-      this.toggle(false);
-
-      this.rethrow(err);
-    }
-  }
-
-
-  _ErrorMessage.DEFAULT_UI = {
-  };
-
-  //export default BubbleChart;
-  const ErrorMessage = mobx.decorate(_ErrorMessage, {
-    "MDL": mobx.computed
-  });
-
   /*!
    * VIZABI INDICATOR PICKER
    * Reusable indicator picker component
@@ -6843,9 +6226,111 @@
 
   }
 
+  class Facet extends BaseComponent {
+    // constructor(config) {
+    //   const facet = config.model.encoding.get("facet");
+
+    //   const {
+    //     COMP_CSSNAME,
+    //     COMP_TYPE
+    //   } = config.options;
+    //   const templateArray  = [];
+    //   const subcomponents = [];
+    //   const baseUI = config.baseUI;
+    //   config.baseUI = {};
+
+    //   const lastIndex = facet.filters.length;
+    //   for (let index = 0; index < lastIndex; index++) {
+    //     templateArray.push(
+    //       '<div class="' + COMP_CSSNAME + ' ' + COMP_CSSNAME + subcomponents.length + '"></div>'
+    //     )
+    //     subcomponents.push({
+    //       type: COMP_TYPE,
+    //       placeholder: "." + COMP_CSSNAME + subcomponents.length,
+    //       model: config.model,
+    //       name: "chart_" + index,
+    //       state: {
+    //         facet: {
+    //           index
+    //         },
+    //         alias: facet.alias
+    //       },
+    //       ui: config.ui,
+    //     });
+    //     config.baseUI["chart_" + index] = baseUI;
+    //   }
+
+    //   config.subcomponents = subcomponents;
+    //   config.template = templateArray.join("\n");
+
+    //   super(config);
+    // }
+    get MDL() {
+      return ({
+        facet: this.model.encoding.facet
+      })
+    }
+
+    draw() {
+      const facet = this.MDL.facet;
+      const rowEncoding = this.model.encoding[facet.rowEncoding];
+      const columnEncoding = this.model.encoding[facet.columnEncoding];
+
+      console.log(rowEncoding.data.dataDomain);
+      console.log(columnEncoding.data.dataDomain);
+    }
+
+    loading() {
+      this.addReaction(()=> {
+        this.element.style("grid-template-columns", Array(this.ui.columns).fill("1fr").join(" "));
+        this.element.style("grid-template-rows", Array(this.ui.rows).fill("1fr").join(" "));
+        this.element.style("grid-auto-flow", this.ui.direction);
+      });
+    }
+
+    resize() {
+      this.services.layout.size;
+
+      this.elementHeight = (this.element.node().clientHeight) || 0;
+      this.elementWidth = (this.element.node().clientWidth) || 0;
+
+      // this.ui.viewWH = { 
+      //   width: this.elementWidth / facet.column.length,
+      //   height: this.elementHeight / facet.row.length
+      // };
+      this.ui.viewWH.width = this.elementWidth / this.ui.columns,
+      this.ui.viewWH.height = this.elementHeight / this.ui.rows;
+
+    }
+
+    addClass() {
+      this.ui.rows - 1;
+      this.ui.columns - 1;
+      const lastIndex = facet.filters.length;
+      for (let index = 0; index < lastIndex; index++) {
+        index % this.ui.rows;
+        index % this.ui.columns;
+      }
+
+
+
+    }
+  //' vzb-sm-chart ' + classed + '
+  }
+
+  Facet.DEFAULT_UI = {
+    viewWH: {
+      width: 0,
+      height: 0
+    },
+    row: 1,
+    column: 1,
+    direction: "column"
+  };
+
   function key(d) {return d[Symbol.for("key")];}
 
-  const PROFILE_CONSTANTS$2 = {
+  const PROFILE_CONSTANTS$3 = {
     SMALL: {
       minLabelTextSize: 7,
       maxLabelTextSize: 21,
@@ -6866,7 +6351,7 @@
     }
   };
 
-  const PROFILE_CONSTANTS_FOR_PROJECTOR$2 = {
+  const PROFILE_CONSTANTS_FOR_PROJECTOR$3 = {
     MEDIUM: {
       minLabelTextSize: 15,
       maxLabelTextSize: 35,
@@ -7436,7 +6921,7 @@
     _updateLayoutProfile(){
       this.services.layout.size;
 
-      this.profileConstants = this.services.layout.getProfileConstants(PROFILE_CONSTANTS$2, PROFILE_CONSTANTS_FOR_PROJECTOR$2);
+      this.profileConstants = this.services.layout.getProfileConstants(PROFILE_CONSTANTS$3, PROFILE_CONSTANTS_FOR_PROJECTOR$3);
       this.height = (this.element.node().clientHeight) || 0;
       this.width = (this.element.node().clientWidth) || 0;
       if (!this.height || !this.width) return warn("Chart _updateProfile() abort: container is too little or has display:none");
@@ -7811,7 +7296,7 @@
     removeLabelBox: false
   };
 
-  const decorated$5 = mobx.decorate(Labels, {
+  const decorated$6 = mobx.decorate(Labels, {
     "MDL": mobx.computed
   });
 
@@ -7951,6 +7436,105 @@
     selectDomainMinMax: false,
     selectZoomedMinMax: true
   };
+
+  let hidden$1 = true;
+  class _ErrorMessage extends BaseComponent {
+    constructor(config) {
+      config.template = `
+      <div class="vzb-errormessage-background"></div>
+      <div class="vzb-errormessage-box">
+        <div class="vzb-errormessage-hero">🙄</div>
+        <div class="vzb-errormessage-title"></div>
+        <div class="vzb-errormessage-body vzb-dialog-scrollable">
+          <div class="vzb-errormessage-message"></div>
+          <div class="vzb-errormessage-expand"></div>
+          <pre class="vzb-errormessage-details vzb-hidden"></pre>
+        </div>
+      </div>
+    `;
+
+      super(config);
+    }
+
+    setup() {
+      this.DOM = {
+        background: this.element.select(".vzb-errormessage-background"),
+        container: this.element.select(".vzb-errormessage-box"),
+        close: this.element.select(".vzb-errormessage-close"),
+        hero: this.element.select(".vzb-errormessage-hero"),
+        title: this.element.select(".vzb-errormessage-title"),
+        message: this.element.select(".vzb-errormessage-message"),
+        expand: this.element.select(".vzb-errormessage-expand"),
+        details: this.element.select(".vzb-errormessage-details")
+      };
+      
+      this.element.classed("vzb-hidden", true);
+      this.DOM.background.on("click", () => {
+        this.toggle(true);
+      });
+      this.DOM.expand.on("click", () => {
+        this.DOM.details.classed("vzb-hidden", !this.DOM.details.classed("vzb-hidden"));
+      });
+    }
+
+    get MDL(){
+      return {
+        frame: this.model.encoding.frame
+      };
+    }
+
+    //this is a hack because MobX autorun onError would eat the error rethrowing from there doesn't help
+    rethrow(err){
+      setTimeout(function(){
+        throw(err);
+      }, 1);
+      setTimeout(function(){
+        throw("ERROR REACHED USER");
+      }, 1);
+    }
+
+    toggle(arg) {
+      if (arg == null) arg = !hidden$1;
+      hidden$1 = arg;
+      this.element.classed("vzb-hidden", hidden$1);
+
+      this.root.children.forEach(c => {
+        c.element.classed("vzb-blur", c != this && !hidden$1);
+      });
+    }
+
+    error(err){
+      if(!hidden$1) return console.warn("errorMessage: skipping action because already in error");
+
+      const localise = this.services.locale.status == "fulfilled"?
+        this.services.locale.auto()
+        : nop => nop;
+
+      this.DOM.title.text(localise(err.name));
+      this.DOM.message.text(localise(err.message));
+
+      this.DOM.expand
+        .style("display", err.details ? "block" : "none")
+        .html(localise("crash/expand"));
+
+      this.DOM.details
+        .style("display", err.details ? "block" : "none")
+        .text(JSON.stringify(err.details, null, 2));
+
+      this.toggle(false);
+
+      this.rethrow(err);
+    }
+  }
+
+
+  _ErrorMessage.DEFAULT_UI = {
+  };
+
+  //export default BubbleChart;
+  const ErrorMessage = mobx.decorate(_ErrorMessage, {
+    "MDL": mobx.computed
+  });
 
   class _Repeater extends BaseComponent {
 
@@ -8107,6 +7691,1093 @@
     }
 
   }
+
+  /*!
+   * VIZABI DIALOG
+   * Reusable Dialog component
+   */
+
+  const PROFILE_CONSTANTS$2 = {
+    SMALL: {},
+    MEDIUM: {},
+    LARGE: {}
+  };
+
+
+  const PROFILE_CONSTANTS_FOR_PROJECTOR$2 = {
+    SMALL: {},
+    MEDIUM: {},
+    LARGE: {}
+  };
+
+
+  const CollectionMixin = superClass => class extends superClass {
+    //static _collection = {};
+    static add(name, addedClass) {
+      CollectionMixin._collection[name] = addedClass;
+    }
+    static get(name) { return CollectionMixin._collection[name];}
+  };
+
+  CollectionMixin._collection = {};
+
+  class Dialog extends CollectionMixin(BaseComponent) {
+    constructor(config) {
+
+      super(config);
+    } 
+
+    setup() {
+      this.DOM = {
+        dialog: this.element.select(".vzb-dialog-modal"),
+        title: this.element.select(".vzb-dialog-modal>.vzb-dialog-title"),
+        buttons: d3.select(this.element.selectAll(".vzb-dialog-modal>.vzb-dialog-buttons").nodes().pop()),
+        content: this.element.select(".vzb-dialog-modal > .vzb-dialog-content"),
+        dragHandler: this.element.select("[data-click='dragDialog']"),
+        pinIcon: this.element.select("[data-click='pinDialog']")
+      };
+      this.transitionEvents = ["webkitTransitionEnd", "transitionend", "msTransitionEnd", "oTransitionEnd"];
+
+      this.state["opened"] = false;
+
+      const _this = this;
+
+      this.DOM.dragHandler.html(ICON_DRAG);
+      this.DOM.pinIcon.html(ICON_PIN);
+      this.DOM.pinIcon.on("click", () => {
+        this.setPin(!this.getPin());
+      });
+
+      const dg = dialogDrag(this.element, this.root.element, 10);
+      const dragBehavior = d3.drag()
+        .on("start", (event) => {
+          const topPos = _this.element.node().offsetTop;
+          _this.element.style("top", topPos + "px");
+          _this.element.style("bottom", "auto");
+          _this.element.dispatch("custom-dragstart");
+          dg.dragStart(event);
+        })
+        .on("drag", (event) => {
+          _this.element.dispatch("custom-drag");
+          dg.drag(event);
+        })
+        .on("end", () => {
+          _this.rightPos = _this.element.style("right");
+          _this.topPos = _this.element.style("top");
+          _this.element.dispatch("custom-dragend");
+        });
+      this.DOM.dragHandler.call(dragBehavior);
+    }
+
+    get MDL() {
+      return {
+        frame: this.model.encoding.frame,
+        selected: this.model.encoding.selected,
+        highlighted: this.model.encoding.highlighted
+      };
+    }
+
+
+    draw() {
+      this.localise = this.services.locale.auto();
+
+      this._localiseDialogTexts();
+
+      if (this._updateLayoutProfile()) return; //return if exists with error
+      this.addReaction(this._pinButtonUpdate);
+      this.addReaction(this._updateSize);
+    }
+
+    resize() {
+      
+    }
+
+    _localiseDialogTexts() {
+      const _this = this;
+      this.element.selectAll("span[data-localise]").each(function() {
+        const view = d3.select(this);
+        view.text(_this.localise(view.attr("data-localise")));
+      });
+    }
+
+    _updateLayoutProfile(){
+      this.services.layout.size;
+
+      this.profileConstants = this.services.layout.getProfileConstants(PROFILE_CONSTANTS$2, PROFILE_CONSTANTS_FOR_PROJECTOR$2);
+      this.height = this.element.node().clientHeight || 0;
+      this.width = this.element.node().clientWidth || 0;
+      if (!this.height || !this.width) return warn("Dialog _updateProfile() abort: container is too little or has display:none");
+    }
+
+    _updateSize() {
+      this.services.layout.size;
+      
+      if (this.element.classed("vzb-top-dialog")) {
+        this.element.classed("notransition", true);
+
+        const profile = this.services.layout.profile;
+
+        if (profile !== "SMALL") {
+          const chartWidth = this.root.element.node().offsetWidth || 0;
+          const chartHeight = this.root.element.node().offsetHeight || 0;
+          const dialogWidth = parseInt(this.element.style("width"), 10) || 0;
+          const dialogHeight = parseInt(this.element.style("height"), 10) || 0;
+
+          const dialogRight = parseInt(this.rightPos, 10);
+          const dialogTop = parseInt(this.topPos, 10);
+          const dialogRightMargin = parseInt(this.element.style("margin-right"), 10) || 0;
+          if (isNumber(dialogRight) && dialogRight > chartWidth - dialogWidth - dialogRightMargin) {
+            if (this.rightPos) {
+              this.rightPos = (chartWidth - dialogWidth - dialogRightMargin) + "px";
+              if (this.isOpen) this.element.style("right", this.rightPos);
+            }
+          }
+          if (isNumber(dialogTop) && isNumber(dialogHeight) && dialogTop >= 0 && dialogTop > chartHeight - dialogHeight) {
+            if (this.topPos) {
+              this.topPos = ((chartHeight - dialogHeight) > 0 ? (chartHeight - dialogHeight) : 0)  + "px";
+              if (this.isOpen) this.element.style("top", this.topPos);
+            }
+          }
+
+          if (this.topPos && (profile === "LARGE" && this.root.element.classed("vzb-dialog-expand-true"))) {
+            this.element.style("bottom", "auto");
+          }
+
+          if (this.root.element.classed("vzb-landscape")) ;
+          //this.element.style('top', this.topPos);
+          this.DOM.dialog.style("max-height", "");
+        } else {
+          this.rightPos = "";
+          this.topPos = "";
+          this.element.attr("style", "");
+          // var totalHeight = this.root.element.offsetHeight;
+          // if(this.root.element.classed('vzb-portrait')) totalHeight = totalHeight - 50;
+          // this.DOM.dialog.style('max-height', (totalHeight - 10) + 'px');
+        }
+
+        this.DOM.dragHandler.classed("vzb-hidden", profile === "SMALL");
+        this.DOM.pinIcon.classed("vzb-hidden", profile === "SMALL");
+
+        this._setMaxHeight();
+      }
+    }
+
+    _setMaxHeight() {
+      let totalHeight = this.root.element.node().offsetHeight;
+      const profile = this.services.layout.profile;
+      if (profile !== "SMALL") {
+        if (!this.topPos && (profile === "LARGE" && this.root.element.classed("vzb-dialog-expand-true"))) {
+          const dialogBottom = parseInt(this.element.style("bottom"), 10);
+          totalHeight -= dialogBottom;
+        } else {
+          const topPos = this.topPos ? parseInt(this.topPos, 10) : this.element.node().offsetTop;
+          totalHeight -= topPos;
+        }
+      } else {
+        totalHeight = this.root.element.classed("vzb-portrait") ? totalHeight - 50 : totalHeight - 10;
+      }
+
+      this.DOM.dialog.style("max-height", totalHeight + "px");
+
+      //set 'max-height' to content for IE11
+      const contentHeight = totalHeight - this.DOM.title.node().offsetHeight - ((this.DOM.buttons.node() || {}).offsetHeight || 0);
+      this.DOM.content.style("max-height", contentHeight + "px");
+    }
+
+    beforeOpen() {
+      const _this = this;
+
+      this.transitionEvents.forEach(event => {
+        _this.element.on(event, _this._transitionEnd.bind(_this, event));
+      });
+
+      this.element.classed("notransition", true);
+
+      this.element.style("top", ""); // issues: 369 & 442
+      this.element.style("bottom", ""); // issues: 369 & 442
+
+      if (this.topPos && this.services.layout.profile === "LARGE" && this.root.element.classed("vzb-dialog-expand-true")) {
+        const topPos = this.element.node().offsetTop;
+        this.element.style("top", topPos + "px"); // issues: 369 & 442
+        this.element.style("bottom", "auto"); // issues: 369 & 442
+      } else if (this.services.layout.profile !== "SMALL") ;
+
+      this.element.node().offsetTop;
+      this.element.classed("notransition", false);
+
+      if (this.services.layout.profile === "SMALL") {
+        this.element.style("top", ""); // issues: 369 & 442
+      } else if (this.root.element.classed("vzb-landscape")) ;
+
+    }
+
+    /**
+     * User has clicked to open this dialog
+     */
+    open() {
+      this.isOpen = true;
+      if (this.services.layout.profile !== "SMALL") {
+        if (this.topPos) {
+          this.element.style("top", this.topPos);
+          this.element.style("right", this.rightPos);
+        }
+      }
+    }
+
+    beforeClose() {
+      //issues: 369 & 442
+      if (this.root.element.classed("vzb-portrait") && this.services.layout.profile === "SMALL") {
+        this.element.style("top", "auto"); // issues: 369 & 442
+      }
+      if (this.services.layout.profile === "LARGE" && this.root.element.classed("vzb-dialog-expand-true")) {
+        this.topPos0 = this.topPos ? (this.element.node().parentNode.offsetHeight - this.element.node().offsetHeight) + "px" : "";
+      }
+      this.element.classed("notransition", false);
+      this.element.node().offsetHeight; // trigger a reflow (flushing the css changes)
+    }
+
+    /**
+     * User has closed this dialog
+     */
+    close() {
+      //issues: 369 & 442
+      if (!(this.root.element.classed("vzb-portrait") && this.services.layout.profile === "SMALL")) {
+        this.element.style("top", ""); // issues: 369 & 442
+        this.element.style("right", ""); // issues: 369 & 442
+      }
+
+      if (this.services.layout.profile === "LARGE" && this.root.element.classed("vzb-dialog-expand-true")) {
+        this.element.style("top", this.topPos0);
+        this.element.style("right", "");
+      }
+      this.isOpen = false;
+      //this.trigger("close");
+    }
+
+    _transitionEnd() {
+      const _this = this;
+
+      this.transitionEvents.forEach(event => {
+        _this.element.on(event, null);
+      });
+      if (this.isOpen) {
+        this.element.classed("notransition", true);
+      }
+    }
+
+    setOpen(state) {
+      this.ui.opened = state;
+    }
+
+    getOpen() {
+      return this.ui.opened;
+    }
+
+    setPin(state) {
+      this.ui.pinned = state;
+    }
+
+    getPin() {
+      return this.ui.pinned;
+    }
+
+    _pinButtonUpdate() {
+      this.element.classed("pinned", this.getPin());
+    }  
+  }
+
+  Dialog.DEFAULT_UI = {
+    opened: false,
+    pinned: false
+  };
+
+  const decorated$5 = mobx.decorate(Dialog, {
+    "MDL": mobx.computed
+  });
+
+  function dialogDrag(element, container, xOffset) {
+    let posX, posY, divTop, divRight, marginRight, marginLeft, xOffsetRight, xOffsetLeft, eWi, eHe, cWi, cHe, diffX, diffY;
+
+    return {
+      move(x, y) {
+        element.style("right", x + "px");
+        element.style("top", y + "px");
+      },
+
+      dragStart(evt) {
+        if (!isTouchDevice()) {
+          posX = evt.sourceEvent.clientX;
+          posY = evt.sourceEvent.clientY;
+        } else {
+          const touchCoord = d3.pointer(container.node());
+          posX = touchCoord[0][0];
+          posY = touchCoord[0][1];
+        }
+        divTop = parseInt(element.style("top")) || 0;
+        divRight = parseInt(element.style("right")) || 0;
+        marginLeft = parseInt(element.style("margin-left")) || 0;
+        marginRight = parseInt(element.style("margin-right")) || 0;
+        xOffsetLeft = Math.min(xOffset, marginLeft);
+        xOffsetRight = Math.min(xOffset, marginRight);
+        eWi = (parseInt(element.style("width"), 10) + marginLeft - xOffsetLeft) || 0;
+        eHe = parseInt(element.style("height"), 10) || 0;
+        cWi = (container.node().offsetWidth - marginRight) || 0;
+        cHe = container.node().offsetHeight || 0;
+        diffX = posX + divRight;
+        diffY = posY - divTop;
+      },
+
+      drag(evt) {
+        if (!isTouchDevice()) {
+          posX = evt.sourceEvent.clientX;
+          posY = evt.sourceEvent.clientY;
+        } else {
+          const touchCoord = d3.pointer(container.node());
+          posX = touchCoord[0][0];
+          posY = touchCoord[0][1];
+        }
+        let aX = -posX + diffX,
+          aY = posY - diffY;
+        if (aX < -xOffsetRight) aX = -xOffsetRight;
+        if (aY < 0) aY = 0;
+        if (aX + eWi > cWi) aX = cWi - eWi;
+        if (aY + eHe > cHe) aY = cHe - eHe;
+
+        this.move(aX, aY);
+      }
+    };
+  }
+
+  /*!
+   * VIZABI DIALOGS
+   * Reusable dialogs component
+   */
+
+  //default existing dialogs
+  const class_active$1 = "vzb-active";
+
+  class Dialogs extends BaseComponent {
+    constructor(config) {
+      const { sidebar = [], popup = []} = deepExtend(deepExtend({}, config.ui.dialogs), config.default_ui.dialogs);
+      const subcomponents = [];
+      const templateArray  = [];
+
+      const dialogList = unique([...sidebar, ...popup]);
+
+      dialogList.forEach(dlg => {      
+        subcomponents.push({
+          type: decorated$5.get(dlg),
+          placeholder: '.vzb-dialogs-dialog[data-dlg="' + dlg + '"]',
+          model: config.model,
+          name: dlg,
+        });
+
+        templateArray.push(
+          `<div data-dlg="${dlg}" class="vzb-top-dialog vzb-dialogs-dialog vzb-dialog-shadow"></div>`
+        );
+      });
+
+      config.subcomponents = subcomponents;
+      config.template = templateArray.join("\n");
+      super(config);
+    } 
+
+    setup() {
+      this.DOM = {
+
+      };
+
+      const _this = this;
+      this._curr_dialog_index = 20;
+      
+      this.element.selectAll(".vzb-top-dialog").data(this.children.map(c => ({ 
+        name: c.name
+      })))
+        .on("custom-dragstart", function(event, d) {
+          _this.bringForward(d.name);
+        })
+        .select(".vzb-top-dialog>.vzb-dialog-modal>.vzb-dialog-buttons>[data-click='closeDialog']")
+        .on("click", (event, d) => {
+          this.toggleDialogOpen(d.name, false);
+        });
+    }
+
+    resize() {
+      const _this = this;
+      const profile = this.services.layout.profile;
+
+      this.children.forEach(childComp => {
+        const dialogEl = childComp.element;
+        let cls = dialogEl.attr("class").replace(" vzb-popup", "").replace(" vzb-sidebar", "");
+
+        if (profile === "LARGE" && _this.ui.dialogs.sidebar.indexOf(childComp.name) > -1) {
+          cls += _this.root.ui.buttons.sidebarCollapse ? " vzb-popup" : " vzb-sidebar";
+          if (!_this.root.ui.buttons.sidebarCollapse) dialogEl.style("z-index", null);
+        } else if (_this.ui.dialogs.popup.indexOf(childComp.name) > -1) {
+          cls += " vzb-popup";
+        }
+
+        dialogEl.attr("class", cls);
+      });
+
+    }
+
+    toggleDialogOpen(name, forceState) {
+      mobx.runInAction(() => {
+        const dialog = this.findChild({ name });
+        if (!dialog) return;
+        const newState = forceState ? forceState : !dialog.getOpen();
+        dialog.setOpen(newState);
+
+        if(newState) {
+          this.openDialog(name);
+        } else {
+          this.closeDialog(name);
+        }
+      });
+    }
+
+    //TODO: make opening/closing a dialog via update and model
+    /*
+     * Activate a dialog
+     * @param {String} id dialog id
+     */
+    openDialog(name) {
+      //close pinned dialogs for small profile
+      const forceClose = this.services.layout.profile === "SMALL";
+      
+      //TODO
+      this.closeAllDialogs(forceClose);
+
+      const dialog = this.element.selectAll(".vzb-popup.vzb-dialogs-dialog[data-dlg='" + name + "']");
+
+      this._active_comp = this.findChild({ name });
+
+      this._active_comp.beforeOpen();
+      //add classes
+      dialog.classed(class_active$1, true);
+
+      this.bringForward(name);
+
+      //call component function
+      this._active_comp.open();
+    }
+
+    /*
+     * Closes a dialog
+     * @param {String} id dialog id
+     */
+    closeDialog(name) {
+      const dialog = this.element.selectAll(".vzb-popup.vzb-dialogs-dialog[data-dlg='" + name + "']");
+
+      this._active_comp = this.findChild({ name });
+
+      if (this._active_comp && !this._active_comp.isOpen) return;
+
+      if (this._active_comp.getPin())
+        this._active_comp.setPin(false);
+
+      if (this._active_comp) {
+        this._active_comp.beforeClose();
+      }
+      //remove classes
+      dialog.classed(class_active$1, false);
+
+      //call component close function
+      if (this._active_comp) {
+        this._active_comp.close();
+      }
+      this._active_comp = false;
+
+    }
+
+    /*
+    * Close all dialogs
+    */
+    closeAllDialogs(forceclose) {
+      const _this = this;
+      //remove classes
+      const dialogClass = forceclose ? ".vzb-popup.vzb-dialogs-dialog.vzb-active" : ".vzb-popup.vzb-dialogs-dialog.vzb-active:not(.pinned)";
+      const all_dialogs = this.element.selectAll(dialogClass);
+      all_dialogs.each(d => {
+        _this.toggleDialogOpen(d.name);
+      });
+    }
+
+    bringForward(name) {
+      const dialog = this.element.select(".vzb-popup.vzb-dialogs-dialog[data-dlg='" + name + "']");
+      dialog.style("z-index", this._curr_dialog_index);
+      this._curr_dialog_index += 10;
+    }
+  }
+
+  const HTML_ICON_PLAY = 
+    `<svg class="vzb-icon vzb-icon-play" viewBox="3 3 42 42"
+  xmlns="http://www.w3.org/2000/svg">
+  <path xmlns="http://www.w3.org/2000/svg" d="M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm-4 29V15l12 9-12 9z"/>
+  </svg>`;
+  const HTML_ICON_PAUSE =
+    `<svg class="vzb-icon vzb-icon-pause" viewBox="3 3 42 42"
+  xmlns="http://www.w3.org/2000/svg">
+  <path xmlns="http://www.w3.org/2000/svg" d="M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm-2 28h-4V16h4v16zm8 0h-4V16h4v16z"/>
+  </svg>`;
+  const HTML_ICON_LOADING =
+    `<div class='vzb-loader'></div>`;
+
+  class PlayButton extends BaseComponent {
+
+    constructor(config) {
+      config.template = 
+        `<button class="vzb-ts-btn">
+        <div class='vzb-loader'></div>
+      </button>`;
+      super(config);
+    }
+
+    setup() {
+      this.buttonEl = this.element.select(".vzb-ts-btn")
+        .on("click", () => {this.model.encoding.frame.togglePlaying();});
+    }
+
+    draw() {
+      this.buttonEl.html(this.model.encoding.frame.playing ? HTML_ICON_PAUSE : HTML_ICON_PLAY);
+    }
+
+    loading() {
+      this.buttonEl.html(HTML_ICON_LOADING);
+    }
+  }
+
+  const PROFILE_CONSTANTS$1 = {
+    SMALL: {
+      margin: {
+        top: 7,
+        right: 25,
+        bottom: 10,
+        left: 60
+      },
+      radius: 8,
+      label_spacing: 5
+    },
+    MEDIUM: {
+      margin: {
+        top: 0,
+        right: 25,
+        bottom: 10,
+        left: 55
+      },
+      radius: 9,
+      label_spacing: 5
+    },
+    LARGE: {
+      margin: {
+        top: -5,
+        right: 25,
+        bottom: 10,
+        left: 80
+      },
+      radius: 11,
+      label_spacing: 8
+    }
+  };
+
+
+  const PROFILE_CONSTANTS_FOR_PROJECTOR$1 = {
+    MEDIUM: {
+      margin: {
+        top: 9,
+        right: 25,
+        bottom: 10,
+        left: 55
+      }
+    },
+    LARGE: {
+      margin: {
+        top: -5,
+        right: 25,
+        bottom: 10,
+        left: 80
+      }
+    }
+  };
+
+  //constants
+  const class_playing = "vzb-playing";
+  const class_loading = "vzb-ts-loading";
+  const class_hide_play = "vzb-ts-hide-play-button";
+  const class_dragging = "vzb-ts-dragging";
+  const class_axis_aligned = "vzb-ts-axis-aligned";
+  const class_show_value = "vzb-ts-show-value";
+  const class_show_value_when_drag_play = "vzb-ts-show-value-when-drag-play";
+
+  class TimeSlider extends BaseComponent {
+
+    constructor(config){
+      config.subcomponents = [{
+        type: PlayButton,
+        placeholder: ".vzb-ts-btns",
+        //model: this.model
+      }];
+
+      config.template = `
+      <div class="vzb-ts-slider">
+        <svg class="vzb-ts-slider-svg">
+          <g>
+            <g class="vzb-ts-slider-axis"></g>
+            <g class="vzb-ts-slider-progress"></g>
+            <g class="vzb-ts-slider-select"></g>
+            <line class="vzb-ts-slider-forecastboundary"></line>
+            <circle class="vzb-ts-slider-handle"></circle>
+            <text class="vzb-ts-slider-value"></text>
+            <line class="vzb-ts-slider-slide"></line>
+          </g>
+        </svg>      
+      </div>
+      <div class="vzb-ts-btns"></div>
+    `;
+      super(config);
+    }
+
+    setup() {
+      this.DOM = {
+        //slider: this.element.select(".vzb-ts-slider")
+        slider_outer: this.element.select(".vzb-ts-slider-svg"),
+        axis: this.element.select(".vzb-ts-slider-axis"),
+        select: this.element.select(".vzb-ts-slider-select"),
+        progressBar: this.element.select(".vzb-ts-slider-progress"),
+        slide: this.element.select(".vzb-ts-slider-slide"),
+        forecastBoundary: this.element.select(".vzb-ts-slider-forecastboundary"),
+        handle: this.element.select(".vzb-ts-slider-handle"),
+        valueText: this.element.select(".vzb-ts-slider-value")
+      };
+
+      this.DOM.slider = this.DOM.slider_outer.select("g");
+
+      //Axis
+      this.xAxis = axisSmart$1("bottom");
+
+      const { valueText, slider, slide, slider_outer } = this.DOM;
+      //Value
+      valueText.classed("stroke", true);
+      if (!slider.style("paint-order").length) {
+        slider.insert("text", ".vzb-ts-slider-value")
+          .attr("class", "vzb-ts-slider-value stroke");
+
+        valueText.classed("stroke", false);
+      }
+      this.DOM.valueText = this.element.selectAll(".vzb-ts-slider-value")
+        .attr("text-anchor", "middle")
+        .attr("dy", "-0.7em");
+
+      //Slide
+      slide.call(d3.drag()
+        //.on("start.interrupt", function() { _this.slide.interrupt(); })
+        .on("start drag", event => this._brushed(event))
+        .on("end", event => this._brushedEnd(event))
+      );
+
+      slider_outer.on("mousewheel", (event) => {
+        //do nothing and dont pass the event on if we are currently dragging the slider
+        if (this.ui.dragging) {
+          event.stopPropagation();
+          event.preventDefault();
+          event.returnValue = false;
+          return false;
+        }
+      });
+
+      this.DOM.forecastBoundary.on("click", () => {
+        this.MDL.frame.setValueAndStop(this.root.ui.chart.endBeforeForecast);
+      });
+    }
+
+    get MDL() {
+      return {
+        frame: this.model.encoding.frame
+      };
+    }
+
+    draw() {
+      this.localise = this.services.locale.auto();
+      
+      this.element.classed(class_loading, false);
+
+      if (this._updateLayoutProfile()) return; //return if exists with error
+
+      this.addReaction(this._configEndBeforeForecast);
+      this.addReaction(this._adjustFrameScaleDomainConfig);
+      this.addReaction(this._updateSize);
+      this.addReaction(this._redrawForecast);
+      this.addReaction(this._optionClasses);
+      this.addReaction(this._processForecast);
+      this.addReaction(this._setHandle);
+
+    }
+
+    // _changeLimits() {
+    //   const minValue = this.model.time.start;
+    //   const maxValue = this.model.time.end;
+    //   //scale
+    //   this.xScale.domain([minValue, maxValue]);
+    //   //axis
+    //   this.xAxis.tickValues([minValue, maxValue])
+    //     .tickFormat(this.model.time.getFormatter());
+    // }
+
+    _updateLayoutProfile() {
+      this.services.layout.size;
+
+      this.profileConstants = this.services.layout.getProfileConstants(PROFILE_CONSTANTS$1, PROFILE_CONSTANTS_FOR_PROJECTOR$1);
+      this.height = this.element.node().clientHeight || 0;
+      this.width = this.element.node().clientWidth || 0;
+      if (!this.height || !this.width) return warn("Timeslider _updateProfile() abort: container is too little or has display:none");
+    }
+
+    get xScale() {
+      return this.MDL.frame.scale.d3Scale;
+    }
+
+    _configEndBeforeForecast() {
+      const frame = this.MDL.frame;
+      const { offset, floor } = this.services.Vizabi.Vizabi.utils.interval(frame.data.concept);
+      if (!this.root.ui.chart.endBeforeForecast) {
+        const stepBack = floor(offset(new Date(), -1));
+        this.root.ui.chart.endBeforeForecast = frame.formatValue(stepBack);
+      }
+      this.firstForecastFrame = offset(frame.parseValue(this.root.ui.chart.endBeforeForecast), +1);
+    }
+
+    _adjustFrameScaleDomainConfig() {
+      const frame = this.MDL.frame;
+      if (this.root.ui.chart.showForecast) {
+        delete frame.scale.config.domain;
+      } else {
+        const lastNonForecast = frame.parseValue(this.root.ui.chart.endBeforeForecast);
+        if (lastNonForecast && frame.data.domain[1] > lastNonForecast)
+          frame.scale.config.domain = [ frame.data.domain[0], lastNonForecast ]
+            .map(v => frame.formatValue(v));
+        else 
+          delete frame.scale.config.domain;
+      }
+    }
+
+    _processForecast() {
+      const frame = this.MDL.frame;
+      const lastNonForecast = frame.parseValue(this.root.ui.chart.endBeforeForecast);
+      const forecastPauseSetting = this.root.ui.chart.pauseBeforeForecast;
+      const equals = this.services.Vizabi.Vizabi.utils.equals;
+
+      // stop when 
+      // - first forecast value is reached, then set to previous year. This way animation finishes.
+      // - previous frame was reached while playing (= allowed)
+      if (frame.playing
+          && forecastPauseSetting 
+          && equals(frame.value, this.firstForecastFrame) 
+          && this.allowForecastPause
+      ) {
+        frame.setValueAndStop(lastNonForecast);
+      }
+
+      // set up pause if we're playing and we're on the last frame before pause (i.e. the frame we actually want to pause on)
+      this.allowForecastPause = frame.playing && equals(frame.value, lastNonForecast);
+    }
+
+    _redrawForecast() {
+      this.services.layout.size;
+
+      const endBeforeForecast = this.MDL.frame.parseValue(this.root.ui.chart.endBeforeForecast);
+      const forecastIsOn = this.root.ui.chart.showForecast && (this.MDL.frame.scale.domain[1] > endBeforeForecast);
+      this.DOM.forecastBoundary
+        .classed("vzb-hidden", !forecastIsOn);
+
+      if (forecastIsOn) {
+        const radius = this.profileConstants.radius;
+
+        this.DOM.forecastBoundary
+          .attr("transform", "translate(0," + this.height / 2 + ")")
+          .attr("x1", this.xScale(endBeforeForecast) - radius / 2)
+          .attr("x2", this.xScale(endBeforeForecast) + radius / 2)
+          .attr("y1", radius)
+          .attr("y2", radius);
+      }
+
+    }
+
+    /**
+     * Executes everytime the container or vizabi is resized
+     * Ideally,it contains only operations related to size
+     */
+    _updateSize() {
+      this.services.layout.size;
+
+      const {
+        margin,
+        radius,
+        label_spacing
+      } = this.profileConstants;
+
+      const {
+        slider,
+        slide,
+        axis,
+        handle,
+        select,
+        progressBar
+      } = this.DOM;
+
+      // const slider_w = parseInt(this.slider_outer.style("width"), 10) || 0;
+      // const slider_h = parseInt(this.slider_outer.style("height"), 10) || 0;
+
+      // if (!slider_h || !slider_w) return utils.warn("time slider resize() aborted because element is too small or has display:none");
+      const marginRight = this.services.layout.hGrid.length ? 
+        this.width - this.services.layout.hGrid[0]
+        : margin.right;
+      this.sliderWidth = this.width - margin.left - marginRight;
+      this.sliderHeight = this.height - margin.bottom - margin.top;
+
+      //translate according to margins
+      slider.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      this.MDL.frame.scale.config.range = [0, this.sliderWidth];
+
+      slide
+        .attr("transform", "translate(0," + this.sliderHeight / 2 + ")")
+        .attr("x1", this.xScale.range()[0])
+        .attr("x2", this.xScale.range()[1])
+        .style("stroke-width", radius * 2 + "px");
+
+      //adjust axis with scale
+      this.xAxis.scale(this.xScale)
+        .tickSizeInner(0)
+        .tickSizeOuter(0)
+        .tickPadding(label_spacing)
+        .tickSizeMinor(0, 0);
+
+      axis.attr("transform", "translate(0," + this.sliderHeight / 2 + ")")
+        .call(this.xAxis);
+
+      select.attr("transform", "translate(0," + this.sliderHeight / 2 + ")");
+      progressBar.attr("transform", "translate(0," + this.sliderHeight / 2 + ")");
+
+      //size of handle
+      handle.attr("transform", "translate(0," + this.sliderHeight / 2 + ")")
+        .attr("r", radius);
+
+      //this.sliderWidth = slider.node().getBoundingClientRect().width;
+
+      // this.resizeSelectedLimiters();
+      // this._resizeProgressBar();
+      // this._setHandle();
+
+    }
+
+    /**
+     * Returns width of slider text value.
+     * Parameters in this function needed for memoize function, so they are not redundant.
+     */
+    _getValueWidth() {
+      return this.valueText.node().getBoundingClientRect().width;
+    }
+
+    _brushed(event) {
+      const { frame } = this.MDL;
+      const { handle, valueText } = this.DOM;
+
+      if (frame.playing) {
+        frame.stopPlaying();
+      }
+
+      this.ui.dragging = true;
+      this.element.classed(class_dragging, this.ui.dragging);
+
+      let value;// = _this.brush.extent()[0];
+      //var value = d3.brushSelection(_this.slide.node());
+
+      //if(!value) return;
+
+      //set brushed properties
+
+      if (event.sourceEvent) {
+        // Prevent window scrolling on cursor drag in Chrome/Chromium.
+        event.sourceEvent.preventDefault();
+
+        //_this.model.time.dragStart();
+        let posX = event.x;
+        const maxPosX = this.sliderWidth;
+
+        const endBeforeForecast = frame.parseValue(this.root.ui.chart.endBeforeForecast);
+        const forecastBoundaryIsOn = this.root.ui.chart.showForecast && (frame.data.domain.at(-1) > endBeforeForecast);
+        const forecastBoundaryPos = this.xScale(endBeforeForecast);
+        const snappyMargin = 0.5 * handle.attr("r");
+
+        if (posX > maxPosX) {
+          posX = maxPosX;
+        } else if (posX < 0) {
+          posX = 0;
+        } else if ((Math.abs(posX - forecastBoundaryPos) < snappyMargin) && event.sourceEvent.shiftKey && forecastBoundaryIsOn) {
+          posX = forecastBoundaryPos;
+        }
+
+        value = this.xScale.invert(posX);
+        //set handle position
+        handle.attr("cx", posX);
+        valueText.attr("transform", "translate(" + posX + "," + (this.sliderHeight / 2) + ")");
+        valueText.text(this.localise(value));
+      }
+
+      //set time according to dragged position
+      if (value - this.MDL.frame.value !== 0) {
+        this._setTime(value);
+      }
+    }
+
+    /**
+     * Gets brushedEnd function to be executed when dragging ends
+     * @returns {Function} brushedEnd function
+     */
+    _brushedEnd() {
+      this.element.classed(class_dragging, this.ui.dragging);
+      this.MDL.frame.snap();
+      this.ui.dragging = false;
+    }
+
+    _setHandle() {
+      this.services.layout.size;
+      this.services.layout.hGrid;
+
+      const { value, speed, playing } = this.MDL.frame;
+
+      if (this.ui.dragging || this._isDomainNotVeryGood()) return;
+      const { handle, valueText } = this.DOM; 
+    
+      //this.slide.call(this.brush.extent([value, value]));
+      const newPos = this.xScale(value);
+      //this.brush.move(this.slide, [newPos, newPos])
+
+      //    this.valueText.text(this.model.time.formatDate(value));
+
+      //    var old_pos = this.handle.attr("cx");
+      //var newPos = this.xScale(value);
+      //if (_this.prevPosition == null) _this.prevPosition = newPos;
+      //const delayAnimations = newPos > _this.prevPosition ? this.model.time.delayAnimations : 0;
+      const delayAnimations = speed;
+      if (playing) {
+        handle//.attr("cx", _this.prevPosition)
+          .transition()
+          .duration(delayAnimations)
+          .ease(d3.easeLinear)
+          .attr("cx", newPos);
+
+        valueText//.attr("transform", "translate(" + _this.prevPosition + "," + (this.height / 2) + ")")
+          .transition("text")
+          .delay(delayAnimations)
+          .text(this.localise(value));
+        valueText
+          .transition()
+          .duration(delayAnimations)
+          .ease(d3.easeLinear)
+          .attr("transform", "translate(" + newPos + "," + (this.sliderHeight / 2) + ")");
+      } else {
+        handle
+          //cancel active transition
+          .interrupt()
+          .attr("cx", newPos);
+
+        valueText
+          //cancel active transition
+          .interrupt()
+          .interrupt("text")
+          .transition("text");
+        valueText
+          .attr("transform", "translate(" + newPos + "," + (this.sliderHeight / 2) + ")")
+          .text(this.localise(value));
+      }
+      //_this.prevPosition = newPos;
+
+    }
+
+    /**
+     * Sets the current time model to time
+     * @param {number} time The time
+     */
+    _setTime(time) {
+      //update state
+      const _this = this;
+      const frameRate = 50;
+
+      //avoid updating more than once in "frameRate"
+      var now = new Date();
+      if (this._updTime != null && now - this._updTime < frameRate) return;
+      this._updTime = now;
+      //const persistent = !this.model.time.dragging && !this.model.time.playing;
+      //_this.model.time.getModelObject("value").set(time, false, persistent); // non persistent
+      _this.MDL.frame.setValue(time);
+
+    }
+
+    /**
+     * Applies some classes to the element according to options
+     */
+    _optionClasses() {
+      //show/hide classes
+      const { frame } = this.MDL;
+
+      const show_ticks = this.ui.show_ticks;
+      const show_value = this.ui.show_value;
+      const show_value_when_drag_play = this.ui.show_value_when_drag_play;
+      const axis_aligned = this.ui.axis_aligned;
+      const show_play = (this.ui.show_button) && (frame.playable);
+
+      this.xAxis.labelerOptions({
+        scaleType: "time",
+        removeAllLabels: !show_ticks,
+        limitMaxTickNumber: 3,
+        showOuter: false,
+        toolMargin: {
+          left: 10,
+          right: 10,
+          top: 0,
+          bottom: 30
+        },
+        fitIntoScale: "optimistic"
+      });
+      this.DOM.axis
+        .classed("vzb-hidden", this.services.layout.projector)
+        .call(this.xAxis);
+
+      this.element.classed("vzb-ts-disabled", this._isDomainNotVeryGood());
+      this.element.classed(class_hide_play, !show_play);
+      this.element.classed(class_playing, frame.playing);
+      this.element.classed(class_show_value, show_value);
+      this.element.classed(class_show_value_when_drag_play, show_value_when_drag_play);
+      this.element.classed(class_axis_aligned, axis_aligned);
+    }
+
+    _isDomainNotVeryGood(){
+      const domain = this.xScale.domain();
+      //domain not available
+      if(!domain || domain.length !== 2) return true;
+      //domain inverted or shrunk to one point
+      if(domain[1] - domain[0] <= 0) return true;
+      //domain sucks in some other way
+      if(domain.some(s => s == null || isNaN(s))) return true;
+      return false;
+    }
+  }
+
+  TimeSlider.DEFAULT_UI = {
+    show_ticks: false,
+    show_value: false,
+    show_value_when_drag_play: true,
+    axis_aligned: false,
+    show_button: true,
+    dragging: false
+  };
+
+  const decorated$4 = mobx.decorate(TimeSlider, {
+    "xScale": mobx.computed,
+    "MDL": mobx.computed
+  });
 
   function spacesAreEqual$2(a, b){
     return a.concat().sort().join() === b.concat().sort().join();
@@ -8690,577 +9361,192 @@
 
   }
 
-  const decorated$4 = mobx.decorate(SteppedSlider, {
+  const decorated$3 = mobx.decorate(SteppedSlider, {
     "MDL": mobx.computed
   });
 
-  const HTML_ICON_PLAY = 
-    `<svg class="vzb-icon vzb-icon-play" viewBox="3 3 42 42"
-  xmlns="http://www.w3.org/2000/svg">
-  <path xmlns="http://www.w3.org/2000/svg" d="M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm-4 29V15l12 9-12 9z"/>
-  </svg>`;
-  const HTML_ICON_PAUSE =
-    `<svg class="vzb-icon vzb-icon-pause" viewBox="3 3 42 42"
-  xmlns="http://www.w3.org/2000/svg">
-  <path xmlns="http://www.w3.org/2000/svg" d="M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm-2 28h-4V16h4v16zm8 0h-4V16h4v16z"/>
-  </svg>`;
-  const HTML_ICON_LOADING =
-    `<div class='vzb-loader'></div>`;
+  /*!
+   * VIZABI ZOOMBUTTONLIST
+   * Reusable zoombuttonlist component
+   */
 
-  class PlayButton extends BaseComponent {
+  //default existing buttons
+  const class_active = "vzb-active";
+  // var class_active_locked = "vzb-active-locked";
+  // var class_hide_btn = "vzb-dialog-side-btn";
+  // var class_unavailable = "vzb-unavailable";
+  // var class_vzb_fullscreen = "vzb-force-fullscreen";
+  // var class_container_fullscreen = "vzb-container-fullscreen";
 
+  class ZoomButtonList extends BaseComponent {
     constructor(config) {
-      config.template = 
-        `<button class="vzb-ts-btn">
-        <div class='vzb-loader'></div>
-      </button>`;
+
       super(config);
-    }
+    } 
 
     setup() {
-      this.buttonEl = this.element.select(".vzb-ts-btn")
-        .on("click", () => {this.model.encoding.frame.togglePlaying();});
-    }
 
-    draw() {
-      this.buttonEl.html(this.model.encoding.frame.playing ? HTML_ICON_PAUSE : HTML_ICON_PLAY);
-    }
-
-    loading() {
-      this.buttonEl.html(HTML_ICON_LOADING);
-    }
-  }
-
-  const PROFILE_CONSTANTS$1 = {
-    SMALL: {
-      margin: {
-        top: 7,
-        right: 25,
-        bottom: 10,
-        left: 60
-      },
-      radius: 8,
-      label_spacing: 5
-    },
-    MEDIUM: {
-      margin: {
-        top: 0,
-        right: 25,
-        bottom: 10,
-        left: 55
-      },
-      radius: 9,
-      label_spacing: 5
-    },
-    LARGE: {
-      margin: {
-        top: -5,
-        right: 25,
-        bottom: 10,
-        left: 80
-      },
-      radius: 11,
-      label_spacing: 8
-    }
-  };
-
-
-  const PROFILE_CONSTANTS_FOR_PROJECTOR$1 = {
-    MEDIUM: {
-      margin: {
-        top: 9,
-        right: 25,
-        bottom: 10,
-        left: 55
-      }
-    },
-    LARGE: {
-      margin: {
-        top: -5,
-        right: 25,
-        bottom: 10,
-        left: 80
-      }
-    }
-  };
-
-  //constants
-  const class_playing = "vzb-playing";
-  const class_loading = "vzb-ts-loading";
-  const class_hide_play = "vzb-ts-hide-play-button";
-  const class_dragging = "vzb-ts-dragging";
-  const class_axis_aligned = "vzb-ts-axis-aligned";
-  const class_show_value = "vzb-ts-show-value";
-  const class_show_value_when_drag_play = "vzb-ts-show-value-when-drag-play";
-
-  class TimeSlider extends BaseComponent {
-
-    constructor(config){
-      config.subcomponents = [{
-        type: PlayButton,
-        placeholder: ".vzb-ts-btns",
-        //model: this.model
-      }];
-
-      config.template = `
-      <div class="vzb-ts-slider">
-        <svg class="vzb-ts-slider-svg">
-          <g>
-            <g class="vzb-ts-slider-axis"></g>
-            <g class="vzb-ts-slider-progress"></g>
-            <g class="vzb-ts-slider-select"></g>
-            <line class="vzb-ts-slider-forecastboundary"></line>
-            <circle class="vzb-ts-slider-handle"></circle>
-            <text class="vzb-ts-slider-value"></text>
-            <line class="vzb-ts-slider-slide"></line>
-          </g>
-        </svg>      
-      </div>
-      <div class="vzb-ts-btns"></div>
-    `;
-      super(config);
-    }
-
-    setup() {
-      this.DOM = {
-        //slider: this.element.select(".vzb-ts-slider")
-        slider_outer: this.element.select(".vzb-ts-slider-svg"),
-        axis: this.element.select(".vzb-ts-slider-axis"),
-        select: this.element.select(".vzb-ts-slider-select"),
-        progressBar: this.element.select(".vzb-ts-slider-progress"),
-        slide: this.element.select(".vzb-ts-slider-slide"),
-        forecastBoundary: this.element.select(".vzb-ts-slider-forecastboundary"),
-        handle: this.element.select(".vzb-ts-slider-handle"),
-        valueText: this.element.select(".vzb-ts-slider-value")
-      };
-
-      this.DOM.slider = this.DOM.slider_outer.select("g");
-
-      //Axis
-      this.xAxis = axisSmart$1("bottom");
-
-      const { valueText, slider, slide, slider_outer } = this.DOM;
-      //Value
-      valueText.classed("stroke", true);
-      if (!slider.style("paint-order").length) {
-        slider.insert("text", ".vzb-ts-slider-value")
-          .attr("class", "vzb-ts-slider-value stroke");
-
-        valueText.classed("stroke", false);
-      }
-      this.DOM.valueText = this.element.selectAll(".vzb-ts-slider-value")
-        .attr("text-anchor", "middle")
-        .attr("dy", "-0.7em");
-
-      //Slide
-      slide.call(d3.drag()
-        //.on("start.interrupt", function() { _this.slide.interrupt(); })
-        .on("start drag", event => this._brushed(event))
-        .on("end", event => this._brushedEnd(event))
-      );
-
-      slider_outer.on("mousewheel", (event) => {
-        //do nothing and dont pass the event on if we are currently dragging the slider
-        if (this.ui.dragging) {
-          event.stopPropagation();
-          event.preventDefault();
-          event.returnValue = false;
-          return false;
-        }
-      });
-
-      this.DOM.forecastBoundary.on("click", () => {
-        this.MDL.frame.setValueAndStop(this.root.ui.chart.endBeforeForecast);
-      });
-    }
-
-    get MDL() {
-      return {
-        frame: this.model.encoding.frame
-      };
-    }
-
-    draw() {
-      this.localise = this.services.locale.auto();
-      
-      this.element.classed(class_loading, false);
-
-      if (this._updateLayoutProfile()) return; //return if exists with error
-
-      this.addReaction(this._configEndBeforeForecast);
-      this.addReaction(this._adjustFrameScaleDomainConfig);
-      this.addReaction(this._updateSize);
-      this.addReaction(this._redrawForecast);
-      this.addReaction(this._optionClasses);
-      this.addReaction(this._processForecast);
-      this.addReaction(this._setHandle);
-
-    }
-
-    // _changeLimits() {
-    //   const minValue = this.model.time.start;
-    //   const maxValue = this.model.time.end;
-    //   //scale
-    //   this.xScale.domain([minValue, maxValue]);
-    //   //axis
-    //   this.xAxis.tickValues([minValue, maxValue])
-    //     .tickFormat(this.model.time.getFormatter());
-    // }
-
-    _updateLayoutProfile() {
-      this.services.layout.size;
-
-      this.profileConstants = this.services.layout.getProfileConstants(PROFILE_CONSTANTS$1, PROFILE_CONSTANTS_FOR_PROJECTOR$1);
-      this.height = this.element.node().clientHeight || 0;
-      this.width = this.element.node().clientWidth || 0;
-      if (!this.height || !this.width) return warn("Timeslider _updateProfile() abort: container is too little or has display:none");
-    }
-
-    get xScale() {
-      return this.MDL.frame.scale.d3Scale;
-    }
-
-    _configEndBeforeForecast() {
-      const frame = this.MDL.frame;
-      const { offset, floor } = this.services.Vizabi.Vizabi.utils.interval(frame.data.concept);
-      if (!this.root.ui.chart.endBeforeForecast) {
-        const stepBack = floor(offset(new Date(), -1));
-        this.root.ui.chart.endBeforeForecast = frame.formatValue(stepBack);
-      }
-      this.firstForecastFrame = offset(frame.parseValue(this.root.ui.chart.endBeforeForecast), +1);
-    }
-
-    _adjustFrameScaleDomainConfig() {
-      const frame = this.MDL.frame;
-      if (this.root.ui.chart.showForecast) {
-        delete frame.scale.config.domain;
-      } else {
-        const lastNonForecast = frame.parseValue(this.root.ui.chart.endBeforeForecast);
-        if (lastNonForecast && frame.data.domain[1] > lastNonForecast)
-          frame.scale.config.domain = [ frame.data.domain[0], lastNonForecast ]
-            .map(v => frame.formatValue(v));
-        else 
-          delete frame.scale.config.domain;
-      }
-    }
-
-    _processForecast() {
-      const frame = this.MDL.frame;
-      const lastNonForecast = frame.parseValue(this.root.ui.chart.endBeforeForecast);
-      const forecastPauseSetting = this.root.ui.chart.pauseBeforeForecast;
-      const equals = this.services.Vizabi.Vizabi.utils.equals;
-
-      // stop when 
-      // - first forecast value is reached, then set to previous year. This way animation finishes.
-      // - previous frame was reached while playing (= allowed)
-      if (frame.playing
-          && forecastPauseSetting 
-          && equals(frame.value, this.firstForecastFrame) 
-          && this.allowForecastPause
-      ) {
-        frame.setValueAndStop(lastNonForecast);
-      }
-
-      // set up pause if we're playing and we're on the last frame before pause (i.e. the frame we actually want to pause on)
-      this.allowForecastPause = frame.playing && equals(frame.value, lastNonForecast);
-    }
-
-    _redrawForecast() {
-      this.services.layout.size;
-
-      const endBeforeForecast = this.MDL.frame.parseValue(this.root.ui.chart.endBeforeForecast);
-      const forecastIsOn = this.root.ui.chart.showForecast && (this.MDL.frame.scale.domain[1] > endBeforeForecast);
-      this.DOM.forecastBoundary
-        .classed("vzb-hidden", !forecastIsOn);
-
-      if (forecastIsOn) {
-        const radius = this.profileConstants.radius;
-
-        this.DOM.forecastBoundary
-          .attr("transform", "translate(0," + this.height / 2 + ")")
-          .attr("x1", this.xScale(endBeforeForecast) - radius / 2)
-          .attr("x2", this.xScale(endBeforeForecast) + radius / 2)
-          .attr("y1", radius)
-          .attr("y2", radius);
-      }
-
-    }
-
-    /**
-     * Executes everytime the container or vizabi is resized
-     * Ideally,it contains only operations related to size
-     */
-    _updateSize() {
-      this.services.layout.size;
-
-      const {
-        margin,
-        radius,
-        label_spacing
-      } = this.profileConstants;
-
-      const {
-        slider,
-        slide,
-        axis,
-        handle,
-        select,
-        progressBar
-      } = this.DOM;
-
-      // const slider_w = parseInt(this.slider_outer.style("width"), 10) || 0;
-      // const slider_h = parseInt(this.slider_outer.style("height"), 10) || 0;
-
-      // if (!slider_h || !slider_w) return utils.warn("time slider resize() aborted because element is too small or has display:none");
-      const marginRight = this.services.layout.hGrid.length ? 
-        this.width - this.services.layout.hGrid[0]
-        : margin.right;
-      this.sliderWidth = this.width - margin.left - marginRight;
-      this.sliderHeight = this.height - margin.bottom - margin.top;
-
-      //translate according to margins
-      slider.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-      this.MDL.frame.scale.config.range = [0, this.sliderWidth];
-
-      slide
-        .attr("transform", "translate(0," + this.sliderHeight / 2 + ")")
-        .attr("x1", this.xScale.range()[0])
-        .attr("x2", this.xScale.range()[1])
-        .style("stroke-width", radius * 2 + "px");
-
-      //adjust axis with scale
-      this.xAxis.scale(this.xScale)
-        .tickSizeInner(0)
-        .tickSizeOuter(0)
-        .tickPadding(label_spacing)
-        .tickSizeMinor(0, 0);
-
-      axis.attr("transform", "translate(0," + this.sliderHeight / 2 + ")")
-        .call(this.xAxis);
-
-      select.attr("transform", "translate(0," + this.sliderHeight / 2 + ")");
-      progressBar.attr("transform", "translate(0," + this.sliderHeight / 2 + ")");
-
-      //size of handle
-      handle.attr("transform", "translate(0," + this.sliderHeight / 2 + ")")
-        .attr("r", radius);
-
-      //this.sliderWidth = slider.node().getBoundingClientRect().width;
-
-      // this.resizeSelectedLimiters();
-      // this._resizeProgressBar();
-      // this._setHandle();
-
-    }
-
-    /**
-     * Returns width of slider text value.
-     * Parameters in this function needed for memoize function, so they are not redundant.
-     */
-    _getValueWidth() {
-      return this.valueText.node().getBoundingClientRect().width;
-    }
-
-    _brushed(event) {
-      const { frame } = this.MDL;
-      const { handle, valueText } = this.DOM;
-
-      if (frame.playing) {
-        frame.stopPlaying();
-      }
-
-      this.ui.dragging = true;
-      this.element.classed(class_dragging, this.ui.dragging);
-
-      let value;// = _this.brush.extent()[0];
-      //var value = d3.brushSelection(_this.slide.node());
-
-      //if(!value) return;
-
-      //set brushed properties
-
-      if (event.sourceEvent) {
-        // Prevent window scrolling on cursor drag in Chrome/Chromium.
-        event.sourceEvent.preventDefault();
-
-        //_this.model.time.dragStart();
-        let posX = event.x;
-        const maxPosX = this.sliderWidth;
-
-        const endBeforeForecast = frame.parseValue(this.root.ui.chart.endBeforeForecast);
-        const forecastBoundaryIsOn = this.root.ui.chart.showForecast && (frame.data.domain.at(-1) > endBeforeForecast);
-        const forecastBoundaryPos = this.xScale(endBeforeForecast);
-        const snappyMargin = 0.5 * handle.attr("r");
-
-        if (posX > maxPosX) {
-          posX = maxPosX;
-        } else if (posX < 0) {
-          posX = 0;
-        } else if ((Math.abs(posX - forecastBoundaryPos) < snappyMargin) && event.sourceEvent.shiftKey && forecastBoundaryIsOn) {
-          posX = forecastBoundaryPos;
-        }
-
-        value = this.xScale.invert(posX);
-        //set handle position
-        handle.attr("cx", posX);
-        valueText.attr("transform", "translate(" + posX + "," + (this.sliderHeight / 2) + ")");
-        valueText.text(this.localise(value));
-      }
-
-      //set time according to dragged position
-      if (value - this.MDL.frame.value !== 0) {
-        this._setTime(value);
-      }
-    }
-
-    /**
-     * Gets brushedEnd function to be executed when dragging ends
-     * @returns {Function} brushedEnd function
-     */
-    _brushedEnd() {
-      this.element.classed(class_dragging, this.ui.dragging);
-      this.MDL.frame.snap();
-      this.ui.dragging = false;
-    }
-
-    _setHandle() {
-      this.services.layout.size;
-      this.services.layout.hGrid;
-
-      const { value, speed, playing } = this.MDL.frame;
-
-      if (this.ui.dragging || this._isDomainNotVeryGood()) return;
-      const { handle, valueText } = this.DOM; 
-    
-      //this.slide.call(this.brush.extent([value, value]));
-      const newPos = this.xScale(value);
-      //this.brush.move(this.slide, [newPos, newPos])
-
-      //    this.valueText.text(this.model.time.formatDate(value));
-
-      //    var old_pos = this.handle.attr("cx");
-      //var newPos = this.xScale(value);
-      //if (_this.prevPosition == null) _this.prevPosition = newPos;
-      //const delayAnimations = newPos > _this.prevPosition ? this.model.time.delayAnimations : 0;
-      const delayAnimations = speed;
-      if (playing) {
-        handle//.attr("cx", _this.prevPosition)
-          .transition()
-          .duration(delayAnimations)
-          .ease(d3.easeLinear)
-          .attr("cx", newPos);
-
-        valueText//.attr("transform", "translate(" + _this.prevPosition + "," + (this.height / 2) + ")")
-          .transition("text")
-          .delay(delayAnimations)
-          .text(this.localise(value));
-        valueText
-          .transition()
-          .duration(delayAnimations)
-          .ease(d3.easeLinear)
-          .attr("transform", "translate(" + newPos + "," + (this.sliderHeight / 2) + ")");
-      } else {
-        handle
-          //cancel active transition
-          .interrupt()
-          .attr("cx", newPos);
-
-        valueText
-          //cancel active transition
-          .interrupt()
-          .interrupt("text")
-          .transition("text");
-        valueText
-          .attr("transform", "translate(" + newPos + "," + (this.sliderHeight / 2) + ")")
-          .text(this.localise(value));
-      }
-      //_this.prevPosition = newPos;
-
-    }
-
-    /**
-     * Sets the current time model to time
-     * @param {number} time The time
-     */
-    _setTime(time) {
-      //update state
-      const _this = this;
-      const frameRate = 50;
-
-      //avoid updating more than once in "frameRate"
-      var now = new Date();
-      if (this._updTime != null && now - this._updTime < frameRate) return;
-      this._updTime = now;
-      //const persistent = !this.model.time.dragging && !this.model.time.playing;
-      //_this.model.time.getModelObject("value").set(time, false, persistent); // non persistent
-      _this.MDL.frame.setValue(time);
-
-    }
-
-    /**
-     * Applies some classes to the element according to options
-     */
-    _optionClasses() {
-      //show/hide classes
-      const { frame } = this.MDL;
-
-      const show_ticks = this.ui.show_ticks;
-      const show_value = this.ui.show_value;
-      const show_value_when_drag_play = this.ui.show_value_when_drag_play;
-      const axis_aligned = this.ui.axis_aligned;
-      const show_play = (this.ui.show_button) && (frame.playable);
-
-      this.xAxis.labelerOptions({
-        scaleType: "time",
-        removeAllLabels: !show_ticks,
-        limitMaxTickNumber: 3,
-        showOuter: false,
-        toolMargin: {
-          left: 10,
-          right: 10,
-          top: 0,
-          bottom: 30
+      this._available_buttons = {
+        "arrow": {
+          title: "buttons/cursorarrow",
+          icon: "cursorArrow",
+          func: this.toggleCursorMode.bind(this),
+          required: true,
+          statebind: "root.ui.chart.cursorMode",
+          statebindfunc: this.setCursorMode.bind(this)
         },
-        fitIntoScale: "optimistic"
+        "plus": {
+          title: "buttons/cursorplus",
+          icon: "cursorPlus",
+          func: this.toggleCursorMode.bind(this),
+          required: true,
+          statebind: "root.ui.chart.cursorMode",
+          statebindfunc: this.setCursorMode.bind(this)
+        },
+        "minus": {
+          title: "buttons/cursorminus",
+          icon: "cursorMinus",
+          func: this.toggleCursorMode.bind(this),
+          required: true,
+          statebind: "root.ui.chart.cursorMode",
+          statebindfunc: this.setCursorMode.bind(this)
+        },
+        "hand": {
+          title: "buttons/cursorhand",
+          icon: "cursorHand",
+          func: this.toggleCursorMode.bind(this),
+          required: true,
+          statebind: "root.ui.chart.cursorMode",
+          statebindfunc: this.setCursorMode.bind(this)
+        },
+        "hundredpercent": {
+          title: "buttons/hundredpercent",
+          icon: "hundredPercent",
+          func: this.toggleHundredPercent.bind(this),
+          required: true
+          // ,
+          // statebind: "ui.chart.trails",
+          // statebindfunc: this.setBubbleTrails.bind(this)
+        }
+      };  
+    }
+
+    draw() {
+
+      this.localise = this.services.locale.auto();
+
+      Object.keys(this._available_buttons).forEach(buttonId => {
+        const button = this._available_buttons[buttonId];
+        if (button && button.statebind) {
+          this.addReaction(() => {
+            button.statebindfunc(buttonId, getProp(this, button.statebind.split(".")));
+          });
+        }
       });
-      this.DOM.axis
-        .classed("vzb-hidden", this.services.layout.projector)
-        .call(this.xAxis);
 
-      this.element.classed("vzb-ts-disabled", this._isDomainNotVeryGood());
-      this.element.classed(class_hide_play, !show_play);
-      this.element.classed(class_playing, frame.playing);
-      this.element.classed(class_show_value, show_value);
-      this.element.classed(class_show_value_when_drag_play, show_value_when_drag_play);
-      this.element.classed(class_axis_aligned, axis_aligned);
+      this._addButtons(Object.keys(this._available_buttons), []);
+
     }
 
-    _isDomainNotVeryGood(){
-      const domain = this.xScale.domain();
-      //domain not available
-      if(!domain || domain.length !== 2) return true;
-      //domain inverted or shrunk to one point
-      if(domain[1] - domain[0] <= 0) return true;
-      //domain sucks in some other way
-      if(domain.some(s => s == null || isNaN(s))) return true;
-      return false;
+    /*
+     * adds buttons configuration to the components and template_data
+     * @param {Array} button_list list of buttons to be added
+     */
+    _addButtons(button_list, button_expand) {
+      const _this = this;
+      this._components_config = [];
+      const details_btns = [];
+      if (!button_list.length) return;
+      //add a component for each button
+      for (let i = 0; i < button_list.length; i++) {
+
+        const btn = button_list[i];
+        const btn_config = this._available_buttons[btn];
+
+        //add template data
+        const d = (btn_config) ? btn : "_default";
+        const details_btn = clone(this._available_buttons[d]);
+        if (d == "_default") {
+          details_btn.title = "buttons/" + btn;
+        }
+        details_btn.id = btn;
+        details_btn.icon = iconset["ICON_" + details_btn.icon.toUpperCase()];
+        details_btns.push(details_btn);
+      }
+
+      const t = this.localise;
+
+      this.element.selectAll("button").data(details_btns)
+        .enter().append("button")
+        .attr("class", d => {
+          let cls = "vzb-buttonlist-btn";
+          if (button_expand.length > 0) {
+            if (button_expand.indexOf(d.id) > -1) {
+              cls += " vzb-dialog-side-btn";
+            }
+          }
+
+          return cls;
+        })
+        .attr("data-btn", d => d.id)
+        .html(btn => "<span class='vzb-buttonlist-btn-icon fa'>" +
+            btn.icon + "</span><span class='vzb-buttonlist-btn-title'>" +
+            t(btn.title) + "</span>");
+
+      const buttons = this.element.selectAll(".vzb-buttonlist-btn");
+
+      //clicking the button
+      buttons.on("click", function(event, d) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        _this.proceedClick(d.id);
+      });
+      
     }
+
+    proceedClick(id) {
+      const _this = this;
+      const btn = _this.element.selectAll(".vzb-buttonlist-btn[data-btn='" + id + "']");
+      const classes = btn.attr("class");
+      const btn_config = _this._available_buttons[id];
+
+      if (btn_config && btn_config.func) {
+        btn_config.func(id);
+      } else {
+        const btn_active = classes.indexOf(class_active) === -1;
+
+        btn.classed(class_active, btn_active);
+        const evt = {};
+        evt["id"] = id;
+        evt["active"] = btn_active;
+        _this.trigger("click", evt);
+      }
+    }
+
+    setButtonActive(id, boolActive) {
+      const btn = this.element.selectAll(".vzb-buttonlist-btn[data-btn='" + id + "']");
+
+      btn.classed(class_active, boolActive);
+    }
+
+    toggleCursorMode(id) {
+      const value = id;
+      this.root.ui.chart.cursorMode = value;
+    }
+
+    setCursorMode(id, value) {
+      //const value = this.model.ui.cursorMode ? this.model.ui.cursorMode : "arrow";
+      this.element.selectAll(".vzb-buttonlist-btn")
+        .classed(class_active, d => d.id == value);
+    }
+
+    toggleHundredPercent() {
+      this.root.element.dispatch("custom-resetZoom");
+    }
+
   }
-
-  TimeSlider.DEFAULT_UI = {
-    show_ticks: false,
-    show_value: false,
-    show_value_when_drag_play: true,
-    axis_aligned: false,
-    show_button: true,
-    dragging: false
-  };
-
-  const decorated$3 = mobx.decorate(TimeSlider, {
-    "xScale": mobx.computed,
-    "MDL": mobx.computed
-  });
 
   const MENU_HORIZONTAL = 1;
   const MENU_VERTICAL = 2;
@@ -9280,6 +9566,7 @@
     leaf_content: "vzb-treemenu-leaf-content",
     leaf_content_item: "vzb-treemenu-leaf-content-item",
     leaf_content_item_title: "vzb-treemenu-leaf-content-item-title",
+    leaf_content_item_datasources: "vzb-treemenu-leaf-content-item-datasources",
     leaf_content_item_space: "vzb-treemenu-leaf-content-item-space",
     leaf_content_item_descr: "vzb-treemenu-leaf-content-item-descr",
     leaf_content_item_helptranslate: "vzb-treemenu-leaf-content-item-helptranslate",
@@ -9331,52 +9618,122 @@
   }
   class DeepLeaf{
 
-    constructor(context, entity){
+    constructor(context, view){
       this.context = context;
-      this.entity = entity;
+      this.view = view;
       this.spaceChanged = false;
+      this.encoding = this.context._targetModel;
+      this.datum = view.datum();
 
       this.buildLeaf();
     }
     
-    buildLeaf() {
-      const _this = this;
-      const leafDatum = this.entity.datum();
-      const encoding = this.context._targetModel;
+    _getDatumForDS(){    
+      return this.datum.byDataSources.find(f => f.dataSource == this.encoding.data.source) || this.datum.byDataSources[0];
+    }
+    _isSelectedConcept() {
+      return this.datum.id == this.encoding.data.concept;
+    }
 
-      this.entity.selectAll("div").remove();
+    buildLeaf() {        
+      this.view.selectAll("div").remove();
 
-      const leafContent = this.entity
-        .append("div").classed(css.leaf + " " + css.leaf_content + " vzb-dialog-scrollable", true)
+      const leafContent = this.view
+        .append("div").attr("class", `${css.leaf} ${css.leaf_content} vzb-dialog-scrollable`)
         .style("width", this.width + "px");
+      
+      this.DOM = {
+        title: leafContent.append("div")
+          .attr("class", `${css.leaf_content_item} ${css.leaf_content_item_title}`),
 
-      leafContent.append("div")
-        .classed(css.leaf_content_item + " " + css.leaf_content_item_title, true)
-        .text(replaceNumberSpacesToNonBreak(leafDatum.name) || "");
-      const spaceContainer = leafContent.append("div")
-        .classed(css.leaf_content_item + " " + css.leaf_content_item_space, true)
-        .on("click", event => {
-          event.stopPropagation();
-        });
-      leafContent.append("div")
-        .classed(css.leaf_content_item + " " + css.leaf_content_item_descr, true)
-        .text(replaceNumberSpacesToNonBreak(leafDatum.description) || "");
-      leafContent.append("div")
-        .classed(css.leaf_content_item + " " + css.leaf_content_item_helptranslate, true)
-        .classed("vzb-invisible", !leafDatum.translateContributionLink)
-        .html(`<a href="${leafDatum.translateContributionLink}" target="_blank">${leafDatum.translateContributionText}</a>`);
+        datasourceContainer: leafContent.append("div")
+          .attr("class", `${css.leaf_content_item} ${css.leaf_content_item_datasources}`)
+          .on("click", event => event.stopPropagation()),
 
-      const currentSpace = encoding.data.space;
-      const markerSpace = encoding.marker.data.space;
+        spaceContainer: leafContent.append("div")
+          .classed(css.leaf_content_item + " " + css.leaf_content_item_space, true)
+          .on("click", event => event.stopPropagation()),
 
-      const isSelectedConcept = () => leafDatum.id == encoding.data.concept;
-      const multipleSpacesAvailable = () => leafDatum.spaces.length > 1;
-      const shorterThanMarkerSpace = () => leafDatum.spaces[0].length < markerSpace.length;
+        descr: leafContent.append("div")
+          .attr("class", `${css.leaf_content_item} ${css.leaf_content_item_descr}`),
+
+        helptranslate: leafContent.append("div")
+          .attr("class", `${css.leaf_content_item} ${css.leaf_content_item_helptranslate}`)
+      };
+      
+      this.updateNameSection();
+      this.updateDatasoutceSection();
+      this.updateSpaceSection();
+      this.updateDescrSection();
+    }
+
+    updateNameSection(datumForDS = this._getDatumForDS()){
+      this.DOM.title.text(replaceNumberSpacesToNonBreak(datumForDS.name) || "");
+    }
+
+
+    updateDescrSection(datumForDS = this._getDatumForDS()){   
+      this.DOM.descr.text(replaceNumberSpacesToNonBreak(datumForDS.description || this.context.localise("hints/nodescr")));
+
+      this.DOM.helptranslate
+        .classed("vzb-invisible", !datumForDS.dataSource?.translateContributionLink)
+        .html(`<a href="${datumForDS.dataSource?.translateContributionLink}" target="_blank">${this.context.localise("dialogs/helptranslate")}</a>`);
+    }
+
+
+    updateDatasoutceSection(){
+      const _this = this;
+
+      if(this.datum.id == "_default") return;
+
+      const getDSColorLight = (v) => this.context.dsColorScaleLight(v.dataSource.id);
+      const getDSColorDark = (v) => this.context.dsColorScaleDark(v.dataSource.id);
+      const paintBackground = (v) => (v.dataSource == this.encoding.data.source) && this._isSelectedConcept() && multipleDataSourcesAvailable;        
+      const multipleDataSourcesAvailable = () => this.datum.byDataSources > 1;
+
+      if(this.context.ui.showDataSources){
+        this.DOM.datasourceContainer.selectAll("span")
+          .data(this.datum.byDataSources, v => v)
+          .enter().append("span")
+          //.text(v => v.dataSource.config.name)
+          .text(v => v.dataSource.id)
+          .on("mouseenter", function(event, v) {
+            d3.select(this).style("background-color", getDSColorLight(v));
+            _this.updateNameSection(v);
+            _this.updateDescrSection(v);
+          })
+          .on("mouseout", function(event, v) {
+            d3.select(this).style("background-color", paintBackground(v) ? getDSColorLight(v) : null);
+            _this.updateNameSection();
+            _this.updateDescrSection();
+          })
+          .on("click", function(event, v){
+            if(_this.DOM.spaceContainer.select("select").node()) _this.resetPickers();
+            _this.setDatasource(v);
+          });
+        
+        this.DOM.datasourceContainer.selectAll("span")
+          .style("pointer-events", this._isSelectedConcept() ? null : "none")
+          .style("border-color", getDSColorDark)
+          .style("background-color", v => paintBackground(v) ? getDSColorLight(v) : null);
+      }
+    }
+
+    updateSpaceSection(datumForDS = this._getDatumForDS()){
+      const _this = this;
+
+      if(this.datum.id == "_default") return;
+
+      const currentSpace = this.encoding.data.space;
+      const markerSpace = this.encoding.marker.data.space;
+
+      const multipleSpacesAvailable = () => datumForDS.spaces.length > 1;
+      const shorterThanMarkerSpace = () => datumForDS.spaces[0].length < markerSpace.length;
 
       //only build the UI for selecting spaces if many conditions are met
-      if(isSelectedConcept() && (multipleSpacesAvailable() || !spacesAreEqual$1(leafDatum.spaces[0], markerSpace) && !shorterThanMarkerSpace())) {
+      if(this._isSelectedConcept() && (multipleSpacesAvailable() || !spacesAreEqual$1(datumForDS.spaces[0], markerSpace) && !shorterThanMarkerSpace())) {
 
-        const spaceSelect = spaceContainer
+        const spaceSelect = this.DOM.spaceContainer
           .append("select")
           .attr("name", "vzb-select-treemenu-leaf-space")
           .attr("id", "vzb-select-treemenu-leaf-space")
@@ -9387,25 +9744,26 @@
     
         spaceSelect
           .selectAll("option")
-          .data(leafDatum.spaces)
+          .data(datumForDS.spaces)
           .enter().append("option")
           .attr("value", option => option.join())
-          .text(option => "by " + getSpaceName(encoding, option));
+          .text(option => "by " + getSpaceName(this.encoding, option));
     
         spaceSelect
           .property("value", currentSpace.join());
         
-        spaceContainer.append("div")
+        this.DOM.spaceContainer.append("div")
           .attr("class","vzb-treemenu-leaf-space-compliment");
 
-        spaceContainer.append("div")
+        this.DOM.spaceContainer.append("div")
           .attr("class","vzb-hidden vzb-treemenu-leaf-space-reset")
           .text("Reset")
           .on("click", () => {
             this.resetPickers();
+            this.setModel();
           });
 
-        spaceContainer.append("div")
+        this.DOM.spaceContainer.append("div")
           .attr("class","vzb-hidden vzb-treemenu-leaf-space-apply")
           .text("Apply")
           .on("click", () => {
@@ -9419,12 +9777,11 @@
 
     updateComplimentSetters() {
       const _this = this;
-      const spaceContainer = this.entity.select("div." + css.leaf_content_item_space);
       const encoding = this.context._targetModel;
-      const compliment = this.context.services.Vizabi.Vizabi.utils.relativeComplement(encoding.marker.data.space, this.getSelectedSpace());
+      const compliment = this.context.services.Vizabi.Vizabi.utils.relativeComplement(encoding.marker.data.space, this._getSelectedSpace());
       
       requestEntityNames(encoding.data.source, compliment).then(dims => {
-        let dimSetters = spaceContainer.select("div.vzb-treemenu-leaf-space-compliment")
+        let dimSetters = this.DOM.spaceContainer.select("div.vzb-treemenu-leaf-space-compliment")
           .selectAll("div.vzb-treemenu-leaf-space-compliment-setter")
           .data(dims, d => d.dim);
 
@@ -9445,7 +9802,7 @@
               .attr("id", d.dim + "_extraDim")
               .on("change", () => {
                 _this.spaceChanged = true;
-                _this.updateResetApply();
+                _this.updateResetApplyButtons();
               });
 
             select.selectAll("option")
@@ -9470,22 +9827,22 @@
           });   
           
           
-        this.updateResetApply();
+        this.updateResetApplyButtons();
       });
     }
 
 
-    getSelectedSpace() {
-      const node = this.entity.select("div." + css.leaf_content_item_space)
+    _getSelectedSpace() {
+      const node = this.view.select("div." + css.leaf_content_item_space)
         .select("select").node();
       return d3.select(node.options[node.selectedIndex]).datum();
     }
 
 
-    getSelectedFilter() {
+    _getSelectedFilter() {
       const filter = {};
       let invalidFilter = false;
-      this.entity.select("div." + css.leaf_content_item_space)
+      this.view.select("div." + css.leaf_content_item_space)
         .select("div.vzb-treemenu-leaf-space-compliment")
         .selectAll("select")
         .each(function(d){ 
@@ -9497,14 +9854,14 @@
     }
 
 
-    updateResetApply() {
+    updateResetApplyButtons(datumForDS = this._getDatumForDS()) {
       const currentSpace = this.context.targetModel().data.space;
-      const defaultSpace = this.context.getNearestSpaceToMarkerSpace(this.entity.datum().spaces);
+      const defaultSpace = this.context.getNearestSpaceToMarkerSpace(datumForDS.spaces);
 
-      const selectedSpace = this.getSelectedSpace();
-      const selectedFilter = this.getSelectedFilter();
+      const selectedSpace = this._getSelectedSpace();
+      const selectedFilter = this._getSelectedFilter();
 
-      const spaceContainer = this.entity.select("div." + css.leaf_content_item_space);
+      const spaceContainer = this.view.select("div." + css.leaf_content_item_space);
       spaceContainer.select(".vzb-treemenu-leaf-space-reset")
         .classed("vzb-hidden", spacesAreEqual$1(currentSpace, defaultSpace));
       spaceContainer.select(".vzb-treemenu-leaf-space-apply")
@@ -9513,22 +9870,28 @@
     }
 
 
-    resetPickers() {
-      const defaultSpace = this.context.getNearestSpaceToMarkerSpace(this.entity.datum().spaces);
+    resetPickers(datumForDS = this._getDatumForDS()) {
+      const defaultSpace = this.context.getNearestSpaceToMarkerSpace(datumForDS.spaces);
       
-      this.entity.select("div." + css.leaf_content_item_space)
+      this.view.select("div." + css.leaf_content_item_space)
         .select("select")
         .property("value", defaultSpace.join());
 
       this.updateComplimentSetters();
-      this.setModel();
     }
 
+
+    setDatasource(datumForDS = this._getDatumForDS()){
+      const encoding = this.context._targetModel;
+      mobx.runInAction(()=>{
+        encoding.data.config.source = datumForDS.dataSource.id;
+      });
+    }
     
     setModel() {
       const encoding = this.context._targetModel;
-      const selectedSpace = this.getSelectedSpace();
-      const selectedFilter = this.getSelectedFilter() || {};
+      const selectedSpace = this._getSelectedSpace();
+      const selectedFilter = this._getSelectedFilter() || {};
 
       mobx.runInAction(()=>{
         encoding.data.config.space = selectedSpace;
@@ -10049,6 +10412,18 @@
     }
   };
 
+  function getItemName(item){
+    if (item.type == "indicator"){
+      return item.byDataSources.map(m => m.name_catalog)
+        .concat(item.byDataSources.map(m => m.name))
+        .concat(item.id)
+        .filter(f => f)
+        [0]
+    } else {
+      return item.name_catalog || item.name || item.id;
+    }
+  }
+
 
   function resolveDefaultScales(concept) {
     if (concept.scales) return JSON.parse(concept.scales);
@@ -10139,12 +10514,7 @@
       this.removeReaction(this._targetModelReaction);
       this._targetModel = input;
       this._targetProp = null;
-      if (this._targetModelIsEncoding) {
-        this._targetProp = ["data", "concept"];
-      }
-      if (this._targetModelIsMarker) {
-        this._targetProp = ["data", "space"];
-      }
+      this._targetProp = ["data", "concept"];
       this.addReaction(this._targetModelReaction);
 
       return this;
@@ -10156,18 +10526,8 @@
       return this;
     }
 
-    get _targetModelIsEncoding() {
-      return this._targetModel && this._targetModel.hasOwnProperty("marker");
-    }
-
-    get _targetModelIsMarker() {
-      return this._targetModel && this._targetModel.hasOwnProperty("encoding");
-    }
-
     _targetModelReaction() {
-      if (this._targetModelIsEncoding) {
-        getProp(this._targetModel, ["scale", "type"]);
-      }
+      getProp(this._targetModel, ["scale", "type"]);
       getProp(this._targetModel, this._targetProp);
       this.updateView();
     }
@@ -10252,13 +10612,25 @@
       return {tags, tagsRoot: tags[ROOT]};
     }
 
+    _addIndicatorToTheTree(id, item, folder) {
+      const existing = folder.children.find(f => f.id == id);
+      if (existing) {
+        //add to an existing item group
+        existing.byDataSources.push(item);
+      } else {
+        //create a new item group
+        folder.children.push({ id: id, type: "indicator", byDataSources: [item] });
+      }
+      return folder;
+    }
+
     _buildIndicatorsTree({ tagsArray, dataModels }) {
 
       let consoleGroupOpen = false;
       const {tags, tagsRoot} = this._buildTagFolderTree({ tagsArray, dataModels });
 
       //add constant pseudoconcept
-      tagsRoot.children.push({id: "_default", type: "indicator", spaces: [[]]});
+      this._addIndicatorToTheTree("_default", { spaces: [[]] }, tagsRoot);
 
       const nest = this._nestAvailabilityByConcepts(this._getAvailability());
       const filtervl = this._conceptsCompatibleWithMarkerSpace(nest, this.model.data.space);
@@ -10276,20 +10648,18 @@
         .filter(f => !f.concept.tags || f.concept.tags !== "_none")
         .forEach(({concept, spaces, source}) => {
 
+          const id = concept.concept;
           const props = {
-            id: concept.concept,
+            dataSource: source,
             spaces,
             name: concept.name,
             name_catalog: concept.name_catalog,
-            description: concept.description,
-            dataSource: this._getSourceName(source),
-            translateContributionLink: source.translateContributionLink,
-            type: "indicator"
+            description: concept.description
           };
 
           if (concept.concept_type == "time" || concept.concept == "_default"){
             //special concepts
-            tagsRoot.children.push(props);
+            this._addIndicatorToTheTree(id, props, tagsRoot);
 
           } else if (concept.concept_type == "entity_domain" || concept.concept_type == "entity_set") {
             //entity sets and domains
@@ -10299,7 +10669,7 @@
               tags[folderName] = { id: folderName, name: keyConcept.name + " properties", type: "folder", children: [] };
               tagsRoot.children.push(tags[folderName]);
             }
-            tags[folderName].children.push(props);
+            this._addIndicatorToTheTree(id, props, tags[folderName]);
 
           } else {
             //regulat indicators
@@ -10307,7 +10677,7 @@
             conceptTags.split(",").forEach(tag => {
               tag = tag.trim();
               if (tags[tag]) {
-                tags[tag].children.push(props);
+                this._addIndicatorToTheTree(id, props, tags[tag]);
               } else {
                 //if entry's tag is not found in the tag dictionary
                 if (!consoleGroupOpen) {
@@ -10315,29 +10685,13 @@
                   consoleGroupOpen = true;
                 }
                 warn("tag '" + tag + "' for indicator '" + props.id + "'");
-                tagsRoot.children.push(props);
+                this._addIndicatorToTheTree(id, props, tagsRoot);
               }
             });
 
           }
         });
 
-      /**
-       * KEY-AVAILABILITY (dimensions for marker space-menu)
-       */
-      this.model.spaceAvailability.forEach(space => {
-        //TODO: get concept for space
-        if (space.length < 2) return;
-        
-        tagsRoot.children.push({
-          id: space.join(","),
-          name: space.join(", "),
-          name_catalog: space.join(", "),
-          description: "no description",
-          dataSource: "All data sources",
-          type: "space"
-        });
-      });
 
       if (consoleGroupOpen) console.groupEnd();
       this._sortChildren(tagsRoot);
@@ -10365,7 +10719,7 @@
               if (b.id == "_default") return -1;
             }
             //sort items alphabetically. folders go down because of the emoji folder in the beginning of the name
-            return (a.name_catalog || a.name) > (b.name_catalog || b.name) ? 1 : -1;
+            return getItemName(a) > getItemName(b) ? 1 : -1;
           })
       );
 
@@ -10622,7 +10976,9 @@
         //translation integration
         const translationMatch = function(value, data, i) {
 
-          let translate = data[i].name;
+          //search name in all datasources
+          const item = data[i];
+          let translate = item.type == "folder" && item.name || item.type == "indicator" && item.byDataSources.map(m => m.name).join();
           if (!translate && _this.localise) {
             const t1 = _this.localise("indicator" + "/" + data[i][_this.OPTIONS.SEARCH_PROPERTY] + "/" + _this._targetModel._type);
             translate =  t1 || _this.localise("indicator/" + data[i][_this.OPTIONS.SEARCH_PROPERTY]);
@@ -10671,6 +11027,7 @@
     }
 
     _selectIndicator(concept) {
+      if(concept.id == this._targetModel.data.concept) return;
       this._setModelWhich(concept);
       this.toggle();
     }
@@ -10679,8 +11036,6 @@
     //function is redrawing data and built structure
     redraw(data, useDataFiltered) {
       const _this = this;
-
-      const isEncoding = _this._targetModelIsEncoding;
 
       let dataFiltered, allowedIDs;
 
@@ -10691,65 +11046,63 @@
         });
       });
 
-      const targetModelType = _this._targetModel.name || _this._targetModel.config.type;
+      const targetModelName = _this._targetModel.name || _this._targetModel.config.type;
 
       if (useDataFiltered) {
         dataFiltered = data;
       } else {
         if (data == null) data = this._indicatorsTree;
 
-        if (isEncoding) {
-          allowedIDs = keys(indicatorsDB).filter(f => {
+        allowedIDs = keys(indicatorsDB).filter(f => {
 
-            //check if indicator is denied to show with allow->names->!indicator
-            if (_this._targetModel.data.allow && _this._targetModel.data.allow.names) {
-              if (_this._targetModel.data.allow.names.indexOf("!" + f) != -1) return false;
-              if (_this._targetModel.data.allow.names.indexOf(f) != -1) return true;
-              if (_this._targetModel.data.allow.namesOnlyThese) return false;
+          //check if indicator is denied to show with allow->names->!indicator
+          if (_this._targetModel.data.allow && _this._targetModel.data.allow.names) {
+            if (_this._targetModel.data.allow.names.indexOf("!" + f) != -1) return false;
+            if (_this._targetModel.data.allow.names.indexOf(f) != -1) return true;
+            if (_this._targetModel.data.allow.namesOnlyThese) return false;
+          }
+
+          const allowedTypes = _this._targetModel.scale.allowedTypes;
+          const isEntity = indicatorsDB[f].concept_type == "entity_domain" || indicatorsDB[f].concept_type == "entity_set";
+          const isMeasure = indicatorsDB[f].concept_type == "measure";
+          const isTime = indicatorsDB[f].concept_type == "time";
+          const isConstant = f === "_default"; //TODO: refactor constants
+          const indicatorScales = JSON.parse(indicatorsDB[f].scales || null);
+
+          //keep indicator if nothing is specified in tool properties or if any scale is allowed explicitly
+          if (!allowedTypes || !allowedTypes.length || allowedTypes[0] == "*") return true;
+
+          //match specific scale types if defined
+          if(indicatorScales) {
+            for (let i = indicatorScales.length - 1; i >= 0; i--) {
+              if (allowedTypes.includes(indicatorScales[i])) return true;
             }
+          }
 
-            const allowedTypes = _this._targetModel.scale.allowedTypes;
-            const isEntity = indicatorsDB[f].concept_type == "entity_domain" || indicatorsDB[f].concept_type == "entity_set";
-            const isMeasure = indicatorsDB[f].concept_type == "measure";
-            const isTime = indicatorsDB[f].concept_type == "time";
-            const isConstant = f === "_default"; //TODO: refactor constants
-            const indicatorScales = JSON.parse(indicatorsDB[f].scales || null);
+          //otherwise go by concept types
+          if (isEntity){
+            //for entities need an ordinal scale to be allowed at this point
+            if (allowedTypes.includes("ordinal")) return true;
+          } else if (isConstant) {
+            //for constants need a ordinal scale to be allowed
+            if (allowedTypes.includes("ordinal")) return true;
+          } else if (isMeasure){
+            // for measures need linear or log or something
+            if (allowedTypes.includes("linear") || allowedTypes.includes("log")
+              || allowedTypes.includes("genericLog") || allowedTypes.includes("pow")) return true;
+          } else if (isTime) {
+            if (allowedTypes.includes("time")) return true;
+          }
 
-            //keep indicator if nothing is specified in tool properties or if any scale is allowed explicitly
-            if (!allowedTypes || !allowedTypes.length || allowedTypes[0] == "*") return true;
-
-            //match specific scale types if defined
-            if(indicatorScales) {
-              for (let i = indicatorScales.length - 1; i >= 0; i--) {
-                if (allowedTypes.includes(indicatorScales[i])) return true;
-              }
-            }
-
-            //otherwise go by concept types
-            if (isEntity){
-              //for entities need an ordinal scale to be allowed at this point
-              if (allowedTypes.includes("ordinal")) return true;
-            } else if (isConstant) {
-              //for constants need a ordinal scale to be allowed
-              if (allowedTypes.includes("ordinal")) return true;
-            } else if (isMeasure){
-              // for measures need linear or log or something
-              if (allowedTypes.includes("linear") || allowedTypes.includes("log")
-                || allowedTypes.includes("genericLog") || allowedTypes.includes("pow")) return true;
-            } else if (isTime) {
-              if (allowedTypes.includes("time")) return true;
-            }
-
-            return false;
-          });
-          dataFiltered = pruneTree(data, f => allowedIDs.includes(f.id) && f.type == "indicator" && this._targetModel.data.allow.space.filter(f.spaces[0]));
-        } else if (_this._targetModelIsMarker) {
-          allowedIDs = data.children.map(child => child.id);
-          dataFiltered = pruneTree(data, f => f.type == "space");
-        } else {
-          allowedIDs = keys(indicatorsDB);
-          dataFiltered = pruneTree(data, f => allowedIDs.indexOf(f.id) > -1);
-        }
+          return false;
+        });
+        const satisfiesAllowedSpaces = (item) => {
+          //optionally check if at least one space in at least one space of at least one DS of a menu item satisfies the "allow.space" filter
+          let spacesFromAllDS = [];
+          item.byDataSources.forEach(item => spacesFromAllDS = spacesFromAllDS.concat(item.spaces));
+          return spacesFromAllDS.some(space => this._targetModel.data.allow.space.filter(space));          
+        };
+        dataFiltered = pruneTree(data, f => allowedIDs.includes(f.id) && f.type == "indicator" && satisfiesAllowedSpaces(f));
 
         this.dataFiltered = dataFiltered;
       }
@@ -10761,10 +11114,7 @@
       if (this._title || this._title === "") {
         title = this._title;
       } else {
-        title = this.localise(
-          _this._targetModelIsMarker ? _this._targetModel.name + "/" + _this._targetModel.name
-            : "buttons/" + (isEncoding ? _this._targetModel.name : (targetModelType + "/" + _this._targetProp))
-        );
+        title = this.localise("buttons/" + targetModelName);
       }
       this.element.select("." + css.title).select("span")
         .text(title);
@@ -10805,11 +11155,11 @@
         const concept = indicatorsDB[pointer];
         if (!concept) error("Concept properties of " + pointer + " are missing from the set, or the set is empty. Put a breakpoint here and check what you have in indicatorsDB");
 
-        const scaleTypesData = isEncoding ? resolveDefaultScales(concept).filter(f => {
+        const scaleTypesData = resolveDefaultScales(concept).filter(f => {
           if (!_this._targetModel.data.allow || !_this._targetModel.data.allow.scales) return true;
           if (_this._targetModel.data.allow.scales[0] == "*") return true;
           return _this._targetModel.data.allow.scales.indexOf(f) > -1;
-        }) : [];
+        });
         if (scaleTypesData.length == 0) {
           this.element.select("." + css.scaletypes).classed(css.hidden, true);
         } else {
@@ -10842,9 +11192,7 @@
     _createSubmenu(select, data, toplevel) {
       if (!data.children) return;
       const _this = this;
-      const noDescriptionText = _this.localise("hints/nodescr");
-      const helpTranslateText = _this.localise("dialogs/helptranslate");
-      const targetModelType = _this._targetModel.name;
+      const targetModelName = _this._targetModel.name || _this._targetModel.config.type;
       const _select = toplevel ? select : select.append("div")
         .classed(css.list_outer, true);
 
@@ -10864,6 +11212,13 @@
         // })
         .attr("children", d => d.children ? "true" : null)
         .attr("type", d => d.type ? d.type : null)
+        .style("color", d => {
+          if (this.ui.showDataSources && d.type == "indicator" && d.id !== "_default" && d.byDataSources.length == 1) {
+            return this.dsColorScaleDark(d.byDataSources[0].dataSource.id);
+          } else {
+            return null;
+          }
+        })
         .on("click", function(event, d) {
           const view = d3.select(this);
           //only for leaf nodes
@@ -10874,7 +11229,7 @@
         .append("span")
         .text(d => {
           //Let the indicator "_default" in tree menu be translated differnetly for every hook type
-          const translated = d.id === "_default" ? _this.localise("indicator/_default/" + targetModelType) : d.name_catalog || d.name || d.id;
+          const translated = d.id === "_default" ? _this.localise("indicator/_default/" + targetModelName) : getItemName(d);
           if (!translated && translated !== "") warn("translation missing: NAME of " + d.id);
           return translated || "";
         });
@@ -10888,11 +11243,9 @@
           //deepLeaf
           if (!d.children) {
             if (d.id === "_default") {
-              d.name = _this.localise("indicator/_default/" + targetModelType);
-              d.description = _this.localise("description/_default/" + targetModelType);
+              d.byDataSources[0].name = _this.localise("indicator/_default/" + targetModelName);
+              d.byDataSources[0].description = _this.localise("description/_default/" + targetModelName);
             }
-            if (!d.description) d.description = noDescriptionText;
-            d.translateContributionText = helpTranslateText;
             const deepLeaf = view.append("div")
               .attr("class", css.menuHorizontal + " " + css.list_outer + " " + css.list_item_leaf);
             deepLeaf.on("click", (event, d) => {
@@ -10971,10 +11324,32 @@
     }
 
     _setModelWhich(concept) {    
-      this._targetModel.setWhich({
-        key: concept.id == "_default" ? null : this.getNearestSpaceToMarkerSpace(concept.spaces),
-        value: {concept: concept.id, dataSource: concept.dataSource}
-      });
+      if(concept.id == "_default"){
+        this._targetModel.setWhich({
+          key: null,
+          value: {concept: "_default", dataSource: null}
+        });
+      } else {
+        const {space, dataSource} = this.getBestFittingDataSourceAndSpace(concept.byDataSources);
+        this._targetModel.setWhich({
+          key: space,
+          value: {concept: concept.id, dataSource: dataSource.id}
+        });
+      }
+    }
+
+    getBestFittingDataSourceAndSpace(byDataSources) {
+      const bestSpacePerDataSource = byDataSources.map(m => this.getNearestSpaceToMarkerSpace(m.spaces));
+      const bestSpace = this.getNearestSpaceToMarkerSpace(bestSpacePerDataSource);
+
+      const dsCandidates = byDataSources.filter(f => f.spaces.find(s => spacesAreEqual(s, bestSpace))).map(m => m.dataSource);
+       
+      if (dsCandidates.includes(this.model.data.source))
+        return {space: bestSpace, dataSource: this.model.data.source};
+      else if (dsCandidates.includes(this._targetModel.data.source)) 
+        return {space: bestSpace, dataSource: this._targetModel.data.source};
+      else
+        return {space: bestSpace, dataSource: dsCandidates[0]};
     }
 
     getNearestSpaceToMarkerSpace(spaces){
@@ -11063,6 +11438,9 @@
         //if(_this.menuEntity.direction != MENU_VERTICAL) _this.menuEntity.closeAllChildren();
       });
 
+      const datasources = this._getDataModels(this.root.model.config.dataSources);
+      this.dsColorScaleLight = d3.scaleOrdinal().range(d3.schemePastel2).domain(datasources.map(m=>m.id));
+      this.dsColorScaleDark = d3.scaleOrdinal().range(d3.schemeSet2).domain(datasources.map(m=>m.id));
     }
 
     draw() {
@@ -11225,189 +11603,6 @@
 
     createKeyString(key, row) {
       return key.map(concept => row[concept]).join(",");
-    }
-
-  }
-
-  /*!
-   * VIZABI ZOOMBUTTONLIST
-   * Reusable zoombuttonlist component
-   */
-
-  //default existing buttons
-  const class_active = "vzb-active";
-  // var class_active_locked = "vzb-active-locked";
-  // var class_hide_btn = "vzb-dialog-side-btn";
-  // var class_unavailable = "vzb-unavailable";
-  // var class_vzb_fullscreen = "vzb-force-fullscreen";
-  // var class_container_fullscreen = "vzb-container-fullscreen";
-
-  class ZoomButtonList extends BaseComponent {
-    constructor(config) {
-
-      super(config);
-    } 
-
-    setup() {
-
-      this._available_buttons = {
-        "arrow": {
-          title: "buttons/cursorarrow",
-          icon: "cursorArrow",
-          func: this.toggleCursorMode.bind(this),
-          required: true,
-          statebind: "root.ui.chart.cursorMode",
-          statebindfunc: this.setCursorMode.bind(this)
-        },
-        "plus": {
-          title: "buttons/cursorplus",
-          icon: "cursorPlus",
-          func: this.toggleCursorMode.bind(this),
-          required: true,
-          statebind: "root.ui.chart.cursorMode",
-          statebindfunc: this.setCursorMode.bind(this)
-        },
-        "minus": {
-          title: "buttons/cursorminus",
-          icon: "cursorMinus",
-          func: this.toggleCursorMode.bind(this),
-          required: true,
-          statebind: "root.ui.chart.cursorMode",
-          statebindfunc: this.setCursorMode.bind(this)
-        },
-        "hand": {
-          title: "buttons/cursorhand",
-          icon: "cursorHand",
-          func: this.toggleCursorMode.bind(this),
-          required: true,
-          statebind: "root.ui.chart.cursorMode",
-          statebindfunc: this.setCursorMode.bind(this)
-        },
-        "hundredpercent": {
-          title: "buttons/hundredpercent",
-          icon: "hundredPercent",
-          func: this.toggleHundredPercent.bind(this),
-          required: true
-          // ,
-          // statebind: "ui.chart.trails",
-          // statebindfunc: this.setBubbleTrails.bind(this)
-        }
-      };  
-    }
-
-    draw() {
-
-      this.localise = this.services.locale.auto();
-
-      Object.keys(this._available_buttons).forEach(buttonId => {
-        const button = this._available_buttons[buttonId];
-        if (button && button.statebind) {
-          this.addReaction(() => {
-            button.statebindfunc(buttonId, getProp(this, button.statebind.split(".")));
-          });
-        }
-      });
-
-      this._addButtons(Object.keys(this._available_buttons), []);
-
-    }
-
-    /*
-     * adds buttons configuration to the components and template_data
-     * @param {Array} button_list list of buttons to be added
-     */
-    _addButtons(button_list, button_expand) {
-      const _this = this;
-      this._components_config = [];
-      const details_btns = [];
-      if (!button_list.length) return;
-      //add a component for each button
-      for (let i = 0; i < button_list.length; i++) {
-
-        const btn = button_list[i];
-        const btn_config = this._available_buttons[btn];
-
-        //add template data
-        const d = (btn_config) ? btn : "_default";
-        const details_btn = clone(this._available_buttons[d]);
-        if (d == "_default") {
-          details_btn.title = "buttons/" + btn;
-        }
-        details_btn.id = btn;
-        details_btn.icon = iconset["ICON_" + details_btn.icon.toUpperCase()];
-        details_btns.push(details_btn);
-      }
-
-      const t = this.localise;
-
-      this.element.selectAll("button").data(details_btns)
-        .enter().append("button")
-        .attr("class", d => {
-          let cls = "vzb-buttonlist-btn";
-          if (button_expand.length > 0) {
-            if (button_expand.indexOf(d.id) > -1) {
-              cls += " vzb-dialog-side-btn";
-            }
-          }
-
-          return cls;
-        })
-        .attr("data-btn", d => d.id)
-        .html(btn => "<span class='vzb-buttonlist-btn-icon fa'>" +
-            btn.icon + "</span><span class='vzb-buttonlist-btn-title'>" +
-            t(btn.title) + "</span>");
-
-      const buttons = this.element.selectAll(".vzb-buttonlist-btn");
-
-      //clicking the button
-      buttons.on("click", function(event, d) {
-
-        event.preventDefault();
-        event.stopPropagation();
-
-        _this.proceedClick(d.id);
-      });
-      
-    }
-
-    proceedClick(id) {
-      const _this = this;
-      const btn = _this.element.selectAll(".vzb-buttonlist-btn[data-btn='" + id + "']");
-      const classes = btn.attr("class");
-      const btn_config = _this._available_buttons[id];
-
-      if (btn_config && btn_config.func) {
-        btn_config.func(id);
-      } else {
-        const btn_active = classes.indexOf(class_active) === -1;
-
-        btn.classed(class_active, btn_active);
-        const evt = {};
-        evt["id"] = id;
-        evt["active"] = btn_active;
-        _this.trigger("click", evt);
-      }
-    }
-
-    setButtonActive(id, boolActive) {
-      const btn = this.element.selectAll(".vzb-buttonlist-btn[data-btn='" + id + "']");
-
-      btn.classed(class_active, boolActive);
-    }
-
-    toggleCursorMode(id) {
-      const value = id;
-      this.root.ui.chart.cursorMode = value;
-    }
-
-    setCursorMode(id, value) {
-      //const value = this.model.ui.cursorMode ? this.model.ui.cursorMode : "arrow";
-      this.element.selectAll(".vzb-buttonlist-btn")
-        .classed(class_active, d => d.id == value);
-    }
-
-    toggleHundredPercent() {
-      this.root.element.dispatch("custom-resetZoom");
     }
 
   }
@@ -11831,121 +12026,85 @@
     }
   }
 
-  /*
-   * About dialog
+  /*!
+   * VIZABI COLOR DIALOG
    */
-  function formatVersion(version){
-    return version || "N/A";
-  }
 
-  function formatBuild(timestamp){
-    if (!timestamp) return "N/A";
-    return d3.utcFormat("%Y-%m-%d at %H:%M")(new Date(parseInt(timestamp)));
-  }
-
-  function url(text = "", link = ""){
-    if (!link) return text;
-    return `<a class='vzb-underline' href='${link}' target='_blank'>⧉ ${text}</a>`;
-  }
-
-  class About extends decorated$6 {
+  class Colors extends decorated$5 {
     constructor(config) {
       config.template = `
       <div class='vzb-dialog-modal'>
-        <div class="vzb-dialog-title"> 
-          <span data-localise="buttons/about"></span>
+        <span class="thumb-tack-class thumb-tack-class-ico-pin fa" data-dialogtype="colors" data-click="pinDialog"></span>
+        <span class="thumb-tack-class thumb-tack-class-ico-drag fa" data-dialogtype="colors" data-click="dragDialog"></span>
+        
+        <div class="vzb-dialog-title">
+          <span data-localise="buttons/colors"></span>
+          <span class="vzb-caxis-selector"></span>
+        </div>
+      
+        <div class="vzb-dialog-content vzb-dialog-scrollable">
+          <div class="vzb-clegend-container">
+            <svg>
+              <g class="vzb-timedisplay"></g>
+            </svg>
+          </div>
         </div>
 
-        <div class="vzb-dialog-content">
-          <div class="vzb-about-header"></div>
-          <div class="vzb-about-body"></div>
-          <div class="vzb-about-footer"></div>
-        </div>
-    
         <div class="vzb-dialog-buttons">
           <div data-click="closeDialog" class="vzb-dialog-button vzb-label-primary">
             <span data-localise="buttons/ok"></span>
           </div>
         </div>
+
       </div>
     `;
-
+      
+      config.subcomponents = [{
+        type: IndicatorPicker,
+        placeholder: ".vzb-caxis-selector",
+        options: {
+          submodel: "encoding",
+          targetProp: "color",
+          showHoverValues: true
+        },
+        //model: config.root.model.stores.markers.get("legend")
+        state: {
+          get hoverKeyLabels() {
+            const legendMarker = config.root.model.markers?.legend;
+            if (!legendMarker) return null;
+            if (legendMarker.state === STATUS.READY) {
+              //TODO: fix on multi dimensions config
+              const labelKey = legendMarker.data.space[0];
+              return legendMarker.dataArray.reduce((labels, data) => {
+                labels[data[labelKey]] = data.name;
+                return labels;
+              }, {});
+            }
+            
+            return null;
+          }
+        }
+      }, {
+        type: decorated$7,
+        placeholder: ".vzb-clegend-container",
+        options: {
+          colorModelName: "color",
+          legendModelName: config.root.options.legendMarkerName || "legend"
+        }
+      }];
+      
       super(config);
     }
 
-    setup() {
-      this.DOM = {
-        header: this.element.select(".vzb-about-header"),
-        body: this.element.select(".vzb-about-body"),
-        footer: this.element.select(".vzb-about-footer")
-      };
-    }
-
-    draw(){
-      this.addReaction(this.drawHeader);
-      this.addReaction(this.drawBody);
-      this.addReaction(this.drawFooter);
-    }
-
-
-    drawHeader(){
-      const author = this.root.constructor.versionInfo?.sharedComponents?.package?.author || {};
-
-      this.DOM.header.html("");
-      this.DOM.header.append("p").html(url("Report a problem", "https://github.com/Gapminder/tools-page/issues"));
-      this.DOM.header.append("p").html("This chart is made with Vizabi, <br/> a project by " + url(author.name, author.url));
-    }
-
-
-    drawBody(){
-      const vizabiModulesData = [
-        this.root.constructor.versionInfo || {},
-        this.root.constructor.versionInfo?.sharedComponents || {},
-        this.services.Vizabi.Vizabi.versionInfo || {}
-      ];
-
-      const readerData = this.services.Vizabi.Vizabi.stores.dataSources.getAll().map(dataSource => {
-        return {
-          name: dataSource.config.name,
-          service: dataSource.config.service,
-          type: dataSource.config.modelType
-        };
-      }); 
-
-      this.DOM.body.html("");
-      this.DOM.body.append("div").append("p").append("h1").html("Components:");
-      this.DOM.body.append("div").selectAll("p")
-        .data(vizabiModulesData)
-        .enter().append("p")
-        .html(d => url(d.package?.description || d.package?.name, d.package?.homepage) + `<br/> - Version: ${formatVersion(d.version)} <br/> - Build ${formatBuild(d.build)}`);
-      
-      this.DOM.body.append("div").append("p").append("h1").html("Readers:");
-      this.DOM.body.append("div").selectAll("p")
-        .data(readerData)
-        .enter().append("p")
-        .html(d => url(d.type + " " + d.name, d.service));
-    }
-
-
-    drawFooter(){
-      const contributors = this.root.constructor.versionInfo?.sharedComponents?.package?.contributors || [];
-      
-      this.DOM.footer.html("");
-      this.DOM.footer.append("p").append("h1").html(`Contributors:`);
-      this.DOM.footer.append("p").selectAll("span")
-        .data(contributors)
-        .enter().append("span")
-        .html(d => url(d.name, d.url));
-    }
   }
 
-  decorated$6.add("about", About);
+  decorated$5.add("colors", Colors);
 
   /*
    * Axes dialog
    */
 
-  class Axes extends decorated$6 {
+  class Axes extends decorated$5 {
     constructor(config) {
       config.template = `
       <div class='vzb-dialog-modal'>
@@ -12007,81 +12166,7 @@
 
   }
 
-  decorated$6.add("axes", Axes);
-
-  /*!
-   * VIZABI COLOR DIALOG
-   */
-
-  class Colors extends decorated$6 {
-    constructor(config) {
-      config.template = `
-      <div class='vzb-dialog-modal'>
-        <span class="thumb-tack-class thumb-tack-class-ico-pin fa" data-dialogtype="colors" data-click="pinDialog"></span>
-        <span class="thumb-tack-class thumb-tack-class-ico-drag fa" data-dialogtype="colors" data-click="dragDialog"></span>
-        
-        <div class="vzb-dialog-title">
-          <span data-localise="buttons/colors"></span>
-          <span class="vzb-caxis-selector"></span>
-        </div>
-      
-        <div class="vzb-dialog-content vzb-dialog-scrollable">
-          <div class="vzb-clegend-container">
-            <svg>
-              <g class="vzb-timedisplay"></g>
-            </svg>
-          </div>
-        </div>
-
-        <div class="vzb-dialog-buttons">
-          <div data-click="closeDialog" class="vzb-dialog-button vzb-label-primary">
-            <span data-localise="buttons/ok"></span>
-          </div>
-        </div>
-
-      </div>
-    `;
-      
-      config.subcomponents = [{
-        type: IndicatorPicker,
-        placeholder: ".vzb-caxis-selector",
-        options: {
-          submodel: "encoding",
-          targetProp: "color",
-          showHoverValues: true
-        },
-        //model: config.root.model.stores.markers.get("legend")
-        state: {
-          get hoverKeyLabels() {
-            const legendMarker = config.root.model.markers?.legend;
-            if (!legendMarker) return null;
-            if (legendMarker.state === STATUS.READY) {
-              //TODO: fix on multi dimensions config
-              const labelKey = legendMarker.data.space[0];
-              return legendMarker.dataArray.reduce((labels, data) => {
-                labels[data[labelKey]] = data.name;
-                return labels;
-              }, {});
-            }
-            
-            return null;
-          }
-        }
-      }, {
-        type: decorated$7,
-        placeholder: ".vzb-clegend-container",
-        options: {
-          colorModelName: "color",
-          legendModelName: "legend"
-        }
-      }];
-      
-      super(config);
-    }
-
-  }
-
-  decorated$6.add("colors", Colors);
+  decorated$5.add("axes", Axes);
 
   /*!
    * VIZABI SHOW PANEL CONTROL
@@ -12382,7 +12467,7 @@
    * Reusable find dialog
    */
 
-  class Find extends decorated$6 {
+  class Find extends decorated$5 {
     constructor(config) {
       config.template = `
       <div class='vzb-dialog-modal'>
@@ -12708,13 +12793,13 @@
     "MDL": mobx.computed
   });
 
-  decorated$6.add("find", decorated$2);
+  decorated$5.add("find", decorated$2);
 
   /*
    * Label dialog
    */
 
-  class Label extends decorated$6 {
+  class Label extends decorated$5 {
     constructor(config) {
       config.template = `
       <div class='vzb-dialog-modal'>
@@ -12766,13 +12851,173 @@
     }
   }
 
-  decorated$6.add("label", Label);
+  decorated$5.add("label", Label);
+
+  /*
+   * About dialog
+   */
+  function formatVersion(version){
+    return version || "N/A";
+  }
+
+  function formatBuild(timestamp){
+    if (!timestamp) return "N/A";
+    return d3.utcFormat("%Y-%m-%d at %H:%M")(new Date(parseInt(timestamp)));
+  }
+
+  function url(text = "", link = ""){
+    if (!link) return text;
+    return `<a class='vzb-underline' href='${link}' target='_blank'>⧉ ${text}</a>`;
+  }
+
+  class About extends decorated$5 {
+    constructor(config) {
+      config.template = `
+      <div class='vzb-dialog-modal'>
+        <div class="vzb-dialog-title"> 
+          <span data-localise="buttons/about"></span>
+        </div>
+
+        <div class="vzb-dialog-content">
+          <div class="vzb-about-header"></div>
+          <div class="vzb-about-body"></div>
+          <div class="vzb-about-footer"></div>
+        </div>
+    
+        <div class="vzb-dialog-buttons">
+          <div data-click="closeDialog" class="vzb-dialog-button vzb-label-primary">
+            <span data-localise="buttons/ok"></span>
+          </div>
+        </div>
+      </div>
+    `;
+
+      super(config);
+    }
+
+    setup() {
+      this.DOM = {
+        header: this.element.select(".vzb-about-header"),
+        body: this.element.select(".vzb-about-body"),
+        footer: this.element.select(".vzb-about-footer")
+      };
+    }
+
+    draw(){
+      this.addReaction(this.drawHeader);
+      this.addReaction(this.drawBody);
+      this.addReaction(this.drawFooter);
+    }
+
+
+    drawHeader(){
+      const author = this.root.constructor.versionInfo?.sharedComponents?.package?.author || {};
+
+      this.DOM.header.html("");
+      this.DOM.header.append("p").html(url("Report a problem", "https://github.com/Gapminder/tools-page/issues"));
+      this.DOM.header.append("p").html("This chart is made with Vizabi, <br/> a project by " + url(author.name, author.url));
+    }
+
+
+    drawBody(){
+      const vizabiModulesData = [
+        this.root.constructor.versionInfo || {},
+        this.root.constructor.versionInfo?.sharedComponents || {},
+        this.services.Vizabi.Vizabi.versionInfo || {}
+      ];
+
+      const readerData = this.services.Vizabi.Vizabi.stores.dataSources.getAll().map(dataSource => {
+        return {
+          name: dataSource.config.name,
+          service: dataSource.config.service,
+          type: dataSource.config.modelType
+        };
+      }); 
+
+      this.DOM.body.html("");
+      this.DOM.body.append("div").append("p").append("h1").html("Components:");
+      this.DOM.body.append("div").selectAll("p")
+        .data(vizabiModulesData)
+        .enter().append("p")
+        .html(d => url(d.package?.description || d.package?.name, d.package?.homepage) + `<br/> - Version: ${formatVersion(d.version)} <br/> - Build ${formatBuild(d.build)}`);
+      
+      this.DOM.body.append("div").append("p").append("h1").html("Data sources:");
+      this.DOM.body.append("div").selectAll("p")
+        .data(readerData)
+        .enter().append("p")
+        .html(d => url(d.type + " " + d.name, d.service));
+    }
+
+
+    drawFooter(){
+      const contributors = this.root.constructor.versionInfo?.sharedComponents?.package?.contributors || [];
+      
+      this.DOM.footer.html("");
+      this.DOM.footer.append("p").append("h1").html(`Contributors:`);
+      this.DOM.footer.append("p").selectAll("span")
+        .data(contributors)
+        .enter().append("span")
+        .html(d => url(d.name, d.url));
+    }
+  }
+
+  decorated$5.add("about", About);
+
+  /*
+   * Size dialog
+   */
+
+  class Opacity extends decorated$5 {
+    constructor(config) {
+      config.template = `
+      <div class='vzb-dialog-modal'>
+        <div class="vzb-dialog-title"> 
+          <span data-localise="buttons/opacity"></span>
+        </div>
+            
+        <div class="vzb-dialog-content">
+          <p class="vzb-dialog-sublabel">
+            <span data-localise="buttons/opacityRegular"></span>
+          </p>
+          <div class="vzb-dialog-bubbleopacity-regular"></div>
+
+          <p class="vzb-dialog-sublabel">
+            <span data-localise="buttons/opacityNonselect"></span>
+          </p>
+          <div class="vzb-dialog-bubbleopacity-selectdim"></div>
+          </div>
+        </div>
+
+      </div>
+    `;
+
+      config.subcomponents = [{
+        type: SingleHandleSlider,
+        placeholder: ".vzb-dialog-bubbleopacity-regular",
+        options: {
+          value: "opacityRegular",
+          submodel: "root.ui.chart"
+        }
+      },{
+        type: SingleHandleSlider,
+        placeholder: ".vzb-dialog-bubbleopacity-selectdim",
+        options: {
+          value: "opacitySelectDim",
+          submodel: "root.ui.chart"
+        }
+      }];
+
+      super(config);
+    }
+  }
+
+  decorated$5.add("opacity", Opacity);
 
   /*
    * More options dialog
    */
 
-  class MoreOptions extends decorated$6 {
+  class MoreOptions extends decorated$5 {
     constructor(config) {
       const { moreoptions = [], popup = []} = config.parent.ui.dialogs;
       const templateArray  = [];
@@ -12785,7 +13030,7 @@
 
       dialogList.forEach(dlg => {      
         subcomponents.push({
-          type: decorated$6.get(dlg),
+          type: decorated$5.get(dlg),
           placeholder: '.vzb-dialogs-dialog[data-dlg="' + dlg + '"]',
           model: config.model,
           name: dlg,
@@ -12875,63 +13120,75 @@
     }
   }
 
-  decorated$6.add("moreoptions", MoreOptions);
+  decorated$5.add("moreoptions", MoreOptions);
 
   /*
    * Size dialog
    */
 
-  class Opacity extends decorated$6 {
+  class Size extends decorated$5 {
     constructor(config) {
       config.template = `
       <div class='vzb-dialog-modal'>
+        <span class="thumb-tack-class thumb-tack-class-ico-pin fa" data-dialogtype="size" data-click="pinDialog"></span>
+        <span class="thumb-tack-class thumb-tack-class-ico-drag fa" data-dialogtype="size" data-click="dragDialog"></span>
         <div class="vzb-dialog-title"> 
-          <span data-localise="buttons/opacity"></span>
+          <span data-localise="buttons/size"></span>
+          <span class="vzb-saxis-selector"></span>
         </div>
-            
         <div class="vzb-dialog-content">
-          <p class="vzb-dialog-sublabel">
-            <span data-localise="buttons/opacityRegular"></span>
-          </p>
-          <div class="vzb-dialog-bubbleopacity-regular"></div>
-
-          <p class="vzb-dialog-sublabel">
-            <span data-localise="buttons/opacityNonselect"></span>
-          </p>
-          <div class="vzb-dialog-bubbleopacity-selectdim"></div>
+          <div class="vzb-dialog-bubblesize"></div>
+          <span class="vzb-dialog-subtitle"></span>
+        </div>
+        <div class="vzb-dialog-buttons">
+          <div data-click="closeDialog" class="vzb-dialog-button vzb-label-primary">
+            <span data-localise="buttons/ok"></span>
           </div>
         </div>
-
-      </div>
+      </div>    
     `;
 
       config.subcomponents = [{
-        type: SingleHandleSlider,
-        placeholder: ".vzb-dialog-bubbleopacity-regular",
+        type: IndicatorPicker,
+        placeholder: ".vzb-saxis-selector",
         options: {
-          value: "opacityRegular",
-          submodel: "root.ui.chart"
+          submodel: "encoding",
+          targetProp: "size",
+          showHoverValues: true
         }
       },{
-        type: SingleHandleSlider,
-        placeholder: ".vzb-dialog-bubbleopacity-selectdim",
+        type: BubbleSize,
+        placeholder: ".vzb-dialog-bubblesize",
         options: {
-          value: "opacitySelectDim",
-          submodel: "root.ui.chart"
+          showArcs: true,
+          submodelFunc: () => this.model.encoding.size.scale,
         }
       }];
 
       super(config);
     }
+
+    draw() {
+      super.draw();
+
+      this.addReaction(this._updateSubtitle);
+    }
+
+    _updateSubtitle() {
+      const conceptProps = this.model.encoding.size.data.conceptProps;
+      const subtitle = getSubtitle(conceptProps.name, conceptProps.name_short);
+
+      this.element.select(".vzb-dialog-subtitle").text(subtitle);
+    }
   }
 
-  decorated$6.add("opacity", Opacity);
+  decorated$5.add("size", Size);
 
   /*
    * Size dialog
    */
 
-  class Presentation extends decorated$6 {
+  class Presentation extends decorated$5 {
     constructor(config) {
       config.template = `
       <div class='vzb-dialog-modal'>
@@ -12994,14 +13251,66 @@
 
   }
 
-  decorated$6.add("presentation", Presentation);
+  decorated$5.add("presentation", Presentation);
+
+  class Technical extends decorated$5 {
+    constructor(config) {
+      config.template = `
+      <div class='vzb-dialog-modal'>
+        <div class="vzb-dialog-title"> 
+          <span data-localise="dialogs/technical"></span>
+        </div>
+
+        <div class="vzb-dialog-content">
+          <div class="vzb-advancedshowandselect-switch"></div>
+          <div class="vzb-advancedmarkerspace-switch"></div>
+          <div class="vzb-showdatasources-switch"></div>
+        </div>
+
+      </div>
+    `;
+
+      config.subcomponents = [{
+        type: SimpleCheckbox,
+        placeholder: ".vzb-advancedshowandselect-switch",
+        options: {
+          checkbox: "enableSelectShowSwitch",
+          submodelFunc: () => this.root
+            .findChild({name: "dialogs"})
+            .findChild({name: "find"}).ui
+        }
+      },{
+        type: SimpleCheckbox,
+        placeholder: ".vzb-advancedmarkerspace-switch",
+        options: {
+          checkbox: "enableMarkerSpaceOptions",
+          submodelFunc: () => this.root
+            .findChild({name: "dialogs"})
+            .findChild({name: "find"}).ui
+        }
+      },{
+        type: SimpleCheckbox,
+        placeholder: ".vzb-showdatasources-switch",
+        options: {
+          checkbox: "showDataSources",
+          submodelFunc: () => this.root
+            .findChild({name: "tree-menu"}).ui
+        }
+      }];
+
+      super(config);
+    }
+
+  }
+
+  decorated$5.add("technical", Technical);
 
   /*
    * Repeat dialog
    */
 
 
-  class Repeat extends decorated$6 {
+  class Repeat extends decorated$5 {
     constructor(config) {
       config.template = `
       <div class='vzb-dialog-modal'>
@@ -13305,48 +13614,125 @@
     "MDL": mobx.computed
   });
     
-  decorated$6.add("repeat", decorated$1);
+  decorated$5.add("repeat", decorated$1);
 
   /*
-   * Size dialog
+   * Timedisplay dialog
+   */
+  class TimeDisplay extends decorated$5 {
+    constructor(config) {
+      config.template = `
+      <div class="vzb-dialog-modal">
+        <div class="vzb-dialog-content vzb-dialog-content-fixed">
+          <svg>
+            <g class="vzb-timedisplay"></g>
+          </svg>
+        </div>
+        <div class="vzb-dialog-buttons"></div>
+      </div>`;
+    
+      config.subcomponents = [{
+        type: DynamicBackground,
+        placeholder: ".vzb-timedisplay"
+      }];
+      
+      super(config);
+    }
+
+    setup(options) {
+      super.setup(options);
+
+      this._year = this.findChild({type: "DynamicBackground"});
+      this._year.setConditions({ widthRatio: 1, heightRatio: 1 });
+    }
+
+    draw() {
+      super.draw();
+
+      this.MDL.frame = this.model.encoding.frame;
+
+      const _this = this;
+      Object.assign(this.state, {
+        get duration() {
+          return _this.MDL.frame.playing ? _this.MDL.frame.speed || 0 : 0;
+        }
+      });
+
+      this.addReaction(this._updateTime);
+      this.addReaction(this._updateSize);
+
+    }
+
+    _updateTime() {
+      const frame = this.MDL.frame;
+      this._year.setText(this.localise(frame.value), this.state.duration);
+    }
+
+    _updateSize() {
+      this.services.layout.size;
+
+      if (this._year) {
+        this._year.resizeText(this.DOM.content.style("width"), this.DOM.content.style("height"));
+      }
+    }
+  }
+
+  decorated$5.add("timedisplay", TimeDisplay);
+
+  /*
+   * Zoom dialog
    */
 
-  class Size extends decorated$6 {
+  class Zoom extends decorated$5 {
     constructor(config) {
       config.template = `
       <div class='vzb-dialog-modal'>
-        <span class="thumb-tack-class thumb-tack-class-ico-pin fa" data-dialogtype="size" data-click="pinDialog"></span>
-        <span class="thumb-tack-class thumb-tack-class-ico-drag fa" data-dialogtype="size" data-click="dragDialog"></span>
+        <span class="thumb-tack-class thumb-tack-class-ico-pin fa" data-dialogtype="label" data-click="pinDialog"></span>
+        <span class="thumb-tack-class thumb-tack-class-ico-drag fa" data-dialogtype="label" data-click="dragDialog"></span>
         <div class="vzb-dialog-title"> 
-          <span data-localise="buttons/size"></span>
-          <span class="vzb-saxis-selector"></span>
+          <span></span>
+          <div class="vzb-dialog-zoom-buttonlist"></div>
         </div>
+            
+            
         <div class="vzb-dialog-content">
-          <div class="vzb-dialog-bubblesize"></div>
-          <span class="vzb-dialog-subtitle"></span>
+          <div class="vzb-panwitharrow-switch"></div>
+          <div class="vzb-zoomonscrolling-switch"></div>
+          <div class="vzb-adaptminmaxzoom-switch"></div>
         </div>
+      
         <div class="vzb-dialog-buttons">
           <div data-click="closeDialog" class="vzb-dialog-button vzb-label-primary">
-            <span data-localise="buttons/ok"></span>
+            <span><span/>
           </div>
         </div>
+      
       </div>    
     `;
 
       config.subcomponents = [{
-        type: IndicatorPicker,
-        placeholder: ".vzb-saxis-selector",
+        type: ZoomButtonList,
+        placeholder: ".vzb-dialog-zoom-buttonlist"
+      },{
+        type: SimpleCheckbox,
+        placeholder: ".vzb-panwitharrow-switch",
         options: {
-          submodel: "encoding",
-          targetProp: "size",
-          showHoverValues: true
+          checkbox: "panWithArrow",
+          submodel: "root.ui.chart"
         }
       },{
-        type: BubbleSize,
-        placeholder: ".vzb-dialog-bubblesize",
+        type: SimpleCheckbox,
+        placeholder: ".vzb-zoomonscrolling-switch",
         options: {
-          showArcs: true,
-          submodelFunc: () => this.model.encoding.size.scale,
+          checkbox: "zoomOnScrolling",
+          submodel: "root.ui.chart"
+        }
+      },{
+        type: SimpleCheckbox,
+        placeholder: ".vzb-adaptminmaxzoom-switch",
+        options: {
+          checkbox: "adaptMinMaxZoom",
+          submodel: "root.ui.chart"
         }
       }];
 
@@ -13356,20 +13742,14 @@
     draw() {
       super.draw();
 
-      this.addReaction(this._updateSubtitle);
-    }
-
-    _updateSubtitle() {
-      const conceptProps = this.model.encoding.size.data.conceptProps;
-      const subtitle = getSubtitle(conceptProps.name, conceptProps.name_short);
-
-      this.element.select(".vzb-dialog-subtitle").text(subtitle);
+      this.DOM.title.select("span").text(this.localise("buttons/zoom"));
+      this.DOM.buttons.select("span").text(this.localise("buttons/ok"));
     }
   }
 
-  decorated$6.add("size", Size);
+  decorated$5.add("zoom", Zoom);
 
-  class Speed extends decorated$6 {
+  class Speed extends decorated$5 {
     constructor(config) {
       config.template = `
       <div class='vzb-dialog-modal'>
@@ -13535,183 +13915,7 @@
     "MDL": mobx.computed
   });
 
-  decorated$6.add("speed", decorated);
-
-  class Technical extends decorated$6 {
-    constructor(config) {
-      config.template = `
-      <div class='vzb-dialog-modal'>
-        <div class="vzb-dialog-title"> 
-          <span data-localise="dialogs/technical"></span>
-        </div>
-
-        <div class="vzb-dialog-content">
-          <div class="vzb-advancedshowandselect-switch"></div>
-          <div class="vzb-advancedmarkerspace-switch"></div>
-        </div>
-
-      </div>
-    `;
-
-      config.subcomponents = [{
-        type: SimpleCheckbox,
-        placeholder: ".vzb-advancedshowandselect-switch",
-        options: {
-          checkbox: "enableSelectShowSwitch",
-          submodelFunc: () => this.root
-            .findChild({name: "dialogs"})
-            .findChild({name: "find"}).ui
-        }
-      },{
-        type: SimpleCheckbox,
-        placeholder: ".vzb-advancedmarkerspace-switch",
-        options: {
-          checkbox: "enableMarkerSpaceOptions",
-          submodelFunc: () => this.root
-            .findChild({name: "dialogs"})
-            .findChild({name: "find"}).ui
-        }
-      }];
-
-      super(config);
-    }
-
-  }
-
-  decorated$6.add("technical", Technical);
-
-  /*
-   * Timedisplay dialog
-   */
-  class TimeDisplay extends decorated$6 {
-    constructor(config) {
-      config.template = `
-      <div class="vzb-dialog-modal">
-        <div class="vzb-dialog-content vzb-dialog-content-fixed">
-          <svg>
-            <g class="vzb-timedisplay"></g>
-          </svg>
-        </div>
-        <div class="vzb-dialog-buttons"></div>
-      </div>`;
-    
-      config.subcomponents = [{
-        type: DynamicBackground,
-        placeholder: ".vzb-timedisplay"
-      }];
-      
-      super(config);
-    }
-
-    setup(options) {
-      super.setup(options);
-
-      this._year = this.findChild({type: "DynamicBackground"});
-      this._year.setConditions({ widthRatio: 1, heightRatio: 1 });
-    }
-
-    draw() {
-      super.draw();
-
-      this.MDL.frame = this.model.encoding.frame;
-
-      const _this = this;
-      Object.assign(this.state, {
-        get duration() {
-          return _this.MDL.frame.playing ? _this.MDL.frame.speed || 0 : 0;
-        }
-      });
-
-      this.addReaction(this._updateTime);
-      this.addReaction(this._updateSize);
-
-    }
-
-    _updateTime() {
-      const frame = this.MDL.frame;
-      this._year.setText(this.localise(frame.value), this.state.duration);
-    }
-
-    _updateSize() {
-      this.services.layout.size;
-
-      if (this._year) {
-        this._year.resizeText(this.DOM.content.style("width"), this.DOM.content.style("height"));
-      }
-    }
-  }
-
-  decorated$6.add("timedisplay", TimeDisplay);
-
-  /*
-   * Zoom dialog
-   */
-
-  class Zoom extends decorated$6 {
-    constructor(config) {
-      config.template = `
-      <div class='vzb-dialog-modal'>
-        <span class="thumb-tack-class thumb-tack-class-ico-pin fa" data-dialogtype="label" data-click="pinDialog"></span>
-        <span class="thumb-tack-class thumb-tack-class-ico-drag fa" data-dialogtype="label" data-click="dragDialog"></span>
-        <div class="vzb-dialog-title"> 
-          <span></span>
-          <div class="vzb-dialog-zoom-buttonlist"></div>
-        </div>
-            
-            
-        <div class="vzb-dialog-content">
-          <div class="vzb-panwitharrow-switch"></div>
-          <div class="vzb-zoomonscrolling-switch"></div>
-          <div class="vzb-adaptminmaxzoom-switch"></div>
-        </div>
-      
-        <div class="vzb-dialog-buttons">
-          <div data-click="closeDialog" class="vzb-dialog-button vzb-label-primary">
-            <span><span/>
-          </div>
-        </div>
-      
-      </div>    
-    `;
-
-      config.subcomponents = [{
-        type: ZoomButtonList,
-        placeholder: ".vzb-dialog-zoom-buttonlist"
-      },{
-        type: SimpleCheckbox,
-        placeholder: ".vzb-panwitharrow-switch",
-        options: {
-          checkbox: "panWithArrow",
-          submodel: "root.ui.chart"
-        }
-      },{
-        type: SimpleCheckbox,
-        placeholder: ".vzb-zoomonscrolling-switch",
-        options: {
-          checkbox: "zoomOnScrolling",
-          submodel: "root.ui.chart"
-        }
-      },{
-        type: SimpleCheckbox,
-        placeholder: ".vzb-adaptminmaxzoom-switch",
-        options: {
-          checkbox: "adaptMinMaxZoom",
-          submodel: "root.ui.chart"
-        }
-      }];
-
-      super(config);
-    }
-
-    draw() {
-      super.draw();
-
-      this.DOM.title.select("span").text(this.localise("buttons/zoom"));
-      this.DOM.buttons.select("span").text(this.localise("buttons/ok"));
-    }
-  }
-
-  decorated$6.add("zoom", Zoom);
+  decorated$5.add("speed", decorated);
 
   exports.About = About;
   exports.Axes = Axes;
@@ -13728,15 +13932,16 @@
   exports.DataNotes = DataNotes;
   exports.DataWarning = DataWarning;
   exports.DeepLeaf = DeepLeaf;
-  exports.Dialog = decorated$6;
+  exports.Dialog = decorated$5;
   exports.Dialogs = Dialogs;
   exports.DynamicBackground = DynamicBackground;
   exports.ErrorMessage = ErrorMessage;
+  exports.Facet = Facet;
   exports.Find = decorated$2;
   exports.Icons = Icons;
   exports.IndicatorPicker = IndicatorPicker;
   exports.Label = Label;
-  exports.Labels = decorated$5;
+  exports.Labels = decorated$6;
   exports.LayoutService = LayoutService;
   exports.LegacyUtils = LegacyUtils;
   exports.LocaleService = LocaleService;
@@ -13756,11 +13961,11 @@
   exports.SizeSlider = SizeSlider;
   exports.SpaceConfig = SpaceConfig;
   exports.Speed = decorated;
-  exports.SteppedSlider = decorated$4;
+  exports.SteppedSlider = decorated$3;
   exports.Technical = Technical;
   exports.TextEllipsis = TextEllipsis;
   exports.TimeDisplay = TimeDisplay;
-  exports.TimeSlider = decorated$3;
+  exports.TimeSlider = decorated$4;
   exports.TreeMenu = TreeMenu;
   exports.Utils = Utils;
   exports.Zoom = Zoom;

@@ -1,4 +1,4 @@
-// http://vizabi.org v1.17.2 Copyright 2021 Jasper Heeffer and others at Gapminder Foundation
+// http://vizabi.org v1.18.0 Copyright 2021 Jasper Heeffer and others at Gapminder Foundation
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('mobx')) :
     typeof define === 'function' && define.amd ? define(['exports', 'mobx'], factory) :
@@ -154,6 +154,7 @@
         "$nin": (field, val) => `!${val}.includes(row.${field})`,
     };
 
+    //used by "filterRequired" transform
     function filterNullish(df, fields) {
         let filterParam = fields.every(isString)
             ? simpleNullishCheck(fields)
@@ -165,12 +166,15 @@
     function simpleNullishCheck(fields) {
         const l = fields.length;
         return row => {
+            //faster implementation with a for-loop
             for (let i = 0; i < l; i++) {
                 if (row[fields[i]] == null) return false;
             }
             return true;
         }
     }
+
+    // used for "repeat" encoding for example
     // allows defining fields with logical conditions like: [{ $or: ['x','x1'] }, 'y']
     function nullishFilterSpec(fields) {
         return { $nor: makeSpec(fields) }
@@ -209,7 +213,10 @@
     }
 
     // copies properties using property descriptors so accessors (and other meta-properties) get correctly copied
-    // https://www.webreflection.co.uk/blog/2015/10/06/how-to-copy-objects-in-javascript
+    // otherwise if you do regular Object.assign it would read directly from the object and execute getters 
+    // and the return values would be what it assigns. but we want to actually copy getters and setters
+
+    // source: https://www.webreflection.co.uk/blog/2015/10/06/how-to-copy-objects-in-javascript
     // rewrote for clarity and make sources overwrite target (mimic Object.assign)
     function assign(target, ...sources) {
         sources.forEach(source => {

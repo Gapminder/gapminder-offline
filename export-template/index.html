@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Gapminder Offline export</title>
-    <link href="libs/vizabi.css" rel="stylesheet" type="text/css" >
+    <link href="libs/VizabiSharedComponents.css" rel="stylesheet" type="text/css" >
     <link href="libs/bubblechart.css" rel="stylesheet" type="text/css">
     <link href="libs/bubblemap.css" rel="stylesheet" type="text/css">
     <link href="libs/mountainchart.css" rel="stylesheet" type="text/css">
@@ -12,14 +12,14 @@
 
     <script src="libs/mobx.umd.js"></script>
     <script src="libs/d3.js"></script>
-    <script src="libs/vizabi.js"></script>
+    <script src="libs/Vizabi.js"></script>
+    <script src="libs/VizabiSharedComponents.js"></script>
     <script src="libs/bubblechart.js"></script>
     <script src="libs/bubblemap.js"></script>
     <script src="libs/mountainchart.js"></script>
     <script src="libs/barrankchart.js"></script>
     <script src="libs/linechart.js"></script>
-    <script src="libs/vizabi-ddfcsv-reader.js"></script>
-    <script src="libs/vizabi-csv-reader.js"></script>
+    <script src="libs/reader-ddfcsv.js"></script>
     <script src="libs/vizabi-excel-reader.js"></script>
   </head>
 
@@ -33,12 +33,26 @@
     <script src="config.js"></script>
     <script>
 
-      var ddfcsvReader = new DDFCsvReader.getDDFCsvReaderObject();
-      Vizabi.Reader.extend("ddf", ddfcsvReader);
-      Vizabi.Reader.extend("ext-csv", CsvReader.csvReaderObject);
-      Vizabi.Reader.extend("excel", ExcelReader.excelReaderObject);
+      var ddfCsvReader = new DDFCsvReader.getDDFCsvReaderObject();
+      Vizabi.stores.dataSources.createAndAddType("ddf", ddfCsvReader);
+      var excelReader = ExcelReader.excelReaderObject(Vizabi.csvReader);
+      Vizabi.stores.dataSources.createAndAddType("excel", excelReader);
+     
+      var toolPrototype = window[VIZABI_CONFIG.chartType];
+      var model = Vizabi(VIZABI_CONFIG.model);
 
-      var viz = Vizabi('#chartType#', document.getElementById('placeholder'), CONFIG);
+      var viz = new toolPrototype({
+        Vizabi,
+        placeholder: "#placeholder",
+        model,
+        locale: VIZABI_CONFIG.ui.locale,
+        layout: VIZABI_CONFIG.ui.layout,
+        ui: {},
+        default_ui: VIZABI_CONFIG.ui,
+        options: {
+          showLoading: true
+        }
+      });
 
     </script>
   </body>

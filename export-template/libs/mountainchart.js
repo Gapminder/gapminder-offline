@@ -1,4 +1,4 @@
-// https://github.com/vizabi/mountainchart#readme v3.6.4 build 1625933926621 Copyright 2021 Gapminder Foundation and contributors
+// https://github.com/vizabi/mountainchart#readme v3.6.5 build 1630884936278 Copyright 2021 Gapminder Foundation and contributors
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('VizabiSharedComponents'), require('mobx')) :
   typeof define === 'function' && define.amd ? define(['VizabiSharedComponents', 'mobx'], factory) :
@@ -1770,10 +1770,13 @@
 
     constructor(config){
 
+      const markerName = config.options.markerName || "mountain";
+      const fullMarker = config.model.markers[markerName];
+
       const frameType = config.Vizabi.stores.encodings.modelTypes.frame;
-      const fullMarker = config.model.markers.mountain;
       const { marker, splashMarker } = frameType.splashMarker(fullMarker);
-      config.model.markers.mountain = marker;
+
+      config.model.markers[markerName] = marker;
 
       config.name = "mountainchart";
 
@@ -1855,7 +1858,7 @@
     },
   };
 
-  MountainChart.versionInfo = { version: "3.6.4", build: 1625933926621, package: {"homepage":"https://github.com/vizabi/mountainchart#readme","name":"@vizabi/mountainchart","description":"Vizabi mountain chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
+  MountainChart.versionInfo = { version: "3.6.5", build: 1630884936278, package: {"homepage":"https://github.com/vizabi/mountainchart#readme","name":"@vizabi/mountainchart","description":"Vizabi mountain chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
 
   return MountainChart;
 

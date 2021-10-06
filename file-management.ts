@@ -665,26 +665,27 @@ export const saveAllTabs = (event, tabsDescriptor) => {
 export const exportForWeb = (event, params) => {
   fsExtra.removeSync(WEB_PATH);
 
-  Object.keys(params.model).forEach(key => {
-    if ((key === 'data' || key.indexOf('data_') === 0) && typeof params.model[key] === 'object') {
-      const pathKeys = params.model[key].path.split(path.sep);
-      const pathKey = pathKeys[pathKeys.length - 1];
+  const dataSources = params.model.model.dataSources;
+  Object.keys(dataSources).forEach(key => {
+    const pathKeys = dataSources[key].path.split(path.sep);
+    const pathKey = pathKeys[pathKeys.length - 1];
 
-      fsExtra.copySync(params.model[key].path, path.resolve(WEB_PATH, 'data', pathKey));
+    fsExtra.copySync(dataSources[key].path, path.resolve(WEB_PATH, 'data', pathKey));
 
-      params.model[key].path = `./data/${pathKey}`;
-      params.model[key].ddfPath = `./data/${pathKey}`;
+    dataSources[key].path = `./data/${pathKey}`;
+    dataSources[key].ddfPath = `./data/${pathKey}`;
 
-      if (params.model[key].reader === 'ddf1-csv-ext') {
-        params.model[key].reader = 'ddf';
-      }
+    if (dataSources[key].modelType === 'ddf-csv') {
+      dataSources[key].modelType = 'ddf';
     }
   });
 
   params.model.chartType = params.chartType;
-  params.model.locale.filePath = 'assets/translation/';
+  params.model.ui.locale.path = 'assets/translation/';
+  params.model.ui.locale.placeholder = "#placeholder";
+  params.model.ui.layout.placeholder = "#placeholder";
 
-  const config = `var CONFIG = ${JSON.stringify(params.model, null, ' ')};`;
+  const config = `var VIZABI_CONFIG = ${JSON.stringify(params.model, null, ' ')};`;
 
   fsExtra.copySync(WEB_RESOURCE_PATH, WEB_PATH);
   fsExtra.outputFileSync(path.resolve(WEB_PATH, 'config.js'), config);

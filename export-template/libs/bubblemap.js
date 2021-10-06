@@ -1,4 +1,4 @@
-// https://github.com/vizabi/bubblemap#readme v3.6.1 build 1625689243078 Copyright 2021 Gapminder Foundation and contributors
+// https://github.com/vizabi/bubblemap#readme v3.6.2 build 1630886051883 Copyright 2021 Gapminder Foundation and contributors
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('VizabiSharedComponents'), require('mobx')) :
   typeof define === 'function' && define.amd ? define(['VizabiSharedComponents', 'mobx'], factory) :
@@ -3297,12 +3297,14 @@
 
     constructor(config){
 
-      const fullMarker = config.model.markers.bubble;
-      config.Vizabi.utils.applyDefaults(fullMarker.config, BubbleMap.DEFAULT_CORE);  
+      const markerName = config.options.markerName || "bubble";
+      const fullMarker = config.model.markers[markerName];
+      config.Vizabi.utils.applyDefaults(fullMarker.config, BubbleMap.DEFAULT_CORE(markerName));
         
       const frameType = config.Vizabi.stores.encodings.modelTypes.frame;
       const { marker, splashMarker } = frameType.splashMarker(fullMarker);
-      config.model.markers.bubble = marker;
+
+      config.model.markers[markerName] = marker;
 
       config.name = "bubblemap";
 
@@ -3381,7 +3383,8 @@
     chart: {
     }
   };
-  BubbleMap.DEFAULT_CORE = {
+
+  BubbleMap.DEFAULT_CORE = (markerName) => ({
     requiredEncodings: ["lat", "lon", "size"],
     encoding: {
       "selected": {
@@ -3437,7 +3440,7 @@
         modelType: "order",
         direction: "desc",
         data: {
-          ref: "markers.bubble.encoding.size.data.config",
+          ref: `markers.${markerName}.encoding.size.data.config`
         }
       },
       "repeat": {
@@ -3445,9 +3448,9 @@
         allowEnc: ["size"]
       }
     }
-  };
+  });
 
-  BubbleMap.versionInfo = { version: "3.6.1", build: 1625689243078, package: {"homepage":"https://github.com/vizabi/bubblemap#readme","name":"@vizabi/bubblemap","description":"Vizabi bubble map"}, sharedComponents: VizabiSharedComponents.versionInfo};
+  BubbleMap.versionInfo = { version: "3.6.2", build: 1630886051883, package: {"homepage":"https://github.com/vizabi/bubblemap#readme","name":"@vizabi/bubblemap","description":"Vizabi bubble map"}, sharedComponents: VizabiSharedComponents.versionInfo};
 
   return BubbleMap;
 

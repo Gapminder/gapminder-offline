@@ -1,4 +1,4 @@
-// https://github.com/vizabi/barrank#readme v3.7.1 build 1625689111924 Copyright 2021 Gapminder Foundation and contributors
+// https://github.com/vizabi/barrank#readme v3.7.2 build 1630874379573 Copyright 2021 Gapminder Foundation and contributors
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('VizabiSharedComponents'), require('mobx')) :
   typeof define === 'function' && define.amd ? define(['VizabiSharedComponents', 'mobx'], factory) :
@@ -704,12 +704,14 @@
     
     constructor(config){
       
-      const fullMarker = config.model.markers.bar;
-      config.Vizabi.utils.applyDefaults(fullMarker.config, BarRank.DEFAULT_CORE);
+      const markerName = config.options.markerName || "bar";
+      const fullMarker = config.model.markers[markerName];
+      config.Vizabi.utils.applyDefaults(fullMarker.config, BarRank.DEFAULT_CORE(markerName));
 
       const frameType = config.Vizabi.stores.encodings.modelTypes.frame;
       const { marker, splashMarker } = frameType.splashMarker(fullMarker);
-      config.model.markers.bar = marker;
+
+      config.model.markers[markerName] = marker;
 
       config.name = "barrank";
 
@@ -805,7 +807,7 @@
     }
   };
 
-  BarRank.DEFAULT_CORE = {
+  BarRank.DEFAULT_CORE = (markerName) => ({
     encoding: {
       selected: {
         modelType: "selection"
@@ -836,9 +838,9 @@
         allowEnc: ["x"]
       }
     }
-  };
+  });
 
-  BarRank.versionInfo = { version: "3.7.1", build: 1625689111924, package: {"homepage":"https://github.com/vizabi/barrank#readme","name":"@vizabi/barrank","description":"Vizabi bar rank chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
+  BarRank.versionInfo = { version: "3.7.2", build: 1630874379573, package: {"homepage":"https://github.com/vizabi/barrank#readme","name":"@vizabi/barrank","description":"Vizabi bar rank chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
 
   return BarRank;
 

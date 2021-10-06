@@ -1,4 +1,4 @@
-// https://github.com/vizabi/linechart#readme v3.7.1 build 1625689243063 Copyright 2021 Gapminder Foundation and contributors
+// https://github.com/vizabi/linechart#readme v3.7.2 build 1630885870935 Copyright 2021 Gapminder Foundation and contributors
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('VizabiSharedComponents'), require('mobx')) :
   typeof define === 'function' && define.amd ? define(['VizabiSharedComponents', 'mobx'], factory) :
@@ -1213,9 +1213,10 @@
 
     constructor(config){
 
-      config.Vizabi.utils.applyDefaults(config.model.markers.line.config, LineChart.DEFAULT_CORE);  
+      const markerName = config.options.markerName || "line";
+      config.Vizabi.utils.applyDefaults(config.model.markers[markerName].config, LineChart.DEFAULT_CORE(markerName));  
 
-      const marker = config.model.markers.line;
+      const marker = config.model.markers[markerName];
 
       config.name = "linechart";
 
@@ -1294,7 +1295,7 @@
     chart: {
     },
   };
-  LineChart.DEFAULT_CORE = {
+  LineChart.DEFAULT_CORE = (markerName) => ({
     requiredEncodings: ["x", "y"],
     encoding: {
       "selected": {
@@ -1311,7 +1312,7 @@
       "x": {
         data: {
           concept: { 
-            ref: "markers.line.encoding.frame.data.concept"
+            ref: `markers.${markerName}.encoding.frame.data.concept`
           }
         },
         scale: {
@@ -1345,9 +1346,9 @@
         modelType: "frame"
       }
     }
-  };
+  });
 
-  LineChart.versionInfo = { version: "3.7.1", build: 1625689243063, package: {"homepage":"https://github.com/vizabi/linechart#readme","name":"@vizabi/linechart","description":"Vizabi line chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
+  LineChart.versionInfo = { version: "3.7.2", build: 1630885870935, package: {"homepage":"https://github.com/vizabi/linechart#readme","name":"@vizabi/linechart","description":"Vizabi line chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
 
   return LineChart;
 

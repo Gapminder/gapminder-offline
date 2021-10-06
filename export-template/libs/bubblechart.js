@@ -1,4 +1,4 @@
-// https://github.com/vizabi/bubblechart#readme v3.11.1 build 1625689243109 Copyright 2021 Gapminder Foundation and contributors
+// https://github.com/vizabi/bubblechart#readme v3.11.1 build 1629407692347 Copyright 2021 Gapminder Foundation and contributors
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('VizabiSharedComponents'), require('mobx')) :
   typeof define === 'function' && define.amd ? define(['VizabiSharedComponents', 'mobx'], factory) :
@@ -2538,13 +2538,14 @@
 
     constructor(config){
 
-      const fullMarker = config.model.markers.bubble;
-      config.Vizabi.utils.applyDefaults(fullMarker.config, BubbleChart.DEFAULT_CORE);   
+      const markerName = config.options.markerName || "bubble";
+      const fullMarker = config.model.markers[markerName];
+      config.Vizabi.utils.applyDefaults(fullMarker.config, BubbleChart.DEFAULT_CORE(markerName));   
 
       const frameType = config.Vizabi.stores.encodings.modelTypes.frame;
       const { marker, splashMarker } = frameType.splashMarker(fullMarker);
       
-      config.model.markers.bubble = marker;
+      config.model.markers[markerName] = marker;
 
       config.name = "bubblechart";
 
@@ -2639,14 +2640,14 @@
     }
   };
 
-  BubbleChart.DEFAULT_CORE = {
+  BubbleChart.DEFAULT_CORE = (markerName) => ({
     requiredEncodings: ["x", "y", "size"],
     encoding: {
       "selected": {
         modelType: "selection",
         data: { 
           filter: { 
-            ref: "markers.bubble.encoding.trail.data.filter"
+            ref: `markers.${markerName}.encoding.trail.data.filter`
           }
         }
       },
@@ -2656,7 +2657,7 @@
       "y": { },
       "order": { modelType: "order",
         data: { 
-          ref: "markers.bubble.encoding.size.data.config"
+          ref: `markers.${markerName}.encoding.size.data.config`
         }
       },
       "size": {
@@ -2683,9 +2684,9 @@
         allowEnc: ["y", "x"]
       }
     }
-  };
+  });
 
-  BubbleChart.versionInfo = { version: "3.11.1", build: 1625689243109, package: {"homepage":"https://github.com/vizabi/bubblechart#readme","name":"@vizabi/bubblechart","description":"Vizabi bubble chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
+  BubbleChart.versionInfo = { version: "3.11.1", build: 1629407692347, package: {"homepage":"https://github.com/vizabi/bubblechart#readme","name":"@vizabi/bubblechart","description":"Vizabi bubble chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
 
   return BubbleChart;
 

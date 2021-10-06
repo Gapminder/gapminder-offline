@@ -1,0 +1,253 @@
+@keyframes rotate-forever {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(359deg); } }
+
+.vzb-hidden {
+  display: none !important; }
+
+.vzb-invisible {
+  visibility: hidden !important; }
+
+.vzb-pointerevents-none {
+  pointer-events: none !important; }
+
+.vzb-blur {
+  filter: blur(3px); }
+
+.vzb-transparent {
+  opacity: 0 !important;
+  pointer-events: none !important; }
+
+.vzb-tool .vzb-bubblemap {
+  direction: ltr;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  grid-auto-rows: 0;
+  grid-auto-columns: 0; }
+
+.vzb-tool .vzb-bubblemap .vzb-bmc-map-background, .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg {
+  color: #666;
+  margin: 0;
+  overflow: hidden;
+  grid-row-start: 1;
+  grid-row-end: -1;
+  grid-column-start: 1;
+  grid-column-end: -1;
+  align-self: stretch;
+  justify-self: stretch; }
+
+.vzb-tool.vzb-small .vzb-bubblemap .vzb-bmc-bubble-labels,
+.vzb-tool.vzb-small .vzb-bubblemap .vzb-bmc-tooltip,
+.vzb-tool.vzb-small .vzb-bubblemap .vzb-bmc-axis-info {
+  font-size: 0.8em; }
+
+.vzb-tool.vzb-medium .vzb-bubblemap .vzb-bmc-bubble-labels,
+.vzb-tool.vzb-medium .vzb-bubblemap .vzb-bmc-tooltip,
+.vzb-tool.vzb-medium .vzb-bubblemap .vzb-bmc-axis-info {
+  font-size: 1em; }
+
+.vzb-tool.vzb-large .vzb-bubblemap .vzb-bmc-bubble-labels,
+.vzb-tool.vzb-large .vzb-bubblemap .vzb-bmc-tooltip,
+.vzb-tool.vzb-large .vzb-bubblemap .vzb-bmc-axis-info {
+  font-size: 1.24em; }
+
+.vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-s-title, .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-c-title {
+  color: #425663;
+  cursor: pointer;
+  fill: currentColor; }
+  .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-s-title:hover, .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-c-title:hover {
+    text-decoration: underline; }
+  .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-disabled.vzb-bmc-axis-s-title, .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-disabled.vzb-bmc-axis-c-title {
+    opacity: 0.3;
+    pointer-events: none; }
+
+.vzb-tool.vzb-small .vzb-bubblemap .vzb-bmc-axis-s-title,
+.vzb-tool.vzb-small .vzb-bubblemap .vzb-bmc-axis-c-title {
+  font-size: 1em; }
+
+.vzb-tool.vzb-medium .vzb-bubblemap .vzb-bmc-axis-s-title,
+.vzb-tool.vzb-medium .vzb-bubblemap .vzb-bmc-axis-c-title {
+  font-size: 1.24em; }
+
+.vzb-tool.vzb-large .vzb-bubblemap .vzb-bmc-axis-s-title,
+.vzb-tool.vzb-large .vzb-bubblemap .vzb-bmc-axis-c-title {
+  font-size: 1.38em; }
+
+.vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-y-info,
+.vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-c-info {
+  cursor: pointer;
+  opacity: 0.3;
+  pointer-events: visible; }
+  .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-y-info path, .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-c-info path {
+    fill: #607889;
+    stroke: none; }
+  .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-y-info circle, .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-c-info circle {
+    fill: none;
+    stroke: #607889; }
+  .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-y-info:hover,
+  .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-c-info:hover {
+    opacity: 1; }
+
+.vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels .stroke {
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-opacity: 0.7;
+  stroke-width: 3px;
+  stroke-linecap: butt;
+  stroke-linejoin: miter; }
+
+.vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels text {
+  fill: #333;
+  pointer-events: none;
+  text-anchor: end; }
+
+.vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels rect {
+  cursor: pointer;
+  pointer-events: none; }
+
+.vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels .vzb-tooltip-border {
+  fill: #fff;
+  stroke: #333;
+  stroke-width: 1.5px; }
+
+.vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-bmc-label-shadow {
+  filter: alpha(opacity=70);
+  opacity: 0.7;
+  fill: #fff;
+  stroke: #fff; }
+
+.vzb-tool.vzb-small .vzb-bubblemap .vzb-shadow,
+.vzb-tool.vzb-small .vzb-bubblemap .vzb-bmc-label-shadow {
+  stroke-width: 2px; }
+
+.vzb-tool.vzb-medium .vzb-bubblemap .vzb-shadow,
+.vzb-tool.vzb-medium .vzb-bubblemap .vzb-bmc-label-shadow {
+  stroke-width: 3px; }
+
+.vzb-tool.vzb-large .vzb-bubblemap .vzb-shadow,
+.vzb-tool.vzb-large .vzb-bubblemap .vzb-bmc-label-shadow {
+  stroke-width: 3px; }
+
+.vzb-tool .vzb-bubblemap {
+  position: relative; }
+  .vzb-tool .vzb-bubblemap .vzb-bmc-map-background {
+    position: relative; }
+    .vzb-tool .vzb-bubblemap .vzb-bmc-map-background .stroke {
+      fill: none;
+      stroke: #999;
+      stroke-width: .5px;
+      stroke-opacity: .3; }
+    .vzb-tool .vzb-bubblemap .vzb-bmc-map-background .fill {
+      fill: none; }
+    .vzb-tool .vzb-bubblemap .vzb-bmc-map-background .graticule {
+      fill: none;
+      stroke: #999;
+      stroke-width: .5px;
+      stroke-opacity: .3; }
+    .vzb-tool .vzb-bubblemap .vzb-bmc-map-background .land {
+      fill: #999;
+      opacity: .4; }
+    .vzb-tool .vzb-bubblemap .vzb-bmc-map-background .boundary {
+      fill: none;
+      stroke: #fff;
+      stroke-width: .5px; }
+  .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg {
+    position: relative; }
+    .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-year {
+      filter: alpha(opacity=50);
+      opacity: 0.5;
+      font-size: 15em;
+      fill: #999;
+      text-anchor: middle;
+      -webkit-touch-callout: none;
+      user-select: none; }
+    .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels text,
+    .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels circle {
+      cursor: pointer;
+      fill: #607889; }
+    .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-highlight .vzb-bmc-label-shadow {
+      stroke: #ff0; }
+    .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-bmc-label .vzb-bmc-label-x-text {
+      transition: opacity 200ms linear;
+      cursor: pointer;
+      fill: #607889;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      font-size: .9em;
+      stroke: none; }
+      .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-bmc-label .vzb-bmc-label-x-text.vzb-revert-color {
+        fill: #607889; }
+    .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-bmc-label .vzb-bmc-label-x-icon {
+      transition: opacity 200ms linear;
+      fill: #fff;
+      pointer-events: none; }
+    .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-bmc-label .vzb-bmc-label-x {
+      transition: opacity 200ms linear;
+      cursor: pointer;
+      pointer-events: all;
+      fill: #607889;
+      stroke: #fff;
+      stroke-width: 2px; }
+      .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble-labels .vzb-bmc-label .vzb-bmc-label-x.vzb-revert-color {
+        fill: #fff;
+        stroke: #607889; }
+    .vzb-rtl.vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels text {
+      direction: rtl;
+      text-anchor: start;
+      unicode-bidi: embed; }
+    .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels rect {
+      pointer-events: visible; }
+    .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels .vzb-bmc-entity .vzb-bmc-label-x {
+      transition: opacity 200ms linear;
+      fill: #607889;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      pointer-events: visible;
+      font-size: .9em;
+      cursor: pointer;
+      stroke: #fff;
+      stroke-width: 2px; }
+      .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels .vzb-bmc-entity .vzb-bmc-label-x.vzb-highlighted rect {
+        fill: #fffcb9; }
+    .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels .vzb-bmc-entity .vzb-bmc-label-x-icon {
+      transition: opacity 200ms linear;
+      fill: #fff; }
+    .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-labels .vzb-bmc-entity.vzb-highlighted rect {
+      fill: #fffcb9; }
+    .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-lines .vzb-bmc-entity line {
+      stroke: #666;
+      opacity: .8; }
+    .vzb-rtl.vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-s-title text {
+      direction: rtl;
+      unicode-bidi: embed; }
+    .vzb-rtl.vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-axis-c-title text {
+      direction: rtl;
+      unicode-bidi: embed; }
+    .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble {
+      stroke: #333;
+      stroke-opacity: .7; }
+      .vzb-tool .vzb-bubblemap .vzb-bubblemap-svg .vzb-bmc-bubble.vzb-super-highlighted {
+        animation: blink 1s step-start 0s infinite; }
+
+@keyframes blink {
+  50% {
+    opacity: 0; } }
+
+.vzb-tool.vzb-presentation .vzb-bubblemap .vzb-bmc-axis-s-title,
+.vzb-tool.vzb-presentation .vzb-bubblemap .vzb-bmc-axis-c-title,
+.vzb-tool.vzb-presentation .vzb-bubblemap .vzb-bmc-axis-info {
+  font-size: 2.1em; }
+
+.vzb-tool.vzb-presentation .vzb-bubblemap .vzb-bmc-bubble-labels text {
+  font-size: 1.6em; }
+
+.vzb-tool.vzb-presentation .vzb-bubblemap .vzb-bmc-labels {
+  font-size: 1.6em; }
+
+.vzb-tool.vzb-presentation.vzb-small .vzb-bmc-axis-s-title,
+.vzb-tool.vzb-presentation.vzb-small .vzb-bmc-axis-c-title {
+  font-size: 1.24em; }

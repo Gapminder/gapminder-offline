@@ -1,4 +1,4 @@
-// http://vizabi.org v1.17.2 Copyright 2021 Jasper Heeffer and others at Gapminder Foundation
+// http://vizabi.org v1.18.0 Copyright 2021 Jasper Heeffer and others at Gapminder Foundation
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('mobx')) :
   typeof define === 'function' && define.amd ? define(['mobx'], factory) :
@@ -526,7 +526,6 @@
       return ObservableGroupMap;
   })(mobx.ObservableMap));
   {
-      Promise.resolve();
       if (typeof queueMicrotask !== "undefined") ;
       else if (typeof process !== "undefined" && process.nextTick) ;
       else ;
@@ -1848,6 +1847,7 @@
       "$nin": (field, val) => `!${val}.includes(row.${field})`,
   };
 
+  //used by "filterRequired" transform
   function filterNullish(df, fields) {
       let filterParam = fields.every(isString)
           ? simpleNullishCheck(fields)
@@ -1859,12 +1859,15 @@
   function simpleNullishCheck(fields) {
       const l = fields.length;
       return row => {
+          //faster implementation with a for-loop
           for (let i = 0; i < l; i++) {
               if (row[fields[i]] == null) return false;
           }
           return true;
       }
   }
+
+  // used for "repeat" encoding for example
   // allows defining fields with logical conditions like: [{ $or: ['x','x1'] }, 'y']
   function nullishFilterSpec(fields) {
       return { $nor: makeSpec(fields) }
@@ -1971,7 +1974,10 @@
   }
 
   // copies properties using property descriptors so accessors (and other meta-properties) get correctly copied
-  // https://www.webreflection.co.uk/blog/2015/10/06/how-to-copy-objects-in-javascript
+  // otherwise if you do regular Object.assign it would read directly from the object and execute getters 
+  // and the return values would be what it assigns. but we want to actually copy getters and setters
+
+  // source: https://www.webreflection.co.uk/blog/2015/10/06/how-to-copy-objects-in-javascript
   // rewrote for clarity and make sources overwrite target (mimic Object.assign)
   function assign(target, ...sources) {
       sources.forEach(source => {
@@ -2021,7 +2027,7 @@
   }
 
   /**
-   * Checks all states sequantially (only check next if previous is fulfilled)
+   * Checks all states sequantially (only check-trigger next state if previous is fulfilled)
    * @param {function[]} states state getters
    * @returns 
    */
@@ -2131,12 +2137,17 @@
   }
 
   function createModel(modelType, config, parent, id) {
+      //suffix for debugging
       let nameSuffix = id ? '-' + id : parent?.name ? '-' + parent.name : '';
       let model = mobx.observable(
+          //actual constructor
           modelType.nonObservable(config, parent, id), 
+          //decorators
           modelType.decorate,
+          //extra options: name of observable
           { name: (modelType.name || config.modelType || 'base') + nameSuffix }
       );
+      //lifecycle function
       if (model.onCreate) model.onCreate();
       return model;
   }
@@ -2535,22 +2546,28 @@
 
   const createStore = function(baseType = defaultType, extendedTypes = {}) {
       return mobx.observable({
+          // add types on store creation
           modelTypes: {
               baseType,
               ...extendedTypes
           },
           models: {},
+          // add types later during runtime
           addType: function(modelType, modelConstructor) {
               if (this.modelTypes[modelType])
                   console.warn("Adding model type " + modelType + " failed. Type already exists", this);
               this.modelTypes[modelType] = modelConstructor;
           },    
           create: mobx.action('create', function(config, parent, id) {
-              const modelType = this.modelTypes[config.modelType] || this.modelTypes.baseType;
-              const model = modelType(...arguments);
+              //model can be of a special type, such as frame or color scale
+              //otherwise it falls back to generic type: encoding or scale that would be
+              const createModelOfType = this.modelTypes[config.modelType] || this.modelTypes.baseType;
+              //see utils.createModel()
+              const model = createModelOfType(...arguments);
               if (id) this.set(id, model);
               return model;
           }),
+          //used for example when passing multiple markers in Vizabi()
           createMany: mobx.action('createMany', function(configs) {
               const models = {};
               for (let id in configs) {
@@ -2561,13 +2578,20 @@
           has: function(id) {
               return id in this.models;
           },   
-          get(reference, parent, name) {
-              if (isString(reference)) {
-                  return this.models[reference] // id
-              } else if (isModel(reference)) {
-                  return reference;
+          get(arg, parent, name) {
+              //get or create actually
+              if (isString(arg)) {
+                  //resolve arg as reference if it's a string - get it from the store
+                  return this.models[arg] // id
+              } else if (isModel(arg)) {
+                  //no-op: if asking for a model - return it without change
+                  return arg;
               } else {
-                  return this.create(reference, parent, name)
+                  //otherwise assume arg is a config for a new model to be created
+                  //allows creating multiple models from the same config
+                  //e.g. order.data and size.data are created from the same config
+                  //see marker get encoding(), marker.encodingCache() and encodingCache.js
+                  return this.create(arg, parent, name)
               }
           },
           getAll: function() {
@@ -2666,7 +2690,11 @@
    */
   function inlineReader(argPromise) {
 
-      argPromise = Promise.resolve(argPromise);
+      argPromise = Promise.resolve(argPromise).then((args) => {
+          args.keyConcepts = args.keyConcepts ?? []; 
+          return args;
+      });
+
       let dataPromise, conceptPromise;
 
       return {
@@ -2709,7 +2737,7 @@
       }
   }
 
-  function parseValues({ values, dtypes, keyConcepts = [] }) {
+  function parseValues({ values, dtypes, keyConcepts}) {
       return DataFrame(makeParser(dtypes)(values), keyConcepts);
   }
 
@@ -3032,6 +3060,7 @@
       };
   }
 
+  const TIME_LIKE_CONCEPTS = ["time", "year", "month", "week", "quarter"];
   const GOOGLE_DOC_PREFIX = 'https://docs.google.com/spreadsheets/';
   const ERRORS$1 = {
       WRONG_TIME_COLUMN_OR_UNITS: 'reader/error/wrongTimeUnitsOrColumn',
@@ -3046,13 +3075,13 @@
   function csvReader({ 
           path = "data.csv", 
           sheet = "", 
-          exernalTextReader,
+          externalTextReader,
           externalJsonReader,
           hasNameColumn = false,
           isTimeInColumns = false,
           assetsPath = "",
           delimiter = "",
-          keyConcepts = [], 
+          keyConcepts, 
           dtypes 
       }) {
       
@@ -3061,14 +3090,15 @@
 
       path = _googleSpreadsheetURLAdaptor(path, sheet);
 
-      return Object.assign(inlineReader(getValues().then(values => ({ 
+      return Object.assign(inlineReader(getValues().then(({values, keyConcepts}) => ({ 
               values,
               keyConcepts,
               dtypes
           })
       )), {
           getDatasetInfo,
-          getAsset
+          getAsset,
+          getValues
       });
 
       function getValues(){
@@ -3077,11 +3107,11 @@
               .then(parseTextToTable)
               .then(transformNameColumn)
               .then(transformTimeInColumns)
-              .then(returnRowsOnly);
+              .then(returnValuesAndKeyConcepts);
       }
     
       function loadFile(){
-          let textReader = exernalTextReader || d3.text;
+          let textReader = externalTextReader || d3.text;
           return textReader(path)
               .catch(error => {
                   error.name = ERRORS$1.FILE_NOT_FOUND;
@@ -3126,8 +3156,23 @@
           return {rows, columns};
       }
 
-      function returnRowsOnly({rows}){
+      function returnValuesAndKeyConcepts({rows, columns}){
+          return {
+              values: autotype(rows),
+              keyConcepts: guessKeyConcepts(columns, keyConcepts),
+              columns
+          }
+      }
+
+      function autotype(rows){
           return rows.map(row => d3.autoType(row));
+      }
+
+      function guessKeyConcepts(columns, keyConcepts){
+          if(keyConcepts) return keyConcepts;
+          const index = columns.findIndex((f) => TIME_LIKE_CONCEPTS.includes(f));
+          // +1 because we want to include time itself as well
+          return columns.slice(0, index + 1);
       }
 
       function makeError(e){
@@ -3211,7 +3256,7 @@
   const defaultConfig$9 = {
       path: null,
       sheet: null,
-      keyConcepts: [],
+      keyConcepts: null,
       values: null,
       transforms: []
   };
@@ -3421,12 +3466,15 @@
               if (this.cache.has(query)) 
                   return this.cache.get(query);
 
+              //find out which queries can be combined (stringify all fields minus select.value)
               const queryCombineId = this.calcCombineId(query);
               if (this.queue.has(queryCombineId)) {
+                  //add an extra column to a query already found in the queue
                   const { baseQuery, promise } = this.queue.get(queryCombineId);
                   baseQuery.select.value = concatUnique(baseQuery.select.value, query.select.value);
                   return promise;
               } else {
+                  //create a new query in a queue
                   const baseQuery = deepclone(query);
                   const promise = fromPromise(this.sendDelayedQuery(baseQuery));
                   this.queue.set(queryCombineId, { baseQuery, promise });
@@ -3439,6 +3487,7 @@
               // sleep first so other queries can fill up baseQuery's select.value
               await sleep();
               const queryCombineId = this.calcCombineId(query);
+              //after deleting from the queue nothing more can be added to the query
               this.queue.delete(queryCombineId);
               const response = await reader.read(query);
               return this.normalizeResponse(response, query);
@@ -3493,8 +3542,8 @@
    * @param {*} possibleRef 
    * @returns config Config object as described in reference config
    */
-   function resolveRef(possibleRef) {
-      // no ref
+   function resolveRef(possibleRef, root = stores) {
+      // not a ref
       if (!isReference(possibleRef))
           return { state: 'fulfilled', value: possibleRef }
 
@@ -3507,7 +3556,7 @@
       }
 
       // model ref includes resolved defaults
-      const result = resolveTreeRef(ref.path, stores);
+      const result = resolveTreeRef(ref.path, root);
       result.value = transformModel(result.value, ref.transform);
       return result;
   }
@@ -3520,9 +3569,11 @@
       const ref = refStr.split('.');
       let prev;
       let node = tree;
+      //walk the tree
       for (let i = 0; i < ref.length; i++) {
           let nextStep = ref[i];
           prev = node;
+          //use get function where there is one, i.e. stores, otherwise assume it's an object
           node = prev.get?.(nextStep) ?? prev[nextStep];
 
           if (typeof node == "undefined") {
@@ -3532,6 +3583,16 @@
       }
 
       return { 
+          //prev state is needed for example when we get a ref to a concept
+          //concept doesn't have state, so we problby want to know the state of dataConfig instead
+
+          //and since it's a getter we don't read it immediately
+          //this prevents circular computations from happening if we do it right away
+          //for example between order and the size encodings
+          //referring to the state of size --> getting state of size -->
+          //size checks marker config resolving state --> which wants to know order state
+          //fortunately we don't need to read the state when constucting the reference
+          //therefore we can have it in a computed
           get state() { return node.state ?? prev.state ?? 'fulfilled' }, 
           value: node 
       }
@@ -3573,8 +3634,6 @@
   const configSolver = {
       addSolveMethod,
       configSolution,
-      needsAutoConfig,
-      encodingSolution,
       markerSolvingState,
       dataConfigSolvingState
   };
@@ -3583,53 +3642,124 @@
       solveMethods[name] = fn;
   }
 
+  //configSolution can be requested by dataConfig of marker, of an encoding, or standalone
   function configSolution(dataConfig) {     
       if (dataConfig.marker) {
+      // autoconfig needs to be solved on the marker level, because encoding solutions are intertwined
+      // this is why we are checking for marker that is involved, both DC of enc and marker have a .marker
           if (dataConfig.hasEncodingMarker) {
+              //if it's an encoding, grab the corresponding part of marker solution.
+              //this would also trigger marker solution if it wasn't yet computed
               if (dataConfig.marker.data.configSolution)
                   return dataConfig.marker.data.configSolution.encodings[dataConfig.parent.name];
               else 
+                  //or return undefined for no-data encoding without throwing an error
                   return { concept: undefined, space: undefined };
           } else {
+              //or else: actually start solving autoconfig on a marker level
               return markerSolution(dataConfig);
           }
       } else {
-          // stand-alone dataConfig
+          // stand-alone dataConfig, not a common case but helpful for tests
           return encodingSolution(dataConfig);
       }
   }
 
-  function encodingSolution(dataConfig, markerSpaceCfg, usedConcepts = []) {
-      let result;    
 
-      if (dataConfig.isConstant) {
-          result = { concept: undefined, space: undefined };
-      } else if (needsSpaceAutoCfg(dataConfig)) {
-          result = findSpaceAndConcept(dataConfig, { usedConcepts, markerSpaceCfg });
-      } else if (needsConceptAutoCfg(dataConfig)) {
-          result = findConceptForSpace(dataConfig, { usedConcepts });
+  function markerSolution(dataConfig) {
+      const cfg = dataConfig.config;
+
+      if (!dataConfig.parent.encoding)
+          console.warn(`Can't get marker solution for a non-marker dataconfig.`);
+
+      if (needsSpaceAutoCfg(dataConfig)) {
+
+          if (!dataConfig.source) {
+              console.warn(`Can't autoconfigure marker space without a source defined.`);
+              return;
+          }
+
+          //the callback in third argument checks that whatever space candidate is suggested by autoConfigSpace,
+          //it also has a solution for encodings
+          return autoConfigSpace(dataConfig, undefined, space => findMarkerConfigForSpace(dataConfig, space))
+
       } else {
-          result = {
-              space: "space" in dataConfig.config ? dataConfig.config.space : dataConfig.defaults.space,
-              concept: "concept" in dataConfig.config ? dataConfig.config.concept : dataConfig.defaults.concept
-          };
+          //for whatever space is configured, find solutions for encoding
+          return findMarkerConfigForSpace(dataConfig, cfg.space);
       }
-
-      if (!result) {
-          result = { concept: undefined, space: undefined };
-      }
-
-      return result;
   }
 
+
+  // this function is used for both marker space and for encoding space
+  function autoConfigSpace(dataConfig, extraOptions = {}, getFurtherResult) {
+      // getFurtherResult for marker: is there also solution for encodings
+      // getFurtherResult for encoding: can we find concept for this space
+
+      const { markerSpaceCfg } = extraOptions;
+      let availableSpaces;
+      //get all the spaces a solution could be set to
+      if (dataConfig.hasEncodingMarker && markerSpaceCfg) {
+          //for encoding space under a known marker space: we need to match with marker space
+          //start with getting all subsets of marker space, filter by availability
+          availableSpaces = subsets(markerSpaceCfg)
+              .filter(space => dataConfig.source.availability.keyLookup.has(createKeyStr(space)));
+          availableSpaces = sortSpacesByPreference(availableSpaces);
+          //add marker space itself too - as most preferable
+          availableSpaces.unshift(markerSpaceCfg);
+      } else {
+          //for marker spaces: get from pure availability
+          availableSpaces = Array.from(dataConfig.source.availability.keyLookup.values());
+          availableSpaces = sortSpacesByPreference(availableSpaces);
+      }
+
+      //put candidates through some filters
+      const solveFilterSpec = dataConfig.config.space?.filter || dataConfig.defaults.space?.filter;
+      const solveFilter = createSpaceFilterFn(solveFilterSpec, dataConfig);
+      const allowFilter = dataConfig.allow.space?.filter || (() => true);
+
+      for (let space of availableSpaces) {
+          let result;        
+          if (!space.includes("concept") //hardcoded disallowing to have concept "concept" in space
+              && solveFilter(space)
+              && allowFilter(space)
+              && (result = getFurtherResult(space))
+          ) {
+              //return the first satisfactory space because they are sorted
+              return result
+          }
+      }
+      
+      console.warn("Could not autoconfig to a space which also satisfies further results for " + dataConfig.parent.id + ".", { 
+          dataConfig,
+          spaceCfg: dataConfig.config.space || dataConfig.defaults.space, 
+          availableSpaces, 
+          getFurtherResult });
+
+      return { concept: undefined, space: undefined };
+  }
+
+
+  // 1-dim spaces go in back of the list, others: smallest spaces first
+  function sortSpacesByPreference(spaces) {
+      return spaces.sort((a, b) => a.length > 1 && b.length > 1 ? a.length - b.length : b.length - a.length); 
+  }
+
+
+  //this is called to try if a space candidate works or for a space that is set
+  //even the explicitly configured concepts go through here because we need to know what concepts they are at
+  //so we don't set other encs to the same concepts
   function findMarkerConfigForSpace(markerDataConfig, space) {
       let encodings = {};
+
+      //track concepts used by previous encodgins so they are not used again
       let usedConcepts = new Set();
       let dataConfigResults = new Map(); 
 
+      //every single encoding should have a compatible configuration, so that space would be good for marker
       let success = sortedEncodingEntries(markerDataConfig.parent.encoding).every(([name, enc]) => {
 
           // only one result per dataConfig, multiple encodings can have the same dataConfig (e.g. by reference)
+          //if we already have results for a certain data config: return that from saved dataConfigResults
           let encResult = dataConfigResults.has(enc.data) 
               ? dataConfigResults.get(enc.data)
               : encodingSolution(enc.data, space, [...usedConcepts]);
@@ -3646,6 +3776,8 @@
       return success ? { encodings, space } : undefined;
   }
 
+
+  //sort encodings so that the autoconfig for them is stable
   function sortedEncodingEntries(encodingObject) {
       return [...Object.entries(encodingObject)]
           .sort(
@@ -3653,79 +3785,32 @@
           );
   }
 
-  function markerSolution(dataConfig) {
-      const cfg = dataConfig.config;
 
-      if (!dataConfig.parent.encoding)
-          console.warn(`Can't get marker solution for a non-marker dataconfig.`);
+  function encodingSolution(dataConfig, markerSpaceCfg, usedConcepts = []) {
 
-      if (needsSpaceAutoCfg(dataConfig)) {
+      if (dataConfig.isConstant) 
+          //nothing to solve
+          return { concept: undefined, space: undefined };
 
-          if (!dataConfig.source) {
-              console.warn(`Can't autoconfigure marker space without a source defined.`);
-              return;
-          }
+      else if (needsSpaceAutoCfg(dataConfig)) 
+          //same pattern with the callback as in markerSolution
+          return autoConfigSpace(dataConfig, { usedConcepts, markerSpaceCfg }, space => {
+              return findConceptForSpace(dataConfig, { usedConcepts, markerSpaceCfg }, space)
+          })
 
-          return autoConfigSpace(dataConfig, undefined, space => findMarkerConfigForSpace(dataConfig, space))
+      else if (needsConceptAutoCfg(dataConfig))
 
-      } else {
-          return findMarkerConfigForSpace(dataConfig, cfg.space);
-      }
+          return findConceptForSpace(dataConfig, { usedConcepts });
+
+      else
+          //no autoconfig needed
+          //select and highlight end up in this branch becuase they are hard-configured on enc level
+          return {
+              space: "space" in dataConfig.config ? dataConfig.config.space : dataConfig.defaults.space,
+              concept: "concept" in dataConfig.config ? dataConfig.config.concept : dataConfig.defaults.concept
+          }    
   }
 
-  function autoConfigSpace(dataConfig, extraOptions = {}, getFurtherResult) {
-
-      const { markerSpaceCfg } = extraOptions;
-      let availableSpaces;
-      if (dataConfig.hasEncodingMarker && markerSpaceCfg) {
-          availableSpaces = subsets(markerSpaceCfg)
-              .filter(space => dataConfig.source.availability.keyLookup.has(createKeyStr(space)));
-          availableSpaces = sortSpacesByPreference(availableSpaces);
-          availableSpaces.unshift(markerSpaceCfg);
-      } else {
-          availableSpaces = Array.from(dataConfig.source.availability.keyLookup.values());
-          availableSpaces = sortSpacesByPreference(availableSpaces);
-      }
-
-      const solveFilterSpec = dataConfig.config.space?.filter || dataConfig.defaults.space?.filter;
-      const solveFilter = createSpaceFilterFn(solveFilterSpec, dataConfig);
-      const allowFilter = dataConfig.allow.space?.filter || (() => true);
-
-      for (let space of availableSpaces) {
-          let result;
-          if (!space.includes("concept") 
-              && solveFilter(space)
-              && allowFilter(space)
-              && (result = getFurtherResult(space))
-          ) {
-              return result
-          }
-      }
-      
-      console.warn("Could not autoconfig to a space which also satisfies further results for " + dataConfig.parent.id + ".", { 
-          dataConfig,
-          spaceCfg: dataConfig.config.space || dataConfig.defaults.space, 
-          availableSpaces, 
-          getFurtherResult });
-
-      return { concept: undefined, space: undefined };
-  }
-
-  function sortSpacesByPreference(spaces) {
-      return spaces.sort((a, b) => a.length > 1 && b.length > 1 ? a.length - b.length : b.length - a.length); // 1-dim in back, rest smallest spaces first
-  }
-
-  function findSpaceAndConcept(dataConfig, extraOptions) {
-
-      return autoConfigSpace(dataConfig, extraOptions, space => {
-          return findConceptForSpace(dataConfig, extraOptions, space)
-      })
-
-  }
-
-  function needsSolving(config) {
-      return isNonNullObject(config) && !Array.isArray(config);
-  }
 
   // Add preconfigured often used solver methods 
   addSolveMethod(defaultConceptSolver);
@@ -3746,6 +3831,7 @@
       const conceptCfg = dataConfig.config.concept || dataConfig.defaults.concept;
       space = space || dataConfig.config.space || dataConfig.defaults.space;
 
+      //need to check it if we got here through autoconfig of space in encodingSolution() 
       if (needsConceptAutoCfg(dataConfig)) {
           const solveConcept = solveMethods[conceptCfg.solveMethod] || defaultConceptSolver;
           concept = solveConcept(space, dataConfig, usedConcepts);
@@ -3771,6 +3857,7 @@
           ? createFilterFn(conceptCfg.filter)
           : () => true;
 
+      //get all concepts available for a space
       const availableConcepts = availability.keyValueLookup.get(createKeyStr(space));
       if (!availableConcepts) 
           return;
@@ -3782,6 +3869,7 @@
           // configurable filter
           .filter(satisfiesFilter);
 
+      //select method can again be configured
       const selectMethod = solveMethods[conceptCfg.selectMethod] || selectUnusedConcept;
       return selectMethod({ concepts: filteredConcepts, dataConfig, usedConcepts, space })?.concept;
   }
@@ -3789,10 +3877,14 @@
   /**
    * Get the property that exists on most entity concepts in space.
    * Possibly limited by `allowedProperties` in the concept solving options.
+   * Takes all properties of all entitity sets in a given space, pushes them into an array
+   * then gets the mode of that array, i.e. most common value
+   * Used only for labels
    * @param {*} space 
    * @param {*} dataConfig 
    * @returns 
    */
+  //TODO: rename to mostCommonEntityPropertyForSpace
   function mostCommonDimensionProperty(space, dataConfig) {
       const dataSource = dataConfig.source;
       const kvLookup = dataSource.availability.keyValueLookup;
@@ -3824,21 +3916,35 @@
   function needsSpaceAutoCfg(dataConfig) {
       const cfg = dataConfig.config;
       const defaults = dataConfig.defaults;
-      const explicitNoSpace = "space" in cfg && !cfg.space;
-      const usesDefaultAutoConfig = !cfg.space && needsSolving(defaults.space);
-      return !dataConfig.isConstant && !explicitNoSpace 
-          && (needsSolving(cfg.space) || usesDefaultAutoConfig)
+
+      const explicitNoSpace = "space" in cfg && !cfg.space; //such as select, highlight encodings
+      const defaultNeedsSolving = !cfg.space && needsSolving(defaults.space);
+
+      return !dataConfig.isConstant 
+          && !explicitNoSpace 
+          && (needsSolving(cfg.space) || defaultNeedsSolving)
   }
 
   function needsConceptAutoCfg(dataConfig) {
       const cfg = dataConfig.config;
       const defaults = dataConfig.defaults;
-      const isStandAloneDataConfig = !dataConfig.marker;
-      const explicitNoConcept = "concept" in cfg && !cfg.concept;
-      const isEncodingDataConfig = dataConfig.hasEncodingMarker;
-      const usesDefaultSolving = !("concept" in cfg) && needsSolving(defaults.concept);
-      return !dataConfig.isConstant && !isReference(dataConfig.config.concept) && !explicitNoConcept && (needsSolving(cfg.concept)
-          || ((isEncodingDataConfig || isStandAloneDataConfig) && usesDefaultSolving));
+
+      const isStandAloneDataConfig = !dataConfig.marker; //for tests
+      const explicitNoConcept = "concept" in cfg && !cfg.concept; //such as select, highlight encodings
+      const isEncodingDataConfig = dataConfig.hasEncodingMarker; //check we are on enc level
+      const defaultNeedsSolving = !("concept" in cfg) && needsSolving(defaults.concept);
+      
+      return !dataConfig.isConstant 
+          && !isReference(dataConfig.config.concept) //not even try to autoconfigure references (weird infinite loops)
+          && !explicitNoConcept 
+          && (needsSolving(cfg.concept)
+          || ((isEncodingDataConfig || isStandAloneDataConfig) && defaultNeedsSolving));
+  }
+
+  //if it's a space then it's array, if it's object, then it's instructions to autoconfigure
+  //if it's an array (for space) or a string (for concept) we know it's set by user
+  function needsSolving(config) {
+      return isNonNullObject(config) && !Array.isArray(config);
   }
 
   function needsAutoConfig(dataConfig) {
@@ -3854,7 +3960,10 @@
 
   function markerSolvingState(marker) {
       const dataConfigs = [marker.data];
-      for (const enc of Object.values(marker.encoding)) { dataConfigs.push(enc.data); }    const states = dataConfigs.flatMap(dataConfigSolvingState);
+      for (const enc of Object.values(marker.encoding)) { dataConfigs.push(enc.data); }    //if we need to autoconfigure space we need to wait concepts to be loaded first
+      //which in turn will wait for availability...
+      const states = dataConfigs.flatMap(dataConfigSolvingState);
+      //here we combine states of all dataConfigs in marker and its encodings
       return combineStates(states);
   }
 
@@ -4066,6 +4175,7 @@
                   }
               })
           },
+          // it's possible to have an encoding without a marker in case of standalone enc (tests)
           get hasEncodingMarker() {
               return this.parent && this.parent.marker;
           },
@@ -5313,6 +5423,11 @@
       })
   }
 
+  //instead of selecting an unused concept it selects a frame concept
+  //gives preference to concepts in space that are of type time and measure
+  //if there is no time or measure in space then check candidate concepts given by solveMethod
+  //if notheing there either, then pick the last dimension of the space
+  //it woud fail if space is an empty array
   configSolver.addSolveMethod(
       function selectFrameConcept({ concepts, space, dataConfig }) {
           const spaceConcepts = space.map(dim => dataConfig.source.getConcept(dim));
@@ -5755,6 +5870,8 @@
       aggregate
   });
 
+  //encoding cache makes sure encodings are not recreated every time
+
   function encodingCache() {
       const cache = {};
       function fill(cfg, marker) {
@@ -5878,14 +5995,18 @@
               );
           },
           get referenceState() {
+              //normal combineStates works in parallel (reads-triggers all states at once)
               return combineStates(Object.values(this.references).map(ref => ref.state))
           },
           get state() {
+              //checking state should not send any queries before reference state and config state are resolved
+              //Checks all states sequantially (only check-trigger next state if previous is fulfilled)
               const dataConfigSolverState = combineStatesSequential([() => this.referenceState, () => this.configState]);
 
               // observe (part of) the pipeline as long as state is observed to keep them cached
               if (dataConfigSolverState == 'fulfilled') {
                   if (this.encoding.frame?.changeBetweenFramesEncodings?.some(enc => this.encoding[enc].data.state !== 'fulfilled')) {
+                      //trigger combining encoding data responses in dataMapCache
                       this.dataMapCache;
                   } else {
                       this.dataMap;
@@ -5978,10 +6099,9 @@
                   || data.iterableResponse === false
                   ) { 
                   // proper subset
-                  // const response = data.response;
                   return row => data.response.get(row)?.[concept];
               } else if (required.length > 0 && !required.includes(name)) {
-                  //const response = data.response;
+                  // superset and not a required enc when required is used (otherwise it would be a defining)
                   return (row, key) => data.response.getByStr(key)?.[concept];
               } else {
                   return 'defining'; // defining encoding
@@ -6006,7 +6126,13 @@
               const joinConfigs = defining.map(name => this.joinConfig(this.encoding[name], name));
               let dataMap = fullJoin(joinConfigs, this.data.space);
 
-              // ammend markers with getter        
+              // ammend markers with getter
+              // part of the optimisation to not redo the whole data pipeline 
+              //ammending encodings are split in 2 groups: ammending with getter and ammending by writing
+              //the once that use the getter won't trigger pipeline (constants, concepts in space)
+              //the idea with getter is to postpone calculation or reading to a later point
+              //in the standard bubble chart color is through the getter too
+              //calcualtions are more expensive but we can postpone them
               for (const encName of ammendGet) {
                   for (const markerKey of dataMap.keys()) {
                       const row = dataMap.get(markerKey); 
@@ -6023,6 +6149,15 @@
               }
 
               // ammend markers by writing
+              //this is the faster way. doesn't have to go through a getter function
+              //quicker access compared to reading from a getter
+              //we do this when the values are computed in trasformation pipeline anyway
+              //see getEncodingByType()
+
+              //each enc has a field. if that field is included in transformFields array of a marker (which adds its own transformfileds and those of every encoding)
+              //then it's a written encoding
+
+              //if we change something that uses getter field then the whole pipele doesn't need to rerun
               const ammendFns = Object.fromEntries(ammendWrite.map(enc => [enc, this.ammendFnForEncoding(enc)]));
               for (const markerKey of dataMap.keys()) {
                   const row = dataMap.get(markerKey);
@@ -6144,6 +6279,7 @@
               console.warn("Requesting unknown transformed data name: ", name);
           },
           get dataMap() {
+              //compute transformations backwards (pull data through trasformations)
               return this.transformedDataMaps.get('final').get();
           },
           get dataArray() {
@@ -6209,7 +6345,7 @@
       return models;
 
   };
-  vizabi.versionInfo = { version: "1.17.2", build: 1625933106569, package: {"homepage":"http://vizabi.org","name":"@vizabi/core","description":"Vizabi core (data layer)"} };
+  vizabi.versionInfo = { version: "1.18.0", build: 1632004814483, package: {"homepage":"http://vizabi.org","name":"@vizabi/core","description":"Vizabi core (data layer)"} };
   vizabi.mobx = mobx__namespace;
   vizabi.utils = utils$1;
   vizabi.stores = stores;
@@ -6236,6 +6372,8 @@
           stores[storeName].disposeAll();
       }
   };
+  vizabi.csvReader = csvReader;
+  vizabi.inlineReader = inlineReader;
 
   return vizabi;
 
