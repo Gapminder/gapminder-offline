@@ -35,7 +35,7 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => {
       event.preventDefault();
       event.stopImmediatePropagation();
       context.isMenuOpened = false;
-      dialog.showOpenDialog(currentWindow, {properties: ['openDirectory']}).then(()=>onFolderClickProcessed.bind(context));
+      dialog.showOpenDialog(currentWindow, {properties: ['openDirectory']}).then(onFolderClickProcessed.bind(context));
     },
     addCsvFile: () => {
       context.chartService.currentTab = context.getCurrentTab();
