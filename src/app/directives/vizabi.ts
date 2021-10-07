@@ -263,13 +263,13 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         const markerAlterNames = markerNames.map(markerName => markerName + "-" + this.order);
 
         //disable splash
-        deepExtend(this.vizabiModel.model.markers[markerNames[markerIndex]], {
-          encoding: {
-            frame: {
-              splash: false
-            }
-          }
-        });
+        // deepExtend(this.vizabiModel.model.markers[markerNames[markerIndex]], {
+        //   encoding: {
+        //     frame: {
+        //       splash: false
+        //     }
+        //   }
+        // });
 
         let strConfig = JSON.stringify(this.vizabiModel);
 
@@ -388,7 +388,6 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
           // else
           //   delete model.ui.projector;
   
-          console.log("reaction", isEmpty(model.model), isEmpty(model.ui), model);
           //DEFAULT_MODEL && (!isEmpty(model.model) || !isEmpty(model.ui)) && 
           if(DEFAULT_MODEL) {
             let strConfig = JSON.stringify(model);
@@ -396,11 +395,13 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
               const re = new RegExp(`\\b${markerName}\\b`,"g");
               strConfig = strConfig.replace(re, markerNames[i]);
             });
+
+            this.model = JSON.parse(strConfig);
     
             this.onChanged.emit({
               order: this.order,
               type: this.chartType,
-              model: JSON.parse(strConfig)
+              model: this.model
               //modelDiff: minModelDiff,
               //minInitialModel: this.model
             });

@@ -381,11 +381,11 @@ export class HomeComponent implements OnInit {
     this.es.ipcRenderer.send(this.globConst.MODIFY_CHART, `user data was added to ${currentTab.chartType}`);
   }
 
-  onDdfExtFolderChanged(filePaths: string[]) {
+  onDdfExtFolderChanged({ filePaths }) {
     const firstFilePath = ChartService.getFirst(filePaths);
 
     if (firstFilePath) {
-      this.addData({reader: 'ddf1-csv-ext', path: firstFilePath});
+      this.addData({modelType: 'ddf-csv', path: firstFilePath});
       this.doDetectChanges();
     }
   }

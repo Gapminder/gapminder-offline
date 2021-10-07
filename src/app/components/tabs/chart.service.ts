@@ -29,7 +29,7 @@ export class ChartService {
   currentTab: TabModel;
 
   private readonly readersDefinitions;
-  private registeredReaders = ['ext-csv', 'csv', 'csv-time_in_columns'];
+  private registeredReaders = ['ext-csv'];
 
   static getFirst(arr: any[]): any {
     return arr && arr.length > 0 ? arr[0] : null;
@@ -70,7 +70,7 @@ export class ChartService {
     tab.readerModuleObject = this.es.ddfCsvReader;
     tab.readerGetMethod = 'getDDFCsvReaderObject';
     tab.readerPlugins = this.isDevMode ? [new BackendFileReader(), console] : [new BackendFileReader()];
-    tab.readerName = 'ddf1-csv-ext';
+    tab.readerName = 'ddf-csv';
   }
 
   newChart(tab: TabModel, tabDataDescriptor: TabDataDescriptor, isDefaults: boolean = true): string {
@@ -102,20 +102,22 @@ export class ChartService {
       return ddfFolderDescriptor.error;
     }
 
-    config.model.dataSources = {
-      'ddf1-csv-ext-ds': {
-        modelType: 'ddf1-csv-ext',
-        path: this.ddfFolderDescriptor.ddfUrl,// + this.es.path.sep,
-        assetsPath: this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data') + this.es.path.sep,
-        _lastModified: ddfFolderDescriptor.lastModified  
+    if (!isDefaults || (isDefaults && !this.registeredReaders.includes("ddf-csv"))) {
+      config.model.dataSources = {
+        [this.es.path.basename(this.ddfFolderDescriptor.ddfUrl)]: {
+          modelType: 'ddf-csv',
+          path: this.ddfFolderDescriptor.ddfUrl,// + this.es.path.sep,
+          assetsPath: this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data') + this.es.path.sep,
+          _lastModified: ddfFolderDescriptor.lastModified  
+        }
       }
     };
 
     const markers = config.model.markers;
     const markerId = ["bubble", "line", "bar", "mountain", "pyramid", "spreadsheet"].find(id => markers[id]);
-    const datasourceIDs = Object.keys(config.model.dataSources);
+    const datasourceIDs = Object.keys(config.model.dataSources || {});
     if (!datasourceIDs.includes(config.model.markers[markerId].data.source))
-      config.model.markers[markerId].data.source = datasourceIDs[0];
+      config.model.markers[markerId].data.source = datasourceIDs[0] || "ddf--gapminder--systema_globalis";
 
     config.ui.locale = {
       id: 'en',
@@ -145,15 +147,16 @@ export class ChartService {
         model: {
           dataSources: {
             [properties.reader]: {
-              modelType: properties.reader,
-              isTimeInColumns: properties.timeInColumns,
+              modelType: properties.modelType,
+              isTimeInColumns: properties.isTimeInColumns,
               sheet: properties.sheet,
               noCache: true,
               delimiter: properties.delimiter,
               path: properties.path,
               lastModified: stats.mtime.valueOf(),
               hasNameColumn: properties.hasNameColumn,
-              nameColumnPosition: properties.nameColumnPosition
+              nameColumnPosition: properties.nameColumnPosition,
+              dtypes: properties.dtypes
             }
           }
         }
@@ -167,8 +170,12 @@ export class ChartService {
         }
       };
 
-      if (properties.state) {
-        newTab.model.state = properties.state;
+      if (properties.interval) {
+        newTab.model.model.markers[chartMarkerName[properties.chartType]].encoding = {
+          frame: {
+            interval: properties.interval
+          }
+        }
       }
 
       if (this.isDevMode) {

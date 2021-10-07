@@ -31,39 +31,23 @@ export class FileSelectConfigFormComponent {
   timeFormatDescription: any = {
     year: {
       example: '2017',
-      state: {}
+      interval: null
     },
     month: {
       example: '2017-09',
-      state: {
-        time: {
-          unit: 'month'
-        }
-      }
+      interval: 'month'
     },
     day: {
       example: '20170905',
-      state: {
-        time: {
-          unit: 'day'
-        }
-      }
+      interval: 'day'
     },
     week: {
       example: '2017w37',
-      state: {
-        time: {
-          unit: 'week'
-        }
-      }
+      interval: 'week'
     },
     quarter: {
       example: '2017q4',
-      state: {
-        time: {
-          unit: 'quarter'
-        }
-      }
+      interval: 'quarter'
     }
   };
   isExampleRows = false;
@@ -122,37 +106,42 @@ export class FileSelectConfigFormComponent {
 
   ok() {
     let reader = 'ext-csv';
-    let timeInColumns = false;
+    let isTimeInColumns = false;
 
     if (this.choice === 'columns') {
-      timeInColumns = true;
+      isTimeInColumns = true;
     }
 
     if (this.format === 'excel') {
       reader = 'excel';
+      this.chartService.registerNewReader(reader);
     }
+
+    const timeColumnName = isTimeInColumns ? "time" : this.header[this.getFieldOffsetInHeader().timeOffset];
 
     const config: any = {
       chartType: this.chartType,
       reader,
-      timeInColumns,
+      modelType: reader,
+      isTimeInColumns,
       format: this.format,
       sheet: this.sheet,
       path: this.file,
       delimiter: this.delimiter,
       lastModified: this.chartService.getLastModifiedForFile(this.file),
       hasNameColumn: this.hasNameColumn,
-      nameColumnPosition: this.nameColumnPosition
+      nameColumnPosition: this.nameColumnPosition,
+      dtypes: {
+        [timeColumnName]: this.timeFormat
+      }
     };
-
-    this.chartService.registerNewReader(reader);
 
     if (this.delimiter === 'auto') {
       delete config.delimiter;
     }
 
-    if (!isEmpty(this.timeFormatDescription[this.timeFormat].state)) {
-      config.state = this.timeFormatDescription[this.timeFormat].state;
+    if (this.timeFormatDescription[this.timeFormat].interval) {
+      config.interval = this.timeFormatDescription[this.timeFormat].interval;
     }
 
     this.done.emit(config);
@@ -212,15 +201,6 @@ export class FileSelectConfigFormComponent {
           this.loadingSheetsTitle = '';
           await this.checkExcelHeader();
         } else {
-          // const VizabiCsvReader = function(config, readerObject) {
-          //   const reader = Object.assign({}, readerObject);
-          //   reader.init(config);
-          //   return reader;
-          // };
-          // const readerObject = new (VizabiCsvReader as any)({
-          //   path: this.file,
-          //   lastModified: new Date().getTime()
-          // }, this.es.CsvReader.csvReaderObject);
           const readerObject = new this.es.Vizabi.csvReader({
             path: this.file,
             lastModified: new Date().getTime()
@@ -297,20 +277,25 @@ export class FileSelectConfigFormComponent {
     this.badFormatHeader = this.getBadFormatHeader();
   }
 
+  getFieldOffsetInHeader() {
+    let keyOffset = 0;
+    let timeOffset = 1;
+
+    if (this.hasNameColumn) {
+      if (this.nameColumnPosition === 0) {
+        keyOffset = 1;
+        timeOffset = 2;
+      } else if (this.nameColumnPosition === 1) {
+        timeOffset = 2;
+      }
+    }
+
+    return { keyOffset, timeOffset };
+  }
+
   private getBadFormatHeader(): IBadFormatHeader {
     if (this.header) {
-      let keyOffset = 0;
-      let timeOffset = 1;
-
-      if (this.hasNameColumn) {
-        if (this.nameColumnPosition === 0) {
-          keyOffset = 1;
-          timeOffset = 2;
-        } else if (this.nameColumnPosition === 1) {
-          timeOffset = 2;
-        }
-      }
-
+      const { keyOffset, timeOffset } = this.getFieldOffsetInHeader();
       if (this.addDataMode && (this.header[keyOffset] !== this.calculatedDataView.dim ||
         this.header[timeOffset] !== this.calculatedDataView.time)) {
         return {
