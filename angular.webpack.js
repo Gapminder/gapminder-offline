@@ -6,6 +6,7 @@
     if (config.optimization.minimizer[2]) {
         config.optimization.minimizer[2].options.terserOptions.keep_classnames = true;    
         config.optimization.minimizer[2].options.terserOptions.keep_fnames = true;
+        config.optimization.minimizer[2].options.terserOptions.compress.pure_getters = false;
     }
 
     config.target = 'electron-renderer';
