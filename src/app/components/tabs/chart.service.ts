@@ -90,7 +90,10 @@ export class ChartService {
       model: {
         markers: {
           [chartMarkerName[chartType]]: {
-            data: {}
+            data: {},
+            encoding: { 
+              frame: {}
+            }
           }
         }
       },
@@ -124,8 +127,6 @@ export class ChartService {
       path: this.es.isServe ? "assets/translation/" : this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data', 'translation') + this.es.path.sep
     };
 
-    //TODO: check splash
-    //config.ui.splash = false;
     tab.model = config;
 
     this.messageService.sendMessage(MODEL_CHANGED);
@@ -166,16 +167,15 @@ export class ChartService {
         [chartMarkerName[properties.chartType]]: {
           data: {
             source: properties.reader
+          },
+          encoding: { 
+            frame: {}
           }
         }
       };
 
       if (properties.interval) {
-        newTab.model.model.markers[chartMarkerName[properties.chartType]].encoding = {
-          frame: {
-            interval: properties.interval
-          }
-        }
+        newTab.model.model.markers[chartMarkerName[properties.chartType]].encoding.frame.interval = properties.interval
       }
 
       if (this.isDevMode) {

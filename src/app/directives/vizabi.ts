@@ -263,13 +263,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         const markerAlterNames = markerNames.map(markerName => markerName + "-" + this.order);
 
         //disable splash
-        // deepExtend(this.vizabiModel.model.markers[markerNames[markerIndex]], {
-        //   encoding: {
-        //     frame: {
-        //       splash: false
-        //     }
-        //   }
-        // });
+        this.vizabiModel.model.markers[markerNames[markerIndex]].encoding.frame.splash = false;
 
         let strConfig = JSON.stringify(this.vizabiModel);
 
