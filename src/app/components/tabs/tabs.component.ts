@@ -2,7 +2,6 @@ import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@a
 import { Observable } from 'rxjs';
 import { ChartService } from './chart.service';
 import { TabModel } from './tab.model';
-import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { ITabActionsSynchronizer } from '../tabs-new/tabs.common';
 import {
   TABS_LOGO_ACTION,
@@ -38,7 +37,6 @@ export class TabsComponent implements OnInit {
   @Output() onChartChanged: EventEmitter<any> = new EventEmitter();
   @Output() onChartClicked: EventEmitter<any> = new EventEmitter();
 
-  tabDataDescriptor: TabDataDescriptor = {};
   savedActiveTab;
   bookmarksVisible = false;
 
@@ -70,7 +68,6 @@ export class TabsComponent implements OnInit {
       (event: any, appArguments: string[]) => appArguments).subscribe((fileDesc: any) => {
       if (!fileDesc || !fileDesc.fileName) {
         this.chartService.ddfFolderDescriptor.defaults();
-        this.chartService.setReaderDefaults(this.tabDataDescriptor);
         this.chartService.initTab(this.tabsModel);
         this.onTabsInit.emit();
       }
@@ -90,14 +87,12 @@ export class TabsComponent implements OnInit {
       }
 
       if (event.message === OPEN_NEW_DDF_TAB_FROM_VALIDATOR) {
-        const tabDataDescriptor: TabDataDescriptor = {};
 
-        this.chartService.setReaderDefaults(tabDataDescriptor);
         this.chartService.ddfFolderDescriptor.ddfUrl = event.options.ddfPath;
 
         const newTab = new TabModel(event.options.chartType, false);
 
-        this.chartService.newChart(newTab, tabDataDescriptor, false);
+        this.chartService.newChart(newTab, false);
         this.tabsModel.forEach((tab: TabModel) => tab.active = false);
         this.setTabToActive(newTab);
         this.tabsModel.push(newTab);
@@ -263,7 +258,7 @@ export class TabsComponent implements OnInit {
   }
 
   private defaultChart() {
-    this.chartService.newChart(this.getCurrentTab(), this.tabDataDescriptor);
+    this.chartService.newChart(this.getCurrentTab());
     this.es.ipcRenderer.send(this.globConst.NEW_CHART, this.getCurrentTab().chartType);
   }
 

@@ -30,7 +30,6 @@ import {
 import { initMenuComponent } from '../menu/system-menu';
 import { getMenuActions } from '../menu/menu-actions';
 import { ElectronService } from '../../providers/electron.service';
-import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { LocalizationService } from '../../providers/localization.service';
 import { langConfigTemplate } from '../../../lang-config';
 import { ICalculatedDataView } from '../file-select-config-form/calculated-data-view';
@@ -170,13 +169,10 @@ export class HomeComponent implements OnInit {
           const firstFilePath = event.options.selectedFolder;
 
           if (firstFilePath) {
-            const tabDataDescriptor: TabDataDescriptor = {};
-
             this.chartService.ddfFolderDescriptor.ddfUrl = firstFilePath;
-            this.chartService.setReaderDefaults(tabDataDescriptor);
 
             const newTab = new TabModel(event.options.chartType, false);
-            const chartIssue = this.chartService.newChart(newTab, tabDataDescriptor, false);
+            const chartIssue = this.chartService.newChart(newTab, false);
 
             this.messageService.sendMessage(SWITCH_BOOKMARKS_PANE, {isBookmarkPaneVisible: false, dontRestoreTab: true});
             this.messageService.sendMessage(BOOKMARKS_PANE_OFF_OUTSIDE);
@@ -411,15 +407,6 @@ export class HomeComponent implements OnInit {
 
     newTab.model = config;
 
-    if (!['excel'].includes((<any>Object.values(config.model.dataSources)[0]).modelType)) {
-      this.chartService.setReaderDefaults(newTab);
-    } else {
-      //this.chartService.registerNewReader('ext-csv');
-      this.chartService.registerNewReader('excel');
-      newTab.readerName = parameters.tab.data.reader;
-    }
-
-    this.registerNewReaders(newTab.model);
     this.tabsModel.forEach((tab: TabModel) => tab.active = false);
     this.tabsModel.push(newTab);
     this.doDetectChanges();
@@ -449,8 +436,6 @@ export class HomeComponent implements OnInit {
 
       newTab.model = tabDescriptor.model;
 
-      this.chartService.setReaderDefaults(newTab);
-      this.registerNewReaders(newTab.model);
       this.tabsModel.forEach((tab: TabModel) => tab.active = false);
       this.tabsModel.push(newTab);
 
@@ -580,11 +565,4 @@ export class HomeComponent implements OnInit {
     return '';
   }
 
-  private registerNewReaders(model) {
-    for (const key of Object.keys(model)) {
-      if (key.indexOf('data_') === 0 && model[key].reader) {
-        this.chartService.registerNewReader(model[key].reader);
-      }
-    }
-  }
 }

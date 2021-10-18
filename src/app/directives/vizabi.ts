@@ -5,16 +5,22 @@ import { MessageService } from '../message.service';
 import { ElectronService } from '../providers/electron.service';
 
 const isReaderReady = {};
+const readersDefinitions = {
+  'excel': (es) => es.ExcelReader.excelReaderObject(es.Vizabi.csvReader),
+  'ddf-csv': (es) => {
+    const BackendFileReader = es.ddfCsvReader.BackendFileReader;
+    const readerModuleObject = es.ddfCsvReader;
+    const readerGetMethod = 'getDDFCsvReaderObject';
+    const readerPlugins = es.devMode ? [new BackendFileReader(), console] : [new BackendFileReader()];
+    return readerModuleObject[readerGetMethod].apply(this, readerPlugins);        
+  }
+}
 
 @Directive({
   selector: 'vizabi'
 })
 export class VizabiDirective implements AfterContentInit, OnDestroy {
   @Input() order: number;
-  @Input() readerModuleObject;
-  @Input() readerGetMethod: string;
-  @Input() readerPlugins: any[];
-  @Input() readerName: string;
   @Input() chartType: string;
   @Input() stopUrlRedirect: boolean;
   @Input() model;
@@ -246,13 +252,14 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         //   }
         // };
 
-        this.readerProcessing();
 
         const placeholder = "." + this.placeholder.className;
 
         this.vizabiModel = deepExtend({},
           changes.model.currentValue, this.getAdditionalData(), this.vizabiModel);
                 
+        this.registerReaders(this.vizabiModel.model.dataSources);
+        
         const markerNames = Object.keys(this.vizabiModel.model.markers);
 
         const toolMarkerNames = ["bubble", "line", "bar", "mountain", "pyramid", "spreadsheet"];
@@ -443,15 +450,15 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
     this.onError.emit(error);
   }
 
-  private readerProcessing() {
-    if (this.readerModuleObject && this.readerGetMethod && this.readerName &&
-      this.readerPlugins && this.readerModuleObject[this.readerGetMethod] && !isReaderReady[this.readerName]) {
-      const readerObject = this.readerModuleObject[this.readerGetMethod].apply(this, this.readerPlugins);
-
-      this.es.Vizabi.stores.dataSources.createAndAddType(this.readerName, readerObject);
-
-      isReaderReady[this.readerName] = true;
-    }
+  private registerReaders(dataSources = {}) {
+    const dataSourceNames = Object.keys(dataSources);
+    dataSourceNames.forEach(dsName => {
+      const readerType = dataSources[dsName].modelType;
+      if (readerType && readersDefinitions[readerType] && !isReaderReady[readerType]) {
+        this.es.Vizabi.stores.dataSources.createAndAddType(readerType, readersDefinitions[readerType](this.es));
+        isReaderReady[readerType] = true;          
+      }
+    });
   }
 
   private removeTool() {

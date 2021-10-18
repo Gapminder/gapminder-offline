@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TabModel } from './tab.model';
 import { DdfFolderDescriptor } from '../descriptors/ddf-folder.descriptor';
-import { TabDataDescriptor } from '../descriptors/tab-data.descriptor';
 import { MessageService } from '../../message.service';
 import { MODEL_CHANGED } from '../../constants';
 import { ElectronService } from '../../providers/electron.service';
@@ -28,7 +27,6 @@ export class ChartService {
   ddfFolderDescriptor: DdfFolderDescriptor;
   currentTab: TabModel;
 
-  private readonly readersDefinitions;
   private registeredReaders = ['ext-csv'];
 
   static getFirst(arr: any[]): any {
@@ -37,10 +35,6 @@ export class ChartService {
 
   constructor(private messageService: MessageService, private es: ElectronService) {
     this.ddfFolderDescriptor = new DdfFolderDescriptor();
-    this.readersDefinitions = {
-      'excel': this.es.ExcelReader.excelReaderObject(this.es.Vizabi.csvReader),
-      //'ext-csv': this.es.CsvReader.csvReaderObject
-    };
   }
 
   log(message?: any, ...optionalParams: any[]) {
@@ -58,30 +52,11 @@ export class ChartService {
     this.messageService.sendMessage(MODEL_CHANGED);
   }
 
-  registerNewReader(readerName: string) {
-    if (this.registeredReaders.indexOf(readerName) < 0 && this.readersDefinitions[readerName]) {
-      this.es.Vizabi.stores.dataSources.createAndAddType(readerName,  this.readersDefinitions[readerName]);
-      this.registeredReaders.push(readerName);
-    }
-  }
-
-  setReaderDefaults(tab: TabModel | TabDataDescriptor) {
-    const BackendFileReader = this.es.ddfCsvReader.BackendFileReader;
-    tab.readerModuleObject = this.es.ddfCsvReader;
-    tab.readerGetMethod = 'getDDFCsvReaderObject';
-    tab.readerPlugins = this.isDevMode ? [new BackendFileReader(), console] : [new BackendFileReader()];
-    tab.readerName = 'ddf-csv';
-  }
-
-  newChart(tab: TabModel, tabDataDescriptor: TabDataDescriptor, isDefaults: boolean = true): string {
+  newChart(tab: TabModel, isDefaults: boolean = true): string {
     if (isDefaults) {
       this.ddfFolderDescriptor.defaults();
     }
 
-    tab.readerModuleObject = tabDataDescriptor.readerModuleObject;
-    tab.readerGetMethod = tabDataDescriptor.readerGetMethod;
-    tab.readerPlugins = tabDataDescriptor.readerPlugins;
-    tab.readerName = tabDataDescriptor.readerName;
     tab.additionalData = this.ddfFolderDescriptor.additionalData;
 
     const deepExtend = this.es.VizabiSharedComponents.LegacyUtils.deepExtend;

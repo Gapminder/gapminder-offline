@@ -19,10 +19,6 @@ export class TabModel {
   model: any;
   additionalData: IAdditionalDataItem[] = [];
 
-  readerModuleObject: any;
-  readerGetMethod: string;
-  readerPlugins: any[];
-  readerName: string;
   component: any;
   instance: any;
   alerts: AlertModel[] = [];

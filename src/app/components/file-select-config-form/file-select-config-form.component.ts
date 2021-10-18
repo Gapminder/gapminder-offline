@@ -114,7 +114,6 @@ export class FileSelectConfigFormComponent {
 
     if (this.format === 'excel') {
       reader = 'excel';
-      this.chartService.registerNewReader(reader);
     }
 
     const timeColumnName = isTimeInColumns ? "time" : this.header[this.getFieldOffsetInHeader().timeOffset];
