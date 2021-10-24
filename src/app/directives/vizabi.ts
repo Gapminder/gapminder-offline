@@ -430,7 +430,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
       for (const additionalItem of this.additionalItems) {
         const parsedPath = additionalItem.path.split(/[\\/]/);
         const name = parsedPath[parsedPath.length - 1];
-        const newAdditionalItemHash = `data_${name}`;
+        const newAdditionalItemHash = `${additionalItem.modelType || "csv"}_${name}`;
 
         if (!result[newAdditionalItemHash]) {
           result[newAdditionalItemHash] = additionalItem;

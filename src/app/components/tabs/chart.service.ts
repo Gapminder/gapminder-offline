@@ -82,7 +82,7 @@ export class ChartService {
 
     if (!isDefaults || (isDefaults && !this.registeredReaders.includes("ddf-csv"))) {
       config.model.dataSources = {
-        [this.es.path.basename(this.ddfFolderDescriptor.ddfUrl)]: {
+        ['ddf-csv_' + this.es.path.basename(this.ddfFolderDescriptor.ddfUrl)]: {
           modelType: 'ddf-csv',
           path: this.ddfFolderDescriptor.ddfUrl,// + this.es.path.sep,
           assetsPath: this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data') + this.es.path.sep,
@@ -118,11 +118,12 @@ export class ChartService {
     const newTab = new TabModel(properties.chartType, true);
 
     this.es.fs.stat(properties.path, (err: any, stats: any) => {
+      const dsName = `${properties.modelType || "csv"}_${this.es.path.basename(properties.path)}`;
       newTab.chartType = properties.chartType;
       newTab.model = {
         model: {
           dataSources: {
-            [properties.reader]: {
+            [dsName]: {
               modelType: properties.modelType,
               isTimeInColumns: properties.isTimeInColumns,
               sheet: properties.sheet,
@@ -141,7 +142,7 @@ export class ChartService {
       newTab.model.model.markers = {
         [chartMarkerName[properties.chartType]]: {
           data: {
-            source: properties.reader
+            source: dsName
           },
           encoding: { 
             frame: {}
