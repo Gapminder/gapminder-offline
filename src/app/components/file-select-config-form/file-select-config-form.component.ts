@@ -105,23 +105,16 @@ export class FileSelectConfigFormComponent {
   }
 
   ok() {
-    let reader = 'ext-csv';
     let isTimeInColumns = false;
 
     if (this.choice === 'columns') {
       isTimeInColumns = true;
     }
 
-    if (this.format === 'excel') {
-      reader = 'excel';
-    }
-
     const timeColumnName = isTimeInColumns ? "time" : this.header[this.getFieldOffsetInHeader().timeOffset];
 
     const config: any = {
       chartType: this.chartType,
-      reader,
-      modelType: reader,
       isTimeInColumns,
       format: this.format,
       sheet: this.sheet,
@@ -134,6 +127,10 @@ export class FileSelectConfigFormComponent {
         [timeColumnName]: this.timeFormat
       }
     };
+
+    if (this.format === 'excel') {
+      config.modelType = 'excel';
+    }
 
     if (this.delimiter === 'auto') {
       delete config.delimiter;
