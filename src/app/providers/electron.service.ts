@@ -7,7 +7,7 @@ import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ddfCsvReader from '@vizabi/reader-ddfcsv';
-import * as excelReader from 'vizabi-excel-reader';
+import * as excelReader from '@vizabi/reader-excel';
 import * as ddfValidation from 'ddf-validation';
 
 @Injectable()
@@ -52,7 +52,7 @@ export class ElectronService {
       this.path = window.require('path');
       this.process = window.process;
       this.ddfCsvReader = window.require('@vizabi/reader-ddfcsv');
-      this.ExcelReader = window.require('vizabi-excel-reader');
+      this.ExcelReader = window.require('@vizabi/reader-excel');
       this.ddfValidation = window.require('ddf-validation');
       this.vizabi = (window as any).Vizabi;
       this.Vizabi = (window as any).Vizabi;
