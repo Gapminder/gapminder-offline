@@ -84,7 +84,7 @@ const getPathCorrectFunction = brokenPathObject => onPathReady => {
     if (response === 0) {
       dialog.showOpenDialog({
         title: `Choose correct location for "${parsed.base}"...`,
-        properties: brokenPathObject.reader.indexOf('ddf') === 0 ? ['openDirectory'] : ['openFile']
+        properties: (brokenPathObject.modelType && brokenPathObject.modelType.indexOf('ddf') === 0) ? ['openDirectory'] : ['openFile']
       }).then(({filePaths: dirPaths}) => {
         if (!dirPaths || dirPaths.length < 0) {
           brokenPathObject.__abandoned = true;
@@ -113,8 +113,6 @@ const normalizeModelToSave = (model, chartType) => {
       dataSources[key].path = `@internal`;
       dataSources[key].assetsPath = `@internal`;
     }
-
-    dataSources[key].ddfPath = dataSources[key].path;
   });
 
   if (isPathInternal(model.ui.locale.path, PREVIEW_DATA_PATH)) {
@@ -122,6 +120,8 @@ const normalizeModelToSave = (model, chartType) => {
   } else {
     model.ui.locale.path = path.resolve(__dirname, '..', '..', model.ui.locale.path);
   }
+  delete model.ui.locale.placeholder;
+  delete model.ui.layout.placeholder;
 
   model.chartType = chartType;
 };
@@ -141,8 +141,6 @@ const normalizeModelToOpen = (model, brokenFileActions) => {
         brokenFileActions.push(getPathCorrectFunction(dataSources[key]));
       }
     }
-
-    dataSources[key].ddfPath = dataSources[key].path;
   });
 
   if (model.ui.locale.path.indexOf('@internal') >= 0) {
@@ -156,17 +154,15 @@ const getConfigWithoutAbandonedData = config => {
       return;
     }
 
-    const model = item.model || item;
-    const keys = Object.keys(model);
+    const dataSources = item.model?.model?.dataSources || item.model?.dataSources;
+    const keys = Object.keys(dataSources);
 
     let isAbandoned = false;
 
     for (const key of keys) {
-      if ((key === 'data' || key.indexOf('data_') === 0) && typeof model[key] === 'object') {
-        if (model[key].__abandoned) {
-          isAbandoned = true;
-          break;
-        }
+      if (dataSources[key].__abandoned) {
+        isAbandoned = true;
+        break;
       }
     }
 
@@ -198,6 +194,11 @@ const openFile = (event, fileName, fileNameOnly) => {
     const brokenFileActions = [];
 
     if (config.length) {
+      if (!config.every(configItem => configItem.model.url === "v1")) {
+        dialog.showErrorBox('File reading error', "Cannot load file created by Gapminder Tool Offline version below 6.0.0");
+        return;
+      }
+
       config.forEach(configItem => {
         normalizeModelToOpen(configItem.model, brokenFileActions);
       });
@@ -216,11 +217,15 @@ const openFile = (event, fileName, fileNameOnly) => {
     }
 
     if (!config.length) {
+      if (config.url !== "v1") {
+        dialog.showErrorBox('File reading error', "Cannot load file created by Gapminder Tool Offline version below 6.0.0");
+        return;
+      }
+      
       normalizeModelToOpen(config, brokenFileActions);
 
       async.waterfall(brokenFileActions, () => {
         const newConfigAsArray = getConfigWithoutAbandonedData(config);
-
         if (!_.isEmpty(newConfigAsArray)) {
           const newConfig = _.head(newConfigAsArray);
 
@@ -281,6 +286,11 @@ export class QueueProcessor {
 export const openBookmark = (event, bookmark) => {
   const sender = event.sender || event.webContents;
   const brokenFileActions = [];
+
+  if (bookmark.content.model.url !== "v1") {
+    dialog.showErrorBox('Open bookmark error', "Cannot restore bookmark created by Gapminder Tool Offline version below 6.0.0");
+    return;
+  }
 
   normalizeModelToOpen(bookmark.content.model, brokenFileActions);
 
@@ -673,7 +683,6 @@ export const exportForWeb = (event, params) => {
     fsExtra.copySync(dataSources[key].path, path.resolve(WEB_PATH, 'data', pathKey));
 
     dataSources[key].path = `./data/${pathKey}`;
-    dataSources[key].ddfPath = `./data/${pathKey}`;
 
     if (dataSources[key].modelType === 'ddf-csv') {
       dataSources[key].modelType = 'ddf';
