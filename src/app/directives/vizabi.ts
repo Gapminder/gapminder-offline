@@ -377,7 +377,8 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
             // model: Utils.clearEmpties(removeProperties(jsmodel, ["highlighted", "superhighlighted", "locale", "range", "frame.scale.domain"])),
             // ui: Utils.clearEmpties(removeProperties(jsui, ["dragging", "opened"]))
             model: removeProperties(jsmodel, ["highlighted", "superhighlighted", "locale", "range", "frame.scale.domain"]),
-            ui: removeProperties(jsui, ["dragging", "opened"])
+            ui: removeProperties(jsui, ["dragging", "opened"]),
+            url: "v1"
           };
   
           // if (PAGE_MODEL.ui.locale.id !== LOCALE.id)
