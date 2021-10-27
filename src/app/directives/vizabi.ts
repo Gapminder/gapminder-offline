@@ -132,11 +132,11 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
       if (!this.viz || !_reloadTime) {
         return;
       }
-      const currentModel = JSON.parse(JSON.stringify(this.model));
-
       this._reloadTime = _reloadTime;
-      this.viz.clear();
 
+      const currentModel = JSON.parse(JSON.stringify(this.model));
+      this.urlUpdateDisposer && this.urlUpdateDisposer();
+      this.removeTool();
       VizabiDirective.removeElement(this.placeholder);
 
       this.createPlaceholder();
@@ -158,12 +158,10 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
     }
   }
 
-  private refreshLastModified(fullModel, lastModified) {
-    for (const modelKey of Object.keys(fullModel)) {
-      if (modelKey === 'data' || modelKey.indexOf('data_') === 0) {
-        fullModel[modelKey].lastModified = lastModified;
-        fullModel[modelKey]._lastModified = lastModified;
-      }
+  private refreshLastModified(dataSources, lastModified) {
+    for (const dsName of Object.keys(dataSources)) {
+      dataSources[dsName].lastModified = lastModified;
+      dataSources[dsName]._lastModified = lastModified;
     }
   }
 
@@ -303,7 +301,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         const fullModel = deepExtend({}, this.vizabiModel, true);
         const lastModified = new Date().getTime();
 
-        //this.refreshLastModified(fullModel, lastModified);
+        this.refreshLastModified(fullModel.model.dataSources, lastModified);
 
         // if (changes.isStateEmpty) {
         //   delete fullModel.state;
