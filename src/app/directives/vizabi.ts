@@ -322,6 +322,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         const markerName = markerAlterNames[markerIndex];
 
         this.viz = new this.es[this.chartType]({
+          id: "c0_" + this.order,
           Vizabi: this.es.Vizabi,
           placeholder: "." + this.placeholder.className,
           model,
