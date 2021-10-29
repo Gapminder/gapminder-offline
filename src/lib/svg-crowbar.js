@@ -202,13 +202,13 @@
       title: 'Save charts as ...',
       defaultPath: path.resolve(require('os').homedir(), filename + '.svg'),
       filters: [{name: 'SVG image', extensions: ['svg']}]
-    }, fullPath => {
-      if (fullPath) {
-        fs.writeFileSync(fullPath, normalizedSvg);
+    }).then(({filePath}) => {
+      if (filePath) {
+        fs.writeFileSync(filePath, normalizedSvg);
       }
 
       document.dispatchEvent(new CustomEvent('cross-frontend-event', {
-        detail: {fullPath},
+        detail: {filePath},
         bubbles: false,
         cancelable: true
       }));
@@ -233,14 +233,14 @@
             title: 'Save charts as ...',
             defaultPath: path.resolve(require('os').homedir(), filename + '.png'),
             filters: [{name: 'PNG image', extensions: ['png']}]
-          }, fullPath => {
-            console.log('pre-end', fullPath);
-            if (fullPath) {
-              fs.writeFileSync(fullPath, new Buffer(reader.result));
+          }).then(({filePath}) => {
+            console.log('pre-end', filePath);
+            if (filePath) {
+              fs.writeFileSync(filePath, new Buffer(reader.result));
             }
 
             document.dispatchEvent(new CustomEvent('cross-frontend-event', {
-              detail: {fullPath},
+              detail: {filePath},
               bubbles: false,
               cancelable: true
             }));
