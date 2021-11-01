@@ -44,16 +44,19 @@ const vizabiStateFacade: any = {
     const markerName = currentTabInstance.options.markerName;
     return currentTabInstance.model.markers[markerName].encoding.frame.data.concept;
   },
-  getCountries: (currentTabInstance: any, dim: any) =>
-    currentTabInstance.model.state.marker.getKeys()
+  getCountries: (currentTabInstance: any, dim: any) => {
+    const markerName = currentTabInstance.options.markerName;
+    return currentTabInstance.model.markers[markerName].dataArray
       .slice(0, 5)
-      .map((marker: any) => marker[dim]).join(', '),
+      .map((marker: any) => marker[dim]).join(', ');
+  },
   getTimePoints: (currentTabInstance: any) => {
-    const timeModel = currentTabInstance.model.state.time;
-
-    return timeModel.getAllSteps()
+    const markerName = currentTabInstance.options.markerName;
+    const timeModel = currentTabInstance.model.markers[markerName].encoding.frame;
+    
+    return timeModel.domainValues
       .slice(0, 3)
-      .map((step: string) => timeModel.formatDate(step))
+      .map((step: any) => currentTabInstance.services.locale.getFormattedDate(step, timeModel.interval))
       .join(', ');
   }
 };
@@ -487,8 +490,8 @@ export class HomeComponent implements OnInit {
     this.calculatedDataView = {
       firstStep,
       secondStep,
-      //countries: this.getCountries(),
-      //timePoints: this.getTimePoints(),
+      countries: this.getCountries(),
+      timePoints: this.getTimePoints(),
       dim: this.getDim(),
       time: this.getTime()
     };
