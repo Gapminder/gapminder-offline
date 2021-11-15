@@ -109,7 +109,7 @@
     "@vizabi/barrank": "3.8.2",
     "@vizabi/bubblechart": "3.12.2",
     "@vizabi/bubblemap": "3.7.2",
-    "@vizabi/core": "1.21.1",
+    "@vizabi/core": "1.21.2",
     "@vizabi/linechart": "3.7.5",
     "@vizabi/mountainchart": "3.7.2",
     "@vizabi/shared-components": "1.19.1",
