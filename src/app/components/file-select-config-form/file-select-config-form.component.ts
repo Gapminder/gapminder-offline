@@ -38,7 +38,7 @@ export class FileSelectConfigFormComponent {
       interval: 'month'
     },
     day: {
-      example: '20170905',
+      example: '2017-09-05',
       interval: 'day'
     },
     week: {
