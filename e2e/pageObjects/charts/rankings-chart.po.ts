@@ -9,7 +9,7 @@ export class RankingsChart extends CommonChartPage {
 
   dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
   dataDoubtsWindow: ExtendedElementFinder = _$('.vzb-data-warning-box');
-  selectedCountries: ExtendedArrayFinder = _$$('.vzb-br-bar.vzb-selected .vzb-br-label'); // TODO
+  selectedCountries: ExtendedArrayFinder = _$$(`.vzb-br-bar[style*="opacity: ${CommonChartPage.opacity.highlighted}"] .vzb-br-label`); // TODO
   bars: ExtendedArrayFinder = _$$('.vzb-br-bar');
   allBars: ElementArrayFinder = $$('.vzb-br-bar');
   yAxisBtn: ExtendedElementFinder = _$('.vzb-br-title');

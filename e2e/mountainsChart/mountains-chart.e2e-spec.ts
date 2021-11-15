@@ -31,7 +31,7 @@ describe('Mountains chart', () => {
     await expect(Number(extremePovertyPercentage.replace('%', ''))).toBeLessThan(11.8);
 
     await mountainChart.hoverMouseOver500AxisXOnMountainsChart();
-    expect(await mountainChart.verticalLine.getText()).toEqual('7.34B');
+    expect(await mountainChart.verticalLine.getText()).toEqual('7.67B');
   });
 
   it('labels on vertical line in 2018 and in 1800 match', async () => {

@@ -7,7 +7,7 @@ describe('Tabs actions', () => {
     await commonChartPage.closeTab();
   });
 
-  it('Add tab', async () => {
+  xit('Add tab', async () => {
     const tabsBefore = await commonChartPage.tabs.count();
     await commonChartPage.addTab();
     const tabsAfter = await commonChartPage.tabs.count();
@@ -17,9 +17,10 @@ describe('Tabs actions', () => {
 
   it('Rename tab', async () => {
     await commonChartPage.addTab();
-    await commonChartPage.renameTab('test_name');
+    const testText = await commonChartPage.renameTab('test_name');
     const tab = await commonChartPage.tabs.last();
 
+    expect("text").toEqual(testText);
     expect(await commonChartPage.getTabName(tab)).toEqual('test_name');
   });  
 });

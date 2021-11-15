@@ -7,9 +7,10 @@ import { waitUntil } from '../../helpers/waitHelper';
 export class BubbleChart extends CommonChartPage {
   chartLink: ExtendedElementFinder = _$$('[src*="bubblechart"]').last();
 
-  public dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
+  public dataDoubtsLink: ExtendedElementFinder = _$('.vzb-datawarning-button');
   public dataDoubtsWindow: ElementFinder = $('.vzb-data-warning-body');
-  public allBubbles: ExtendedArrayFinder = _$$('circle[class*="vzb-bc-entity"]');
+  public allBubbles: ExtendedArrayFinder = _$$('g[class*="vzb-bc-entity"][id*="vzb-bc-bubble-"]>circle');
+  public allBubblesByOpacity: ExtendedArrayFinder = _$$('g[class*="vzb-bc-entity"][id*="vzb-bc-bubble-"]');
   public bubbleLabelOnMouseHover: ExtendedElementFinder = _$('g[class="vzb-bc-tooltip"]');
   public axisXValue: ElementFinder = $$('g[class="vzb-axis-value"]').first();
   yAxisBtn: ExtendedElementFinder = _$('.vzb-bc-axis-y-title');
@@ -20,9 +21,9 @@ export class BubbleChart extends CommonChartPage {
   public allLabels: ExtendedArrayFinder = _$$('.vzb-bc-entity[class*=label-][transform*=translate]');
   public xIconOnBubble: ExtendedElementFinder = _$('[class="vzb-bc-label-x"]');
   public trials: ElementArrayFinder = $$('.vzb-bc-entity.entity-trail');
-  public chinaTrails: ElementArrayFinder = $$('.trail-chn [class="vzb-bc-trailsegment"]');
-  public indiaTrails: ElementArrayFinder = $$('.trail-ind [class="vzb-bc-trailsegment"]');
-  public usaTrails: ElementArrayFinder = $$('.trail-usa [class="vzb-bc-trailsegment"]');
+  public chinaTrails: ElementArrayFinder = $$('.vzb-bc-entity[id*="vzb-bc-bubble-chn¬"]');
+  public indiaTrails: ElementArrayFinder = $$('.vzb-bc-entity[id*="vzb-bc-bubble-ind¬"]');
+  public usaTrails: ElementArrayFinder = $$('.vzb-bc-entity[id*="vzb-bc-bubble-usa¬"]');
   public selectedCountries: ExtendedArrayFinder = _$$('[class*="vzb-bc-entity label"]');
   public noDataLabelArr: ExtendedArrayFinder = _$$('label[class="vzb-find-item-brokendata"]');
 
@@ -35,10 +36,10 @@ export class BubbleChart extends CommonChartPage {
   };
   
   public colors = {
-    'red': 'rgb(255, 88, 114)',
-    'yellow': 'rgb(255, 231, 0)',
-    'blue': 'rgb(0, 213, 233)',
-    'green': 'rgb(127, 235, 0)'
+    'red': '#ff5872',
+    'yellow': '#ffe700',
+    'blue': '#00d5e9',
+    'green': '#7feb00'
   };
 
   countryTooltip = country => $(`[class*="vzb-bc-entity label-${CommonChartPage.countries[country]}"]`);
@@ -48,7 +49,7 @@ export class BubbleChart extends CommonChartPage {
   }
 
   getCountryBubble(country: string): ExtendedElementFinder {
-    return _$(`circle[class*="vzb-bc-entity bubble-${CommonChartPage.countries[country]}"]`);
+    return _$(`g[class*="vzb-bc-entity"][id*="vzb-bc-bubble-${CommonChartPage.countries[country]}-c0"]>circle`);
   }
 
   getSelectedCountries(): ElementArrayFinder {
@@ -66,9 +67,9 @@ export class BubbleChart extends CommonChartPage {
   }
 
   async filterBubblesByColor(color: string, index = 0): Promise<ElementFinder> {
-    await waitUntil($$(`circle[style*='fill: ']`).first());
+    await waitUntil($$(`circle[fill]`).first());
 
-    return $$(`circle[style*='fill: ${this.colors[color.toLocaleLowerCase()]}']`).get(index);
+    return $$(`circle[fill*='${this.colors[color.toLocaleLowerCase()]}']`).get(index);
   }
 
   async hoverMouseOverBubble(color: string, index = 0, x = 0, y = 0): Promise<ElementFinder> {
@@ -77,7 +78,7 @@ export class BubbleChart extends CommonChartPage {
      */
 
     const filteredElement = await this.filterBubblesByColor(color, index);
-
+    
     /**
      * if 'x' and 'y' were set - use the coordinates, otherwise just move to the element
      */
@@ -133,17 +134,17 @@ export class BubbleChart extends CommonChartPage {
   }
 
   countBubblesByOpacity(opacity?: number) {
-    const element = this.allBubbles;
+    const element = this.allBubblesByOpacity;
 
     if (!opacity) {
       return element.count();
     }
 
-    return $$(`circle[style*='opacity: ${opacity}']`).count();
+    return $$(`g[class*='vzb-bc-entity'][id*="vzb-bc-bubble-"][style*='opacity: ${opacity}']`).count();
   }
 
   countBubblesByColor(color: string) {
-    return $$(`circle[style*='fill: ${this.colors[color.toLocaleLowerCase()]}']`).count();
+    return $$(`g[class*='vzb-bc-entity']>circle[fill*='${this.colors[color.toLocaleLowerCase()]}']`).count();
   }
 
   dragAndDropSelectedCountryLabelBubblesChart(x: number, y: number) {

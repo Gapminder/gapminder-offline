@@ -15,7 +15,8 @@ export class Color {
     mainReligion: element(by.cssContainingText('.vzb-treemenu-list-item-label', 'Main religion')),
     firstColor: _$$('.vzb-cl-color-sample').first()
   };
-  minimapAsiaRegion = _$$('.vzb-cl-minimap').$$('path').first();
+  colorAsiaRegion = 'rgb(255, 88, 114)'; //red
+  minimapAsiaRegion = _$$('.vzb-cl-minimap').$$(`path[style*='fill: ${this.colorAsiaRegion}']`).first();
   minimapDropdown: ExtendedElementFinder = _$('[class=vzb-cl-select-dialog]'); // will find any active(mobile or desktop)
 
   async selectInColorDropdown(element: ExtendedElementFinder | ElementFinder): Promise<void> {

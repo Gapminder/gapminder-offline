@@ -10,8 +10,8 @@ export class LineChart extends CommonChartPage {
   type = 'lineChart';
   chartLink: ExtendedElementFinder = _$('[src*="linechart"]');
 
-  dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
-  dataDoubtsWindow: ElementFinder = $('.vzb-data-warning-box');
+  dataDoubtsLink: ExtendedElementFinder = _$('.vzb-datawarning-button');
+  dataDoubtsWindow: ElementFinder = $('.vzb-data-warning-body');
 
   /**
    * specific Line chart selectors

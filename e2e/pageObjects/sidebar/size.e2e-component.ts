@@ -21,7 +21,7 @@ export class Size {
 
   async changeSizeIndicator() {
     await this.dialogModal.sizeDropdown.safeClick();
-    await this.treeMenuModal.listItems.first().safeClick();
+    await this.treeMenuModal.listItems.get(1).safeClick();
     await waitForSpinner();
   }
 

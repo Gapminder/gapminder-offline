@@ -23,17 +23,18 @@ export class CommonChartPage {
 
   static opacity = {
     highlighted: 1,
+    regular: 0.8,
     dimmed: 0.3
   };
 
   public static sideBar: ElementFinder = $('.vzb-tool-sidebar');
-  public static buttonPlay: ExtendedElementFinder = _$('.vzb-ts-btn-play');
-  public static buttonPause: ExtendedElementFinder = _$('.vzb-ts-btn-pause.vzb-ts-btn');
+  public static buttonPlay: ExtendedElementFinder = _$('.vzb-ts-btn .vzb-icon-play');
+  public static buttonPause: ExtendedElementFinder = _$('.vzb-ts-btn .vzb-icon-pause');
   public static mainChart: ElementFinder = $('.vzb-tool');
   public static spinner: ElementFinder = _$$('.vzb-loading-data').first();
   public static errorWindow: ElementFinder = _$$('.vzb-error-message-box').last();
-  public static sliderReady: ElementFinder = $('.domain.rounded');
-  public movingSliderProgress: ElementArrayFinder = $$('.domain.rounded');
+  public static sliderReady: ElementFinder = $('.vzb-animationcontrols .vzb-ts-btn .vzb-icon-play');
+  public movingSliderProgress: ElementArrayFinder = $$('.vzb-animationcontrols .vzb-ts-btn .vzb-icon-play');
   public mapsChart: ElementFinder = $('a[href*="map"]');
   public bubblesChart: ElementFinder = $('a[href*="bubbles"]');
   public linesChart: ElementFinder = $('a[href*="linechart"]');
@@ -115,10 +116,13 @@ export class CommonChartPage {
     await this.closeTabBtn.last().safeClick();
   }
 
-  async renameTab(newName: string): Promise<void> {
+  async renameTab(newName: string): Promise<string> {
     await this.tabs.last().safeClick();
-    await _$('.editTabInput').typeText(newName);
+    await waitUntil($('.editTabInput'));
+    const text = await $('.editTabInput').getAttribute('id');
+    //await $('.editTabInput').typeText(newName);
     await browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    return text;
   }
 
   async getTabName(tab: ExtendedElementFinder): Promise<string> {

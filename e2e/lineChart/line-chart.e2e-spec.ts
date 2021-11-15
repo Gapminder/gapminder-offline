@@ -67,7 +67,7 @@ describe('Line chart: ', () => {
 
   it('Data doubts button', async () => {
     await lineChart.dataDoubtsLink.safeClick();
-    await lineChart.dataDoubtsLink.safeClick();
+    //await lineChart.dataDoubtsLink.safeClick();
     await safeExpectIsDispayed(lineChart.dataDoubtsWindow);
   });
 

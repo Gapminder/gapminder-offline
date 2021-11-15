@@ -7,9 +7,9 @@ import { safeDragAndDrop } from '../../helpers/helper';
 export class Slider {
   public sliderSelectedYear: ExtendedElementFinder = _$('.vzb-ts-slider-value');
   public sliderButton: ElementFinder = $('.vzb-ts-slider-handle');
-  public sliderReady: ElementFinder = $('.domain.rounded'); // TODO remove this because there is static property
+  public sliderReady: ElementFinder = $('.vzb-animationcontrols .vzb-ts-btn .vzb-icon-play'); // TODO remove this because there is static property
   public sliderAxis: ElementFinder = $('.vzb-ts-slider');
-  public speedStepper: ExtendedElementFinder = _$('.vzb-tool-stepped-speed-slider');
+  public speedStepper: ExtendedElementFinder = _$('.vzb-speedslider');
 
   async waitForSliderToBeReady(): Promise<{}> {
     return await browser.wait(EC.visibilityOf(this.sliderReady), 30000, 'slider not visible');

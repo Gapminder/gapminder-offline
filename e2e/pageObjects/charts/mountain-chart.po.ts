@@ -11,7 +11,7 @@ export class MountainChart extends CommonChartPage {
 
   public selectedCountries: ExtendedArrayFinder = _$$('text[class="vzb-mc-label-text"]');
   // public mountainsChartLeftSidePanelSelectedCountries: ElementArrayFinder = $$('text[class="vzb-mc-label-text"]');
-  public extremePovertyPercentage: ElementFinder = $('text[class="vzb-shadow vzb-mc-probe-value-ul"]');
+  public extremePovertyPercentage: ElementFinder = $('text[class="vzb-mc-probe-value vzb-shadow vzb-mc-probe-value-ul"]');
   public axisXLineNumbers: ElementArrayFinder = $$('g[class="tick"]');
   public verticalLine: ElementFinder = $$('.vzb-mc-probe-value-dl').first();
   public extremePovertyTitle: ElementFinder = $('text[class="vzb-mc-probe-extremepoverty"]');

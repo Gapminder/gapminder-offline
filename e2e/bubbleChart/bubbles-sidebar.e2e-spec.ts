@@ -184,16 +184,16 @@ describe('Bubbles chart: Sidebar', () => {
     const nonSelectedBubbles = await bubbleChart.countBubblesByOpacity(CommonChartPage.opacity.dimmed);
 
     await sidebar.changeOpacityForNonSelected();
-    const newOpacity = await bubbleChart.allBubbles.last().getCssValue('opacity');
+    const newOpacity = await bubbleChart.allBubblesByOpacity.last().getCssValue('opacity');
 
     expect(await bubbleChart.countBubblesByOpacity(Number(newOpacity))).toEqual(nonSelectedBubbles);
   });
 
   it('Change regular opacity', async () => {
-    const highlightedBubbles = await bubbleChart.countBubblesByOpacity(CommonChartPage.opacity.highlighted);
+    const highlightedBubbles = await bubbleChart.countBubblesByOpacity(CommonChartPage.opacity.regular);
 
     await sidebar.changeRegularOpacity();
-    const newOpacity = await bubbleChart.allBubbles.last().getCssValue('opacity');
+    const newOpacity = await bubbleChart.allBubblesByOpacity.last().getCssValue('opacity');
 
     expect(await bubbleChart.countBubblesByOpacity(Number(newOpacity))).toEqual(highlightedBubbles);
   });
@@ -201,8 +201,7 @@ describe('Bubbles chart: Sidebar', () => {
   // todo: incorrect behavior: fit it!
   it('Click on minimap region - "Remove everything else"', async () => {
     await sidebar.colorSection.removeEverythingElseInMinimap();
-    await expect(await bubbleChart.allBubbles.count() - await bubbleChart.noDataLabelArr.count())
-      .toEqual(await bubbleChart.countBubblesByColor('red'));
+    await expect(await bubbleChart.allBubbles.count()).toEqual(await bubbleChart.countBubblesByColor('red'));
   });
 
   it('Click on minimap region - "Select all in this group"', async () => {
@@ -210,7 +209,7 @@ describe('Bubbles chart: Sidebar', () => {
     const selectedBubbles = await bubbleChart.countBubblesByColor('red');
     const selectedLabels = await bubbleChart.allLabels.count();
 
-    expect(selectedLabels).toEqual(selectedBubbles);
+    expect(selectedLabels).toEqual(selectedBubbles/2);
   });
 
   it('remove label boxes', async () => {

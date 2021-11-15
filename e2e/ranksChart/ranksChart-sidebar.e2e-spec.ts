@@ -36,7 +36,7 @@ describe('Ranks chart: Sidebar', () => {
     await waitForSpinner();
 
     const colorFromColorSection = await sidebar.colorSection.color.firstColor.getAttribute('style');
-    expect(colorFromColorSection).toContain(await ranksChart.getBarForCountry('China').safeGetCssValue('fill'));
+    expect(colorFromColorSection).toContain(await ranksChart.getBarForCountry('United States').safeGetCssValue('fill'));
   });
 
   it(`"DESELECT" button reset selected countries`, async () => {

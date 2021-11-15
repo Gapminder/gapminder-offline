@@ -68,7 +68,7 @@ describe('Bubbles chart', () => {
     await bubbleChart.clickOnUnitedStates();
 
     expect(await bubbleChart.getCountryBubble('USA').getCssValue('opacity')).toEqual('1');
-    expect(await bubbleChart.countBubblesByOpacity(0.3)).toBe(await bubbleChart.allBubbles.count() - 1);
+    expect(await bubbleChart.countBubblesByOpacity(0.3)).toBe(await bubbleChart.allBubbles.count() - 4);
     expect(await bubbleChart.countBubblesByOpacity(1)).toBe(1);
     expect(await bubbleChart.getCountryBubble('India').getCssValue('opacity')).toEqual('0.3');
   });

@@ -5,10 +5,12 @@ import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../../helpe
 import { waitUntil } from '../../helpers/waitHelper';
 
 export class MapChart extends CommonChartPage {
+  static opacityHighlighted = 0.8;
   chartLink: ExtendedElementFinder = _$('[src*="bubblemap"]');
 
   selectedCountries: ExtendedArrayFinder = _$$('[class*="vzb-bmc-entity label"]');
-  selectedBubbles: ExtendedArrayFinder = _$$('.vzb-bmc-bubble.vzb-selected');
+  selectedBubbles: ExtendedArrayFinder = _$$(`.vzb-bmc-bubble[style*="opacity: ${MapChart.opacityHighlighted}"]`);
+  nonSelectedBubbles: ExtendedArrayFinder = _$$(`.vzb-bmc-bubble[style*="opacity: ${CommonChartPage.opacity.dimmed}"]`);
   allBubbles: ExtendedArrayFinder = _$$('circle[class="vzb-bmc-bubble"]');
   allLabels: ExtendedArrayFinder = _$$('.vzb-bmc-entity[class*=label-][transform*=translate]');
   bubbleLabelOnMouseHover: ExtendedElementFinder = _$('.vzb-bmc-tooltip');
@@ -16,7 +18,7 @@ export class MapChart extends CommonChartPage {
   selectedCountriesLabels: ExtendedArrayFinder = _$$('text[class="vzb-bmc-label-content stroke"]');
   selectedCountryLabel: ElementFinder = $('[class*="vzb-bmc-entity label"]'); // TODO this could be elementArray
   xIconOnBubble: ExtendedElementFinder = _$('.vzb-bmc-label-x');
-  yAxisTitle: ElementFinder = $('.vzb-bmc-axis-y-title');
+  yAxisTitle: ElementFinder = $('.vzb-bmc-axis-s-title');
 
   sidebar = {
     bubbleOpacityControl: $('.vzb-dialog-bubbleopacity'),
@@ -24,6 +26,7 @@ export class MapChart extends CommonChartPage {
     axisSelector: $('.vzb-saxis-selector')
   };
 
+  
   colors = {
     'red': '#ff5872',
     'yellow': '#ffe700',

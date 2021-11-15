@@ -68,7 +68,7 @@ describe('Line chart: Sidebar', () => {
     await waitUntil(lineChart.countriesLines.first());
 
     const colorFromColorSection = await sidebar.colorSection.getColorFromColorSection();
-    expect(await lineChart.getLineColor('China')).toEqual(colorFromColorSection, 'line color');
+    expect(await lineChart.getLineColor('Russia')).toEqual(colorFromColorSection, 'line color');
   });
 
 

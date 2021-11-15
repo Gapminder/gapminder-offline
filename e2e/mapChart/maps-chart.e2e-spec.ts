@@ -61,10 +61,10 @@ describe('Maps chart', () => {
     const nonSelectedBubblesCount = await mapChart.allBubbles.count();
     await mapChart.clickOnBubble('green');
     expect(await mapChart.selectedCountriesLabels.safeGetText()).toMatch('United States');
-    expect(await mapChart.selectedBubbles.get(0).safeGetAttribute('style')).toContain(`${CommonChartPage.opacity.highlighted}`);
+    expect(await mapChart.selectedBubbles.get(0).safeGetAttribute('style')).toContain(`${MapChart.opacityHighlighted}`);
     expect(await mapChart.allBubbles.get(0).safeGetAttribute('style')).toContain(`${CommonChartPage.opacity.dimmed}`);
 
-    expect(await mapChart.allBubbles.count()).not.toEqual(nonSelectedBubblesCount);
+    expect(await mapChart.nonSelectedBubbles.count()).not.toEqual(nonSelectedBubblesCount);
   });
 
   it('Bubble label can be dragged and dropped(TC29)', async () => {
@@ -90,7 +90,7 @@ describe('Maps chart', () => {
 
     await mapChart.clickOnBubble('green');
     expect(await mapChart.selectedCountriesLabels.getText()).toMatch('United States');
-    expect(await mapChart.selectedBubbles.get(0).getAttribute('style')).toContain('opacity: 1;');
+    expect(await mapChart.selectedBubbles.get(0).getAttribute('style')).toContain(`opacity: ${MapChart.opacityHighlighted};`);
 
     await mapChart.deselectBubble('green');
 
@@ -98,7 +98,7 @@ describe('Maps chart', () => {
   });
 
   it('Chart title show the exact values on hover(TC32)', async () => {
-    waitForPageLoaded();
+    //waitForPageLoaded();
     const axisYInitialText = await mapChart.yAxisTitle.getText();
     await expect(axisYInitialText).toEqual('Size: Population, total');
 

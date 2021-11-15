@@ -65,10 +65,10 @@ export class Sidebar {
    * Options
    */
   optionsButton: ExtendedElementFinder = _$$('[data-btn="moreoptions"]').last();
-  optionsMenuSizeButton: ExtendedElementFinder = _$$('span[data-vzb-translate="buttons/size"]').last();
+  optionsMenuSizeButton: ExtendedElementFinder = _$$('span[data-localise="buttons/size"]').last();
   optionsMenuBubblesResizeToddler: ExtendedElementFinder = _$$('.vzb-slider.vzb-slider-bubblesize .w').last();
   optionsXandY = {
-    openBtn: $('[data-vzb-translate="buttons/axes"]'),
+    openBtn: $('[data-localise="buttons/axes"]'),
     xMin: $$('.vzb-mmi-zoomedmin').first(),
     xMax: $$('.vzb-mmi-zoomedmax').first(),
     yMin: $$('.vzb-mmi-zoomedmin').last(),
