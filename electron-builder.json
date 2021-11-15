@@ -33,7 +33,8 @@
     "target": [
       "nsis:x64",
       "nsis:ia32",
-      "zip",
+      "zip:x64",
+      "zip:ia32",
       "portable"
     ],
     "verifyUpdateCodeSignature": false,
