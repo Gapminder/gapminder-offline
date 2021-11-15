@@ -511,7 +511,7 @@
   stroke: #999;
   stroke-width: 1px;
 }
-.vzb-tool .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-year {
+.vzb-tool .vzb-bubblechart .vzb-bubblechart-svg .vzb-bc-date {
   filter: alpha(opacity=30);
   opacity: 0.3;
   font-size: 15em;

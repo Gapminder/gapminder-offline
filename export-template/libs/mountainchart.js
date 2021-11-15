@@ -1,4 +1,4 @@
-// https://github.com/vizabi/mountainchart#readme v3.6.5 build 1630884936278 Copyright 2021 Gapminder Foundation and contributors
+// https://github.com/vizabi/mountainchart#readme v3.7.2 build 1634239711575 Copyright 2021 Gapminder Foundation and contributors
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('VizabiSharedComponents'), require('mobx')) :
   typeof define === 'function' && define.amd ? define(['VizabiSharedComponents', 'mobx'], factory) :
@@ -286,7 +286,7 @@
         selectedF: this.model.encoding.selected.data.filter,
         highlightedF: this.model.encoding.highlighted.data.filter
       };
-      this.localise = this.services.locale.auto();
+      this.localise = this.services.locale.auto(this.MDL.frame.interval);
 
       this.addReaction(this.addAndRemoveLabels);
       this.addReaction(this.updateHighlighted);
@@ -548,7 +548,7 @@
     }
 
     draw() {
-      this.localise = this.services.locale.auto();
+      this.localise = this.services.locale.auto(this.MDL.frame.interval);
       this.addReaction(this.redraw);
     }
 
@@ -663,8 +663,8 @@
 
     constructor(config) {
       config.subcomponents = [{
-        type: VizabiSharedComponents.DynamicBackground,
-        placeholder: ".vzb-mc-year"
+        type: VizabiSharedComponents.DateTimeBackground,
+        placeholder: ".vzb-mc-date"
       },{
         name: "selectlist",
         type: MCSelectList,
@@ -682,7 +682,7 @@
       <svg class="vzb-mountainchart-svg vzb-export">
         <g class="vzb-mc-graph">
           <rect class="vzb-mc-eventarea"></rect>
-          <g class="vzb-mc-year"></g>
+          <g class="vzb-mc-date"></g>
 
           <g class="vzb-mc-mountains-mergestacked"></g>
           <g class="vzb-mc-mountains-mergegrouped"></g>
@@ -739,7 +739,7 @@
         xTitle: this.element.select(".vzb-mc-axis-x-title"),
         yTitle: this.element.select(".vzb-mc-axis-y-title"),
         info: this.element.select(".vzb-mc-axis-info"),
-        year: this.element.select(".vzb-mc-year"),      
+        year: this.element.select(".vzb-mc-date"),      
         mountainMergeStackedContainer: this.element.select(".vzb-mc-mountains-mergestacked"),
         mountainMergeGroupedContainer: this.element.select(".vzb-mc-mountains-mergegrouped"),
         mountainAtomicContainer: this.element.select(".vzb-mc-mountains"),
@@ -750,7 +750,7 @@
         xAxisGroups: this.element.select(".vzb-mc-x-axis-groups")
       };
 
-      this._year = this.findChild({type: "DynamicBackground"});
+      this._date = this.findChild({type: "DateTimeBackground"});
       this._selectlist = this.findChild({name: "selectlist"});
       this._probe = this.findChild({name: "probe"});
       
@@ -763,7 +763,7 @@
       //this._export = new Exporter(this);
       //this._export
       //  .prefix("vzb-mc-")
-      //  .deleteClasses(["vzb-mc-mountains-mergestacked", "vzb-mc-mountains-mergegrouped", "vzb-mc-mountains", "vzb-mc-year", "vzb-mc-mountains-labels", "vzb-mc-axis-labels"]);
+      //  .deleteClasses(["vzb-mc-mountains-mergestacked", "vzb-mc-mountains-mergegrouped", "vzb-mc-mountains", "vzb-mc-date", "vzb-mc-mountains-labels", "vzb-mc-axis-labels"]);
       //this._robinhood = new RobinHood(this);
 
       // define path generator
@@ -818,7 +818,7 @@
 
     draw() {
 
-      this.localise = this.services.locale.auto();
+      this.localise = this.services.locale.auto(this.MDL.frame.interval);
       this._dataNotes = this.root.findChild({name: "datanotes"});
 
       if (this.updateLayoutProfile()) return; //return if exists with error
@@ -919,7 +919,7 @@
     }
 
     updateYear() {
-      this._year.setText(this.localise(this.MDL.frame.value), this.duration);    
+      this._date.setText(this.MDL.frame.value, this.duration);    
     }
 
     updateMathSettings(){
@@ -944,7 +944,7 @@
       const isRTL = this.services.locale.isRTL();
 
       //year is centered and resized
-      this._year
+      this._date
         .setConditions({
           topOffset: this.services.layout.profile === "LARGE" ? margin.top * 2 : 0,
           xAlign: this.services.layout.profile === "LARGE" ? (isRTL ? "left" : "right") : "center",
@@ -1341,7 +1341,7 @@
       if (typeof d.label == "object") 
         return Object.entries(d.label)
           .filter(entry => entry[0] != this.MDL.frame.data.concept)
-          .map(entry => entry[1])
+          .map(entry => VizabiSharedComponents.LegacyUtils.isNumber(entry[1]) ? (entry[0] + ": " + entry[1]) : entry[1])
           .join(", ");
       if (d.label != null) return "" + d.label;
       return d[Symbol.for("key")];
@@ -1858,7 +1858,7 @@
     },
   };
 
-  MountainChart.versionInfo = { version: "3.6.5", build: 1630884936278, package: {"homepage":"https://github.com/vizabi/mountainchart#readme","name":"@vizabi/mountainchart","description":"Vizabi mountain chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
+  MountainChart.versionInfo = { version: "3.7.2", build: 1634239711575, package: {"homepage":"https://github.com/vizabi/mountainchart#readme","name":"@vizabi/mountainchart","description":"Vizabi mountain chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
 
   return MountainChart;
 

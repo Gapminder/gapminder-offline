@@ -22,7 +22,7 @@
   "scripts": {
     "md-export-template-lib": "mkdirp ./export-template/libs && mkdirp ./export-template/libs/assets && mkdirp ./export-template/assets",
     "cp-vizabi-ddfcsv-reader": "copyfiles -u 4 ./node_modules/@vizabi/reader-ddfcsv/dist/* ./export-template/libs",
-    "cp-vizabi-excel-reader": "copyfiles -u 3 ./node_modules/@vizabi/reader-excel/dist/* ./export-template/libs",
+    "cp-vizabi-excel-reader": "copyfiles -u 4 ./node_modules/@vizabi/reader-excel/dist/* ./export-template/libs",
     "cp-vizabi-core": "copyfiles -u 4 ./node_modules/@vizabi/core/dist/* ./export-template/libs",
     "cp-vizabi-shared-components": "copyfiles -u 4 ./node_modules/@vizabi/shared-components/build/* ./export-template/libs",
     "cp-vizabi-shared-components-assets": "copyfiles -u 5 ./node_modules/@vizabi/shared-components/build/assets/**/* ./export-template/libs/assets && copyfiles -u 4 ./node_modules/@vizabi/shared-components/build/assets/**/* ./export-template/assets",

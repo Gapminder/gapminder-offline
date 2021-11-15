@@ -1,9 +1,9 @@
-// http://vizabi.org v1.18.0 Copyright 2021 Jasper Heeffer and others at Gapminder Foundation
+// http://vizabi.org v1.21.2 Copyright 2021 Jasper Heeffer and others at Gapminder Foundation
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('mobx')) :
     typeof define === 'function' && define.amd ? define(['exports', 'mobx'], factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.Dataframe = {}, global.mobx));
-}(this, (function (exports, mobx) { 'use strict';
+})(this, (function (exports, mobx) { 'use strict';
 
     const directions = {
         ascending: 1,
@@ -338,11 +338,11 @@
     });
 
 
-    function range(start, stop, concept) {
-        return interval(concept).range(start, stop);
+    function range(start, stop, intervalSize) {
+        return interval(intervalSize).range(start, stop);
     }
 
-    function interval({ concept, concept_type }) {
+    function interval(intervalSize) {
         const nonTimeInterval = {
             offset: (n, d) => isNumeric(n) && isNumeric(d) ? n + d : console.error("Can't offset using non-numeric values", { n, d }),
             range: d3.range,
@@ -350,25 +350,24 @@
             ceil: Math.ceil,
             round: Math.round
         };
-        if (concept_type == "time") {
-            if (concept == "time") concept = "year";
-            return d3['utc' + ucFirst(concept)] || nonTimeInterval;
-        } else {
-            return nonTimeInterval;
-        }
+        //case for quarter
+        if (intervalSize === "quarter") return d3.utcMonth.every(3);
+        //special case to make weeks start from monday as per ISO 8601, not sunday
+        if (intervalSize === "week") intervalSize = "monday";
+        return d3['utc' + ucFirst(intervalSize)] || nonTimeInterval;
     }
 
-    function inclusiveRange(start, stop, concept) {
+    function inclusiveRange(start, stop, intervalSize) {
         if (!start || !stop) return [];
-        const result = range(start, stop, concept);
-        result.push(stop);
-        return result;
+        return range(start, stop, intervalSize).concat(stop);
     }
 
     [
         d3.utcParse('%Y'),
         d3.utcParse('%Y-%m'),
         d3.utcParse('%Y-%m-%d'),
+        d3.utcParse('%Yw%V'),
+        d3.utcParse('%Yq%q'),
         d3.utcParse('%Y-%m-%dT%HZ'),
         d3.utcParse('%Y-%m-%dT%H:%MZ'),
         d3.utcParse('%Y-%m-%dT%H:%M:%SZ'),
@@ -1144,8 +1143,8 @@
                 for (const markerKey of frame.keys()) {
                     const marker = frame.getByStr(markerKey);
                     if (marker[field] != null) {
-                        let lastIndex = lastIndexPerMarker.get(markerKey);
-                        if (lastIndex && (i - lastIndex) > 1) {
+                        const lastIndex = lastIndexPerMarker.get(markerKey);
+                        if (lastIndex !== undefined && (i - lastIndex) > 1) {
                             const gapRows = []; // d3.range(lastIndex + 1, i).map(i => group.get(frameKeys[i]))
                             for (let j = lastIndex + 1; j < i; j++) {
                                 const gapFrame = group.get(frameKeys[j]);
@@ -1217,10 +1216,10 @@
         return newGroup;
     }
 
-    function reindexGroupToKeyDomain(group, keyConcept) {
+    function reindexGroupToKeyDomain(group, intervalSize) {
         if (group.size > 1) {
             const domain = group.keyExtent();
-            const newIndex = inclusiveRange(domain[0], domain[1], keyConcept);
+            const newIndex = inclusiveRange(domain[0], domain[1], intervalSize);
             group = reindexGroup(group, newIndex);
         }
         return group;
@@ -1264,7 +1263,7 @@
         group.interpolate = mapCall(group, "interpolate");
         group.extrapolate = mapCall(group, "extrapolate");
         group.reindexGroup = index => reindexGroup(group, index);
-        group.reindexToKeyDomain = keyConcept => reindexGroupToKeyDomain(group, keyConcept);
+        group.reindexToKeyDomain = intervalSize => reindexGroupToKeyDomain(group, intervalSize);
         group.interpolateOverMembers = options => interpolateGroup(group, options);
         group.extrapolateOverMembers = options => extrapolateGroup(group, options);
         group.copy = () => group.map(member => member.copy());
@@ -1553,5 +1552,5 @@
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
 //# sourceMappingURL=Dataframe.js.map

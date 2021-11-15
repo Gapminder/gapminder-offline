@@ -1,4 +1,4 @@
-// https://github.com/vizabi/bubblemap#readme v3.6.2 build 1630886051883 Copyright 2021 Gapminder Foundation and contributors
+// https://github.com/vizabi/bubblemap#readme v3.7.2 build 1634239710540 Copyright 2021 Gapminder Foundation and contributors
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('VizabiSharedComponents'), require('mobx')) :
   typeof define === 'function' && define.amd ? define(['VizabiSharedComponents', 'mobx'], factory) :
@@ -2548,8 +2548,8 @@
     constructor(config) {
 
       config.subcomponents = [{
-        type: VizabiSharedComponents.DynamicBackground,
-        placeholder: ".vzb-bmc-year"
+        type: VizabiSharedComponents.DateTimeBackground,
+        placeholder: ".vzb-bmc-date"
       },{
         type: VizabiSharedComponents.Labels,
         placeholder: ".vzb-bmc-labels",      
@@ -2568,7 +2568,7 @@
       </svg>
       <svg class="vzb-bubblemap-svg vzb-export">
           <g class="vzb-bmc-graph">
-              <g class="vzb-bmc-year"></g>
+              <g class="vzb-bmc-date"></g>
 
               <g class="vzb-bmc-bubbles"></g>
 
@@ -2645,7 +2645,7 @@
         this._initMap();
       });
       this._labels = this.findChild({type: "Labels"});
-      this._year = this.findChild({type: "DynamicBackground"});
+      this._date = this.findChild({type: "DateTimeBackground"});
     }
 
     get MDL(){
@@ -2660,7 +2660,7 @@
     }
 
     draw(){
-      this.localise = this.services.locale.auto();
+      this.localise = this.services.locale.auto(this.MDL.frame.interval);
 
       // new scales and axes
       this.sScale = this.MDL.size.scale.d3Scale;
@@ -2687,7 +2687,7 @@
 
     _updateYear() {
       const duration = this._getDuration();
-      this._year.setText(this.localise(this.MDL.frame.value), duration);
+      this._date.setText(this.MDL.frame.value, duration);
     }
 
     _drawForecastOverlay() {
@@ -2978,7 +2978,7 @@
       if (typeof d.label == "object") 
         return Object.entries(d.label)
           .filter(entry => entry[0] != this.MDL.frame.data.concept)
-          .map(entry => entry[1])
+          .map(entry => VizabiSharedComponents.LegacyUtils.isNumber(entry[1]) ? (entry[0] + ": " + entry[1]) : entry[1])
           .join(", ");
       if (d.label != null) return "" + d.label;
       return d[Symbol.for("key")];
@@ -3050,13 +3050,13 @@
 
       const {margin} = this.profileConstants;
 
-      this._year.setConditions({ 
+      this._date.setConditions({ 
         xAlign: "right", 
         yAlign: "top", 
         widthRatio: 2 / 10,
         rightOffset: 30
       });
-      this._year.resizeText(this.width, this.height);
+      this._date.resizeText(this.width, this.height);
       //this.repositionElements();
       //this.rescaleMap();
 
@@ -3145,9 +3145,9 @@
       this.services.layout.size;
 
       const sText = this.options.sTitle || 
-        this.localise("buttons/size") + ": " + (this.MDL.size.data.isConstant ? this.localise("indicator/_default/color") : this.MDL.size.data.conceptProps.name);
+        this.localise("buttons/size") + ": " + VizabiSharedComponents.Utils.getConceptName(this.MDL.size, this.localise);
       const cText = this.options.cTitle || 
-        this.localise("buttons/color") + ": " + (this.MDL.color.data.isConstant ? this.localise("indicator/_default/color") : this.MDL.color.data.conceptProps.name);
+        this.localise("buttons/color") + ": " + VizabiSharedComponents.Utils.getConceptName(this.MDL.color, this.localise);
 
       const treemenu = this.root.findChild({type: "TreeMenu"});
       const sTitle = this.DOM.sTitle
@@ -3352,6 +3352,17 @@
         placeholder: ".vzb-buttonlist",
         name: "buttons",
         model: marker
+      },{
+        type: VizabiSharedComponents.SpaceConfig,
+        placeholder: ".vzb-spaceconfig",
+        options: {button: ".vzb-spaceconfig-button"},
+        model: marker,
+        name: "space-config"
+      },{
+        type: VizabiSharedComponents.ErrorMessage,
+        placeholder: ".vzb-errormessage",
+        model: marker,
+        name: "error-message"
       }];
 
       config.template = `
@@ -3366,7 +3377,9 @@
       </div>
       <div class="vzb-treemenu"></div>
       <div class="vzb-datawarning"></div>
+      <div class="vzb-spaceconfig"></div>
       <div class="vzb-datanotes"></div>
+      <div class="vzb-errormessage"></div>
     `;
 
       config.services = {
@@ -3450,7 +3463,7 @@
     }
   });
 
-  BubbleMap.versionInfo = { version: "3.6.2", build: 1630886051883, package: {"homepage":"https://github.com/vizabi/bubblemap#readme","name":"@vizabi/bubblemap","description":"Vizabi bubble map"}, sharedComponents: VizabiSharedComponents.versionInfo};
+  BubbleMap.versionInfo = { version: "3.7.2", build: 1634239710540, package: {"homepage":"https://github.com/vizabi/bubblemap#readme","name":"@vizabi/bubblemap","description":"Vizabi bubble map"}, sharedComponents: VizabiSharedComponents.versionInfo};
 
   return BubbleMap;
 

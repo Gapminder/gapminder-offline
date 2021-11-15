@@ -1,4 +1,4 @@
-// https://github.com/vizabi/bubblechart#readme v3.11.1 build 1629407692347 Copyright 2021 Gapminder Foundation and contributors
+// https://github.com/vizabi/bubblechart#readme v3.12.2 build 1634239701931 Copyright 2021 Gapminder Foundation and contributors
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('VizabiSharedComponents'), require('mobx')) :
   typeof define === 'function' && define.amd ? define(['VizabiSharedComponents', 'mobx'], factory) :
@@ -939,14 +939,14 @@
         },
         name: "labels"
       },{
-        type: VizabiSharedComponents.DynamicBackground,
-        placeholder: ".vzb-bc-year"
+        type: VizabiSharedComponents.DateTimeBackground,
+        placeholder: ".vzb-bc-date"
       }];
 
       config.template = `
       <svg class="vzb-bubblechart-svg vzb-bubblechart-svg-back vzb-export">
           <g class="vzb-bc-graph">
-              <g class="vzb-bc-year"></g>
+              <g class="vzb-bc-date"></g>
               <svg class="vzb-bc-axis-x"><g></g></svg>
               <svg class="vzb-bc-axis-y"><g></g></svg>
               <line class="vzb-bc-projection-x"></line>
@@ -1060,7 +1060,7 @@
         Object.assign(this.DOM, {
           yAxisElContainer: graphBack.select(".vzb-bc-axis-y"),
           xAxisElContainer: graphBack.select(".vzb-bc-axis-x"),
-          yearEl: graphBack.select(".vzb-bc-year"),
+          date: graphBack.select(".vzb-bc-date"),
           projectionX: graphBack.select(".vzb-bc-projection-x"),
           projectionY: graphBack.select(".vzb-bc-projection-y"),
         });
@@ -1072,7 +1072,7 @@
       this.DOM.bubbleCrown.selectAll(".vzb-crown-glow")
         .attr("filter", "url(" + location.pathname + "#vzb-glow-filter)");
 
-      this._year = this.findChild({type: "DynamicBackground"});
+      this._date = this.findChild({type: "DateTimeBackground"});
       this._labels = this.findChild({type: "Labels"});
       this._panZoom = new PanZoom(this);    
       this.decorations = new BCDecorations(this);
@@ -1191,7 +1191,7 @@
     }
 
     draw() {
-      this.localise = this.services.locale.auto();
+      this.localise = this.services.locale.auto(this.MDL.frame.interval);
 
       //this.MDL.trail.config.show = false;
       //this.ui.cursorMode = "plus";
@@ -1230,12 +1230,12 @@
     }
 
     _updateShowYear() {
-      this.DOM.yearEl.classed("vzb-hidden", !this.ui.timeInBackground);
+      this.DOM.date.classed("vzb-hidden", !this.ui.timeInBackground);
     }
 
     _updateYear() {
       const duration = this._getDuration();
-      this._year.setText(this.localise(this.MDL.frame.value), duration);    
+      this._date.setText(this.MDL.frame.value, duration);    
     }
 
     _createAndDeleteBubbles() {
@@ -1785,9 +1785,7 @@
       graphAll
         .attr("transform", "translate(" + (margin.left * this.profileConstants.leftMarginRatio) + "," + margin.top + ")");
 
-      this._year.resizeText(width, height);
-      //this.yearEl.classed("vzb-hidden", !this.ui.timeInBackground);
-      //this.year.resize(width, height);
+      this._date.resizeText(width, height);
       
       eventArea
         .attr("width", width)
@@ -2469,7 +2467,7 @@
       if (typeof d.label == "object") 
         return Object.entries(d.label)
           .filter(entry => entry[0] != this.MDL.frame.data.concept)
-          .map(entry => entry[1])
+          .map(entry => VizabiSharedComponents.LegacyUtils.isNumber(entry[1]) ? (entry[0] + ": " + entry[1]) : entry[1])
           .join(", ");
       if (d.label != null) return "" + d.label;
       return d[Symbol.for("key")];
@@ -2686,7 +2684,7 @@
     }
   });
 
-  BubbleChart.versionInfo = { version: "3.11.1", build: 1629407692347, package: {"homepage":"https://github.com/vizabi/bubblechart#readme","name":"@vizabi/bubblechart","description":"Vizabi bubble chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
+  BubbleChart.versionInfo = { version: "3.12.2", build: 1634239701931, package: {"homepage":"https://github.com/vizabi/bubblechart#readme","name":"@vizabi/bubblechart","description":"Vizabi bubble chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
 
   return BubbleChart;
 

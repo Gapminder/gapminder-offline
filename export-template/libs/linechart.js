@@ -1,4 +1,4 @@
-// https://github.com/vizabi/linechart#readme v3.7.2 build 1630885870935 Copyright 2021 Gapminder Foundation and contributors
+// https://github.com/vizabi/linechart#readme v3.7.5 build 1634239716290 Copyright 2021 Gapminder Foundation and contributors
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('VizabiSharedComponents'), require('mobx')) :
   typeof define === 'function' && define.amd ? define(['VizabiSharedComponents', 'mobx'], factory) :
@@ -255,7 +255,7 @@
     }
 
     draw() {
-      this.localise = this.services.locale.auto();
+      this.localise = this.services.locale.auto(this.MDL.frame.interval);
       
       this.TIMEDIM = this.MDL.frame.data.concept;
           
@@ -336,7 +336,7 @@
       if (typeof d.label == "object") 
         return Object.entries(d.label)
           .filter(entry => entry[0] != this.MDL.frame.data.concept)
-          .map(entry => entry[1])
+          .map(entry => VizabiSharedComponents.LegacyUtils.isNumber(entry[1]) ? (entry[0] + ": " + entry[1]) : entry[1])
           .join(", ");
       if (d.label != null) return "" + d.label;
       return d[Symbol.for("key")];
@@ -1264,6 +1264,17 @@
         placeholder: ".vzb-buttonlist",
         model: marker,
         name: "buttons"
+      },{
+        type: VizabiSharedComponents.SpaceConfig,
+        placeholder: ".vzb-spaceconfig",
+        options: {button: ".vzb-spaceconfig-button"},
+        model: marker,
+        name: "space-config"
+      },{
+        type: VizabiSharedComponents.ErrorMessage,
+        placeholder: ".vzb-errormessage",
+        model: marker,
+        name: "error-message"
       }];
 
       config.template = `
@@ -1277,8 +1288,10 @@
         <div class="vzb-buttonlist"></div>
       </div>
       <div class="vzb-treemenu"></div>
-      <div class="vzb-datanotes"></div>
       <div class="vzb-datawarning"></div>
+      <div class="vzb-spaceconfig"></div>
+      <div class="vzb-datanotes"></div>
+      <div class="vzb-errormessage"></div>
     `;
 
       config.services = {
@@ -1321,6 +1334,8 @@
       },
       "color": {
         data: {
+          concept: { filter: { concept_type: { $in: ["entity_set", "entity_domain"]} } },
+          
           allow: {
             space: {
               filter: {
@@ -1348,7 +1363,7 @@
     }
   });
 
-  LineChart.versionInfo = { version: "3.7.2", build: 1630885870935, package: {"homepage":"https://github.com/vizabi/linechart#readme","name":"@vizabi/linechart","description":"Vizabi line chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
+  LineChart.versionInfo = { version: "3.7.5", build: 1634239716290, package: {"homepage":"https://github.com/vizabi/linechart#readme","name":"@vizabi/linechart","description":"Vizabi line chart"}, sharedComponents: VizabiSharedComponents.versionInfo};
 
   return LineChart;
 

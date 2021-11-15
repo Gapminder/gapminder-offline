@@ -1,9 +1,9 @@
-// http://vizabi.org v1.18.0 Copyright 2021 Jasper Heeffer and others at Gapminder Foundation
+// http://vizabi.org v1.21.2 Copyright 2021 Jasper Heeffer and others at Gapminder Foundation
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('mobx')) :
   typeof define === 'function' && define.amd ? define(['mobx'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Vizabi = factory(global.mobx));
-}(this, (function (mobx) { 'use strict';
+})(this, (function (mobx) { 'use strict';
 
   function _interopNamespace(e) {
     if (e && e.__esModule) return e;
@@ -14,14 +14,12 @@
           var d = Object.getOwnPropertyDescriptor(e, k);
           Object.defineProperty(n, k, d.get ? d : {
             enumerable: true,
-            get: function () {
-              return e[k];
-            }
+            get: function () { return e[k]; }
           });
         }
       });
     }
-    n['default'] = e;
+    n["default"] = e;
     return Object.freeze(n);
   }
 
@@ -526,6 +524,7 @@
       return ObservableGroupMap;
   })(mobx.ObservableMap));
   {
+      Promise.resolve();
       if (typeof queueMicrotask !== "undefined") ;
       else if (typeof process !== "undefined" && process.nextTick) ;
       else ;
@@ -1341,8 +1340,8 @@
               for (const markerKey of frame.keys()) {
                   const marker = frame.getByStr(markerKey);
                   if (marker[field] != null) {
-                      let lastIndex = lastIndexPerMarker.get(markerKey);
-                      if (lastIndex && (i - lastIndex) > 1) {
+                      const lastIndex = lastIndexPerMarker.get(markerKey);
+                      if (lastIndex !== undefined && (i - lastIndex) > 1) {
                           const gapRows = []; // d3.range(lastIndex + 1, i).map(i => group.get(frameKeys[i]))
                           for (let j = lastIndex + 1; j < i; j++) {
                               const gapFrame = group.get(frameKeys[j]);
@@ -1414,10 +1413,10 @@
       return newGroup;
   }
 
-  function reindexGroupToKeyDomain(group, keyConcept) {
+  function reindexGroupToKeyDomain(group, intervalSize) {
       if (group.size > 1) {
           const domain = group.keyExtent();
-          const newIndex = inclusiveRange(domain[0], domain[1], keyConcept);
+          const newIndex = inclusiveRange(domain[0], domain[1], intervalSize);
           group = reindexGroup(group, newIndex);
       }
       return group;
@@ -1461,7 +1460,7 @@
       group.interpolate = mapCall(group, "interpolate");
       group.extrapolate = mapCall(group, "extrapolate");
       group.reindexGroup = index => reindexGroup(group, index);
-      group.reindexToKeyDomain = keyConcept => reindexGroupToKeyDomain(group, keyConcept);
+      group.reindexToKeyDomain = intervalSize => reindexGroupToKeyDomain(group, intervalSize);
       group.interpolateOverMembers = options => interpolateGroup(group, options);
       group.extrapolateOverMembers = options => extrapolateGroup(group, options);
       group.copy = () => group.map(member => member.copy());
@@ -2212,11 +2211,11 @@
   }
 
 
-  function range(start, stop, concept) {
-      return interval(concept).range(start, stop);
+  function range(start, stop, intervalSize) {
+      return interval(intervalSize).range(start, stop);
   }
 
-  function interval({ concept, concept_type }) {
+  function interval(intervalSize) {
       const nonTimeInterval = {
           offset: (n, d) => isNumeric(n) && isNumeric(d) ? n + d : console.error("Can't offset using non-numeric values", { n, d }),
           range: d3.range,
@@ -2224,25 +2223,24 @@
           ceil: Math.ceil,
           round: Math.round
       };
-      if (concept_type == "time") {
-          if (concept == "time") concept = "year";
-          return d3['utc' + ucFirst(concept)] || nonTimeInterval;
-      } else {
-          return nonTimeInterval;
-      }
+      //case for quarter
+      if (intervalSize === "quarter") return d3.utcMonth.every(3);
+      //special case to make weeks start from monday as per ISO 8601, not sunday
+      if (intervalSize === "week") intervalSize = "monday";
+      return d3['utc' + ucFirst(intervalSize)] || nonTimeInterval;
   }
 
-  function inclusiveRange(start, stop, concept) {
+  function inclusiveRange(start, stop, intervalSize) {
       if (!start || !stop) return [];
-      const result = range(start, stop, concept);
-      result.push(stop);
-      return result;
+      return range(start, stop, intervalSize).concat(stop);
   }
 
   const defaultParsers = [
       d3.utcParse('%Y'),
       d3.utcParse('%Y-%m'),
       d3.utcParse('%Y-%m-%d'),
+      d3.utcParse('%Yw%V'),
+      d3.utcParse('%Yq%q'),
       d3.utcParse('%Y-%m-%dT%HZ'),
       d3.utcParse('%Y-%m-%dT%H:%MZ'),
       d3.utcParse('%Y-%m-%dT%H:%M:%SZ'),
@@ -2750,7 +2748,7 @@
   }
 
   function getConcepts(data) {
-      const types = getTypes(data);
+      const types = getConceptTypes(data);
       return [...data.fields].map(concept => ({
           concept,
           concept_type: types.get(concept)
@@ -2769,7 +2767,17 @@
           return [{ key: ["concept"], value: "concept_type"}];
       }
       if (from == "entities.schema") {
-          return [];
+          //make the key itself always present in schema
+          const conceptTpes = getConceptTypes(data);
+          const entitiesSchema = data.key
+              .filter(f => conceptTpes.get(f) !== "time")
+              .map(m => ({key: [m], value: m}));
+          
+          //this only supports names for the first dimension, but it is possible to add more, i.e. with dot notation
+          if (data.fields.includes("name"))
+              entitiesSchema.push({ key: [data.key[0]], value: "name" }); 
+         
+          return entitiesSchema;
       }
       console.warn("Invalid schema query `from` clause: ", from);
   }
@@ -2779,8 +2787,13 @@
       const { key, value } = select;
       const projection = [...key, ...value];
 
-      if ("join" in query)
-          console.warn('Inline reader does not handle joins as it handles only one table.', { query });
+      if ("join" in query){
+          console.warn('Inline reader does not handle joins as it has only one table. Sections of "where" statement that refer to joins will be ignored.', { query });
+          //delete where statements that refer to joins
+          for (let w in where) {
+              if(Object.keys(join).includes(where[w])) delete where[w]; 
+          }
+      }
 
       if (relativeComplement([...data.fields], projection).length > 0)
           console.error('Concepts found in query.select which are not in data', { query, dataFields: data.fields});
@@ -2818,10 +2831,18 @@
       number: d => +d,
       boolean: d => d == '1' || d.toLowerCase() == 'true',
       auto: autoParse,
+      time: (d) => {
+          if ((""+d).length == 4) return dtypeParsers.year(d);
+          if (d.length == 7 && d[4] == "-") return dtypeParsers.month(d);
+          if (d.length == 10) return dtypeParsers.day(d);
+          if (d[4].toLowerCase() == "w") return dtypeParsers.week(d);
+          if (d[4].toLowerCase() == "q") return dtypeParsers.quarter(d);
+      }, 
       year: d3.utcParse("%Y"),
       month: d3.utcParse("%Y-%m"),
       day: d3.utcParse("%Y-%m-%d"),
-      week: d3.utcParse("%Yw%V")
+      week: d3.utcParse("%Yw%V"),
+      quarter: d3.utcParse("%Yq%q")
   };
 
   function parserFromDtypes(dtypes) {
@@ -2873,38 +2894,49 @@
       return value;
   }
 
-  function getTypes(data) {
+  function getConceptTypes(data) {
       const types = new Map();
 
       // get types from first row
       const [firstRow] = data.values();
       for (let field in firstRow) {
-          types.set(field, getType(firstRow[field]));
+          types.set(field, getConceptType(firstRow[field], field, data.key));
       }
       // check if those types are consistent
-      for (let [field, type] in types) {
-          if (!validateType(data, field, type)) {
+      for (let [field, type] of types) {
+          const checkedType = validateConceptType(data, field, type);
+          if (!checkedType) {
               console.warn("Field " + field + " is not consistently typed " + type);
               types.set(field, "mixed");
+          } else if (type === "null") {
+              types.set(field, checkedType !== type ? checkedType : undefined);
           }
       }
       return types;
   }
 
-  function validateType(data, field, type) {
-      for (row of data.values()) {
-          if (getType(row[field]) !== type)
-              return false;
+  function validateConceptType(data, field, type) {
+      let conceptType;
+      for (let row of data.values()) {
+          conceptType = getConceptType(row[field], field, data.key);
+          if ( type !== conceptType ) {
+              if (type === "null") {
+                  type = conceptType;
+              } else if (conceptType !== "null") return false;
+          }
       }
+      return type;
   }
 
-  function getType(value) {
-      if (isDate(value))     return 'time';
+  function getConceptType(value, field, datakey) {
+      if (value === null) return 'null';
+      if (isDate(value)) return 'time';
+      if(datakey.includes(field)) return 'entity_domain';
       const type = typeof value;
       if (type == "string")  return 'string';
       if (type == "boolean") return 'boolean';
       if (type == "number" || isNumber(value))  return 'measure';
-      console.warn("Couldn't decide type of value.", { value });
+      console.warn("Couldn't decide type of value", { value, field, datakey });
   }
 
   const isDate = val => val instanceof Date;
@@ -2985,29 +3017,29 @@
       return matches ? matches.length : 0;
   }
 
-  function timeInColumns({columns, rows}, parsers) {
-      const keySize = this.keySize;
+  const MISSED_INDICATOR_NAME = 'indicator';
 
+  function timeInColumns({columns, rows, hasNameColumn, timeKey = "time", keySize = 1}, ERRORS, parsers) {
       let nameConcept = null;
       
       // remove column "name" as array's k+1 th element, but remember its header in a variable.
       // if it's an empty string, call it "name"
       // name column is not at its original index because it was moved by csv reader "load" method
-      if (this.hasNameColumn) {
+      if (hasNameColumn) {
           nameConcept = columns.splice(keySize + 1, 1)[0] || 'name';
       }
       
-      const missedIndicator = parsers && parsers[this.timeKey] && !!parsers[this.timeKey](columns[keySize]);
+      const missedIndicator = parsers && parsers[timeKey] && !!parsers[timeKey](columns[keySize]);
 
       if (missedIndicator) {
-          Vizabi.utils.warn('Indicator column is missed.');
+          console.warn('Indicator column is missed.');
       }
 
-      const indicatorKey = missedIndicator ? this.MISSED_INDICATOR_NAME : columns[keySize];
+      const indicatorKey = missedIndicator ? MISSED_INDICATOR_NAME : columns[keySize];
       const concepts = columns.slice(0, keySize)
-          .concat(this.timeKey)
+          .concat(timeKey)
           .concat(nameConcept || [])
-          .concat(missedIndicator ? Vizabi.utils.capitalize(this.MISSED_INDICATOR_NAME) : rows.reduce((result, row) => {
+          .concat(missedIndicator ? ucFirst(MISSED_INDICATOR_NAME) : rows.reduce((result, row) => {
               const concept = row[indicatorKey];
               if (!result.includes(concept) && concept) {
               result.push(concept);
@@ -3026,21 +3058,21 @@
 
               if (resultRows.length) {
               if (resultRows[0][row[indicatorKey]] !== null) {
-                  throw this.error(ERRORS.REPEATED_KEYS, null, {
-                  indicator: row[indicatorKey],
-                  key: row[entityDomain]
-                  });
+                  throw {
+                      name: ERRORS.REPEATED_KEYS,
+                      message: `indicator: ${row[indicatorKey]}, key: ${row[entityDomain]}`
+                  }
               }
 
               resultRows.forEach(resultRow => {
-                  resultRow[row[indicatorKey]] = row[resultRow[this.timeKey]];
+                  resultRow[row[indicatorKey]] = row[resultRow[timeKey]];
               });
               } else {
               Object.keys(row).forEach(key => {
                   if (![entityDomain, indicatorKey, nameConcept].includes(key)) {
                   const domainAndTime = {
                       [entityDomain]: row[entityDomain], 
-                      [this.timeKey]: key
+                      [timeKey]: key
                   };
                   const optionalNameColumn = !nameConcept ? {} : {
                       [nameConcept]: row[nameConcept]
@@ -3060,9 +3092,10 @@
       };
   }
 
-  const TIME_LIKE_CONCEPTS = ["time", "year", "month", "week", "quarter"];
+  const TIME_LIKE_CONCEPTS = ["time", "year", "month", "day", "week", "quarter"];
+  const NAME_LIKE_CONCEPTS = ["name", "title"];
   const GOOGLE_DOC_PREFIX = 'https://docs.google.com/spreadsheets/';
-  const ERRORS$1 = {
+  const ERRORS = {
       WRONG_TIME_COLUMN_OR_UNITS: 'reader/error/wrongTimeUnitsOrColumn',
       NOT_ENOUGH_ROWS_IN_FILE: 'reader/error/notEnoughRows',
       UNDEFINED_DELIMITER: 'reader/error/undefinedDelimiter',
@@ -3082,6 +3115,7 @@
           assetsPath = "",
           delimiter = "",
           keyConcepts, 
+          nameColumnIndex,
           dtypes 
       }) {
       
@@ -3090,7 +3124,7 @@
 
       path = _googleSpreadsheetURLAdaptor(path, sheet);
 
-      return Object.assign(inlineReader(getValues().then(({values, keyConcepts}) => ({ 
+      return Object.assign(inlineReader(getValues().then(({values, dtypes, keyConcepts}) => ({ 
               values,
               keyConcepts,
               dtypes
@@ -3107,14 +3141,14 @@
               .then(parseTextToTable)
               .then(transformNameColumn)
               .then(transformTimeInColumns)
-              .then(returnValuesAndKeyConcepts);
+              .then(returnValuesDtypesAndKeyConcepts);
       }
     
       function loadFile(){
           let textReader = externalTextReader || d3.text;
           return textReader(path)
               .catch(error => {
-                  error.name = ERRORS$1.FILE_NOT_FOUND;
+                  error.name = ERRORS.FILE_NOT_FOUND;
                   error.message = `No permissions, missing or empty file: ${path}`;
                   error.endpoint = path;
                   throw error;
@@ -3122,7 +3156,7 @@
       }
 
       function guessDelim(text){
-          if (!delimiter) delimiter = guessDelimiter(text, ERRORS$1);
+          if (!delimiter) delimiter = guessDelimiter(text, ERRORS);
           if (delimiter.error) throw makeError(delimiter.error);
           return text;
       }
@@ -3142,25 +3176,40 @@
       function transformNameColumn({rows, columns}){
           // move column "name" so it goes after "time"
           // turns [name, geo, gender, time, lex] into [geo, gender, time, name, lex]
-          if (hasNameColumn)
-              columns.splice(this.keySize + 1, 0, columns.splice(this.nameColumnIndex, 1)[0]);
-
+          nameColumnIndex = nameColumnIndex ?? NAME_LIKE_CONCEPTS.map(n => columns.indexOf(n)).find(f => f > -1);
+          if (hasNameColumn && nameColumnIndex != undefined){
+              const nameColumn = columns.splice(nameColumnIndex, 1); //mutates columns array
+              const keySize = guessKeyConcepts(columns, keyConcepts).length;
+              columns = columns.slice(0, keySize).concat(nameColumn).concat(columns.slice(keySize));
+          }
           return {rows, columns};
       }
 
       function transformTimeInColumns({rows, columns}){
 
-          if (isTimeInColumns)
-              return timeInColumns({rows, columns});
+          if (isTimeInColumns) {
+              try {
+                  return timeInColumns({rows, columns}, ERRORS);
+              } catch (error) {
+                  throw makeError(error);
+              }
+          }
           
           return {rows, columns};
       }
 
-      function returnValuesAndKeyConcepts({rows, columns}){
+      function returnValuesDtypesAndKeyConcepts({rows, columns}){
+          const values = autotype(rows);
           return {
-              values: autotype(rows),
+              values,
               keyConcepts: guessKeyConcepts(columns, keyConcepts),
-              columns
+              columns,
+              dtypes: columns.reduce((dtypes, column) => {
+                  const lowerCaseColumn = column.toLowerCase();
+                  //skip dtypes config for time column which typed to Date with d3.autoType already ('day' and 'month' timeformats for ex.)
+                  if (TIME_LIKE_CONCEPTS.includes(lowerCaseColumn) && !(values[0][column] instanceof Date)) dtypes[column] = lowerCaseColumn;
+                  return dtypes;
+              }, {})
           }
       }
 
@@ -3170,7 +3219,7 @@
 
       function guessKeyConcepts(columns, keyConcepts){
           if(keyConcepts) return keyConcepts;
-          const index = columns.findIndex((f) => TIME_LIKE_CONCEPTS.includes(f));
+          const index = columns.findIndex((f) => TIME_LIKE_CONCEPTS.includes(f.toLowerCase()));
           // +1 because we want to include time itself as well
           return columns.slice(0, index + 1);
       }
@@ -3195,7 +3244,7 @@
 
           return jsonReader()
               .catch(error => {
-                  error.name = ERRORS$1.FILE_NOT_FOUND;
+                  error.name = ERRORS.FILE_NOT_FOUND;
                   error.message = `No permissions, missing or empty file: ${path}`;
                   error.endpoint = path;
                   throw error;
@@ -3284,7 +3333,7 @@
               if (this.values)
                   return inlineReader({ values: this.values, keyConcepts: this.keyConcepts, dtypes: this.dtypes });
               else if (this.path)
-                  return csvReader({ path: this.path, sheet: this.sheet, keyConcepts: this.keyConcepts, dtypes: this.dtypes });
+                  return csvReader(this.config);
               console.warn("No inline values or csv path found. Please set `values` or `path` property on dataSource.", this);
           },
           get values() { 
@@ -3427,6 +3476,9 @@
           isEntityConcept(conceptId) {
               return ["entity_set", "entity_domain"].includes(this.getConcept(conceptId).concept_type);
           },
+          isTimeConcept(conceptId) {
+              return this.getConcept(conceptId).concept_type === "time";
+          },
           normalizeResponse(response, query) {
               const cache = {};
               if (isDataFrame(response)) {
@@ -3449,7 +3501,12 @@
                   return forKey(query.select.key);
               }
               return {
-                  raw: response,
+                  //Sometimes the raw response is a dataframe (such as from CSV/inline reader)
+                  //And sometimes it's a plain array (such as from ws-service reader)
+                  //Some downstream code however expects "raw" to be a plain array, 
+                  //for example, the for loop in entityPropertyDataConfig.js: lookups()
+                  //hence, this converts response back to plain array
+                  raw: isDataFrame(response) ? [...response.values()] : response,
                   forKey,
                   forQueryKey
               }
@@ -3896,11 +3953,20 @@
       const occurences = [];
       for (let dim of entitySpace) {
           let concepts;
-          let allProperties = kvLookup.get(createKeyStr([dim]));
-          if (allowedProperties) {
+          const allProperties = kvLookup.get(createKeyStr([dim]));
+          if (allProperties && allowedProperties) {
               concepts = allowedProperties.filter(c => allProperties.has(c));
-          } else {
+          } else if (allProperties) {
               concepts = allProperties.keys();
+          } else if (entitySpace.length === 1) {
+              //dimension has no entity properties --> return dimension name itself if it's the only dimension
+              concepts = [dim];
+          } else {
+              //otherwise setting concept to a single dim in a multidim situation would result
+              //in ambiguity (i.e. "chn" label for "geo:chn gender:male" marker)
+              //therefore we set concept to null and let the encoding be underconfigured
+              //this situation can be handled later
+              concepts = [null];
           }
           occurences.push(...concepts);
       }
@@ -4400,12 +4466,12 @@
       return composeObj(base, {
           iterableResponse: false,
           get space() {
-              return base.space?.filter(dim => this.source.isEntityConcept(dim));
+              return base.space?.filter(dim => !this.source.isTimeConcept(dim));
           },
           get queries() {
               const kvLookup = this.source.availability.keyValueLookup;
               return this.space
-                  .filter(dim => kvLookup.get(dim).has(this.concept))
+                  .filter(dim => kvLookup.get(dim)?.has(this.concept))
                   .map(dim => {
                       return this.createQuery({ space: [dim] });
                   });
@@ -4763,7 +4829,8 @@
               return Array.isArray(color) ? color[0] : color;
           },
           setColor: mobx.action('setColor', function (value, pointer) {
-              this.config.palette["" + pointer] = value ? d3.color(value).hex() : value;
+              if(!this.parent.config.palette) this.parent.config.palette = {palette: {}};
+              this.parent.config.palette.palette["" + pointer] = value ? d3.color(value).hex() : value;
           }),
           removeColor: mobx.action('removeColor', function (pointer) {
               if(this.config.palette.hasOwnProperty("" + pointer))
@@ -4997,6 +5064,8 @@
       }
   };
 
+  const POSSIBLE_INTERVALS = ["year", "month", "day", "week", "quarter"];
+
   const defaults$4 = {
       interpolate: true,
       extrapolate: false,
@@ -5004,6 +5073,7 @@
       loop: false,
       playbackSteps: 1,
       speed: 100,
+      interval: "year",
       splash: false
   };
 
@@ -5059,7 +5129,7 @@
               const frameMap = this.marker.getTransformedDataMap("filterRequired");
               if (this.playEmptyFrames) {
                   const domain = frameMap.keyExtent();
-                  return inclusiveRange(domain[0], domain[1], this.data.conceptProps);
+                  return inclusiveRange(domain[0], domain[1], this.interval);
               } else {
                   let frameValues = [];
                   for (let frame of frameMap.values()) {
@@ -5190,7 +5260,7 @@
               // reindex framemap - add missing frames within domain
               // i.e. not a single defining encoding had data for these frame
               // reindexing also sorts frames
-              return frameMap.reindexToKeyDomain(this.data.conceptProps);
+              return frameMap.reindexToKeyDomain(this.interval);
           },
           get rowKeyDims() {
               // remove frame concept from key if it's in there
@@ -5223,6 +5293,11 @@
                       return enc[prop].data.hasOwnData 
                           && enc[prop].data.space.includes(this.data.concept);
                   })
+          },
+
+          get interval() { 
+              const interval = this.config.interval ?? this.data.conceptProps.concept;
+              return POSSIBLE_INTERVALS.includes(interval) ? interval : defaults$4.interval;
           },
 
           // extrapolate transform
@@ -6345,7 +6420,7 @@
       return models;
 
   };
-  vizabi.versionInfo = { version: "1.18.0", build: 1632004814483, package: {"homepage":"http://vizabi.org","name":"@vizabi/core","description":"Vizabi core (data layer)"} };
+  vizabi.versionInfo = { version: "1.21.2", build: 1637011150548, package: {"homepage":"http://vizabi.org","name":"@vizabi/core","description":"Vizabi core (data layer)"} };
   vizabi.mobx = mobx__namespace;
   vizabi.utils = utils$1;
   vizabi.stores = stores;
@@ -6377,5 +6452,5 @@
 
   return vizabi;
 
-})));
+}));
 //# sourceMappingURL=Vizabi.js.map
