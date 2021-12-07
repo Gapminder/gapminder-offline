@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import * as fsExtra from 'fs-extra';
 import * as zipdir from 'zip-dir';
 import { promisify } from 'util';
-import { app, remote } from 'electron';
+import { app } from 'electron';
 import { GoogleAnalytics } from './google-analytics';
 import './glob-const';
 
@@ -19,7 +19,7 @@ const unlink = promisify(fs.unlink);
 const packageJSON = require('./package.json');
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 const nonAsarAppPath = app.getAppPath().replace(/app\.asar/, '');
-const userDataPath = (app || remote.app).getPath('userData');
+const userDataPath = (app || require('@electron/remote').app).getPath('userData');
 const bookmarkFile = path.resolve(userDataPath, 'bookmarks.json');
 const bookmarkCopyFile = path.resolve(userDataPath, 'bookmarks-copy.json');
 const bookmarkUndoFile = path.resolve(userDataPath, 'bookmarks-undo.json');
@@ -363,7 +363,7 @@ export const getBookmarksObject = async (filePar?: string) => {
   const _file = filePar;
 
   async function initFile(filename) {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       fs.open(filename, 'r', (openErr) => {
         if (openErr) {
           fs.writeFile(filename, '{"content": [], "folders": []}', (writeErr) => {

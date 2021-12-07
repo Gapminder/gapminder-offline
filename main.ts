@@ -1,4 +1,6 @@
-import { app, BrowserWindow, ipcMain as ipc, remote } from 'electron';
+import { app, BrowserWindow, ipcMain as ipc} from 'electron';
+import * as remoteMain from '@electron/remote/main';
+
 import * as path from 'path';
 import * as fs from 'fs';
 import * as urlLib from 'url';
@@ -48,7 +50,7 @@ autoUpdater.autoInstallOnAppQuit = false;
 const args = process.argv.slice(1);
 const devMode = process.argv.length > 1 && process.argv.indexOf('dev') > 0;
 const nonAsarAppPath = app.getAppPath().replace(/app\.asar/, '');
-const userDataPath = (app || remote.app).getPath('userData');
+const userDataPath = (app || require('@electron/remote').app).getPath('userData');
 const bookmarkFile = path.resolve(userDataPath, 'bookmarks.json');
 const datasetPath = path.resolve(nonAsarAppPath, 'ddf--gapminder--systema_globalis');
 const serve = args.some(val => val === '--serve');
@@ -68,13 +70,14 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200, height: 800, webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true
+      contextIsolation: false
     }
   });
   mainWindow.appPath = nonAsarAppPath;
   mainWindow.devMode = devMode;
   mainWindow.userDataPath = userDataPath;
   mainWindow.serve = serve;
+  remoteMain.enable(mainWindow.webContents);
 
   if (serve) {
     require('electron-reload')(__dirname, {
@@ -284,6 +287,9 @@ if (!gotTheLock) {
     }
   });
 }
+
+//init electron remote
+remoteMain.initialize();
 
 app.on('ready', () => {
   createWindow();

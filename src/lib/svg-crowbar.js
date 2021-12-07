@@ -189,7 +189,7 @@
   const downloadDefault = (source, filename) => {
     const fs = require('fs');
     const path = require('path');
-    const {dialog} = require('electron').remote;
+    const {dialog} = require('@electron/remote');
 
     const svgContent = source.source.join();
     const svgPos = svgContent.indexOf('<svg');
@@ -218,7 +218,7 @@
   const downloadPng = (source, filename) => {
     const fs = require('fs');
     const path = require('path');
-    const {dialog} = require('electron').remote;
+    const {dialog} = require('@electron/remote');
     const loader = new Image();
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
