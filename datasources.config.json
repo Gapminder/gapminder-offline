@@ -1,0 +1,20 @@
+{
+  "sg": {
+    "path": "ddf--gapminder--systema_globalis"
+  },
+  "billy": {
+    "path": "ddf--gapminder--billionaires"
+  },
+  "povcalnet": {
+    "path": "ddf--worldbank--povcalnet"
+  },
+  "wdi": {
+    "path": "ddf--open_numbers--world_development_indicators"
+  },
+  "fasttrack": {
+    "path": "ddf--gapminder--fasttrack"
+  },
+  "country_flags": {
+    "path": "ddf--gapminder--country_flag_svg"
+  }
+}

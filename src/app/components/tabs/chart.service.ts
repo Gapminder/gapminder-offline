@@ -5,6 +5,9 @@ import { MessageService } from '../../message.service';
 import { MODEL_CHANGED } from '../../constants';
 import { ElectronService } from '../../providers/electron.service';
 
+const configDs = require('../../../../datasources.config.json');
+const configToolset = require('../../../../toolset.config.json');
+
 const configSg = {
   BarRank: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BarRank.json'),
   BubbleChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleChart.json'),
@@ -74,22 +77,38 @@ export class ChartService {
       },
       ui: deepExtend({}, {...configSg[chartType]}.ui)
     };
-    const ddfFolderDescriptor = this.getDdfFolderDescriptor(this.ddfFolderDescriptor.ddfUrl);
 
-    if (ddfFolderDescriptor.error) {
-      return ddfFolderDescriptor.error;
-    }
+    if (!isDefaults) {//|| (isDefaults && !this.registeredReaders.includes("ddf-csv"))) {
+      const ddfFolderDescriptor = this.getDdfFolderDescriptor(this.ddfFolderDescriptor.ddfUrl);
 
-    if (!isDefaults || (isDefaults && !this.registeredReaders.includes("ddf-csv"))) {
+      if (ddfFolderDescriptor.error) {
+        return ddfFolderDescriptor.error;
+      }
+
       config.model.dataSources = {
         ['ddf-csv_' + this.es.path.basename(this.ddfFolderDescriptor.ddfUrl)]: {
           modelType: 'ddf-csv',
           path: this.ddfFolderDescriptor.ddfUrl,// + this.es.path.sep,
-          assetsPath: this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data') + this.es.path.sep,
+          assetsPath: this.es.path.resolve(DdfFolderDescriptor.electronPath, 'preview-data') + this.es.path.sep,
           _lastModified: ddfFolderDescriptor.lastModified  
         }
       }
-    };
+    } else {
+      const dataSources = configToolset[chartType].dataSources;
+      config.model.dataSources = dataSources.reduce((result, ds) => {
+        const ddfFolderDescriptor = new DdfFolderDescriptor(configDs[ds].path);
+        const {error, lastModified} = this.getDdfFolderDescriptor(ddfFolderDescriptor.ddfUrl);
+        if (!error) {
+          result[ds] = {
+            modelType: 'ddf-csv',
+            path: ddfFolderDescriptor.ddfUrl,// + this.es.path.sep,
+            assetsPath: this.es.path.resolve(DdfFolderDescriptor.electronPath, 'preview-data') + this.es.path.sep,
+            _lastModified: lastModified  
+          }
+          return result;
+        }
+      }, {});
+    }
 
     const markers = config.model.markers;
     const markerId = ["bubble", "line", "bar", "mountain", "pyramid", "spreadsheet"].find(id => markers[id]);
@@ -99,7 +118,7 @@ export class ChartService {
 
     config.ui.locale = {
       id: 'en',
-      path: this.es.isServe ? "assets/translation/" : this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data', 'translation') + this.es.path.sep
+      path: this.es.isServe ? "assets/translation/" : this.es.path.resolve(DdfFolderDescriptor.electronPath, 'preview-data', 'translation') + this.es.path.sep
     };
 
     tab.model = config;
@@ -162,7 +181,7 @@ export class ChartService {
       
       newTab.model.ui.locale = {
         id: 'en',
-        path: this.es.isServe ? "assets/translation/" : this.es.path.resolve(this.ddfFolderDescriptor.electronPath, 'preview-data', 'translation') + this.es.path.sep
+        path: this.es.isServe ? "assets/translation/" : this.es.path.resolve(DdfFolderDescriptor.electronPath, 'preview-data', 'translation') + this.es.path.sep
       };
   
       tabsModel.forEach((tab: TabModel) => tab.active = false);

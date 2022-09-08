@@ -19,6 +19,7 @@ import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/take';
 import { ElectronService } from '../../providers/electron.service';
 import { LocalizationService } from '../../providers/localization.service';
+import { DdfFolderDescriptor } from '../descriptors/ddf-folder.descriptor';
 
 declare const d3: any;
 
@@ -61,8 +62,8 @@ export class TabsComponent implements OnInit {
     this.es.ipcRenderer.send(this.globConst.GET_VERSIONS_INFO);
     this.es.ipcRenderer.send(this.globConst.GET_APP_ARGUMENTS);
 
-    this.chartService.ddfFolderDescriptor.electronPath = this.es.appPath + (this.es.isServe ? this.es.path.sep : "");
-    this.chartService.isDevMode = this.es.devMode;
+    DdfFolderDescriptor.electronPath = this.es.appPath + (this.es.isServe ? this.es.path.sep : "");
+    DdfFolderDescriptor.isDevMode = this.es.devMode;
 
     Observable.fromEvent(this.es.ipcRenderer, this.globConst.GOT_APP_FILE_ARGUMENT,
       (event: any, appArguments: string[]) => appArguments).subscribe((fileDesc: any) => {

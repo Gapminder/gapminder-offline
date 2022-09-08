@@ -1,0 +1,17 @@
+{
+  "BubbleChart": {
+    "dataSources": ["sg", "wdi", "fasttrack", "country_flags"]
+  },
+  "BubbleMap": {
+    "dataSources": ["sg", "wdi", "fasttrack"]
+  },
+  "MountainChart": {
+    "dataSources": ["povcalnet", "sg", "fasttrack", "billy"]
+  },
+  "LineChart": {
+    "dataSources": ["sg", "wdi", "fasttrack"]
+  },
+  "BarRank": {
+    "dataSources": ["sg", "wdi", "fasttrack"]
+  }
+}

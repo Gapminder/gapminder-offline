@@ -261,24 +261,29 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         const markerNames = Object.keys(this.vizabiModel.model.markers);
 
         const toolMarkerNames = ["bubble", "line", "bar", "mountain", "pyramid", "spreadsheet"];
-        const legendMarkerName = "legend";
-        const markerIndex = markerNames.findIndex(markerName => toolMarkerNames.includes(markerName));
-        const legendMarkerIndex = markerNames.indexOf(legendMarkerName);
+        let toolMarkerIndex = markerNames.findIndex(markerName => toolMarkerNames.includes(markerName));
+        const toolMarkerName = markerNames[toolMarkerIndex];
+        markerNames.splice(toolMarkerIndex, 1);
+        markerNames.push(toolMarkerName);
+        toolMarkerIndex = markerNames.length - 1;
 
         const markerAlterNames = markerNames.map(markerName => markerName + "-" + this.order);
 
         //disable splash
-        this.vizabiModel.model.markers[markerNames[markerIndex]].encoding.frame.splash = false;
+        this.vizabiModel.model.markers[markerNames[toolMarkerIndex]].encoding.frame.splash = false;
 
         let strConfig = JSON.stringify(this.vizabiModel);
 
         markerNames.forEach((markerName, i) => {
-          const re = new RegExp(`\\b${markerName}\\b`,"g");
+          const re = new RegExp(`((?<=markers.)${markerName}|(?<=")${markerName}(?="\s*:))`,"g");
           strConfig = strConfig.replace(re, markerAlterNames[i]);
         });
         
-        this.vizabiModel = JSON.parse(strConfig);
-
+        const vizabiModelUpdated = JSON.parse(strConfig);
+        this.vizabiModel.model.markers = vizabiModelUpdated.model.markers;
+        if (this.vizabiModel.model.presets) {
+          this.vizabiModel.model.presets = vizabiModelUpdated.model.presets;
+        }
 
         this.vizabiPageModel = deepExtend({
           ui: {
@@ -319,8 +324,6 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
 
         const model = this.es.Vizabi(fullModel.model);
 
-        const markerName = markerAlterNames[markerIndex];
-
         this.viz = new this.es[this.chartType]({
           id: "c0_" + this.order,
           Vizabi: this.es.Vizabi,
@@ -332,12 +335,14 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
           default_ui: this.vizabiPageModel.ui,
           options: {
             showLoading: true,
-            markerName: markerName,
-            legendMarkerName: markerAlterNames[legendMarkerIndex]
+            markerNames: markerNames.reduce((result, markerName , i) => {
+              result[markerName] = markerAlterNames[i];
+              return result;
+            }, {})
           }
         })
 
-        this.bindLoadEvents(this.viz, markerName);
+        this.bindLoadEvents(this.viz, markerAlterNames[toolMarkerIndex]);
 
         const VIZABI_DEFAULT_MODEL = diffObject(
           toJS(this.viz.model.config, { recurseEverything: true }),
@@ -463,17 +468,17 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
 
   private removeTool() {
     if (this.viz) {
-      const legendMarkerName = this.viz.options.legendMarkerName;
-      const markerName = this.viz.options.markerName;
+      const markerNames = this.viz.options.markerNames;
       this.viz.deconstruct();
       this.viz = void 0;
       let dispose;
       while (dispose = this.disposers.pop()) {
         dispose();
       }
-      this.es.mobx.runInAction(() => {
-        legendMarkerName && this.es.Vizabi.stores.markers.dispose(legendMarkerName);
-        this.es.Vizabi.stores.markers.dispose(markerName);
+      Object.values(markerNames).forEach(markerName => {
+        this.es.mobx.runInAction(() => {
+          this.es.Vizabi.stores.markers.dispose(markerName);
+        });
       });
     }
   }
