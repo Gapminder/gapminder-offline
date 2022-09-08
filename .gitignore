@@ -8,6 +8,7 @@ package-lock.json
 !postinstall.js
 !postinstall-web.js
 !export-template/**/*
+export-template/libs/**/*
 !preview-data/**/*
 *.map.js
 *.js.map
