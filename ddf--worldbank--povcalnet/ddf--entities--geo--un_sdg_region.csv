@@ -1,0 +1,9 @@
+un_sdg_region,name,color,is--un_sdg_region,income_mountain_50bracket_max_height_for_log
+un_sub_saharan_africa,Sub-Saharan Africa,#e11484,TRUE,260962995
+un_northern_africa_and_western_asia,Northern Africa and Western Asia,#f99d26,TRUE,94161679
+un_central_and_southern_asia,Central and Southern Asia,#f36d25,TRUE,462272054
+un_eastern_and_south_eastern_asia,Eastern and South-Eastern Asia,#279b48,TRUE,302630893
+un_oceania_exc_australia_and_new_zealand,Oceania (exc. Australia and New Zealand),#8f1838,TRUE,2425884
+un_latin_america_and_the_caribbean,Latin America and the Caribbean,#00aed9,TRUE,86872786
+un_australia_and_new_zealand,Australia and New Zealand,#eb1c2d,TRUE,6945712
+un_europe_and_northern_america,Europe and Northern America,#02558b,TRUE,154870681

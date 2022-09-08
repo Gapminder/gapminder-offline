@@ -1,0 +1,12 @@
+concept,name,concept_type,domain,tags
+geo,Geo,entity_domain,,_none
+country,Country,entity_set,geo,_none
+name,Name,string,,_none
+flag_svg,Country flags,string,,_root
+domain,Domain,string,,_none
+un_state,UN states,boolean,,_none
+dummy,dummy,measure,,_none
+time,time,time,,_none
+tags,Tags,string,,_none
+tag,Tag,entity_domain,,_none
+parent,Tag parent,string,,_none

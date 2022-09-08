@@ -1,6 +1,11 @@
 {
   "extraResources": [
     "ddf--gapminder--systema_globalis/**/*",
+    "ddf--worldbank--povcalnet/**/*",
+    "ddf--gapminder--fasttrack/**/*",
+    "ddf--gapminder--billionaires/**/*",
+    "ddf--open_numbers--world_development_indicators/**/*",
+    "ddf--gapminder--country_flag_svg/**/*",
     "export-template/**/*",
     "preview-data/**/*"
   ],
@@ -11,6 +16,11 @@
   "files": [
     "**/*",
     "!ddf--gapminder--systema_globalis/**/*",
+    "!ddf--worldbank--povcalnet/**/*",
+    "!ddf--gapminder--fasttrack/**/*",
+    "!ddf--gapminder--billionaires/**/*",
+    "!ddf--open_numbers--world_development_indicators/**/*",
+    "!ddf--gapminder--country_flag_svg/**/*",
     "!export-template/**/*",
     "!preview-data/**/*",
     "!**/*.ts",

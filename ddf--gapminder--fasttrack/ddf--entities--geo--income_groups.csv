@@ -1,0 +1,5 @@
+income_groups,is--income_groups,name,rank
+high_income,TRUE,High income,1
+low_income,TRUE,Low income,4
+lower_middle_income,TRUE,Lower middle income,3
+upper_middle_income,TRUE,Upper middle income,2

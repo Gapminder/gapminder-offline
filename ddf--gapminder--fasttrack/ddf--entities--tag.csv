@@ -1,0 +1,30 @@
+tag,name,parent
+governance,Governance,society
+society,Society,
+inequality,Inequality,economy
+economy,Economy,
+media,Media,communication
+communication,Communication,
+society,Society,
+democracy,Democracy,society
+democracy_idea,Democracy indices from IDEA,democracy
+democracy_eiu,Democracy indices from EIU,democracy
+freedom_fh,Freedom from FH,democracy
+more_dem_idea,More,democracy_idea
+refugees,Refugees,war_peace
+war_peace,War & peace,society
+nutrition,Nutrition,health
+health,Health,
+population,Population,
+environment,Environment,
+urbanization,Urbanization,population
+education,Education,
+vaccine,Vaccine,health
+maternal_health,Maternal health,health
+employment_by_sector,Employment by sector,work
+work,Work,
+forced_labor,Forced Labor,work
+unhcr_refugees,UNHCR refugees,refugees
+sustainability,Sustainability,
+disasters,Disasters,environment
+migration,Migration,war_peace
