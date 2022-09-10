@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "@electron/remote": "^2.0.1",
-    "@vizabi/reader-ddfcsv": "4.0.1",
+    "@vizabi/reader-ddfcsv": "4.0.2",
     "@vizabi/reader-excel": "1.0.0",
     "async": "2.6.2",
     "async-waterfall": "0.1.5",
