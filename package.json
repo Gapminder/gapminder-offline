@@ -118,7 +118,7 @@
     "core-js": "2.6.5",
     "d3": "^6.0.0",
     "electron": "^14.0.0",
-    "electron-builder": "^22.0.0",
+    "electron-builder": "^23.0.2",
     "electron-chromedriver": "^14.0.0",
     "electron-reload": "1.5.0",
     "jasmine-core": "~3.10.1",
