@@ -9,11 +9,11 @@ const configDs = require('../../../../datasources.config.json');
 const configToolset = require('../../../../toolset.config.json');
 
 const configSg = {
-  BarRank: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BarRank.json'),
-  BubbleChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleChart.json'),
-  BubbleMap: require('../../../../node_modules/vizabi-config-systema_globalis/dist/BubbleMap.json'),
-  LineChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/LineChart.json'),
-  MountainChart: require('../../../../node_modules/vizabi-config-systema_globalis/dist/MountainChart.json')
+  BarRank: require('../../../../node_modules/@gapminder/tools-page-chart-configs/dist/BarRank.json'),
+  BubbleChart: require('../../../../node_modules/@gapminder/tools-page-chart-configs/dist/BubbleChart.json'),
+  BubbleMap: require('../../../../node_modules/@gapminder/tools-page-chart-configs/dist/BubbleMap.json'),
+  LineChart: require('../../../../node_modules/@gapminder/tools-page-chart-configs/dist/LineChart.json'),
+  MountainChart: require('../../../../node_modules/@gapminder/tools-page-chart-configs/dist/MountainChart.json')
 };
 
 const chartMarkerName = {
