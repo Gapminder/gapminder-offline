@@ -335,6 +335,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
           default_ui: this.vizabiPageModel.ui,
           options: {
             showLoading: true,
+            markerName: markerAlterNames[toolMarkerIndex],
             markerNames: markerNames.reduce((result, markerName , i) => {
               result[markerName] = markerAlterNames[i];
               return result;
