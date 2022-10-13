@@ -5,9 +5,10 @@ import * as net from 'net';
 import * as path from 'path';
 import * as events from 'events';
 import * as urlLib from 'url';
-import * as gitclient from 'git-fetch-pack';
-import * as transport from 'git-transport-protocol';
 import * as semverSort from 'semver-sort';
+import { getRemoteInfo } from 'isomorphic-git';
+import httpGit from "isomorphic-git/http/node";
+
 import * as extract from 'extract-zip';
 import * as DecompressZip from 'decompress-zip';
 import { http, https } from 'follow-redirects';
@@ -73,30 +74,13 @@ async function getFirstDir(baseDir: string): Promise<string> {
 export async function getLatestGithubTag(inputParam: string): Promise<string> {
   return new Promise<string>((resolve: Function, reject: Function) => {
     const input = inputParam.replace(/^(?!(?:https|git):\/\/)/, 'https://');
-    const tcp = net.connect({host: urlLib.parse(input).host, port: 9418});
-    const client = gitclient(input);
-    const tags = [];
-
-    client.refs.on('data', ref => {
-      const name = ref.name;
-
-      if (/^refs\/tags/.test(name)) {
-        tags.push(name.split('/')[2].replace(/\^\{\}$/, '').substr(1));
+    getRemoteInfo({ http: httpGit, url: input }).then(info => {
+      const tags = info?.refs?.tags;
+      if (tags) {
+        resolve(semverSort.desc(Object.keys(tags).map(tag => tag.replace(/\^\{\}$/, '').substr(1)))[0]);
       }
+      return reject('Tags are missing');
     });
-
-    client
-      .pipe(transport(tcp))
-      .on('error', reject)
-      .pipe(client)
-      .on('error', reject)
-      .once('end', () => {
-        if (tags.length === 0) {
-          return reject('Tags are missing');
-        }
-
-        resolve(semverSort.desc(tags)[0]);
-      });
   });
 }
 

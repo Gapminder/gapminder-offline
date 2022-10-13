@@ -69,6 +69,7 @@ function createWindow() {
 
   mainWindow = new BrowserWindow({
     width: 1200, height: 800, webPreferences: {
+      nativeWindowOpen: true,
       nodeIntegration: true,
       contextIsolation: false
     }
