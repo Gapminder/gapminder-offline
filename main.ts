@@ -37,8 +37,8 @@ require('node-fetch');
 
 export const FEED_VERSION_URL = 'http://s3-eu-west-1.amazonaws.com/gapminder-offline/auto-update.json';
 const packageJSON = require('./package.json');
+const dsConfigs = require('./datasources.config.json');
 const dsGithubOwner = 'open-numbers';
-const dsGithubRepo = 'ddf--gapminder--systema_globalis';
 const isPortable = !!process.env.PORTABLE_EXECUTABLE_DIR;
 const ga = new GoogleAnalytics(packageJSON.googleAnalyticsId, app.getVersion());
 
@@ -127,9 +127,11 @@ function createWindow() {
     mainWindow.reload();
   });
 
-  ipc.on(globConst.START_DATASET_UPDATE, async (event, tagVersion) => {
+  ipc.on(globConst.START_DATASET_UPDATE, async (event, tags) => {
     try {
-      await updateDataset(tagVersion, datasetPath, userDataPath);
+      for (const tag of tags) {
+        await updateDataset(tag, tag.datasetPath, userDataPath);
+      }
       mainWindow.webContents.send(globConst.DATASET_UPDATED);
     } catch (e) {
       mainWindow.webContents.send(globConst.DATASET_NOT_UPDATED, e);
@@ -149,10 +151,25 @@ function createWindow() {
     isVersionCheckPassed = true;
 
     if (os.platform() !== 'linux' && !isPortable) {
-      const tagVersion = await getLatestGithubTag(`github.com/${dsGithubOwner}/${dsGithubRepo}`);
+      const tags = (await Promise.all(Object.keys(dsConfigs).map(async ds => {
+        const tagVersion = await getLatestGithubTag(`github.com/${dsGithubOwner}/${dsConfigs[ds].path}`);
+        return {
+          path: dsConfigs[ds].path,
+          version: tagVersion,
+          ds,
+          datasetPath: null,
+          name: null
+        }      
+      }))).filter(tag => {
+        tag.datasetPath = path.resolve(nonAsarAppPath, tag.path);
+        const dataPackage = require(path.resolve(tag.datasetPath, 'datapackage.json'));
+        tag.name = dataPackage.title || dataPackage.name || tag.ds;
 
-      if (diff(tagVersion, dataPackage.version)) {
-        mainWindow.webContents.send('dataset-update-available', tagVersion);
+        return diff(tag.version || "0.0.0", dataPackage.version || "0.0.0");
+      })
+
+      if (tags.length) {
+        mainWindow.webContents.send('dataset-update-available', tags);
       }
     }
   });

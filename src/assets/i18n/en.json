@@ -48,7 +48,7 @@
   "OK": "OK",
   "Update now": "Update now",
   "New version is available!": "New version <b>{{version}}</b> is available!",
-  "New dataset is available!": "New dataset (v{{actualVersionDsUpdate}}) is available!",
+  "New datasets is available!": "New datasets is available! :<br><ul>{{actualVersionDsUpdate}}</ul>",
   "Press OK and wait — the app will restart automatically.": "Press OK and wait — the app will restart automatically.",
   "Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version": "Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version",
   "Please uninstall Gapminder Offline and install the new version": "Please uninstall Gapminder Offline and install the new version",

@@ -48,7 +48,7 @@
   "OK": "حسنا",
   "Update now": "تحديث الان",
   "New version is available!": "!متاح <b>{{version}}</b> الإصدار الجديد",
-  "New dataset is available!": "!متاح (v{{actualVersionDsUpdate}}) مجموعة بيانات جديدة",
+  "New datasets is available!": ": !متاح مجموعات البيانات الجديدة<br><ul>{{actualVersionDsUpdate}}</ul>",
   "Press OK and wait — the app will restart automatically.": ".سيتم إعادة تشغيل التطبيق تلقائيًا — اضغط موافق وانتظر",
   "Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version": "Gapminder Offline آسف، التحديث التلقائي كسر، الرجاء إلغاء تثبيت وتثبيت الإصدار الجديد",
   "Please uninstall Gapminder Offline and install the new version": "Gapminder Offline الرجاء إلغاء تثبيت وتثبيت الإصدار الجديد",

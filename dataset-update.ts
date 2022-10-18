@@ -13,30 +13,28 @@ import * as extract from 'extract-zip';
 import * as DecompressZip from 'decompress-zip';
 import { http, https } from 'follow-redirects';
 
-const dsFeedUrlTemp =
-  'https://github.com/open-numbers/ddf--gapminder--systema_globalis/archive/v#version#.zip';
 
-export async function updateDataset(tagVersion: string, destDir: string, userDataPath: string, em?: events.EventEmitter) {
-  const dsFeedUrl = dsFeedUrlTemp.replace('#version#', tagVersion);
-  const tempPath = path.resolve(userDataPath, 'gapminder-offline-dataset-temp');
+export async function updateDataset(tag: any, destDir: string, userDataPath: string, em?: events.EventEmitter) {
+  const dsFeedUrl = `https://github.com/open-numbers/${tag.path}/archive/v${tag.version}.zip`;
+  const tempPath = path.resolve(userDataPath, `gapminder-offline-dataset-temp_${tag.ds}`);
   await removeDir(tempPath);
 
   if (em) {
-    em.emit('ds-update-status', 'Downloading dataset archive...');
+    em.emit('ds-update-status', `Downloading ${tag.path} dataset archive...`);
   }
 
   const dlFile = await download({url: dsFeedUrl, path: tempPath, file: 'dl.zip'});
   const unpackFun = os.platform() === 'win32' ? unpackWin : unpackNix;
 
   if (em) {
-    em.emit('ds-update-status', 'Unpacking dataset archive...');
+    em.emit('ds-update-status', `Unpacking  ${tag.path} dataset archive...`);
   }
 
   const unpacked = await unpackFun({fullPath: dlFile, target: path.resolve(tempPath, 'unpacked')});
   const contentDir = await getFirstDir(unpacked);
 
   if (em) {
-    em.emit('ds-update-status', 'Updating existing dataset...');
+    em.emit('ds-update-status', `Updating existing  ${tag.path} dataset...`);
   }
 
   await copy(contentDir, destDir);

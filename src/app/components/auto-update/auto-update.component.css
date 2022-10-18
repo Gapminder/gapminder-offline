@@ -18,3 +18,7 @@
 .label {
     font-size: smaller;
 }
+.auto-update-container {
+    margin-top: 5px;
+    border: solid 2px #f9cc3e;
+}

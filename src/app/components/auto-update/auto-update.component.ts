@@ -19,7 +19,7 @@ export class AutoUpdateComponent implements OnInit {
   versionDescriptor;
   error;
   datasetError;
-  newDataset: string;
+  newDatasets: string[];
   private globConst;
 
   constructor(public ls: LocalizationService, private es: ElectronService, private ms: MessageService) {
@@ -30,9 +30,9 @@ export class AutoUpdateComponent implements OnInit {
     this.es.ipcRenderer.on('update-available', (e, versionDescriptor) => {
       this.versionDescriptor = versionDescriptor;
     });
-    this.es.ipcRenderer.on('dataset-update-available', (e, datasetTag) => {
-      this.versionDescriptor = {actualVersionDsUpdate: datasetTag};
-      this.newDataset = datasetTag;
+    this.es.ipcRenderer.on('dataset-update-available', (e, datasetTags) => {
+      this.versionDescriptor = {actualVersionDsUpdate: datasetTags.map(tag => `<li>${tag.name} (v${tag.version})</li>`).join("")};
+      this.newDatasets = datasetTags;
     });
     this.es.ipcRenderer.on('update-error', (e, err) => {
       this.updating = false;
@@ -65,9 +65,9 @@ export class AutoUpdateComponent implements OnInit {
   }
 
   updateDataset() {
-    this.es.ipcRenderer.send(this.globConst.START_DATASET_UPDATE, this.newDataset);
+    this.es.ipcRenderer.send(this.globConst.START_DATASET_UPDATE, this.newDatasets);
     this.updating = true;
-    this.newDataset = '';
+    this.newDatasets = null;//'';
   }
 
   reload() {
@@ -87,7 +87,7 @@ export class AutoUpdateComponent implements OnInit {
 
   cancel() {
     this.versionDescriptor = null;
-    this.newDataset = null;
+    this.newDatasets = null;
   }
 
   resetError() {
@@ -96,7 +96,7 @@ export class AutoUpdateComponent implements OnInit {
   }
 
   isActive(): boolean {
-    return !!this.versionDescriptor || this.updating || this.showProgress || this.ready || !!this.newDataset || this.datasetReady ||
+    return !!this.versionDescriptor || this.updating || this.showProgress || this.ready || !!this.newDatasets || this.datasetReady ||
       !!this.error || !!this.datasetError;
   }
 

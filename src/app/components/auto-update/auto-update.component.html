@@ -1,12 +1,12 @@
 <div class="auto-update-container" [ngClass]="{'auto-update-container-ltr': !ls.isRtl(), 'auto-update-container-rtl': ls.isRtl()}" *ngIf="isActive()">
-  <div *ngIf="!!newDataset && !!versionDescriptor && !updating">
-    <div class="label" [innerHTML]="'New dataset is available!' | translate:versionDescriptor"></div>
+  <div *ngIf="!!newDatasets && !!versionDescriptor && !updating && !datasetReady && !datasetError">
+    <div class="label" [innerHTML]="'New datasets is available!' | translate:versionDescriptor"></div>
     <span>
       <input type="button" (click)="updateDataset()" value="{{'Update now' | translate}}" class="btn" />
       <input type="button" (click)="cancel()" value="{{'Cancel' | translate}}" class="btn btn-margin" />
     </span>
   </div>
-  <div *ngIf="!!versionDescriptor && !datasetReady && !newDataset && !updating">
+  <div *ngIf="!!versionDescriptor && !datasetReady && !newDatasets && !updating">
     <div class="label" [innerHTML]="'New version is available!' | translate:versionDescriptor"></div>
     <span>
       <input type="button" (click)="download()" value="{{'Update now' | translate}}" class="btn" />
