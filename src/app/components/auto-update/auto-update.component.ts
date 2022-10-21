@@ -67,7 +67,7 @@ export class AutoUpdateComponent implements OnInit {
   updateDataset() {
     this.es.ipcRenderer.send(this.globConst.START_DATASET_UPDATE, this.newDatasets);
     this.updating = true;
-    this.newDatasets = null;//'';
+    this.newDatasets = [''];
   }
 
   reload() {
@@ -87,6 +87,7 @@ export class AutoUpdateComponent implements OnInit {
 
   cancel() {
     this.versionDescriptor = null;
+    this.datasetError = null;
     this.newDatasets = null;
   }
 

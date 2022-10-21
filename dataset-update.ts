@@ -37,6 +37,10 @@ export async function updateDataset(tag: any, destDir: string, userDataPath: str
     em.emit('ds-update-status', `Updating existing  ${tag.path} dataset...`);
   }
 
+  await removeDir(path.resolve(contentDir,'etl'));
+  await removeDir(path.resolve(contentDir,'.gitignore'));
+  await removeDir(path.resolve(contentDir,'.gitattributes'));
+  await removeDir(path.resolve(contentDir,'.gitmodules'));
   await copy(contentDir, destDir);
   await removeDir(tempPath);
 }

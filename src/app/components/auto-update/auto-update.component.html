@@ -1,12 +1,12 @@
 <div class="auto-update-container" [ngClass]="{'auto-update-container-ltr': !ls.isRtl(), 'auto-update-container-rtl': ls.isRtl()}" *ngIf="isActive()">
-  <div *ngIf="!!newDatasets && !!versionDescriptor && !updating && !datasetReady && !datasetError">
+  <div *ngIf="!!newDatasets && !!versionDescriptor && !updating && !datasetReady && !error && !datasetError">
     <div class="label" [innerHTML]="'New datasets is available!' | translate:versionDescriptor"></div>
     <span>
       <input type="button" (click)="updateDataset()" value="{{'Update now' | translate}}" class="btn" />
       <input type="button" (click)="cancel()" value="{{'Cancel' | translate}}" class="btn btn-margin" />
     </span>
   </div>
-  <div *ngIf="!!versionDescriptor && !datasetReady && !newDatasets && !updating">
+  <div *ngIf="!!versionDescriptor && !datasetReady && !newDatasets && !updating && !error && !datasetError">
     <div class="label" [innerHTML]="'New version is available!' | translate:versionDescriptor"></div>
     <span>
       <input type="button" (click)="download()" value="{{'Update now' | translate}}" class="btn" />
@@ -33,12 +33,18 @@
       </div>
     </div>
   </div>
-  <div *ngIf="!!error || !!datasetError">
+  <div *ngIf="!!error">
     <div class="label">{{'Sorry, autoupdate broke, please uninstall Gapminder Offline and install the new version' | translate}}
       <a href="#" (click)="openURL('https://www.gapminder.org/tools-offline/')">{{'from here' | translate}}</a>
       <span>
       <input type="button" (click)="resetError()" value="{{'Cancel' | translate}}" class="btn btn-margin" />
     </span>
     </div>
+  </div>
+  <div *ngIf="!!datasetError">
+    <div class="label">{{'Sorry, datasets update broke, please restart app' | translate}}</div>
+    <span>
+      <input type="button" (click)="cancel()" value="{{'OK' | translate}}" class="btn" />
+    </span>
   </div>
 </div>
