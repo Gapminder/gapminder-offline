@@ -59,7 +59,8 @@
     "changelog": "conventional-changelog -i CHANGELOG.md -s -p angular",
     "github-release": "conventional-github-releaser -p angular",
     "version": "npm run changelog && git add CHANGELOG.md",
-    "postversion": "git push origin development && git push --tags && npm run github-release"
+    "postversion": "git push origin development && git push --tags && npm run github-release",
+    "update-datasets": "tsc update-datasets.ts && node update-datasets.js"
   },
   "dependencies": {
     "@electron/remote": "^2.0.1",
