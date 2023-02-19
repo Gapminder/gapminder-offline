@@ -49,6 +49,7 @@
     "electron:linux": "npm run build:prod && electron-builder build --linux",
     "electron:windows": "npm run build:prod && electron-builder build --windows",
     "electron:windows:dev": "npm run build:dev && electron-builder build --windows",
+    "electron:mac-notarized": "export NOTARIZE=true && npm run build:prod && electron-builder build --mac",
     "electron:mac": "npm run build:prod && electron-builder build --mac",
     "start-webdriver": "node node_modules/electron-chromedriver/chromedriver &",
     "e2e:test": "protractor ./e2e/protractor.conf.js",

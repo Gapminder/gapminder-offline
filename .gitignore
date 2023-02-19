@@ -4,6 +4,7 @@ package-lock.json
 # compiled output
 *.js
 *.pfx
+!notarize.js
 !postcss.config.js
 !postinstall.js
 !postinstall-web.js
