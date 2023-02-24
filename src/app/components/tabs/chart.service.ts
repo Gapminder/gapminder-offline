@@ -8,12 +8,12 @@ import { ElectronService } from '../../providers/electron.service';
 const configDs = require('../../../../datasources.config.json');
 const configToolset = require('../../../../toolset.config.json');
 
-const configSg = {
-  BarRank: require('../../../../node_modules/@gapminder/tools-page-chart-configs/dist/BarRank.json'),
-  BubbleChart: require('../../../../node_modules/@gapminder/tools-page-chart-configs/dist/BubbleChart.json'),
-  BubbleMap: require('../../../../node_modules/@gapminder/tools-page-chart-configs/dist/BubbleMap.json'),
-  LineChart: require('../../../../node_modules/@gapminder/tools-page-chart-configs/dist/LineChart.json'),
-  MountainChart: require('../../../../node_modules/@gapminder/tools-page-chart-configs/dist/MountainChart.json')
+const chartConfigs = {
+  BarRank: require('../../../../node_modules/@gapminder/tools-page-chart-configs/src/BarRank.js'),
+  BubbleChart: require('../../../../node_modules/@gapminder/tools-page-chart-configs/src/BubbleChart.js'),
+  BubbleMap: require('../../../../node_modules/@gapminder/tools-page-chart-configs/src/BubbleMap.js'),
+  LineChart: require('../../../../node_modules/@gapminder/tools-page-chart-configs/src/LineChart.js'),
+  MountainChart: require('../../../../node_modules/@gapminder/tools-page-chart-configs/src/MountainChart.js')
 };
 
 const chartMarkerName = {
@@ -64,7 +64,7 @@ export class ChartService {
 
     const deepExtend = this.es.VizabiSharedComponents.LegacyUtils.deepExtend;
     const chartType = tab.chartType;
-    const config = isDefaults ? {...configSg[chartType]} : {
+    const config = isDefaults ? {...chartConfigs[chartType]} : {
       model: {
         markers: {
           [chartMarkerName[chartType]]: {
@@ -75,7 +75,7 @@ export class ChartService {
           }
         }
       },
-      ui: deepExtend({}, {...configSg[chartType]}.ui)
+      ui: deepExtend({}, {...chartConfigs[chartType]}.ui)
     };
 
     if (!isDefaults) {//|| (isDefaults && !this.registeredReaders.includes("ddf-csv"))) {
@@ -177,7 +177,7 @@ export class ChartService {
         this.log(JSON.stringify(newTab.model));
       }
 
-      newTab.model.ui = deepExtend({}, {...configSg[properties.chartType]}.ui);
+      newTab.model.ui = deepExtend({}, {...chartConfigs[properties.chartType]}.ui);
       
       newTab.model.ui.locale = {
         id: 'en',
