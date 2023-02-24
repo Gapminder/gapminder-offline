@@ -7,7 +7,8 @@
     "description": "",
     "author": "",
     "license": "",
-    "created": "2022-05-06T03:00:37.617566+00:00",
+    "created": "2022-12-12T10:45:39.249955+00:00",
+    "version": "2.1.0",
     "resources": [
         {
             "name": "ddf--concepts",
@@ -604,6 +605,21 @@
             }
         },
         {
+            "name": "ddf--entities--income_bracket_80",
+            "path": "ddf--entities--income_bracket_80.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "income_bracket_80"
+                    },
+                    {
+                        "name": "name"
+                    }
+                ],
+                "primaryKey": "income_bracket_80"
+            }
+        },
+        {
             "name": "ddf--entities--wb_level",
             "path": "ddf--entities--wb_level.csv",
             "schema": {
@@ -934,6 +950,27 @@
             }
         },
         {
+            "name": "ddf--datapoints--median_income--by--geo--time",
+            "path": "indicators/ddf--datapoints--median_income--by--geo--time.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "geo"
+                    },
+                    {
+                        "name": "time"
+                    },
+                    {
+                        "name": "median_income"
+                    }
+                ],
+                "primaryKey": [
+                    "geo",
+                    "time"
+                ]
+            }
+        },
+        {
             "name": "ddf--datapoints--poverty_line--by--country--time",
             "path": "poverty_rates/ddf--datapoints--poverty_line--by--country--time.csv",
             "schema": {
@@ -1151,6 +1188,15 @@
                 "primaryKey": [
                     "concept"
                 ],
+                "value": "drill_up",
+                "resources": [
+                    "ddf--concepts"
+                ]
+            },
+            {
+                "primaryKey": [
+                    "concept"
+                ],
                 "value": "name",
                 "resources": [
                     "ddf--concepts"
@@ -1161,15 +1207,6 @@
                     "concept"
                 ],
                 "value": "tags",
-                "resources": [
-                    "ddf--concepts"
-                ]
-            },
-            {
-                "primaryKey": [
-                    "concept"
-                ],
-                "value": "drill_up",
                 "resources": [
                     "ddf--concepts"
                 ]
@@ -2025,6 +2062,15 @@
             },
             {
                 "primaryKey": [
+                    "income_bracket_80"
+                ],
+                "value": "name",
+                "resources": [
+                    "ddf--entities--income_bracket_80"
+                ]
+            },
+            {
+                "primaryKey": [
                     "income_groups"
                 ],
                 "value": "name",
@@ -2703,6 +2749,26 @@
                 "value": "income_mountain_79bracket_shape_for_log",
                 "resources": [
                     "ddf--datapoints--income_mountain_79bracket_shape_for_log--by--country--time"
+                ]
+            },
+            {
+                "primaryKey": [
+                    "country",
+                    "time"
+                ],
+                "value": "median_income",
+                "resources": [
+                    "ddf--datapoints--median_income--by--geo--time"
+                ]
+            },
+            {
+                "primaryKey": [
+                    "geo",
+                    "time"
+                ],
+                "value": "median_income",
+                "resources": [
+                    "ddf--datapoints--median_income--by--geo--time"
                 ]
             },
             {

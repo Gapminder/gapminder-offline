@@ -1,8 +1,8 @@
 unicef_region,name,is--unicef_region,income_mountain_50bracket_max_height_for_log
-sa,South Asia,TRUE,437913337
-eca,Europe and Central Asia,TRUE,112225584
-mena,Middle East and North Africa,TRUE,88746007
-ssa,Sub-Saharan Africa,TRUE,274697250
-lac,Latin America and Caribbean,TRUE,86872786
-eap,East Asia and Pacific,TRUE,303032747
-na,North America,TRUE,62373480
+sa,South Asia,TRUE,476082586.0
+eca,Europe and Central Asia,TRUE,109919092.0
+mena,Middle East and North Africa,TRUE,111598307.0
+ssa,Sub-Saharan Africa,TRUE,491441001.0
+lac,Latin America and Caribbean,TRUE,89006746.0
+eap,East Asia and Pacific,TRUE,316191556.0
+na,North America,TRUE,65114248.0

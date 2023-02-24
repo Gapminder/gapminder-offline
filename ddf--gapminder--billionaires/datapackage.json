@@ -8,9 +8,9 @@
     "description": "Forbes billionaires dataset",
     "author": "Gapminder",
     "license": "CC-BY-4.0",
-    "created": "2022-06-21T05:45:56.247285+00:00",
+    "created": "2022-10-29T08:32:00.000000+00:00",
     "translations": [],
-    "version": "0.0.1",
+    "version": "2.1.0",
     "resources": [
         {
             "name": "ddf--concepts",

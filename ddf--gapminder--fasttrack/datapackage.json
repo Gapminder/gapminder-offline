@@ -1,5 +1,6 @@
 {
     "name": "ddf--gapminder--fasttrack",
+    "version": "1.0.0",
     "language": {
         "id": "en"
     },
@@ -7,7 +8,7 @@
     "description": "",
     "author": "",
     "license": "",
-    "created": "2022-06-18T15:54:52.515812+00:00",
+    "created": "2022-09-20T22:37:50.878753+00:00",
     "resources": [
         {
             "name": "ddf--concepts",
@@ -401,6 +402,132 @@
                 ],
                 "primaryKey": [
                     "country",
+                    "time"
+                ]
+            }
+        },
+        {
+            "name": "ddf--datapoints--cc_somw_t_per--by--country--time",
+            "path": "ddf--datapoints--cc_somw_t_per--by--country--time.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "country"
+                    },
+                    {
+                        "name": "time"
+                    },
+                    {
+                        "name": "cc_somw_t_per"
+                    }
+                ],
+                "primaryKey": [
+                    "country",
+                    "time"
+                ]
+            }
+        },
+        {
+            "name": "ddf--datapoints--cc_somw_t_per--by--global--time",
+            "path": "ddf--datapoints--cc_somw_t_per--by--global--time.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "global"
+                    },
+                    {
+                        "name": "time"
+                    },
+                    {
+                        "name": "cc_somw_t_per"
+                    }
+                ],
+                "primaryKey": [
+                    "global",
+                    "time"
+                ]
+            }
+        },
+        {
+            "name": "ddf--datapoints--cc_vser_somw_t_per--by--country--time",
+            "path": "ddf--datapoints--cc_vser_somw_t_per--by--country--time.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "country"
+                    },
+                    {
+                        "name": "time"
+                    },
+                    {
+                        "name": "cc_vser_somw_t_per"
+                    }
+                ],
+                "primaryKey": [
+                    "country",
+                    "time"
+                ]
+            }
+        },
+        {
+            "name": "ddf--datapoints--cc_vser_somw_t_per--by--global--time",
+            "path": "ddf--datapoints--cc_vser_somw_t_per--by--global--time.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "global"
+                    },
+                    {
+                        "name": "time"
+                    },
+                    {
+                        "name": "cc_vser_somw_t_per"
+                    }
+                ],
+                "primaryKey": [
+                    "global",
+                    "time"
+                ]
+            }
+        },
+        {
+            "name": "ddf--datapoints--cc_vser_t_per--by--country--time",
+            "path": "ddf--datapoints--cc_vser_t_per--by--country--time.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "country"
+                    },
+                    {
+                        "name": "time"
+                    },
+                    {
+                        "name": "cc_vser_t_per"
+                    }
+                ],
+                "primaryKey": [
+                    "country",
+                    "time"
+                ]
+            }
+        },
+        {
+            "name": "ddf--datapoints--cc_vser_t_per--by--global--time",
+            "path": "ddf--datapoints--cc_vser_t_per--by--global--time.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "global"
+                    },
+                    {
+                        "name": "time"
+                    },
+                    {
+                        "name": "cc_vser_t_per"
+                    }
+                ],
+                "primaryKey": [
+                    "global",
                     "time"
                 ]
             }
@@ -2191,6 +2318,27 @@
             }
         },
         {
+            "name": "ddf--datapoints--ndisasd_noep_tot--by--country--time",
+            "path": "ddf--datapoints--ndisasd_noep_tot--by--country--time.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "country"
+                    },
+                    {
+                        "name": "time"
+                    },
+                    {
+                        "name": "ndisasd_noep_tot"
+                    }
+                ],
+                "primaryKey": [
+                    "country",
+                    "time"
+                ]
+            }
+        },
+        {
             "name": "ddf--datapoints--ndisasd_noep_tot--by--global--time",
             "path": "ddf--datapoints--ndisasd_noep_tot--by--global--time.csv",
             "schema": {
@@ -2228,6 +2376,27 @@
                 ],
                 "primaryKey": [
                     "global",
+                    "time"
+                ]
+            }
+        },
+        {
+            "name": "ddf--datapoints--ndisasd_tot--by--country--time",
+            "path": "ddf--datapoints--ndisasd_tot--by--country--time.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "country"
+                    },
+                    {
+                        "name": "time"
+                    },
+                    {
+                        "name": "ndisasd_tot"
+                    }
+                ],
+                "primaryKey": [
+                    "country",
                     "time"
                 ]
             }
@@ -5797,6 +5966,99 @@
                     "country",
                     "time"
                 ],
+                "value": "cc_somw_t_per",
+                "resources": [
+                    "ddf--datapoints--cc_somw_t_per--by--country--time"
+                ]
+            },
+            {
+                "primaryKey": [
+                    "geo",
+                    "time"
+                ],
+                "value": "cc_somw_t_per",
+                "resources": [
+                    "ddf--datapoints--cc_somw_t_per--by--country--time",
+                    "ddf--datapoints--cc_somw_t_per--by--global--time"
+                ]
+            },
+            {
+                "primaryKey": [
+                    "global",
+                    "time"
+                ],
+                "value": "cc_somw_t_per",
+                "resources": [
+                    "ddf--datapoints--cc_somw_t_per--by--global--time"
+                ]
+            },
+            {
+                "primaryKey": [
+                    "country",
+                    "time"
+                ],
+                "value": "cc_vser_somw_t_per",
+                "resources": [
+                    "ddf--datapoints--cc_vser_somw_t_per--by--country--time"
+                ]
+            },
+            {
+                "primaryKey": [
+                    "geo",
+                    "time"
+                ],
+                "value": "cc_vser_somw_t_per",
+                "resources": [
+                    "ddf--datapoints--cc_vser_somw_t_per--by--country--time",
+                    "ddf--datapoints--cc_vser_somw_t_per--by--global--time"
+                ]
+            },
+            {
+                "primaryKey": [
+                    "global",
+                    "time"
+                ],
+                "value": "cc_vser_somw_t_per",
+                "resources": [
+                    "ddf--datapoints--cc_vser_somw_t_per--by--global--time"
+                ]
+            },
+            {
+                "primaryKey": [
+                    "country",
+                    "time"
+                ],
+                "value": "cc_vser_t_per",
+                "resources": [
+                    "ddf--datapoints--cc_vser_t_per--by--country--time"
+                ]
+            },
+            {
+                "primaryKey": [
+                    "geo",
+                    "time"
+                ],
+                "value": "cc_vser_t_per",
+                "resources": [
+                    "ddf--datapoints--cc_vser_t_per--by--country--time",
+                    "ddf--datapoints--cc_vser_t_per--by--global--time"
+                ]
+            },
+            {
+                "primaryKey": [
+                    "global",
+                    "time"
+                ],
+                "value": "cc_vser_t_per",
+                "resources": [
+                    "ddf--datapoints--cc_vser_t_per--by--global--time"
+                ]
+            },
+            {
+                "primaryKey": [
+                    "country",
+                    "time"
+                ],
                 "value": "celec_idea",
                 "resources": [
                     "ddf--datapoints--celec_idea--by--country--time"
@@ -7332,11 +7594,22 @@
             },
             {
                 "primaryKey": [
+                    "country",
+                    "time"
+                ],
+                "value": "ndisasd_noep_tot",
+                "resources": [
+                    "ddf--datapoints--ndisasd_noep_tot--by--country--time"
+                ]
+            },
+            {
+                "primaryKey": [
                     "geo",
                     "time"
                 ],
                 "value": "ndisasd_noep_tot",
                 "resources": [
+                    "ddf--datapoints--ndisasd_noep_tot--by--country--time",
                     "ddf--datapoints--ndisasd_noep_tot--by--global--time"
                 ]
             },
@@ -7368,6 +7641,16 @@
                 "value": "ndisasd_rate",
                 "resources": [
                     "ddf--datapoints--ndisasd_rate--by--global--time"
+                ]
+            },
+            {
+                "primaryKey": [
+                    "country",
+                    "time"
+                ],
+                "value": "ndisasd_tot",
+                "resources": [
+                    "ddf--datapoints--ndisasd_tot--by--country--time"
                 ]
             },
             {
@@ -7377,6 +7660,7 @@
                 ],
                 "value": "ndisasd_tot",
                 "resources": [
+                    "ddf--datapoints--ndisasd_tot--by--country--time",
                     "ddf--datapoints--ndisasd_tot--by--global--time"
                 ]
             },
