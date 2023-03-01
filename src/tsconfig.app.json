@@ -4,7 +4,7 @@
     "outDir": "../out-tsc/app",
     "module": "es2015",
     "baseUrl": "",
-    "types": ["node", "dom-mediacapture-record"]
+    "types": []
   },
   "exclude": [
     "src/test.ts",

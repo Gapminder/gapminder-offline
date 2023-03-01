@@ -9,10 +9,7 @@
     "outDir": "../dist/out-tsc-e2e",
     "sourceMap": true,
     "target": "es2016",
-    "types": [
-      "jasmine",
-      "node"
-    ],
+    "types": [],
     "typeRoots": [
       "../node_modules/@types"
     ]
