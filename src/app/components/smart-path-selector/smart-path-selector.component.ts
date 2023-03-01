@@ -8,7 +8,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl, Validator } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, UntypedFormControl, Validator } from '@angular/forms';
 import { ChartService } from '../tabs/chart.service';
 import { ElectronService } from '../../providers/electron.service';
 
@@ -70,7 +70,7 @@ export class SmartPathSelectorComponent implements ControlValueAccessor, Validat
   registerOnChange(fn: any) {
   }
 
-  validate(c: FormControl): any {
+  validate(c: UntypedFormControl): any {
     return (!this.fileDoesNotExistsError) ? null : {
       fileExistsError: {
         valid: false
