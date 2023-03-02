@@ -1,12 +1,21 @@
 /**
  * Custom angular webpack configuration
  */
+const TerserPlugin = require("terser-webpack-plugin");
 
  module.exports = (config, options) => {
     if (config.optimization.minimizer[0]) {
-        config.optimization.minimizer[0].options.terserOptions.keep_classnames = true;    
-        config.optimization.minimizer[0].options.terserOptions.keep_fnames = true;
-        config.optimization.minimizer[0].options.terserOptions.compress.pure_getters = false;
+        config.optimization.minimizer[0] = (
+            new TerserPlugin({
+                terserOptions: {
+                    keep_classnames: true,
+                    keep_classnames: true,
+                    compress: {
+                        pure_getters: false
+                    }
+                }
+            })
+        )
     }
 
     config.target = 'electron-renderer';
