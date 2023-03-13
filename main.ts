@@ -1,4 +1,7 @@
-import { app, BrowserWindow, ipcMain as ipc} from 'electron';
+import { app, BrowserWindow, Menu, ipcMain as ipc} from 'electron';
+
+Menu.setApplicationMenu(null);
+
 import * as remoteMain from '@electron/remote/main';
 
 import * as path from 'path';
