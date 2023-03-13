@@ -117,7 +117,7 @@ const normalizeModelToSave = (model, chartType) => {
   if (isPathInternal(model.ui.locale.path, PREVIEW_DATA_PATH)) {
     model.ui.locale.path = `@internal`;
   } else {
-    model.ui.locale.path = path.resolve(__dirname, '..', '..', model.ui.locale.path);
+    model.ui.locale.path = path.resolve(__dirname, '..', '..', model.ui.locale.path) + path.sep;
   }
   delete model.ui.locale.placeholder;
   delete model.ui.layout.placeholder;
