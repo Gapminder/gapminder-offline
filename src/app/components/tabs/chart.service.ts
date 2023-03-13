@@ -89,7 +89,6 @@ export class ChartService {
         ['ddf-csv_' + this.es.path.basename(this.ddfFolderDescriptor.ddfUrl)]: {
           modelType: 'ddf-csv',
           path: this.ddfFolderDescriptor.ddfUrl,// + this.es.path.sep,
-          assetsPath: this.es.path.resolve(DdfFolderDescriptor.electronPath, 'preview-data') + this.es.path.sep,
           _lastModified: ddfFolderDescriptor.lastModified  
         }
       }
@@ -102,7 +101,6 @@ export class ChartService {
           result[ds] = {
             modelType: 'ddf-csv',
             path: ddfFolderDescriptor.ddfUrl,// + this.es.path.sep,
-            assetsPath: this.es.path.resolve(DdfFolderDescriptor.electronPath, 'preview-data') + this.es.path.sep,
             _lastModified: lastModified  
           }
           return result;

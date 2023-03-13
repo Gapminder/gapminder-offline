@@ -111,7 +111,6 @@ const normalizeModelToSave = (model, chartType) => {
   dataSources && Object.keys(dataSources).forEach(key => {
     if (isPathInternal(dataSources[key].path, DATA_PATH)) {
       dataSources[key].path = `@internal`;
-      dataSources[key].assetsPath = `@internal`;
     }
   });
 
@@ -135,7 +134,6 @@ const normalizeModelToOpen = (model, brokenFileActions) => {
 
     if (dataSources[key].path.indexOf('@internal') >= 0) {
       dataSources[key].path = DATA_PATH;
-      dataSources[key].assetsPath = PREVIEW_DATA_PATH + path.sep;
     } else {
       if (!fs.existsSync(dataSources[key].path)) {
         brokenFileActions.push(getPathCorrectFunction(dataSources[key]));
