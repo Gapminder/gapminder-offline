@@ -23,7 +23,6 @@
               "src/app-icon.icns",
               "src/assets/i18n",
               "src/assets/images",
-              "src/assets/translation",
               "src/assets/logo.gif",
               "src/lib/svg-crowbar.js"
             ],
