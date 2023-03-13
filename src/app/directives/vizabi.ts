@@ -255,7 +255,9 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
 
         this.vizabiModel = deepExtend({},
           changes.model.currentValue, this.getAdditionalData(), this.vizabiModel);
-                
+        
+        Object.values(this.vizabiModel.model.dataSources).forEach((ds: any) => ds.locale = this.language);
+        
         this.registerReaders(this.vizabiModel.model.dataSources);
         
         const markerNames = Object.keys(this.vizabiModel.model.markers);
@@ -293,6 +295,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         }, this.vizabiModel);
         this.vizabiPageModel.ui.layout.placeholder = placeholder;
         this.vizabiPageModel.ui.locale.placeholder = placeholder;
+        this.vizabiPageModel.ui.locale.id = this.language;
 
         const VIZABI_UI_CONFIG = observable({});
 
