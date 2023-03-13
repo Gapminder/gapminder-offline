@@ -37,7 +37,8 @@
     "!karma.conf.js",
     "!tsconfig.json",
     "!tslint.json",
-    "!www"
+    "!www",
+    "!.angular/**/*"
   ],
   "win": {
     "icon": "dist/app-icon.png",
