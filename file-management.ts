@@ -733,27 +733,16 @@ export const exportForWeb = (event, params) => {
 
 
 export const getUpdateLinks = (versionsConfig) => {
-  const oldVersions = versionsConfig.modern3.supported.concat(versionsConfig.modern.supported).concat(versionsConfig.supported)
-    .map(version => ({
-      win32: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Install+Gapminder+Offline-32.exe`,
-      win64: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Install+Gapminder+Offline-64.exe`,
-      win32Port: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline-win32.zip`,
-      win64Port: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline-win64.zip`,
-      lin: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline-linux.zip`,
-      mac: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Install+Gapminder+Offline.dmg`,
-      version
-    }));
-  const newVersions = versionsConfig.modern4.supported.map(version => ({
-    win32: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/new-version/Gapminder+Offline+Setup+${version}.exe`,
-    win64: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/new-version/Gapminder+Offline+Setup+${version}.exe`,
-    win32Port: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/new-version/Gapminder+Offline-${version}-ia32-win.zip`,
-    win64Port: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/new-version/Gapminder+Offline-${version}-win.zip`,
-    lin: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/new-version/Gapminder+Offline+${version}.AppImage`,
-    mac: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/new-version/Gapminder+Offline-${version}.dmg`,
+  const supported = versionsConfig.modern6.supported.map(version => ({
+    win32: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline+Setup+${version}.exe`,
+    win64: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline+Setup+${version}.exe`,
+    win32Port: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline-${version}-ia32-win.zip`,
+    win64Port: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline-${version}-win.zip`,
+    lin: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline+${version}.AppImage`,
+    mac: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline-${version}-universal.dmg`,
     version
   }));
-  const supported = newVersions.concat(oldVersions);
-  const currentVersion = versionsConfig.modern4.version;
+  const currentVersion = versionsConfig.modern6.version;
 
   return {supported, currentVersion};
 };

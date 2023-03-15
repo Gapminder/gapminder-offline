@@ -38,7 +38,7 @@ import './glob-const';
 
 require('node-fetch');
 
-export const FEED_VERSION_URL = 'http://s3-eu-west-1.amazonaws.com/gapminder-offline/auto-update.json';
+export const FEED_VERSION_URL = 'http://s3-eu-west-1.amazonaws.com/gapminder-offline/auto-update-test.json';
 const packageJSON = require('./package.json');
 const dsConfigs = require('./datasources.config.json');
 const dsGithubOwner = 'open-numbers';
@@ -191,7 +191,7 @@ function createWindow() {
   });
 
   ipc.on(globConst.GET_VERSIONS_INFO, () => {
-    mainWindow.setTitle(`Gapminder Tools Offline v.${app.getVersion()} (dataset v.${dataPackage.version})`);
+    mainWindow.setTitle(`Gapminder Tools Offline v.${app.getVersion()} (main dataset Systema Globalis v.${dataPackage.version})`);
   });
 
   ipc.on(globConst.RELOAD_MAIN_WINDOW, () => {

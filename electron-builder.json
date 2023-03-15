@@ -63,8 +63,6 @@
     "gatekeeperAssess": false,
     "target": {
       "arch": [
-        "x64",
-        "arm64",
         "universal"
       ],
       "target":"default"
