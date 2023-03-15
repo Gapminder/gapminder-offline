@@ -25,12 +25,20 @@ const bookmarkCopyFile = path.resolve(userDataPath, 'bookmarks-copy.json');
 const bookmarkUndoFile = path.resolve(userDataPath, 'bookmarks-undo.json');
 const bookmarksThumbnailsPath = path.resolve(userDataPath, 'bookmarks-thumbnails');
 const bookmarksThumbnailsUndoPath = path.resolve(userDataPath, 'bookmarks-thumbnails-undo');
-const DATA_PATH = path.resolve(nonAsarAppPath, 'ddf--gapminder--systema_globalis');
 const PREVIEW_DATA_PATH = path.resolve(nonAsarAppPath, 'preview-data');
 const WEB_RESOURCE_PATH = path.resolve(nonAsarAppPath, 'export-template');
 const WEB_PATH = path.resolve(userDataPath, 'web');
 const previouslyOpened = {};
 const globConst = (global as any).globConst;
+
+const getDataPaths = appPath => {
+  const dsConfigs = require('./datasources.config.json');
+  return Object.keys(dsConfigs).reduce((result, ds) => {
+    result[ds] = path.resolve(appPath, dsConfigs[ds].path);
+    return result;
+  }, {});
+}
+const DATA_PATHS = getDataPaths(nonAsarAppPath);
 
 const initBookmarksThumbnailsCache = async () => {
   return fsExtra.ensureDir(bookmarksThumbnailsUndoPath);
@@ -109,7 +117,7 @@ const isPathInternal = (_path: string, template: string) => _path.startsWith(tem
 const normalizeModelToSave = (model, chartType) => {
   const dataSources = model.model.dataSources;
   dataSources && Object.keys(dataSources).forEach(key => {
-    if (isPathInternal(dataSources[key].path, DATA_PATH)) {
+    if (isPathInternal(dataSources[key].path, DATA_PATHS[key])) {
       dataSources[key].path = `@internal`;
     }
   });
@@ -133,7 +141,7 @@ const normalizeModelToOpen = (model, brokenFileActions) => {
     }
 
     if (dataSources[key].path.indexOf('@internal') >= 0) {
-      dataSources[key].path = DATA_PATH;
+      dataSources[key].path = DATA_PATHS[key];
     } else {
       if (!fs.existsSync(dataSources[key].path)) {
         brokenFileActions.push(getPathCorrectFunction(dataSources[key]));
