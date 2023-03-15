@@ -22,7 +22,7 @@ module.exports = (config, options) => {
             new TerserPlugin({
                 terserOptions: {
                     keep_classnames: true,
-                    keep_classnames: true,
+                    keep_fnames: true,
                     compress: {
                         pure_getters: false
                     }
