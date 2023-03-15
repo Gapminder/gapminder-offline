@@ -1,4 +1,4 @@
-import * as waterfall from 'async-waterfall';
+import { waterfall } from 'async-es';
 import { isEmpty, endsWith } from 'lodash';
 import {
   Component,
