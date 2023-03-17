@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
-import { Observable } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import { ChartService } from './chart.service';
 import { TabModel } from './tab.model';
 import { ITabActionsSynchronizer } from '../tabs-new/tabs.common';
@@ -14,9 +14,6 @@ import {
 import { MessageService } from '../../message.service';
 import { FreshenerService } from '../tab-freshener/freshener.service';
 
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/take';
 import { ElectronService } from '../../providers/electron.service';
 import { LocalizationService } from '../../providers/localization.service';
 import { DdfFolderDescriptor } from '../descriptors/ddf-folder.descriptor';
@@ -65,7 +62,7 @@ export class TabsComponent implements OnInit {
     DdfFolderDescriptor.electronPath = this.es.appPath + (this.es.isServe ? this.es.path.sep : "");
     DdfFolderDescriptor.isDevMode = this.es.devMode;
 
-    Observable.fromEvent(this.es.ipcRenderer, this.globConst.GOT_APP_FILE_ARGUMENT,
+    fromEvent(this.es.ipcRenderer, this.globConst.GOT_APP_FILE_ARGUMENT,
       (event: any, appArguments: string[]) => appArguments).subscribe((fileDesc: any) => {
       if (!fileDesc || !fileDesc.fileName) {
         this.chartService.ddfFolderDescriptor.defaults();

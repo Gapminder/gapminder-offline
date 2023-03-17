@@ -8,7 +8,7 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ModalDirective } from 'ngx-bootstrap';
 import { ChartService } from '../tabs/chart.service';
 import { TabModel } from '../tabs/tab.model';
