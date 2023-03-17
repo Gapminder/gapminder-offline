@@ -678,11 +678,13 @@ export const saveAllTabs = (event, tabsDescriptor) => {
   });
 };
 
-export const exportForWeb = (event, params) => {
-  fsExtra.removeSync(WEB_PATH);
+export const exportForWeb = async (event, params) => {
+  try {
+    fsExtra.removeSync(WEB_PATH);
+  } catch {}
 
   const dataSources = params.model.model.dataSources;
-  Object.keys(dataSources).forEach(key => {
+  for (const key in dataSources) {
     const pathKeys = dataSources[key].path.split(path.sep);
     const pathKey = pathKeys[pathKeys.length - 1];
 
@@ -693,7 +695,7 @@ export const exportForWeb = (event, params) => {
     if (dataSources[key].modelType === 'ddf-csv') {
       dataSources[key].modelType = 'ddf';
     }
-  });
+  }
 
   params.model.chartType = params.chartType;
   params.model.ui.locale.path = 'assets/translation/';
@@ -702,14 +704,15 @@ export const exportForWeb = (event, params) => {
 
   const config = `var VIZABI_CONFIG = ${JSON.stringify(params.model, null, ' ')};`;
 
+  fsExtra.copySync(path.resolve(PREVIEW_DATA_PATH, "translation"), path.resolve(WEB_PATH, "assets", "translation"));
   fsExtra.copySync(WEB_RESOURCE_PATH, WEB_PATH);
   fsExtra.outputFileSync(path.resolve(WEB_PATH, 'config.js'), config);
 
-  let indexContent = fs.readFileSync(path.resolve(WEB_RESOURCE_PATH, 'index.html')).toString();
+  let indexContent = (fsExtra.readFileSync(path.resolve(WEB_RESOURCE_PATH, 'index.html'))).toString();
 
   indexContent = indexContent.replace(/#chartType#/, params.chartType);
 
-  fs.writeFileSync(path.resolve(WEB_PATH, 'index.html'), indexContent, 'utf8');
+  fsExtra.writeFileSync(path.resolve(WEB_PATH, 'index.html'), indexContent, 'utf8');
 
   dialog.showSaveDialog({
     title: 'Export current chart as ...',
@@ -720,6 +723,8 @@ export const exportForWeb = (event, params) => {
     }
 
     zipdir(WEB_PATH, {saveTo: fileName}, err => {
+      fsExtra.removeSync(WEB_PATH);
+
       if (err) {
         dialog.showMessageBox({message: 'This chart has NOT been exported.', buttons: ['OK']});
         ga.error('Export for Web was NOT completed: ' + err.toString());
