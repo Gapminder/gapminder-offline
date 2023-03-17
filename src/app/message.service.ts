@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ElectronService } from './providers/electron.service';
 
 @Injectable()
@@ -30,7 +29,7 @@ export class MessageService {
   }
 
   clearMessage() {
-    this.subject$.next();
+    this.subject$.next({});
   }
 
   lock() {

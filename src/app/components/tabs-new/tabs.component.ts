@@ -12,7 +12,7 @@ import {
 import { TabNewComponent } from './tab.component';
 import { ITabActionsSynchronizer } from './tabs.common';
 import { MessageService } from '../../message.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import {
   CLEAR_EDITABLE_TABS_ACTION, TABS_LOGO_ACTION, TABS_ADD_TAB_ACTION, SWITCH_MENU_ACTION,
   MODEL_CHANGED, SET_ACTIVE_TAB, REMOVE_TAB, SWITCH_BOOKMARKS_PANE, BOOKMARK_TAB, BOOKMARKS_PANE_OFF_OUTSIDE, CLEAR_ALERTS
