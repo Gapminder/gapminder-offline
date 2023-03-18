@@ -9,8 +9,6 @@
   GET_APP_ARGUMENTS: 'get-app-arguments',
   GOT_APP_FILE_ARGUMENT: 'got-app-file-argument',
   OPEN_FILE_AFTER_START: 'open-file-after-start',
-  GET_SUPPORTED_VERSIONS: 'get-supported-versions',
-  GOT_SUPPORTED_VERSIONS: 'got-supported-versions',
   DO_OPEN_VALIDATION_WINDOW: 'do-open-validation-window',
   OPEN_DEV_TOOLS: 'open-dev-tools',
   DO_OPEN: 'do-open',

@@ -735,19 +735,3 @@ export const exportForWeb = async (event, params) => {
     });
   });
 };
-
-
-export const getUpdateLinks = (versionsConfig) => {
-  const supported = versionsConfig.modern6.supported.map(version => ({
-    win32: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline+Setup+${version}.exe`,
-    win64: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline+Setup+${version}.exe`,
-    win32Port: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline-${version}-ia32-win.zip`,
-    win64Port: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline-${version}-win.zip`,
-    lin: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline+${version}.AppImage`,
-    mac: `https://s3-eu-west-1.amazonaws.com/gapminder-offline/${version}/Gapminder+Offline-${version}-universal.dmg`,
-    version
-  }));
-  const currentVersion = versionsConfig.modern6.version;
-
-  return {supported, currentVersion};
-};
