@@ -43,7 +43,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
   private prevStateStr;
   private poppedState = null;
   private disposers = [];
-  private urlUpdateDisposer: any;
+  private modelUpdateDisposer: any;
 
   constructor(private element: ElementRef, private ms: MessageService, private es: ElectronService) {
   }
@@ -109,7 +109,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
       }
 
       const currentModel = JSON.parse(JSON.stringify(this.model));
-      this.urlUpdateDisposer && this.urlUpdateDisposer();
+      this.modelUpdateDisposer && this.modelUpdateDisposer();
       this.removeTool();
       VizabiDirective.removeElement(this.placeholder);
 
@@ -135,7 +135,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
       this._reloadTime = _reloadTime;
 
       const currentModel = JSON.parse(JSON.stringify(this.model));
-      this.urlUpdateDisposer && this.urlUpdateDisposer();
+      this.modelUpdateDisposer && this.modelUpdateDisposer();
       this.removeTool();
       VizabiDirective.removeElement(this.placeholder);
 
@@ -150,7 +150,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
 
   ngOnDestroy() {
     try {
-      this.urlUpdateDisposer && this.urlUpdateDisposer();
+      this.modelUpdateDisposer && this.modelUpdateDisposer();
       this.removeTool();
       VizabiDirective.removeElement(this.placeholder);
     } catch (generalError) {
@@ -171,18 +171,16 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
     const splashMarker = viz.splashMarker;
   
     const registerLoadFinish = (loadMarker, id) => {
-      //console.time(id);
 
       const dispose = this.es.mobx.when(
         () => loadMarker.state == "fulfilled",
         () => {
           this.onReadyOnce.emit({
-                  order: this.order,
-                  type: this.chartType,
-                  minInitialModel: this.model,
-                  component: this.viz
-                });
-          // console.timeEnd(id);
+            order: this.order,
+            type: this.chartType,
+            minInitialModel: this.model,
+            component: this.viz
+          });
           // const time = timeLogger.snapOnce(id);
           // if (gtag && time) gtag("event", "timing_complete", {
           //   "name": id + " load",
@@ -200,9 +198,6 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
       this.disposers.push(dispose);
     }  
 
-    // if (splashMarker) {
-    //   registerLoadFinish(splashMarker, "SPLASH");
-    // }
     registerLoadFinish(marker, "FULL");
 
   }
@@ -225,31 +220,6 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         } = this.es.VizabiSharedComponents.LegacyUtils;
 
         this.vizabiModel = {};
-
-        // this.vizabiModel.bind = {
-        //   ready: () => {
-        //     this.onPersistentChange();
-        //     setTimeout(() => {
-        //       this.ms.unlock();
-        //     }, 300);
-        //   },
-        //   persistentChange: () => {
-        //     this.onPersistentChange();
-        //   },
-        //   readyOnce: () => {
-        //     this.onReadyOnce.emit({
-        //       order: this.order,
-        //       type: this.chartType,
-        //       minInitialModel: this.model,
-        //       component: this.viz
-        //     });
-        //   },
-        //   'load_error': (event: any, error: string) => {
-        //     this.emitError(error);
-        //     this.ms.unlock();
-        //   }
-        // };
-
 
         const placeholder = "." + this.placeholder.className;
 
@@ -304,26 +274,10 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         const VIZABI_LAYOUT = observable(this.vizabiPageModel.ui.layout);
         if (VIZABI_UI_CONFIG.projector !== undefined) VIZABI_LAYOUT.projector = VIZABI_UI_CONFIG.projector;
   
-  
-
         const fullModel = deepExtend({}, this.vizabiModel, true);
         const lastModified = new Date().getTime();
 
         this.refreshLastModified(fullModel.model.dataSources, lastModified);
-
-        // if (changes.isStateEmpty) {
-        //   delete fullModel.state;
-        // }
-
-        //this.ms.lock();
-
-        // if (fullModel.locale) {
-        //   fullModel.locale.id = this.language;
-        // } else {
-        //   fullModel.locale = {
-        //     id: this.language
-        //   };
-        // }
 
         const model = this.es.Vizabi(fullModel.model);
 
@@ -351,7 +305,6 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         const VIZABI_DEFAULT_MODEL = diffObject(
           toJS(this.viz.model.config, { recurseEverything: true }),
           {}
-          //(URLI.model && URLI.model.model) ? deepExtend({}, URLI.model.model) : {}
         );
 
         const removeProperties = (obj, array, keyStack = "") => {
@@ -364,11 +317,10 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
           return obj;
         };
     
-        this.urlUpdateDisposer = autorun(() => {
+        this.modelUpdateDisposer = autorun(() => {
           const Utils = this.es.VizabiSharedComponents.Utils;
           const UI_CONFIG = VIZABI_UI_CONFIG;
           const DEFAULT_MODEL = VIZABI_DEFAULT_MODEL;
-          const MODEL = this.vizabiModel;
           const LOCALE = VIZABI_LOCALE;
           const LAYOUT = VIZABI_LAYOUT;
           const PAGE_MODEL = this.vizabiPageModel;
@@ -376,29 +328,19 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
           let jsmodel = toJS(this.viz.model.config, { recurseEverything: true });
           let jsui = toJS(UI_CONFIG, { recurseEverything: true });
   
-          //jsmodel = diffObject(jsmodel, DEFAULT_MODEL || {});
-          
-          //jsui = diffObject(jsui, MODEL.ui);
           jsui = deepExtend(deepExtend({}, PAGE_MODEL.ui), jsui);
 
           const model: any = {
-            // model: Utils.clearEmpties(removeProperties(jsmodel, ["highlighted", "superhighlighted", "locale", "range", "frame.scale.domain"])),
-            // ui: Utils.clearEmpties(removeProperties(jsui, ["dragging", "opened"]))
-            model: removeProperties(jsmodel, ["highlighted", "superhighlighted", "locale", "range", "frame.scale.domain"]),
-            ui: removeProperties(jsui, ["dragging", "opened"]),
+            model: Utils.clearEmpties(removeProperties(jsmodel, ["locale", "range", "frame.scale.domain"])),
+            ui: Utils.clearEmpties(removeProperties(jsui, ["dragging", "opened", "pinned"])),
             url: "v1"
           };
   
-          // if (PAGE_MODEL.ui.locale.id !== LOCALE.id)
-          //   model.ui.locale = LOCALE.id;
-          // else
-          //   delete model.ui.locale;
-          // if (PAGE_MODEL.ui.layout.projector !== LAYOUT.projector)
-          //   model.ui.projector = LAYOUT.projector;
-          // else
-          //   delete model.ui.projector;
-  
-          //DEFAULT_MODEL && (!isEmpty(model.model) || !isEmpty(model.ui)) && 
+          if (PAGE_MODEL.ui.locale.id !== LOCALE.id)
+            model.ui.locale.id = LOCALE.id;
+          if (PAGE_MODEL.ui.layout.projector !== LAYOUT.projector)
+            model.ui.layout.projector = LAYOUT.projector;
+
           if(DEFAULT_MODEL) {
             let strConfig = JSON.stringify(model);
             markerAlterNames.forEach((markerName, i) => {
@@ -412,12 +354,9 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
               order: this.order,
               type: this.chartType,
               model: this.model
-              //modelDiff: minModelDiff,
-              //minInitialModel: this.model
             });
           }
-          //&& updateURL(model, undefined, true);
-        }, { name: "tool.js: update url" });
+        }, { name: "tool model changes" });
 
         this.onCreated.emit({
           order: this.order,
@@ -430,7 +369,7 @@ export class VizabiDirective implements AfterContentInit, OnDestroy {
         this.ms.unlock();
       }
     });
-}
+  }
 
   private getAdditionalData() {
     const result = {};
