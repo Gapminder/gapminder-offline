@@ -14,7 +14,6 @@ import { autoUpdater } from 'electron-updater';
 import {
   addBookmark,
   exportForWeb,
-  getUpdateLinks,
   openBookmark,
   openFileWhenDoubleClick,
   openFileWithDialog,
@@ -38,7 +37,6 @@ import './glob-const';
 
 require('node-fetch');
 
-export const FEED_VERSION_URL = 'http://s3-eu-west-1.amazonaws.com/gapminder-offline/auto-update-test.json';
 const packageJSON = require('./package.json');
 const dsConfigs = require('./datasources.config.json');
 const dsGithubOwner = 'open-numbers';
@@ -219,20 +217,6 @@ function createWindow() {
         openFileWhenDoubleClick(event, fileName);
       }
     }
-  });
-
-  ipc.on(globConst.GET_SUPPORTED_VERSIONS, event => {
-    request.get(FEED_VERSION_URL, (error, response, body) => {
-      if (!error && response.statusCode === 200) {
-        try {
-          const config = JSON.parse(body);
-          const links = getUpdateLinks(config);
-
-          event.sender.send(globConst.GOT_SUPPORTED_VERSIONS, links.supported, links.currentVersion, app.getVersion());
-        } catch (e) {
-        }
-      }
-    });
   });
 
   ipc.on(globConst.OPEN_DEV_TOOLS, () => {
