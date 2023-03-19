@@ -24,6 +24,11 @@ module.exports = (config, options) => {
                     keep_classnames: true,
                     keep_fnames: true,
                     compress: {
+                        global_defs: {
+                            ngDevMode: false,
+                            ngI18nClosureMode: false,
+                            ngJitMode: false
+                        },
                         pure_getters: false
                     }
                 }
