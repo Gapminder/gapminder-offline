@@ -270,6 +270,10 @@ function createWindow() {
   ipc.on(globConst.MODIFY_CHART, (event, action) => {
     ga.chartChangingEvent(action);
   });
+
+  ipc.handle(globConst.GET_MEDIA_SOURCE_ID,
+    () => mainWindow.getMediaSourceId()
+  )
 }
 
 const gotTheLock = app.requestSingleInstanceLock();

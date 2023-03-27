@@ -8,10 +8,6 @@ import { LocalizationService } from '../../providers/localization.service';
 
 declare const navigator;
 
-interface CurrentMediaSource {
-  id: string;
-}
-
 let blobs = [];
 let recorder;
 
@@ -22,12 +18,14 @@ let recorder;
 })
 export class RecorderComponent implements OnInit, OnDestroy {
   private readonly recentVideoPathSetting: string;
+  private globConst;
 
   constructor(public ls: LocalizationService,
               private es: ElectronService,
               private ms: MessageService,
               private ts: TranslateService) {
     this.recentVideoPathSetting = this.es.path.resolve(this.es.userDataPath, 'recent-video-path');
+    this.globConst = this.es.remote.getGlobal('globConst');
   }
 
   ngOnInit() {
@@ -50,8 +48,9 @@ export class RecorderComponent implements OnInit, OnDestroy {
       blobs = [];
 
       if (!recorder) {
-        const currentSource = await this.getCurrentWindowMediaSource();
-        const stream = await this.getUserMediaStream(currentSource);
+        const currentSourceId = await this.getCurrentWindowMediaSourceId(); 
+        if (!currentSourceId) throw new Error('Native window is not found');
+        const stream = await this.getUserMediaStream(currentSourceId);
 
         recorder = new MediaRecorder(stream, {mimeType: 'video/x-matroska;codecs=avc1'});
 
@@ -167,44 +166,22 @@ export class RecorderComponent implements OnInit, OnDestroy {
     const mm = ('0' + dateNow.getMinutes()).slice(-2);
     const ss = ('0' + dateNow.getSeconds()).slice(-2);
     const dateString = `${y}${m}${d}-${hh}${mm}${ss}`;
-    return `Gapminder Offline Screen-${dateString}`;
+    return `Gapminder Tools Offline Screen-${dateString}`;
   }
 
-  private async getCurrentWindowMediaSource(): Promise<CurrentMediaSource> {
-    return new Promise((resolve: Function, reject: Function) => {
-      const nativeWindowPrefix = 'Gapminder Offline v';
-
-      desktopCapturer.getSources({types: ['window']}).then((sources) => {
-        let currentSource;
-
-        for (const source of sources as any) {
-          if (source.name.indexOf(nativeWindowPrefix) === 0 && currentSource) {
-            return reject('Too many native windows');
-          } else if (source.name.indexOf(nativeWindowPrefix) === 0 && !currentSource) {
-            currentSource = source;
-          }
-        }
-
-        if (currentSource) {
-          resolve(currentSource);
-        } else {
-          reject('Native window is not found');
-        }
-      });
-    });
+  private async getCurrentWindowMediaSourceId() {
+    return this.es.ipcRenderer.invoke(this.globConst.GET_MEDIA_SOURCE_ID);
   }
 
-  private async getUserMediaStream(currentSource: CurrentMediaSource): Promise<MediaStream> {
-    return new Promise((resolve: Function, reject: Function) => {
-      navigator.getUserMedia({
-        audio: false,
-        video: {
-          mandatory: {
-            chromeMediaSource: 'desktop',
-            chromeMediaSourceId: currentSource.id
-          }
+  private async getUserMediaStream(currentSourceId: String): Promise<MediaStream> {
+    return navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: {
+        mandatory: {
+          chromeMediaSource: 'desktop',
+          chromeMediaSourceId: currentSourceId
         }
-      }, resolve, reject);
+      }
     });
   }
 }

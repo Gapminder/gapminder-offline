@@ -26,6 +26,7 @@
   NEW_CHART: 'new-chart',
   MODIFY_CHART: 'modify-chart',
   START_DOWNLOAD: 'start-download',
+  GET_MEDIA_SOURCE_ID: 'get-media-source-id',
   REMOVE_BOOKMARKS_FOLDER: 'remove-bookmarks-folder',
   BOOKMARK_REMOVED: 'bookmark-removed',
   BOOKMARKS_REMOVE_RESTORE: 'bookmarks-remove-restore',
