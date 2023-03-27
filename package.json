@@ -61,7 +61,8 @@
     "github-release": "conventional-github-releaser -p angular",
     "version": "npm run changelog && git add CHANGELOG.md",
     "postversion": "git push origin development && git push --tags && npm run github-release",
-    "update-datasets": "tsc update-datasets.ts && node update-datasets.js"
+    "update-datasets": "tsc update-datasets.ts && node update-datasets.js",
+    "lint": "ng lint"
   },
   "dependencies": {
     "@electron/remote": "^2.0.9",
@@ -89,6 +90,11 @@
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^15.0.0",
+    "@angular-eslint/builder": "15.2.1",
+    "@angular-eslint/eslint-plugin": "15.2.1",
+    "@angular-eslint/eslint-plugin-template": "15.2.1",
+    "@angular-eslint/schematics": "15.2.1",
+    "@angular-eslint/template-parser": "15.2.1",
     "@angular/cli": "15.2.4",
     "@angular/common": "15.2.3",
     "@angular/compiler": "15.2.3",
@@ -105,6 +111,8 @@
     "@types/dom-mediacapture-record": "^1.0.1",
     "@types/jasminewd2": "^2.0.10",
     "@types/node": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "5.48.2",
+    "@typescript-eslint/parser": "5.48.2",
     "@vizabi/barrank": "3.9.3",
     "@vizabi/bubblechart": "3.14.3",
     "@vizabi/bubblemap": "4.0.4",
@@ -112,7 +120,6 @@
     "@vizabi/linechart": "3.8.3",
     "@vizabi/mountainchart": "7.2.4",
     "@vizabi/shared-components": "1.28.1",
-    "codelyzer": "^6.0.0",
     "conventional-changelog-cli": "^2.0.12",
     "copyfiles": "^2.0.0",
     "core-js": "^3.29.1",
@@ -121,6 +128,10 @@
     "electron-builder": "^23.6.0",
     "electron-chromedriver": "^22.0.0",
     "electron-reload": "1.5.0",
+    "eslint": "^8.33.0",
+    "eslint-plugin-import": "latest",
+    "eslint-plugin-jsdoc": "latest",
+    "eslint-plugin-prefer-arrow": "latest",
     "jasmine-core": "~4.6.0",
     "jasmine-spec-reporter": "~7.0.0",
     "karma": "~6.4.1",
@@ -137,7 +148,6 @@
     "rxjs": "~7.8.0",
     "terser": "^5.16.6",
     "ts-node": "^10.9.1",
-    "tslint": "~6.1.0",
     "typescript": "4.9.5",
     "wait-on": "^7.0.0",
     "zone.js": "^0.12.0"
