@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { ModalDirective } from 'ngx-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import { ChartService } from '../tabs/chart.service';
 import { TabModel } from '../tabs/tab.model';
 import { MessageService } from '../../message.service';

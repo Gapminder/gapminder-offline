@@ -11,7 +11,10 @@ import { ElectronService } from './providers/electron.service';
 import { WebviewDirective } from './directives/webview.directive';
 import { VizabiDirective } from './directives/vizabi';
 
-import { ModalModule, ProgressbarModule, AlertModule, PopoverModule } from 'ngx-bootstrap';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 import { DragulaModule } from 'ng2-dragula';
 
 import { AppComponent } from './app.component';
