@@ -17,7 +17,7 @@
     "sass"
   ],
   "main": "main.js",
-  "googleAnalyticsId": "UA-67908993-4",
+  "googleAnalyticsId": "G-23TV434Y9Q",
   "private": true,
   "scripts": {
     "md-export-template-lib": "mkdirp ./export-template/libs && mkdirp ./export-template/libs/assets && mkdirp ./export-template/assets",
